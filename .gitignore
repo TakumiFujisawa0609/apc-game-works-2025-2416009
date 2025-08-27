@@ -39,6 +39,6 @@
 
 # debug information files
 *.dwo
-.vs/
-x64/
-Log.txt
+FightForSurvival/.vs/
+FightForSurvival/x64/
+FightForSurvival/Log.txt
