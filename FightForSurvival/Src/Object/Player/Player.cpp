@@ -80,16 +80,6 @@ void Player::Release(void)
 {
 }
 
-void Player::SetAbility(AblityType type, int i)
-{
-	switch (type)
-	{
-
-	default:
-		break;
-	}
-}
-
 void Player::SetAbility(AblityType type, float i)
 {
 	switch (type)
