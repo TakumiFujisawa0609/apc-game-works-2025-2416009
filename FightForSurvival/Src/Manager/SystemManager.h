@@ -5,6 +5,9 @@ class SystemManager
 {
 public:
 
+	// 感度
+	static constexpr float SENSITIVITY = 0.005f;
+
 	// 明示的にインステンスを生成する
 	static void CreateInstance(void);
 
@@ -17,16 +20,16 @@ public:
 	//リセット
 	void ResetGame();
 
-	//人数を格納
+	// 感度を格納
 	void SetSensitivity(const float num) { sensitivity = num; }
 
-	//人数を返す
+	// 感度を返す
 	const float GetSensitivity() const { return sensitivity; }
 
-	//スコアを格納
+	// スコアを格納
 	void SetScore(const int score) { score_ = score; }
 
-	//スコアを返す
+	// スコアを返す
 	const int GetScore() const { return score_; }
 
 private:
@@ -37,7 +40,7 @@ private:
 	// マウス感度
 	float sensitivity;
 
-	//スコア
+	// スコア
 	int score_;
 
 	// デフォルトコンストラクタをprivateにして、

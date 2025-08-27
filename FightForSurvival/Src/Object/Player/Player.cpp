@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Manager/InputManager.h"
+#include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "Player.h"
@@ -21,6 +22,8 @@ void Player::Load(void)
 
 void Player::Init(void)
 {
+	auto& ins = SystemManager::GetInstance();
+
 	// 座標の設定
 	player_.pos_ = player_.prevPos_ = DEFAULT_POS;
 	//MV1SetPosition(player_.modelId_, player_.pos_);
@@ -34,33 +37,41 @@ void Player::Init(void)
 	//MV1SetScale(player_.modelId_, player_.scales_);
 
 	// HPの初期化
-	player_.hp_ = MAX_HP;
+	player_.hp_ = ability_.hpMax_ = DEFAULT_HP;
 
-	player_.moveSpeed_ = SPEED_MOVE;
+	player_.moveSpeed_ = DEFAULT_MOVE_SPEED;
 
-	mouse_ = { 0,0 };
+	ability_.stamina_ = ability_.staminaMax_ = DEFAULT_STAMINA;
+
+	mouse_ = { 0,0 }; 
+	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 
 	yaw_ = pitch_ = 0.0f;
 
 	// 他の場所で設定された感度入れる
-	sensitivity_ = SystemManager::GetInstance().GetSensitivity();
+	sensitivity_ = ins.GetSensitivity();
+
+	staminaCounter_ = 0.0f;
 }
 
 void Player::Update(void)
 {
-
-	// 視点移動
-	ProcessAngle();
 	
 	// 移動
 	ProcessMove();
+
+	// 視点移動
+	ProcessAngle();
 
 }
 
 void Player::Draw(void)
 {
+
 #ifdef _DEBUG
 	DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
+	DrawFormatString(0, 70, 0x7fff00, "HP：%.2d", player_.hp_);
+	DrawFormatString(0, 90, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
 #endif // _DEBUG
 
 }
@@ -69,10 +80,60 @@ void Player::Release(void)
 {
 }
 
+void Player::SetAbility(AblityType type, int i)
+{
+	switch (type)
+	{
+
+	default:
+		break;
+	}
+}
+
+void Player::SetAbility(AblityType type, float i)
+{
+	switch (type)
+	{
+	case Player::AblityType::SPEED_UP:
+
+		player_.moveSpeed_ += i;
+
+		break;
+	case Player::AblityType::HEAL_HP:
+
+		int healHp = static_cast<int>(i);
+
+		player_.hp_ += healHp;
+		if (player_.hp_ > ability_.hpMax_)
+		{
+			player_.hp_ = ability_.hpMax_;
+		}
+
+		break;
+	case Player::AblityType::HP_UP:
+
+		int addHp = static_cast<int>(i);
+
+		player_.hp_ += addHp;
+		ability_.hpMax_ += addHp;
+
+		break;
+	case Player::AblityType::STAMINA_UP:
+
+		ability_.stamina_ += i;
+		ability_.staminaMax_ += i;
+
+		break;
+	default:
+		break;
+	}
+}
+
 void Player::ProcessMove(void)
 {
 
-	InputManager& ins = InputManager::GetInstance();
+	InputManager& inputIns = InputManager::GetInstance();
+	auto& sysIns = SystemManager::GetInstance();
 
 	// 水平方向の forward ベクトル（y成分を0にする）
 	VECTOR moveForward = VGet(
@@ -92,11 +153,48 @@ void Player::ProcessMove(void)
 	moveForward = VNorm(moveForward);
 	moveRight = VNorm(moveRight);
 
+	float moveSpeed_;
+	// ダッシュボタンが押されているかつ、スタミナが0ではなかったら入る
+	if (inputIns.MoveDash() && ability_.stamina_ > 0.0f)
+	{
+		moveSpeed_ = player_.moveSpeed_ + DASH_SPEED;
+
+		// スタミナを減らす
+		ability_.stamina_ -= 0.1f;
+		if (ability_.stamina_ <= 0.0f)
+		{
+			// 0を超えないようにする
+			ability_.stamina_ = 0.0f;
+		}
+
+		staminaCounter_ = 0.0f;
+	}
+	else
+	{
+		moveSpeed_ = player_.moveSpeed_;
+
+		staminaCounter_ += SceneManager::GetInstance().GetDeltaTime();
+
+		// スタミナ回復を行うまでの制限時間を超えたら入る
+		if (staminaCounter_ >= RECOVERY_STAMINA_WAIT_TIME)
+		{
+			// スタミナ回復させる
+			ability_.stamina_ += RECOVERY_STAMINA;
+
+			if (ability_.stamina_ > ability_.staminaMax_)
+			{
+				// 最大スタミナを超えないようにする
+				ability_.stamina_ = ability_.staminaMax_;
+			}
+
+		}
+	}
+
 	// 入力に応じてプレイヤーの位置を更新
-	if (ins.MoveFront()) { player_.pos_ = VAdd(player_.pos_, VScale(moveForward, player_.moveSpeed_)); }
-	if (ins.MoveBack()) { player_.pos_ = VSub(player_.pos_, VScale(moveForward, player_.moveSpeed_)); }
-	if (ins.MoveLeft()) { player_.pos_ = VSub(player_.pos_, VScale(moveRight, player_.moveSpeed_)); }
-	if (ins.MoveRight()) { player_.pos_ = VAdd(player_.pos_, VScale(moveRight, player_.moveSpeed_)); }
+	if (inputIns.MoveFront()) { player_.pos_ = VAdd(player_.pos_, VScale(moveForward, moveSpeed_)); }
+	if (inputIns.MoveBack()) { player_.pos_ = VSub(player_.pos_, VScale(moveForward, moveSpeed_)); }
+	if (inputIns.MoveLeft()) { player_.pos_ = VSub(player_.pos_, VScale(moveRight, moveSpeed_)); }
+	if (inputIns.MoveRight()) { player_.pos_ = VAdd(player_.pos_, VScale(moveRight, moveSpeed_)); }
 
 }
 

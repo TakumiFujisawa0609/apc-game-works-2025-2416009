@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Common/FpsControl.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -29,11 +30,16 @@ void Application::Init(void)
 {
 
 	// アプリケーションの初期設定
-	SetWindowText("BlockAction");
+	SetWindowText("Fight For Survival");
 
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
+
+	ChangeWindowMode(false);
+
+#ifdef _DEBUG
 	ChangeWindowMode(true);
+#endif // _DEBUG
 
 	// DxLibの初期化
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
@@ -54,6 +60,11 @@ void Application::Init(void)
 	// 設定する数値によって、ランダムの出方が変わる
 	SRand(date.Year + date.Mon + date.Day + date.Hour + date.Min + date.Sec);
 
+
+	//FPS初期化
+	fps_ = new FpsControl;
+	fps_->Init();
+
 	// 入力制御初期化
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
@@ -73,10 +84,16 @@ void Application::Run(void)
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 
+		//フレームレート更新
+		if (!fps_->UpdateFrameRate()) continue;
+
 		inputManager.Update();
 		sceneManager.Update();
 
 		sceneManager.Draw();
+
+		fps_->CalcFrameRate();
+		fps_->DrawFrameRate();
 
 		ScreenFlip();
 
@@ -99,9 +116,11 @@ void Application::Destroy(void)
 	// 入力制御解放
 	InputManager::GetInstance().Destroy();
 
+	//フレームレート解放
+	delete fps_;
+
 	// インスタンスのメモリ解放
 	delete instance_;
-
 }
 
 bool Application::IsInitFail(void) const

@@ -34,4 +34,15 @@ struct Unit
 
 	// ダメージを受けたか true = 受けた / false = 受けてない
 	bool isDamaged_;
+
+};
+
+struct Ability
+{
+	// 最大HP
+	int hpMax_;
+
+	// スタミナ
+	float stamina_;
+	float staminaMax_;
 };

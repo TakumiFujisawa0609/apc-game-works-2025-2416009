@@ -4,7 +4,7 @@
 
 class Camera;
 class Grid;
-class ObjectBase;
+class Player;
 
 class GameScene : public SceneBase
 {
@@ -32,7 +32,7 @@ private:
 
 	// オブジェクト
 	// プレイヤー
-	ObjectBase* player_;
+	Player* player_;
 
 
 };

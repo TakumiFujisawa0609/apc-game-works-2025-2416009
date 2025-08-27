@@ -21,7 +21,7 @@ Camera::~Camera(void)
 
 void Camera::Init(void)
 {
-	pos_ = DEFAULT_POS;
+	pos_ = Player::DEFAULT_POS;
 	angles_ = AsoUtility::VECTOR_ZERO;
 }
 

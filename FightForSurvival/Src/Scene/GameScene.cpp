@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "../Object/Grid/Grid.h"
 #include "../Manager/Camera.h"
+#include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "GameScene.h"
 
@@ -31,7 +32,7 @@ void GameScene::Init(void)
 	player_->Init();
 
 	// ƒJƒƒ‰‚Ì¶¬
-	camera_ = new Camera(dynamic_cast<Player*>(player_));
+	camera_ = new Camera(player_);
 	camera_->Init();
 
 }

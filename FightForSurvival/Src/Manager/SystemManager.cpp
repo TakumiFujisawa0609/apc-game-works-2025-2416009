@@ -23,11 +23,12 @@ void SystemManager::Destroy()
 
 void SystemManager::ResetGame()
 {
-	score_ = 0; // 各プレイヤーのスコアを0で初期化
+	score_ = 0; // スコアを0で初期化
 }
 
 SystemManager::SystemManager(void)
 {
-	sensitivity = 0.005f;
+	sensitivity = SENSITIVITY;
 	score_ = 0;
+
 }

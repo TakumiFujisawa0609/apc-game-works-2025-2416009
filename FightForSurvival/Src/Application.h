@@ -1,14 +1,16 @@
 #pragma once
 #include <string>
 
+class FpsControl;
+
 class Application
 {
 
 public:
 
 	// スクリーンサイズ
-	static constexpr int SCREEN_SIZE_X = 1024;
-	static constexpr int SCREEN_SIZE_Y = 640;
+	static constexpr int SCREEN_SIZE_X = 1120;
+	static constexpr int SCREEN_SIZE_Y = 630;
 
 	// データパス関連
 	//-------------------------------------------
@@ -44,6 +46,9 @@ private:
 
 	// 静的インスタンス
 	static Application* instance_;
+
+	// FPSコントロールインスタンス
+	FpsControl* fps_;
 
 	// 初期化失敗
 	bool isInitFail_;

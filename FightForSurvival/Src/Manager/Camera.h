@@ -7,9 +7,6 @@ class Camera
 {
 public:
 
-	// カメラの初期位置
-	static constexpr VECTOR DEFAULT_POS =
-	{ 3.0f, 305.0f, 300.0f };
 	// カメラクリップ：NEAR
 	static constexpr float CAMERA_NEAR = 3.0f;
 	// カメラクリップ：FAR
