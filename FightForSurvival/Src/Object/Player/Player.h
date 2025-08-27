@@ -21,7 +21,7 @@ public:
 	static constexpr int DEFAULT_HP = 10;
 
 	// スタミナ
-	static constexpr float DEFAULT_STAMINA = 30.0f;
+	static constexpr float DEFAULT_STAMINA = 20.0f;
 
 	// スタミナ回復量
 	static constexpr float RECOVERY_STAMINA = 0.1f;
@@ -29,7 +29,7 @@ public:
 	// スタミナ回復を行うまでの時間
 	static constexpr float RECOVERY_STAMINA_WAIT_TIME = 1.0f;
 
-	enum class AblityType
+	enum class ABILITY_TYPE
 	{
 		SPEED_UP,
 		HEAL_HP,
@@ -49,7 +49,7 @@ public:
 	// 初期化処理
 	void Init(void);
 
-	// 更新ステップ
+	// 更新
 	void Update(void);
 
 	// 描画処理
@@ -62,7 +62,7 @@ public:
 	const float GetYaw() const { return yaw_; }
 	const float GetPitch() const { return pitch_; }
 
-	void SetAbility(AblityType type, float i);
+	void SetAbility(ABILITY_TYPE type, float i);
 
 private:
 

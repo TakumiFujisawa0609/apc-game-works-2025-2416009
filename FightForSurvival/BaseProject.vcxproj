@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\PlayerWeapon.cpp" />
     <ClCompile Include="Src\Common\FpsControl.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Manager\SystemManager.cpp" />
@@ -38,6 +39,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\PlayerWeapon.h" />
     <ClInclude Include="Src\Base.h" />
     <ClInclude Include="Src\Common\FpsControl.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />

@@ -80,18 +80,21 @@ void Player::Release(void)
 {
 }
 
-void Player::SetAbility(AblityType type, float i)
+void Player::SetAbility(ABILITY_TYPE type, float i)
 {
+	int healHp, addHp;
+	healHp = addHp = 0;
+
 	switch (type)
 	{
-	case Player::AblityType::SPEED_UP:
+	case Player::ABILITY_TYPE::SPEED_UP:
 
 		player_.moveSpeed_ += i;
 
 		break;
-	case Player::AblityType::HEAL_HP:
+	case Player::ABILITY_TYPE::HEAL_HP:
 
-		int healHp = static_cast<int>(i);
+		healHp = static_cast<int>(i);
 
 		player_.hp_ += healHp;
 		if (player_.hp_ > ability_.hpMax_)
@@ -100,15 +103,15 @@ void Player::SetAbility(AblityType type, float i)
 		}
 
 		break;
-	case Player::AblityType::HP_UP:
+	case Player::ABILITY_TYPE::HP_UP:
 
-		int addHp = static_cast<int>(i);
+		addHp = static_cast<int>(i);
 
 		player_.hp_ += addHp;
 		ability_.hpMax_ += addHp;
 
 		break;
-	case Player::AblityType::STAMINA_UP:
+	case Player::ABILITY_TYPE::STAMINA_UP:
 
 		ability_.stamina_ += i;
 		ability_.staminaMax_ += i;
