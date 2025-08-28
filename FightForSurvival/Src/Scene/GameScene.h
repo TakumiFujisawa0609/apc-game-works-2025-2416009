@@ -23,6 +23,8 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+	Camera* GetCameraPoint(void) { return camera_; }
+
 private:
 	// ƒJƒƒ‰
 	Camera* camera_;

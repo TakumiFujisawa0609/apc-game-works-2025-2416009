@@ -19,7 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Object\Player\PlayerWeapon.cpp" />
+    <ClCompile Include="Src\Object\Player\Gun\Bullet\BulletBase.cpp" />
+    <ClCompile Include="Src\Object\Player\Gun\Handgun.cpp" />
+    <ClCompile Include="Src\Object\Player\Gun\GunBase.cpp" />
     <ClCompile Include="Src\Common\FpsControl.cpp" />
     <ClCompile Include="Src\Object\Player\Player.cpp" />
     <ClCompile Include="Src\Manager\SystemManager.cpp" />
@@ -39,7 +41,9 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Object\Player\PlayerWeapon.h" />
+    <ClInclude Include="Src\Object\Player\Gun\Bullet\BulletBase.h" />
+    <ClInclude Include="Src\Object\Player\Gun\Handgun.h" />
+    <ClInclude Include="Src\Object\Player\Gun\GunBase.h" />
     <ClInclude Include="Src\Base.h" />
     <ClInclude Include="Src\Common\FpsControl.h" />
     <ClInclude Include="Src\Object\Player\Player.h" />

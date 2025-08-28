@@ -96,7 +96,13 @@
     <ClCompile Include="Src\Common\FpsControl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\PlayerWeapon.cpp">
+    <ClCompile Include="Src\Object\Player\Gun\GunBase.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Player\Gun\Handgun.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Object\Player\Gun\Bullet\BulletBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,7 +161,13 @@
     <ClInclude Include="Src\Common\FpsControl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\PlayerWeapon.h">
+    <ClInclude Include="Src\Object\Player\Gun\GunBase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Player\Gun\Handgun.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Object\Player\Gun\Bullet\BulletBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
