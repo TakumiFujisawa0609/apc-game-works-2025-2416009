@@ -4,10 +4,13 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Utility/AsoUtility.h"
+#include "Gun/Handgun.h"
 #include "Player.h"
 
 Player::Player(void)
 {
+	player_.modelId_ = -1;
+	gun_ = nullptr;
 }
 
 Player::~Player(void)
@@ -18,10 +21,12 @@ void Player::Load(void)
 {
 	//// モデルのロード
 	//player_.modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
+	gun_->Load();
 }
 
 void Player::Init(void)
 {
+
 	auto& ins = SystemManager::GetInstance();
 
 	// 座標の設定
@@ -52,6 +57,10 @@ void Player::Init(void)
 	sensitivity_ = ins.GetSensitivity();
 
 	staminaCounter_ = 0.0f;
+
+	// 銃を生成
+	gun_ = new Handgun(this);
+	gun_->Init();
 }
 
 void Player::Update(void)
@@ -63,10 +72,15 @@ void Player::Update(void)
 	// 視点移動
 	ProcessAngle();
 
+	// 銃の更新
+	gun_->Update();
+
 }
 
 void Player::Draw(void)
 {
+	// 銃の描画
+	gun_->Draw();
 
 #ifdef _DEBUG
 	DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
@@ -78,6 +92,17 @@ void Player::Draw(void)
 
 void Player::Release(void)
 {
+	if (player_.modelId_ != -1)
+	{
+		MV1DeleteModel(player_.modelId_);
+	}
+
+	if (gun_ != nullptr)
+	{
+		gun_->Release();
+		delete gun_;
+		gun_ = nullptr;
+	}
 }
 
 void Player::SetAbility(ABILITY_TYPE type, float i)

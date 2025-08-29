@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Player\Gun\Bullet\HundgunBullet.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Bullet\BulletBase.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Handgun.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\GunBase.cpp" />
@@ -41,6 +42,7 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Player\Gun\Bullet\HundgunBullet.h" />
     <ClInclude Include="Src\Object\Player\Gun\Bullet\BulletBase.h" />
     <ClInclude Include="Src\Object\Player\Gun\Handgun.h" />
     <ClInclude Include="Src\Object\Player\Gun\GunBase.h" />

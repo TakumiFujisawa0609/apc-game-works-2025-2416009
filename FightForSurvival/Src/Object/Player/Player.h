@@ -2,6 +2,8 @@
 
 #include "../../Base.h"
 
+class GunBase;
+
 class Player
 {
 public:
@@ -65,6 +67,9 @@ public:
 	void SetAbility(ABILITY_TYPE type, float i);
 
 private:
+
+	// 銃クラスのインスタンス
+	GunBase* gun_;
 
 	// プレイヤーの情報
 	Unit player_;

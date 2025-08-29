@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "../Base.h"
 
 class SystemManager
 {
@@ -32,6 +33,12 @@ public:
 	// スコアを返す
 	const int GetScore() const { return score_; }
 
+	// 銃の種類を格納
+	void SetGunType(const GUN_TYPE gunType) { gunType_ = gunType; }
+
+	// 銃の種類を返す
+	const GUN_TYPE GetGunType() const { return gunType_; }
+
 private:
 
 	// 静的インスタンス
@@ -42,6 +49,9 @@ private:
 
 	// スコア
 	int score_;
+
+	// 銃の種類
+	GUN_TYPE gunType_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

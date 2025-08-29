@@ -30,5 +30,5 @@ SystemManager::SystemManager(void)
 {
 	sensitivity = SENSITIVITY;
 	score_ = 0;
-
+	gunType_ = GUN_TYPE::HANDGUN;
 }

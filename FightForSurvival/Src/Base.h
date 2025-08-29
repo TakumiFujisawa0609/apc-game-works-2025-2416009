@@ -46,3 +46,10 @@ struct Ability
 	float stamina_;
 	float staminaMax_;
 };
+
+enum class GUN_TYPE
+{
+	HANDGUN,
+	ASSAULT_RIFLE,
+	SHOTGUN,
+};

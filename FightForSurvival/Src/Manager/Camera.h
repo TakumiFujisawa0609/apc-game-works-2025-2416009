@@ -8,9 +8,9 @@ class Camera
 public:
 
 	// カメラクリップ：NEAR
-	static constexpr float CAMERA_NEAR = 3.0f;
+	static constexpr float CAMERA_NEAR = 1.0f;
 	// カメラクリップ：FAR
-	static constexpr float CAMERA_FAR = 15000.0f;
+	static constexpr float CAMERA_FAR = 30000.0f;
 
 	// ヒットストップで止める時間
 	static constexpr int HIT_STOP_TIME = 20;

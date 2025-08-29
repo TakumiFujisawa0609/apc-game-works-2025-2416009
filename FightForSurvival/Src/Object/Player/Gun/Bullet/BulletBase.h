@@ -5,40 +5,7 @@ class GunBase;
 
 class BulletBase
 {
-public:
-
-	// 弾の状態
-	enum class STATE
-	{
-		NONE,
-		SHOT,
-		BLAST,
-		END
-	};
-
-	// コンストラクタ(銃種別、元となるモデルのハンドルID)
-	BulletBase(GunBase::GUN_TYPE type, int baseModelId);
-	// デストラクタ
-	virtual ~BulletBase(void);
-
-	// 弾の生成(表示開始座標、弾の進行方向)
-	virtual void CreateShot(VECTOR pos, VECTOR dir);
-	// 更新ステップ
-	virtual void Update(void);
-	// 描画
-	void Draw(void);
-	// 解放処理
-	void Release(void);
-
-	// SHOT中のみtrueを返す
-	bool IsCollisionState(void);
-
-	void ChangeState(STATE state);
-
-	// 爆発させる
-	//void Blast(EFFECT_TYPE type);
 protected:
-	Player* player_;
 
 	struct Bullet
 	{
@@ -57,14 +24,53 @@ protected:
 		// 弾の生存判定
 		bool isAlive_;
 		// 弾の生存期間
-		int cntAlive_;
+		float cntAlive_;
 		// 弾の衝突判定用半径
 		float collisionRadius_;
-		// 弾の状態
-		STATE state_;
 		// ダメージ数
 		int damage_;
 	};
+
+public:
+
+	// 弾の状態
+	enum class STATE
+	{
+		NONE,
+		SHOT,
+		BLAST,
+		END
+	};
+
+	// コンストラクタ(銃種別、元となるモデルのハンドルID)
+	BulletBase(int baseModelId);
+	// デストラクタ
+	virtual ~BulletBase(void);
+
+	// 弾の生成(表示開始座標、弾の進行方向)
+	virtual void CreateShot(VECTOR pos, VECTOR dir);
+	// 更新ステップ
+	virtual void Update(void);
+	// 描画
+	void Draw(void);
+	// 解放処理
+	void Release(void);
+
+	// SHOT中のみtrueを返す
+	bool IsCollisionState(void);
+
+	void ChangeState(STATE state);
+
+	Bullet GetBullet(void)const { return bullet_; }
+
+	// 爆発させる
+	//void Blast(EFFECT_TYPE type);
+
+protected:
+	Player* player_;
+
+	// 弾の状態
+	STATE state_;
 
 	Bullet bullet_;
 
@@ -72,7 +78,6 @@ protected:
 	//int effectBlastPlayId_;
 	// エフェクトの種類
 	//EFFECT_TYPE effectType_;
-
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
@@ -87,8 +92,6 @@ protected:
 	void ChangeShot(void);
 	void ChangeBlast(void);
 	void ChangeEnd(void);
-public:
 
-	Bullet GetBullet(void)const { return bullet_; }
 };
 
