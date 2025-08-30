@@ -60,7 +60,7 @@ void BulletBase::Update(void)
 void BulletBase::Draw(void)
 {
 
-	if (state_ != STATE::SHOT)
+	if (!bullet_.isAlive_)
 	{
 		// 生存していなければ処理中断
 		return;
@@ -70,7 +70,7 @@ void BulletBase::Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	DrawSphere3D(bullet_.pos_, bullet_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(bullet_.pos_, bullet_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
 #endif // _DEBUG
 }
 

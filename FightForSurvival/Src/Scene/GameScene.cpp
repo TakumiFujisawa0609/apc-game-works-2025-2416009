@@ -3,6 +3,7 @@
 #include "../Manager/Camera.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
+#include "../Object/Common/Cursor.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -10,6 +11,10 @@ GameScene::GameScene(void)
 	grid_ = nullptr;
 	player_ = nullptr;
 	camera_ = nullptr;
+	cursor_ = nullptr;
+
+	// マウスカーソルを表示しない
+	SetMouseDispFlag(false);
 }
 
 GameScene::~GameScene(void)
@@ -18,6 +23,8 @@ GameScene::~GameScene(void)
 
 void GameScene::Load(void)
 {
+	player_->Load();
+	cursor_->Load();
 }
 
 void GameScene::Init(void)
@@ -35,6 +42,9 @@ void GameScene::Init(void)
 	camera_ = new Camera(player_);
 	camera_->Init();
 
+	// カーソルの生成
+	cursor_ = new Cursor();
+	cursor_->Init();
 }
 
 void GameScene::Update(void)
@@ -47,6 +57,7 @@ void GameScene::Update(void)
 
 	// カメラの更新
 	camera_->Update();
+
 }
 
 void GameScene::Draw(void)
@@ -67,10 +78,20 @@ void GameScene::Draw(void)
 	camera_->DrawDebug();
 #endif // _DEBUG
 
+	// カーソルの表示
+	cursor_->Draw();
+
 }
 
 void GameScene::Release(void)
 {
+
+	// カーソルの解放
+	if (cursor_ != nullptr)
+	{
+		cursor_->Release();
+		delete cursor_;
+	}
 
 	// カメラの解放
 	if (camera_ != nullptr)
@@ -95,4 +116,6 @@ void GameScene::Release(void)
 		grid_ = nullptr;
 	}
 
+	// マウスカーソルを表示させる
+	SetMouseDispFlag(true);
 }

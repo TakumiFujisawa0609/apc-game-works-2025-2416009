@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\Vector2.cpp" />
+    <ClCompile Include="Src\Object\Common\Cursor.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Bullet\HundgunBullet.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Bullet\BulletBase.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Handgun.cpp" />
@@ -30,7 +32,6 @@
     <ClCompile Include="Src\Application.cpp" />
     <ClCompile Include="Src\Common\Fader.cpp" />
     <ClCompile Include="Src\Common\Quaternion.cpp" />
-    <ClCompile Include="Src\Common\Vector2.cpp" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\Manager\Camera.cpp" />
     <ClCompile Include="Src\Manager\InputManager.cpp" />
@@ -42,6 +43,8 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\Vector2.h" />
+    <ClInclude Include="Src\Object\Common\Cursor.h" />
     <ClInclude Include="Src\Object\Player\Gun\Bullet\HundgunBullet.h" />
     <ClInclude Include="Src\Object\Player\Gun\Bullet\BulletBase.h" />
     <ClInclude Include="Src\Object\Player\Gun\Handgun.h" />
@@ -54,7 +57,6 @@
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader.h" />
     <ClInclude Include="Src\Common\Quaternion.h" />
-    <ClInclude Include="Src\Common\Vector2.h" />
     <ClInclude Include="Src\main.h" />
     <ClInclude Include="Src\Manager\Camera.h" />
     <ClInclude Include="Src\Manager\InputManager.h" />

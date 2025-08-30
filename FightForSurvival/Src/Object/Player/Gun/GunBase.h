@@ -10,11 +10,15 @@ class GunBase
 {
 public:
 
-	// 弾発射後の硬直時間
-	static constexpr VECTOR RELATIVE_POS = { 1.0f,-1.0f,1.8f };
+	// プレイヤーとの銃の相対座標
+	static constexpr VECTOR RELATIVE_POS_GUN = { 22.0f,-28.0f,65.0f };
 
-	// 弾発射後の硬直時間
-	static constexpr float STOP_DELAY = 1.0f;
+	// 銃との弾の発射位置の相対座標
+	static constexpr VECTOR RELATIVE_POS_BULLET = { 0.0f,0.0f,15.0f };
+
+	// プレイヤーとの狙う場所の相対座標
+	static constexpr VECTOR RELATIVE_POS_TARGET = { 0.0f,0.0f,2000.0f };
+
 
 	enum class STATE
 	{
@@ -43,6 +47,8 @@ public:
 	// 弾の取得
 	std::vector<BulletBase*> GetBullets(void)const { return bullets_; }
 
+	bool GetCanShot(void)const { return state_ == STATE::IDLE; }
+
 	void ChangeState(STATE state);
 
 protected:
@@ -63,9 +69,14 @@ protected:
 	// 弾のモデルID
 	int bulletModelId_;
 
+	// 弾が出る場所
 	VECTOR bulletPos_;
 
+	// 銃を撃つときの狙う場所（銃によって狙う場所の位置が変化する）
+	VECTOR targetPos_;
+
 	// 弾発射後の硬直時間計算用
+	float stopDelayCnt_;
 	float stopDelay_;
 
 	// パラメーター設定

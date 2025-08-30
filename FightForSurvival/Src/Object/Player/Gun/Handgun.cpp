@@ -28,5 +28,6 @@ void Handgun::SetParam(void)
 {
 	gunScales_ = SCALE;
 	gunRotate_ = ROTATE;
+	stopDelay_ = STOP_DELAY;
 }
 

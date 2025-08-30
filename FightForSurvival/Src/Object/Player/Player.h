@@ -12,8 +12,7 @@ public:
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
 	// ‰ŠúˆÊ’u
-	static constexpr VECTOR DEFAULT_POS = { 0.0f, 305.0f, 0.0f };
-
+	static constexpr VECTOR DEFAULT_POS = { 0.0f, 300.0f, 0.0f };
 
 	// ˆÚ“®‘¬“x
 	static constexpr float DEFAULT_MOVE_SPEED = 7.0f;
@@ -92,4 +91,6 @@ private:
 	void ProcessMove(void);
 	// ‹“_ˆ—
 	void ProcessAngle(void);
+	// UŒ‚ˆ—
+	void ProcessAttack(void);
 };

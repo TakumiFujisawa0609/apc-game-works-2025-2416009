@@ -23,18 +23,25 @@ InputManager& InputManager::GetInstance(void)
 
 void InputManager::Init(void)
 {
+	auto& ins = InputManager::GetInstance();
 
 	// ゲームで使用したいキーを、
 	// 事前にここで登録しておいてください
-	InputManager::GetInstance().Add(KEY_INPUT_SPACE);
-	InputManager::GetInstance().Add(KEY_INPUT_N);
-	InputManager::GetInstance().Add(KEY_INPUT_Z);
+	ins.Add(KEY_INPUT_SPACE);
+	ins.Add(KEY_INPUT_N);
+	ins.Add(KEY_INPUT_Z);
 
 	// 移動キー
-	InputManager::GetInstance().Add(KEY_INPUT_W);
-	InputManager::GetInstance().Add(KEY_INPUT_A);
-	InputManager::GetInstance().Add(KEY_INPUT_S);
-	InputManager::GetInstance().Add(KEY_INPUT_D);
+	ins.Add(KEY_INPUT_W);
+	ins.Add(KEY_INPUT_A);
+	ins.Add(KEY_INPUT_S);
+	ins.Add(KEY_INPUT_D);
+	ins.Add(KEY_INPUT_Q);
+	ins.Add(KEY_INPUT_E);
+	ins.Add(KEY_INPUT_DOWN);
+	ins.Add(KEY_INPUT_UP);
+	ins.Add(KEY_INPUT_RIGHT);
+	ins.Add(KEY_INPUT_LEFT);
 
 	// ダッシュキー
 	InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);

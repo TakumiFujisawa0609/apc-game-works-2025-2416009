@@ -21,7 +21,10 @@ void Player::Load(void)
 {
 	//// モデルのロード
 	//player_.modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
-	gun_->Load();
+	if (gun_ != nullptr)
+	{
+		gun_->Load();
+	}
 }
 
 void Player::Init(void)
@@ -59,8 +62,20 @@ void Player::Init(void)
 	staminaCounter_ = 0.0f;
 
 	// 銃を生成
-	gun_ = new Handgun(this);
-	gun_->Init();
+	switch (ins.GetGunType())
+	{
+	case::GUN_TYPE::HANDGUN:
+		gun_ = new Handgun(this);
+		gun_->Init();
+		break;
+	case::GUN_TYPE::ASSAULT_RIFLE:
+		break;
+	case::GUN_TYPE::SHOTGUN:
+		break;
+	default:
+		break;
+	}
+
 }
 
 void Player::Update(void)
@@ -72,20 +87,32 @@ void Player::Update(void)
 	// 視点移動
 	ProcessAngle();
 
+	// 攻撃
+	ProcessAttack();
+
 	// 銃の更新
-	gun_->Update();
+	if (gun_ != nullptr)
+	{
+		gun_->Update();
+	}
 
 }
 
 void Player::Draw(void)
 {
 	// 銃の描画
-	gun_->Draw();
+	if (gun_ != nullptr)
+	{
+		gun_->Draw();
+	}
 
 #ifdef _DEBUG
 	DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	DrawFormatString(0, 70, 0x7fff00, "HP：%.2d", player_.hp_);
 	DrawFormatString(0, 90, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+
+	// プレイヤー頭の位置目安
+	//DrawSphere3D(player_.pos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
 #endif // _DEBUG
 
 }
@@ -241,4 +268,21 @@ void Player::ProcessAngle(void)
 
 	//// マウスカーソルを画面中央に戻す
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+}
+
+void Player::ProcessAttack(void)
+{
+	if (gun_ == nullptr)
+	{
+		// 銃インスタンスの中身がなかったら処理を行わない
+		return;
+	}
+
+	auto& ins = InputManager::GetInstance();
+
+	// 左クリックされたかつ、銃が撃てる状態なら入る
+	if (ins.IsTrgMouseLeft() && gun_->GetCanShot())
+	{
+		gun_->ChangeState(GunBase::STATE::ATTACK);
+	}
 }

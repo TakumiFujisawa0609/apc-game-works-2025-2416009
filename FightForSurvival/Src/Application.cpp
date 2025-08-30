@@ -35,6 +35,7 @@ void Application::Init(void)
 	// ウィンドウサイズ
 	SetGraphMode(SCREEN_SIZE_X, SCREEN_SIZE_Y, 32);
 
+	// フルスクリーンにする
 	ChangeWindowMode(false);
 
 #ifdef _DEBUG

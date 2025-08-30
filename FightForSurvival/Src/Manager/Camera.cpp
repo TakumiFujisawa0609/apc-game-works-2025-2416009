@@ -23,6 +23,7 @@ void Camera::Init(void)
 {
 	pos_ = Player::DEFAULT_POS;
 	angles_ = AsoUtility::VECTOR_ZERO;
+	//mode_ = MODE::FREE;
 }
 
 void Camera::Update(void)

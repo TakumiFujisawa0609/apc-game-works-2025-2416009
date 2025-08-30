@@ -12,8 +12,8 @@ public:
 	// モデルの向き
 	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
-	// 使用時のプレイヤーとの相対座標
-	static constexpr VECTOR RELATIVE_POS = { 0.0f,90.0f,0.0f };
+	// 弾発射後の硬直時間
+	static constexpr float STOP_DELAY = 0.4f;
 
 	// コンストラクタ
 	Handgun(Player* player);

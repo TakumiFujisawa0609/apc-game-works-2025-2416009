@@ -5,6 +5,7 @@
 class Camera;
 class Grid;
 class Player;
+class Cursor;
 
 class GameScene : public SceneBase
 {
@@ -35,7 +36,9 @@ private:
 	// オブジェクト
 	// プレイヤー
 	Player* player_;
-
+	
+	// カーソル
+	Cursor* cursor_;
 
 };
 

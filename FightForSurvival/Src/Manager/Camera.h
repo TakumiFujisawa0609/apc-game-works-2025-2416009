@@ -8,7 +8,7 @@ class Camera
 public:
 
 	// カメラクリップ：NEAR
-	static constexpr float CAMERA_NEAR = 1.0f;
+	static constexpr float CAMERA_NEAR = 3.0f;
 	// カメラクリップ：FAR
 	static constexpr float CAMERA_FAR = 30000.0f;
 
