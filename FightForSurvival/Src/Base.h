@@ -14,9 +14,6 @@ struct Unit
 	// 移動前座標
 	VECTOR prevPos_;
 
-	// 加速度、重力
-	float moveSpeed_;
-
 	// モデルの向き
 	VECTOR angles_;
 
@@ -24,16 +21,25 @@ struct Unit
 	VECTOR scales_;
 
 	// 向き
-	VECTOR moveDir_;
+	VECTOR dir_;
 
-	// 生存判定
-	bool isAlive_;
+	// 重力
+	VECTOR velocity_;
 
 	// 体力
 	int hp_;
 
+	// 加速度、重力
+	float moveSpeed_;
+
+	// 生存判定
+	bool isAlive_;
+
 	// ダメージを受けたか true = 受けた / false = 受けてない
 	bool isDamaged_;
+
+	// 衝突判定用半径
+	float collisionRadius_;
 
 };
 

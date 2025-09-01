@@ -40,7 +40,7 @@ void GunBase::Init(void)
 	MV1SetRotationXYZ(modelId_, gunRotate_);
 
 	// 銃の座標設定
-	gunPos_ = player_->GetPlayer().pos_;
+	gunPos_ = player_->GetCameraPos();
 	gunPos_ = VAdd(gunPos_, RELATIVE_POS_GUN);
 
 	MV1SetPosition(modelId_, gunPos_);
@@ -254,7 +254,7 @@ void GunBase::UpdatePos(void)
 
 #pragma region 銃
 
-	gunPos_ = player_->GetPlayer().pos_;
+	gunPos_ = player_->GetCameraPos();
 
 	// 方向と同じ要領で、相対座標を回転
 	VECTOR localPosRot = VTransform(RELATIVE_POS_GUN, matRot);
@@ -279,7 +279,7 @@ void GunBase::UpdatePos(void)
 #pragma region 狙う場所
 
 	// 狙う場所の位置
-	targetPos_ = player_->GetPlayer().pos_;
+	targetPos_ = player_->GetCameraPos();
 
 	// 方向と同じ要領で、相対座標を回転
 	localPosRot = VTransform(RELATIVE_POS_TARGET, matRot);

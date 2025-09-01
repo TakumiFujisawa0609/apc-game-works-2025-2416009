@@ -22,6 +22,7 @@ Camera::~Camera(void)
 void Camera::Init(void)
 {
 	pos_ = Player::DEFAULT_POS;
+	pos_.y += Player::RELATIVE_POS_CAMERA;
 	angles_ = AsoUtility::VECTOR_ZERO;
 	//mode_ = MODE::FREE;
 }
@@ -135,7 +136,7 @@ void Camera::MoveCamera(void)
 		return;
 	}
 
-	pos_ = player_->GetPlayer().pos_;
+	pos_ = player_->GetCameraPos();
 
 	// プレイヤーの角度をカメラの角度として設定
 	angles_.y = player_->GetYaw();

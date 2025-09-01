@@ -12,7 +12,10 @@ public:
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
 	// 初期位置
-	static constexpr VECTOR DEFAULT_POS = { 0.0f, 300.0f, 0.0f };
+	static constexpr VECTOR DEFAULT_POS = { 0.0f, 150.0f, 0.0f };
+
+	// プレイヤーとの銃の相対座標
+	static constexpr float RELATIVE_POS_CAMERA = 150.0f;
 
 	// 移動速度
 	static constexpr float DEFAULT_MOVE_SPEED = 7.0f;
@@ -29,6 +32,9 @@ public:
 
 	// スタミナ回復を行うまでの時間
 	static constexpr float RECOVERY_STAMINA_WAIT_TIME = 1.0f;
+
+	// 衝突判定用半径
+	static constexpr float COLLISION_RADIUS = 50.0f;
 
 	enum class ABILITY_TYPE
 	{
@@ -60,6 +66,7 @@ public:
 	void Release(void);
 
 	const Unit GetPlayer(void)const { return player_; }
+	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const float GetYaw() const { return yaw_; }
 	const float GetPitch() const { return pitch_; }
 
@@ -72,6 +79,9 @@ private:
 
 	// プレイヤーの情報
 	Unit player_;
+
+	// カメラの位置
+	VECTOR cameraPos_;
 
 	Ability ability_;
 

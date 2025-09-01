@@ -33,7 +33,8 @@ void Player::Init(void)
 	auto& ins = SystemManager::GetInstance();
 
 	// 座標の設定
-	player_.pos_ = player_.prevPos_ = DEFAULT_POS;
+	player_.pos_ = player_.prevPos_ = cameraPos_ = DEFAULT_POS;
+	cameraPos_.y += RELATIVE_POS_CAMERA;
 	//MV1SetPosition(player_.modelId_, player_.pos_);
 
 	// 向きの設定
@@ -47,7 +48,16 @@ void Player::Init(void)
 	// HPの初期化
 	player_.hp_ = ability_.hpMax_ = DEFAULT_HP;
 
+	//  速度の初期化
 	player_.moveSpeed_ = DEFAULT_MOVE_SPEED;
+
+	// 生存フラグ初期化
+	player_.isAlive_ = true;
+
+	player_.isDamaged_ = false;
+
+	// 衝突判定用半径
+	player_.collisionRadius_ = COLLISION_RADIUS;
 
 	ability_.stamina_ = ability_.staminaMax_ = DEFAULT_STAMINA;
 
@@ -112,7 +122,8 @@ void Player::Draw(void)
 	DrawFormatString(0, 90, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
 
 	// プレイヤー頭の位置目安
-	//DrawSphere3D(player_.pos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
+	//DrawSphere3D(cameraPos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
+	//DrawSphere3D(player_.pos_, player_.collisionRadius_, 10, 0x00ff00, 0x0000ff, false);
 #endif // _DEBUG
 
 }
@@ -200,7 +211,7 @@ void Player::ProcessMove(void)
 
 	float moveSpeed_;
 	// ダッシュボタンが押されているかつ、スタミナが0ではなかったら入る
-	if (inputIns.MoveDash() && ability_.stamina_ > 0.0f)
+	if (inputIns.MoveDash() && ability_.stamina_ >= 0.1f)
 	{
 		moveSpeed_ = player_.moveSpeed_ + DASH_SPEED;
 
@@ -241,10 +252,21 @@ void Player::ProcessMove(void)
 	if (inputIns.MoveLeft()) { player_.pos_ = VSub(player_.pos_, VScale(moveRight, moveSpeed_)); }
 	if (inputIns.MoveRight()) { player_.pos_ = VAdd(player_.pos_, VScale(moveRight, moveSpeed_)); }
 
+	// カメラ位置の更新
+	cameraPos_ = player_.pos_;
+	cameraPos_.y += RELATIVE_POS_CAMERA;
+
 }
 
 void Player::ProcessAngle(void)
 {
+	float nowsensitivity = SystemManager::GetInstance().GetSensitivity();
+	if (nowsensitivity != sensitivity_)
+	{
+		// 感度に変更が加えてあったら適用する
+		sensitivity_ = nowsensitivity;
+	}
+
 	// 現在のマウス座標を取得
 	GetMousePoint(&mouse_.x, &mouse_.y);
 

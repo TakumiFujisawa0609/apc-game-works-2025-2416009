@@ -13,7 +13,7 @@ public:
 	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
 	// 弾発射後の硬直時間
-	static constexpr float STOP_DELAY = 0.4f;
+	static constexpr float STOP_DELAY = 0.2f;
 
 	// コンストラクタ
 	Handgun(Player* player);

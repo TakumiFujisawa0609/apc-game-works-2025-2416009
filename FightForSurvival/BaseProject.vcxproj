@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
+    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
     <ClCompile Include="Src\Common\Vector2.cpp" />
     <ClCompile Include="Src\Object\Common\Cursor.cpp" />
     <ClCompile Include="Src\Object\Player\Gun\Bullet\HundgunBullet.cpp" />
@@ -43,6 +45,8 @@
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
+    <ClInclude Include="Src\Object\Enemy\EnemyBase.h" />
     <ClInclude Include="Src\Common\Vector2.h" />
     <ClInclude Include="Src\Object\Common\Cursor.h" />
     <ClInclude Include="Src\Object\Player\Gun\Bullet\HundgunBullet.h" />
