@@ -1,86 +1,51 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 #include "EnemyBase.h"
-class EnemyBase;
-class Player;
 
 class EnemyManager
 {
 public:
+    // シングルトン（生成・取得・削除）
+    static void CreateInstance(void) { if (instance_ == nullptr) { instance_ = new EnemyManager(); } };
+    static EnemyManager* GetInstance(void) { return instance_; };
+    static void DeleteInstance(void) { if (instance_ != nullptr) { delete instance_; instance_ = nullptr; } }
 
-	// ウェーブが進む条件フレーム数
-	static constexpr float NEXT_WAVE_FRAME = 60.0f;
+    // 敵の追加
+    void AddEnemy(std::unique_ptr<EnemyBase> enemy);
 
-	// スポーン間隔
-	static constexpr float ZOMBIE_SPAWN_INTERVAL = 1.5f;
-
-	// スポーンさせる数
-	static constexpr int WAVE01_ZOMBIE_SPAWN_NUM = 5;
-
-	static constexpr int WAVE02_ZOMBIE_SPAWN_NUM = 10;
-
-	// 敵の生成ウェーブ
-	enum class WAVE
-	{
-		WAVE01,
-		WAVE02,
-		WAVE03,
-		WAIT,
-		END
-	};
-
-	// コンストラクタ
-	EnemyManager(Player* player);
-	// デストラクタ
-	~EnemyManager(void);
-
-	void Init(void);
-	void Load(void);
-	void Update(void);
-	void Draw(void);
-	void Release(void);
-
-	std::vector<EnemyBase*> GetEnemys(void)const { return enemys_; }
-
-	// 今現在のウェーブを確認する
-	WAVE GetNowWave(void)const { return wave_; }
-	WAVE GetNextWave(void)const { return nextWave_; }
+    void Update();  // 更新
+    void Draw();    // 描画
+    void Delete();  // 削除
 
 private:
+    // 静的インスタンス
+    static EnemyManager* instance_;
 
-	// エネミー用のモデルハンドルID
-	std::vector<int> enemyModelIds_;
+    // デフォルトコンストラクタをprivateにして、外部から生成できない様にする
+    EnemyManager(void);
+    // デストラクタも同様
+    ~EnemyManager(void);
 
-	// 攻撃エフェクト用のモデルハンドルID
-	//std::vector<int> attackEffectModelIds_;
+    // コピー・ムーブ操作を禁止
+    EnemyManager(const EnemyManager&) = delete;
+    EnemyManager& operator=(const EnemyManager&) = delete;
+    EnemyManager(EnemyManager&&) = delete;
+    EnemyManager& operator=(EnemyManager&&) = delete;
 
-	// エネミー
-	std::vector<EnemyBase*> enemys_;
+    // 下記をコンパイルエラーさせるため 上記を追加
+    // EnemyManager copy = *EnemyManager::GetInstance();
+    // EnemyManager copied(*EznemyManager::GetInstance());
+    // EnemyManager moved = std::move(*EnemyManager::GetInstance());
+    
+    // 全てのエネミーを管理する
+    std::vector<std::unique_ptr<EnemyBase>> enemys_;
 
-	EnemyBase::ENEMY_TYPE enemyType_;
-
-	// プレイヤーのポインタ
-	Player* player_;
-
-	WAVE wave_;
-	WAVE nextWave_;
-
-	float zombieTime_;
-
-	int zombieNum_;
-
-	float frameNum_;
-
-	// 待ちタイムか
-	bool isWait_;
-
-	void Collision(void);
-
-	void ChangeWave(WAVE wave);
-	void UpdateWave01(void);
-	void UpdateWave02(void);
-	//void UpdateWave03(void);
-	void UpdateEnd(void);
+	//void ChangeWave(WAVE wave);
+	//void UpdateWave01(void);
+	//void UpdateWave02(void);
+	////void UpdateWave03(void);
+	//void UpdateEnd(void);
 };
 

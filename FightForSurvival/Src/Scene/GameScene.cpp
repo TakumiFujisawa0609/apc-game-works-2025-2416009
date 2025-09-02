@@ -1,9 +1,11 @@
 #include <DxLib.h>
 #include "../Object/Grid/Grid.h"
+#include "../Application.h"
 #include "../Manager/Camera.h"
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Common/Cursor.h"
+#include "../Object/Enemy/Zombie.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -12,6 +14,9 @@ GameScene::GameScene(void)
 	player_ = nullptr;
 	camera_ = nullptr;
 	cursor_ = nullptr;
+	enemy_ = nullptr;
+
+	enemyId_ = -1;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -45,6 +50,11 @@ void GameScene::Init(void)
 	// カーソルの生成
 	cursor_ = new Cursor();
 	cursor_->Init();
+
+	// 敵の生成
+	enemyId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str());
+	enemy_ = new Zombie();
+	enemy_->Init(EnemyBase::ENEMY_TYPE::ZOMBIE, enemyId_, -1, VGet(0.0f, 0.0f, 100.0f), player_);
 }
 
 void GameScene::Update(void)
@@ -58,6 +68,8 @@ void GameScene::Update(void)
 	// カメラの更新
 	camera_->Update();
 
+	// 敵の更新
+	enemy_->Update();
 }
 
 void GameScene::Draw(void)
@@ -68,8 +80,11 @@ void GameScene::Draw(void)
 	// グリッド描画
 	grid_->Draw();
 
-	// プレイヤー更新
+	// プレイヤー描画
 	player_->Draw();
+
+	// 敵の描画
+	enemy_->Draw();
 
 #ifdef _DEBUG
 	DrawString(0, 0, "GameScene", 0xffffff);
@@ -78,13 +93,21 @@ void GameScene::Draw(void)
 	camera_->DrawDebug();
 #endif // _DEBUG
 
-	// カーソルの表示
+	// カーソルの描画
 	cursor_->Draw();
 
 }
 
 void GameScene::Release(void)
 {
+
+	// 敵の解放
+	if (enemy_ != nullptr)
+	{
+		enemy_->Release();
+		delete enemy_;
+	}
+	MV1DeleteModel(enemyId_);
 
 	// カーソルの解放
 	if (cursor_ != nullptr)

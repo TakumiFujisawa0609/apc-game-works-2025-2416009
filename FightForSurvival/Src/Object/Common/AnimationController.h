@@ -41,6 +41,9 @@ public:
 
 	// 再生中のアニメーション
 	int GetPlayType(void)const;
+
+	float GetAnimStep(void)const { return playAnim_.step; }
+
 private:
 
 	// アニメーションするモデルのハンドルID

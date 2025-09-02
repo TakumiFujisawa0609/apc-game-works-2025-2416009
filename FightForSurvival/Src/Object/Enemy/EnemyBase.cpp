@@ -3,10 +3,17 @@
 #include "../Player/Player.h"
 #include "../Common/AnimationController.h"
 #include "EnemyBase.h"
+#include "Zombie.h"
 
 EnemyBase::EnemyBase(void)
 {
 	enemy_.modelId_ = -1;
+	baseAttackEffectModelId_ = -1;
+	stateTable_[STATE_CHASE] = Chase;
+	stateTable_[STATE_RETREAT] = Retreat;
+	stateTable_[STATE_HIT] = Hit;
+	stateTable_[STATE_DEAD] = Dead;
+	stateTable_[STATE_END] = End;
 }
 
 EnemyBase::~EnemyBase(void)
@@ -26,12 +33,16 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 
 	// 指定された座標を設定
 	enemy_.pos_ = pos;
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 
 	// プレイヤーのポインタを格納
 	player_ = player;
 
 	// パラメータ設定
 	SetParam();
+
+	// アングルを設定する
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
 
 	// 大きさを設定する
 	MV1SetScale(enemy_.modelId_, enemy_.scales_);
@@ -42,45 +53,19 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	AddAnimation();
 
 	// 初期状態
-	ChangeState(STATE::IDLE);
-
-	attackFrameCnt_ = 0;
+	ChangeState(ENEMY_STATE::STATE_IDLE);
 }
 
 void EnemyBase::Update(void)
 {
-	switch (state_)
+	// nullチェック
+	if (stateTable_[state_])
 	{
-	case EnemyBase::STATE::IDLE:
-		IdleUpdate();
-		break;
-	case EnemyBase::STATE::MOVE:
-		MoveUpdate();
-		break;
-	case EnemyBase::STATE::PUNCH:
-		PunchUpdate();
-		break;
-	case EnemyBase::STATE::MAGIC:
-		MagicUpdate();
-		break;
-	case EnemyBase::STATE::AREA:
-		AreaUpdate();
-		break;
-	case EnemyBase::STATE::HIT_REACT:
-		HitReactUpdate();
-		break;
-	case EnemyBase::STATE::DEAD_REACT:
-		DeadReactUpdate();
-		break;
-	case EnemyBase::STATE::END:
-		EndUpdate();
-		break;
-	default:
-		break;
+		stateTable_[state_](*this);
 	}
 
 	// アニメーション更新
-	animationController_->Update();
+	//animationController_->Update();
 }
 
 void EnemyBase::Draw(void)
@@ -106,157 +91,69 @@ void EnemyBase::Release(void)
 		// 中にデータが入っていたら解放する
 		MV1DeleteModel(enemy_.modelId_);
 	}
+
+	if (baseAttackEffectModelId_ != -1)
+	{
+		// 中にデータが入っていたら解放する
+		MV1DeleteModel(baseAttackEffectModelId_);
+	}
 }
 
-void EnemyBase::ChangeState(STATE state)
+void EnemyBase::ChangeState(ENEMY_STATE state)
 {
 	state_ = state;
 
-	switch (state_)
+	if (state_ == ENEMY_STATE::STATE_END)
 	{
-	case EnemyBase::STATE::IDLE:
-		ChangeIdle();
-		break;
-	case EnemyBase::STATE::MOVE:
-		ChangeMove();
-		break;
-	case EnemyBase::STATE::PUNCH:
-		ChangePunch();
-		break;
-	case EnemyBase::STATE::MAGIC:
-		ChangeMagic();
-		break;
-	case EnemyBase::STATE::AREA:
-		ChangeArea();
-		break;
-	case EnemyBase::STATE::HIT_REACT:
-		ChangeHitReact();
-		break;
-	case EnemyBase::STATE::DEAD_REACT:
-		ChangeDeadReact();
-		break;
-	case EnemyBase::STATE::END:
-		ChangeEnd();
-		break;
-	default:
-		break;
+		// エフェクト停止
+		//StopEffekseer3DEffect(effectBlastPlayId_);
+		// 生存判定を折る
+		enemy_.isAlive_ = false;
+	}
+	else
+	{
+		//animationController_->Play(static_cast<int>(state_));
 	}
 }
 
-void EnemyBase::ChangeIdle(void)
-{
-	animationController_->Play(static_cast<int>(ANIM_TYPE::IDLE));
-}
-
-void EnemyBase::ChangeMove(void)
-{
-	animationController_->Play(static_cast<int>(ANIM_TYPE::WALK));
-}
-
-void EnemyBase::ChangePunch(void)
-{
-	animationController_->Play(static_cast<int>(ANIM_TYPE::PUNCH),false);
-}
-
-void EnemyBase::ChangeMagic(void)
-{
-	//animationController_->Play(static_cast<int>(ANIM_TYPE::MAGIC));
-}
-
-void EnemyBase::ChangeArea(void)
-{
-	//animationController_->Play(static_cast<int>(ANIM_TYPE::AREA));
-}
-
-void EnemyBase::ChangeHitReact(void)
-{
-	animationController_->Play(static_cast<int>(ANIM_TYPE::HIT_REACT),false);
-}
-
-void EnemyBase::ChangeDeadReact(void)
-{
-	animationController_->Play(static_cast<int>(ANIM_TYPE::DEATH),false);
-}
-
-void EnemyBase::ChangeEnd(void)
-{
-	// エフェクト停止
-	//StopEffekseer3DEffect(effectBlastPlayId_);
-	// 生存判定を折る
-	enemy_.isAlive_ = false;
-}
-
-void EnemyBase::IdleUpdate(void)
-{
-	//if (範囲内に入ってなかったら移動)
-	{
-		// 範囲内に入っていなかったら移動を行う
-		ChangeState(STATE::MOVE);
-	}
-	//else
-	//{
-
-	//	if (攻撃制限時間を超えたら入る)
-	//	{
-	//		// 攻撃制限時間を超えているかつ、範囲内に入っていたら攻撃を行う
-	//		ChangeState(STATE::PUNCH);
-	//	}
-	//}
-}
-
-void EnemyBase::MoveUpdate(void)
+void EnemyBase::Chase(EnemyBase& enemy)
 {
 	// プレイヤーのほうへ向く
-	LookPlayer();
+	enemy.LookPlayer();
 
-	enemy_.pos_ = VAdd(enemy_.pos_, VScale(enemy_.dir_, enemy_.moveSpeed_));
+	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, enemy.enemy_.moveSpeed_));
+
+	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
 
 	//if (範囲内に入っていたら攻撃)
 	{
 		// 攻撃範囲内に入ったら攻撃を行う
-		ChangeState(STATE::PUNCH);
+		//enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
 	}
 }
 
-void EnemyBase::PunchUpdate(void)
+void EnemyBase::Retreat(EnemyBase& enemy)
 {
-	attackFrameCnt_++;
-
-	//if (攻撃終わったらIDLEに戻す)
-	{
-		// 攻撃が終わったらIDLE状態に戻す
-		ChangeState(STATE::IDLE);
-	}
 }
 
-void EnemyBase::MagicUpdate(void)
-{
-	attackFrameCnt_++;
-}
-
-void EnemyBase::AreaUpdate(void)
-{
-	attackFrameCnt_++;
-}
-
-void EnemyBase::HitReactUpdate(void)
+void EnemyBase::Hit(EnemyBase& enemy)
 {
 	//if (アニメーションを終えたら)
 	{
-		ChangeState(STATE::IDLE);
+		enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
 	}
 }
 
-void EnemyBase::DeadReactUpdate(void)
+void EnemyBase::Dead(EnemyBase& enemy)
 {
 	//if (アニメーション終わったら入る)
 	{
 		// 死亡リアクションを終えたらENDへ移行
-		ChangeState(STATE::END);
+		enemy.ChangeState(ENEMY_STATE::STATE_END);
 	}
 }
 
-void EnemyBase::EndUpdate(void)
+void EnemyBase::End(EnemyBase& enemy)
 {
 }
 
@@ -284,21 +181,14 @@ void EnemyBase::LookPlayer(void)
 	enemy_.dir_.z = vec.z / length;
 
 	// 方向から角度を出す
-	//angles_.y = atan2(moveDir_.x, moveDir_.z);
+	enemy_.angles_.y = atan2(enemy_.dir_.x, enemy_.dir_.z);
 
 	// 今回のモデルのY軸向きが逆なので向きを反転させる
-	//angles_.y += 180.0f * (DX_PI_F / 180.0f);
+	enemy_.angles_.y += 180.0f * (DX_PI_F / 180.0f);
 
 	// 回転はY軸のみとする
-	//angles_.x = angles_.z = 0.0f;
+	enemy_.angles_.x = enemy_.angles_.z = 0.0f;
 
 	// モデルに向きを設定
-	//MV1SetRotationXYZ(modelId_, angles_);
-}
-
-void EnemyBase::AddAnimation(void)
-{
-	// ダンステスト
-	//std::string pas = "Data/Model/Enemy/Idle.mv1";
-	//animationController_->Add(static_cast<int>(ANIM_TYPE::IDLE), 60.0f, pas);
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
 }

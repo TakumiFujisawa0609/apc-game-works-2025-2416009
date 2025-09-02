@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../Base.h"
+#include "EnemyState.h"
 
 class AnimationController;
 class Player;
@@ -8,9 +9,6 @@ class Player;
 class EnemyBase
 {
 public:
-
-	// 最大HP
-	static constexpr int DEFAULT_HP = 10;
 
 	// 攻撃が確定するフレーム数
 	static constexpr int ATTACK_FRAME_TIMMING = 10;
@@ -22,28 +20,6 @@ public:
 		WIZARD,
 		GIANT,
 		MAX,
-	};
-
-	// アニメーション種別
-	enum class ANIM_TYPE
-	{
-		IDLE,
-		WALK,
-		PUNCH,
-		HIT_REACT,
-		DEATH,
-	};
-
-	enum class STATE
-	{
-		IDLE,
-		MOVE,
-		PUNCH,
-		MAGIC,
-		AREA,
-		HIT_REACT,
-		DEAD_REACT,
-		END,
 	};
 
 	// コンストラクタ
@@ -68,7 +44,11 @@ public:
 
 	void SetHp(int hp) { enemy_.hp_ = hp; }
 
-	void ChangeState(STATE state);
+	// 状態遷移
+	void ChangeState(ENEMY_STATE newState);
+
+	// 状態を返却
+	ENEMY_STATE GetState() const { return state_; }
 
 protected:
 	AnimationController* animationController_;
@@ -84,43 +64,29 @@ protected:
 	ENEMY_TYPE type_;
 
 	// ステート
-	STATE state_;
+	ENEMY_STATE state_;
 
-	// 攻撃フレームカウント
-	int attackFrameCnt_;
-
-	// パラメータ設定
-	virtual void SetParam(void) = 0;
-
-	// 状態遷移
-	virtual void ChangeIdle(void);
-	virtual void ChangeMove(void);
-	virtual void ChangePunch(void);
-	virtual void ChangeMagic(void);
-	virtual void ChangeArea(void);
-	virtual void ChangeHitReact(void);
-	virtual void ChangeDeadReact(void);
-	virtual void ChangeEnd(void);
+	// 状態のテーブル（派生クラスでセットする）
+	EnemyStateFunction stateTable_[ENEMY_STATE_MAX];
 
 	// 状態別更新
-	// 待機処理
-	virtual void IdleUpdate(void);
 	// 移動処理
-	virtual void MoveUpdate(void);
-	// 攻撃処理
-	virtual void PunchUpdate(void);
-	virtual void MagicUpdate(void);
-	virtual void AreaUpdate(void);
+	static void Chase(EnemyBase& enemy);
+	// 後退処理
+	static void Retreat(EnemyBase& enemy);
 	// ダメージ時のリアクション処理
-	void HitReactUpdate(void);
+	static void Hit(EnemyBase& enemy);
 	// 死亡時のリアクション処理
-	void DeadReactUpdate(void);
+	static void Dead(EnemyBase& enemy);
 	// 完全死亡
-	void EndUpdate(void);
+	static void End(EnemyBase& enemy);
 
 	// プレイヤー側に向く処理
 	void LookPlayer(void);
 
+	// パラメータ設定
+	virtual void SetParam(void) = 0;
+	// アニメーション登録
 	virtual void AddAnimation(void) = 0;
 };
 

@@ -6,6 +6,7 @@ class Camera;
 class Grid;
 class Player;
 class Cursor;
+class EnemyBase;
 
 class GameScene : public SceneBase
 {
@@ -40,5 +41,8 @@ private:
 	// ƒJ[ƒ\ƒ‹
 	Cursor* cursor_;
 
+	// “G
+	EnemyBase* enemy_;
+	int enemyId_;
 };
 

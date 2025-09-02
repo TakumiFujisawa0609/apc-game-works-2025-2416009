@@ -29,7 +29,7 @@ struct Unit
 	// 体力
 	int hp_;
 
-	// 加速度、重力
+	// 速度
 	float moveSpeed_;
 
 	// 生存判定
