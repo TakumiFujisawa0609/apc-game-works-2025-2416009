@@ -13,10 +13,11 @@ public:
 	static constexpr float CNT_ALIVE = 1.0f;
 	
 	// 当たり判定用サイズ
-	static constexpr float COLLISION_RAD = 5.0f;
+	static constexpr float COLLISION_RAD = 3.0f;
 	
 	// 当たり判定用サイズ
-	static constexpr int DAMAGE = 10;
+	static constexpr int HEAD_DAMAGE = 5;
+	static constexpr int BODY_DAMAGE = 10;
 
 	HundgunBullet(int baseModelId);
 	~HundgunBullet(void);

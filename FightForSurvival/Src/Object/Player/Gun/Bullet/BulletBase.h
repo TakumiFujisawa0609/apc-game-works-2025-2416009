@@ -19,6 +19,7 @@ protected:
 		VECTOR rotate_;
 		// 弾の座標
 		VECTOR pos_;
+		VECTOR prevPos_;
 		// 弾の移動速度
 		float speed_;
 		// 弾の生存判定
@@ -28,7 +29,8 @@ protected:
 		// 弾の衝突判定用半径
 		float collisionRadius_;
 		// ダメージ数
-		int damage_;
+		int headDamage_;
+		int bodyDamage_;
 	};
 
 public:

@@ -40,7 +40,7 @@ struct Unit
 
 	// è’ìÀîªíËópîºåa
 	float collisionRadius_;
-
+	float collisionRadiusBody_;
 };
 
 struct Ability
@@ -58,4 +58,14 @@ enum class GUN_TYPE
 	HANDGUN,
 	ASSAULT_RIFLE,
 	SHOTGUN,
+};
+
+struct CollisionPos
+{
+	VECTOR posHead_;
+	VECTOR posBodyTop_;
+	VECTOR posBodyUnder_;
+	float relativePosHead_;
+	float relativePosBodyTop_;
+	float relativePosBodyUnder_;
 };

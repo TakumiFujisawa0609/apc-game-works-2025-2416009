@@ -12,10 +12,10 @@ public:
 	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
 
 	// 初期位置
-	static constexpr VECTOR DEFAULT_POS = { 0.0f, 150.0f, 0.0f };
+	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 
-	// プレイヤーとの銃の相対座標
-	static constexpr float RELATIVE_POS_CAMERA = 150.0f;
+	// プレイヤーと銃の相対座標
+	static constexpr float RELATIVE_POS_CAMERA = 70.0f;
 
 	// 移動速度
 	static constexpr float DEFAULT_MOVE_SPEED = 7.0f;
@@ -69,6 +69,8 @@ public:
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const float GetYaw() const { return yaw_; }
 	const float GetPitch() const { return pitch_; }
+
+	GunBase* GetGun(void)const { return gun_; }
 
 	void SetAbility(ABILITY_TYPE type, float i);
 

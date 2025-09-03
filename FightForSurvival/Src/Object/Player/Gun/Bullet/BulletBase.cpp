@@ -14,7 +14,7 @@ BulletBase::~BulletBase(void)
 void BulletBase::CreateShot(VECTOR pos, VECTOR dir)
 {
 	// 弾の発射位置を設定
-	bullet_.pos_ = pos;
+	bullet_.prevPos_ = bullet_.pos_ = pos;
 	// 弾の発射方向の設定
 	bullet_.dir_ = dir;
 	// 弾の生存判定
@@ -70,7 +70,7 @@ void BulletBase::Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	DrawSphere3D(bullet_.pos_, bullet_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(bullet_.pos_, bullet_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
@@ -115,7 +115,6 @@ void BulletBase::ReduceCntAlive(void)
 	if (bullet_.cntAlive_ < 0)
 	{
 		// 弾の存在可能時間が過ぎたら消す
-		bullet_.isAlive_ = false;
 		ChangeState(STATE::BLAST);
 	}
 
@@ -123,6 +122,9 @@ void BulletBase::ReduceCntAlive(void)
 
 void BulletBase::UpdateShot(void)
 {
+	// 移動前の座標を取得しておく
+	bullet_.prevPos_ = bullet_.pos_;
+
 	// 弾を移動させる
 	bullet_.pos_ = VAdd(bullet_.pos_, VScale(bullet_.dir_, bullet_.speed_));
 

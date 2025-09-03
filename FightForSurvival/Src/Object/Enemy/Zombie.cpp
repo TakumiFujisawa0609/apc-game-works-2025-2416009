@@ -18,7 +18,10 @@ void Zombie::SetParam(void)
 	enemy_.moveSpeed_ = SPEED;
 	enemy_.isAlive_ = true;
 	enemy_.collisionRadius_ = COLLISION_RADIUS;
-
+	enemy_.collisionRadiusBody_ = COLLISION_RADIUS_BODY;
+	colPos_.relativePosHead_ = RELATIVE_POS_HEAD;
+	colPos_.relativePosBodyTop_ = RELATIVE_POS_BODY_TOP;
+	colPos_.relativePosBodyUnder_ = RELATIVE_POS_BODY_UNDER;
 }
 
 void Zombie::AddAnimation(void)
@@ -33,7 +36,7 @@ void Zombie::Idle(EnemyBase& enemy)
 	//if (”ÍˆÍ“à‚É“ü‚Á‚Ä‚È‚©‚Á‚½‚çˆÚ“®)
 	//{
 	//	// ”ÍˆÍ“à‚É“ü‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç’ÇÕ
-		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
+		//enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
 	//}
 	//else
 	//{

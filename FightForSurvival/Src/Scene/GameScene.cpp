@@ -6,6 +6,9 @@
 #include "../Object/Player/Player.h"
 #include "../Object/Common/Cursor.h"
 #include "../Object/Enemy/Zombie.h"
+#include "../Object/Player/Gun/GunBase.h"
+#include "../Object/Player/Gun/Bullet/BulletBase.h"
+#include "../CollisionManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -70,6 +73,9 @@ void GameScene::Update(void)
 
 	// “G‚ÌXV
 	enemy_->Update();
+
+	// “–‚½‚è”»’è
+	CheckCollisions();
 }
 
 void GameScene::Draw(void)
@@ -141,4 +147,71 @@ void GameScene::Release(void)
 
 	// ƒ}ƒEƒXƒJ[ƒ\ƒ‹‚ð•\Ž¦‚³‚¹‚é
 	SetMouseDispFlag(true);
+}
+
+void GameScene::CheckCollisions(void)
+{
+	if (!enemy_->IsCollisionState())
+	{
+		// “G‚ª¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—‚ðs‚í‚È‚¢
+		return;
+	}
+
+	// “G‚Ìî•ñ
+	Unit eneInfo = enemy_->GetEnemy();
+	CollisionPos eneColPosInfo = enemy_->GetColPos();
+
+	// “G‚ÌÀ•W
+	VECTOR enemyPosHead = eneColPosInfo.posHead_;
+	VECTOR enemyPosBodyTop = eneColPosInfo.posBodyTop_;
+	VECTOR enemyPosBodyUnder = eneColPosInfo.posBodyUnder_;
+
+	// “G‚Ì”¼Œa
+	float eneRadHead = eneInfo.collisionRadius_;
+	float eneRadBody = eneInfo.collisionRadiusBody_;
+
+	// ’eƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^[Žæ“¾
+	auto bullets = player_->GetGun()->GetBullets();
+
+	// ’e‚Ì”•ª‰ñ‚·
+	for (auto bullet : bullets)
+	{
+		// ’e‚ª¶‘¶‚µ‚Ä‚¢‚È‚©‚Á‚½‚çŽŸ‚Ì’e‚Éi‚Þ
+		if (!bullet->IsCollisionState())
+		{
+			continue;
+		}
+
+		// ’e‚Ìî•ñ
+		auto bulletInfo = bullet->GetBullet();
+
+		// ’e‚ÌˆÚ“®Œo˜H‚Ìü•ª‚ð’è‹`
+		VECTOR bulletLineStart = bulletInfo.pos_;
+		VECTOR bulletLineEnd = bulletInfo.prevPos_; // ‘O‚ÌƒtƒŒ[ƒ€‚Å‚Ì’e‚ÌˆÊ’u
+
+		// ’e‚Ì”¼Œa
+		float bulletRad = bulletInfo.collisionRadius_;
+
+		// “ª‚Ì“–‚½‚è”»’è
+		if (CollisionManager::IsCollidingSphereAndSphere(enemyPosHead, eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+		{
+			// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
+			enemy_->SubHp(bulletInfo.headDamage_);
+			// ’e‚ð”š”­‚³‚¹‚é
+			bullet->ChangeState(BulletBase::STATE::BLAST);
+
+			// “–‚½‚Á‚Ä‚¢‚½‚çŽŸ‚Ì’e‚Éi‚Þ
+			continue;
+		}
+
+		//// ‘Ì‚Ì“–‚½‚è”»’è
+		//if (CollisionManager::IsCollidingCapsuleSphere(enemyPosBodyTop, enemyPosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad))
+		//{
+		//	// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
+		//	enemy_->SubHp(bulletInfo.bodyDamage_);
+		//	// ’e‚ð”š”­‚³‚¹‚é
+		//	bullet->ChangeState(BulletBase::STATE::BLAST);
+		//}
+	}
+
 }

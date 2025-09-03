@@ -41,6 +41,8 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	// パラメータ設定
 	SetParam();
 
+	UpdateCollisionPositions();
+
 	// アングルを設定する
 	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
 
@@ -80,7 +82,11 @@ void EnemyBase::Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	//DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	// デバッグ用：衝突判定用球体
+	DrawSphere3D(colPos_.posHead_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	// デバッグ用：衝突判定用カプセル
+	DrawCapsule3D(colPos_.posBodyTop_, colPos_.posBodyUnder_, enemy_.collisionRadiusBody_, 10, 0xff0000, 0xff0000, false);
 #endif // _DEBUG
 }
 
@@ -96,6 +102,29 @@ void EnemyBase::Release(void)
 	{
 		// 中にデータが入っていたら解放する
 		MV1DeleteModel(baseAttackEffectModelId_);
+	}
+}
+
+bool EnemyBase::IsCollisionState(void)
+{
+	// 死亡していなかったらtrueを返す
+	return !(state_ == STATE_DEAD || state_ == STATE_END);
+}
+
+void EnemyBase::SubHp(int hp)
+{
+	enemy_.hp_ -= hp;
+
+	if (enemy_.hp_ <= 0)
+	{
+		enemy_.hp_ = 0;
+		// 攻撃を受けてHPが無くなったら死亡させる
+		ChangeState(STATE_DEAD);
+	}
+	else
+	{
+		// 攻撃を受けたがまだHPがあったらダメージ時のアニメーションをさせる
+		ChangeState(STATE_HIT);
 	}
 }
 
@@ -121,8 +150,13 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	// プレイヤーのほうへ向く
 	enemy.LookPlayer();
 
+	// 方向単位ベクトルに速度をかけた数を座標に足しこむ
 	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, enemy.enemy_.moveSpeed_));
 
+	// 頭用座標と体用座標を更新させる
+	enemy.UpdateCollisionPositions();
+
+	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
 
 	//if (範囲内に入っていたら攻撃)
@@ -134,6 +168,10 @@ void EnemyBase::Chase(EnemyBase& enemy)
 
 void EnemyBase::Retreat(EnemyBase& enemy)
 {
+	//if (アニメーションを終えたら)
+	{
+		enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+	}
 }
 
 void EnemyBase::Hit(EnemyBase& enemy)
@@ -191,4 +229,12 @@ void EnemyBase::LookPlayer(void)
 
 	// モデルに向きを設定
 	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
+}
+
+void EnemyBase::UpdateCollisionPositions(void)
+{
+	// 基準座標からオフセットを適用
+	colPos_.posHead_ = VAdd(enemy_.pos_, VGet(0.0f, colPos_.relativePosHead_, 0.0f));
+	colPos_.posBodyTop_ = VAdd(enemy_.pos_, VGet(0.0f, colPos_.relativePosBodyTop_, 0.0f));
+	colPos_.posBodyUnder_ = VAdd(enemy_.pos_, VGet(0.0f, colPos_.relativePosBodyUnder_, 0.0f));
 }

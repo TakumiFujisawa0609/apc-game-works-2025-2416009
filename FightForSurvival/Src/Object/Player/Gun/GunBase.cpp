@@ -56,6 +56,12 @@ void GunBase::Init(void)
 
 void GunBase::Update(void)
 {
+	// 銃、弾の座標計算
+	UpdatePos();
+
+	// 弾の更新
+	UpdateBullet();
+
 	switch (state_)
 	{
 	case GunBase::STATE::IDLE:
@@ -74,11 +80,6 @@ void GunBase::Update(void)
 		break;
 	}
 
-	// 銃、弾の座標計算
-	UpdatePos();
-
-	// 弾の更新
-	UpdateBullet();
 }
 
 void GunBase::Draw(void)
@@ -146,24 +147,11 @@ void GunBase::AttackUpdate(void)
 
 	VECTOR dir;
 
-	// 狙う場所から弾発射場所のベクトルを計算(引き算)
-	VECTOR vec = AsoUtility::VECTOR_ZERO;
-	vec.x = targetPos_.x - bulletPos_.x;
-	vec.y = targetPos_.y - bulletPos_.y;
-	vec.z = targetPos_.z - bulletPos_.z;
+	// 狙う場所から弾の発射位置へのベクトルを計算
+	VECTOR vec = VSub(targetPos_, bulletPos_);
 
-	// ベクトルの正規化で単位ベクトル(方向)を取得する
-	float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-
-	if (length == 0.0f)
-	{
-		vec.x = vec.y = vec.z = 0.0f;
-	}
-
-	// 大きさで割って単位ベクトルにする
-	dir.x = vec.x / length;
-	dir.y = vec.y / length;
-	dir.z = vec.z / length;
+	// ベクトルを正規化し、弾の方向とする
+	dir = VNorm(vec);
 
 #pragma endregion
 
@@ -247,6 +235,8 @@ BulletBase* GunBase::GetValidBullet(void)
 
 void GunBase::UpdatePos(void)
 {
+	VECTOR playerCameraPos = player_->GetCameraPos();
+
 	// 砲身の回転行列
 	MATRIX matRot = MGetIdent();
 	matRot = MMult(matRot, MGetRotX(player_->GetPitch()));
@@ -254,38 +244,36 @@ void GunBase::UpdatePos(void)
 
 #pragma region 銃
 
-	gunPos_ = player_->GetCameraPos();
-
 	// 方向と同じ要領で、相対座標を回転
 	VECTOR localPosRot = VTransform(RELATIVE_POS_GUN, matRot);
 
-	gunPos_ = VAdd(gunPos_, localPosRot);
+	gunPos_ = VAdd(playerCameraPos, localPosRot);
 
 #pragma endregion
 
-#pragma region 弾
-
-	// 弾の発射位置
-	bulletPos_ = gunPos_;
+#pragma region 銃口
 
 	// 方向と同じ要領で、相対座標を回転
 	localPosRot = VTransform(RELATIVE_POS_BULLET, matRot);
 
-	bulletPos_ = VAdd(bulletPos_, localPosRot);
+	bulletPos_ = VAdd(gunPos_, localPosRot);
 
 
 #pragma endregion
 
 #pragma region 狙う場所
 
-	// 狙う場所の位置
-	targetPos_ = player_->GetCameraPos();
+	// カメラの視線方向のベクトルを計算
+	// DxlibのVTransformを使用
+	VECTOR forward = VGet(0.0f, 0.0f, 1.0f); // 前方向をZ軸とする
+	VECTOR cameraDir = VTransform(forward, matRot);
 
-	// 方向と同じ要領で、相対座標を回転
-	localPosRot = VTransform(RELATIVE_POS_TARGET, matRot);
+	// カメラから遠く離れた点をターゲットとする
+	// カーソルの場所はカメラの視線方向と一致すると仮定
+	targetPos_ = VAdd(playerCameraPos, VScale(cameraDir, RELATIVE_POS_TARGET));
 
-	targetPos_ = VAdd(targetPos_, localPosRot);
-
+	// ターゲットをわずかに上へ補正
+	targetPos_.y += 0.5f; // 例として0.5fを加えています。この値は調整が必要です
 #pragma endregion
 }
 

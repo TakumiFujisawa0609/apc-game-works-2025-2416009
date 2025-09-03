@@ -19,7 +19,17 @@ public:
 	static constexpr float SPEED = 3.0f;
 
 	// 当たり判定用半径
-	static constexpr float COLLISION_RADIUS = 50.0f;
+	static constexpr float COLLISION_RADIUS = 15.0f;
+	static constexpr float COLLISION_RADIUS_BODY = 20.0f;
+
+	// モデルと頭の相対座標
+	static constexpr float RELATIVE_POS_HEAD = 165.0f;
+
+	// モデルと体の相対座標
+	static constexpr float RELATIVE_POS_BODY_TOP = 125.0f;
+
+	// モデルと体の相対座標
+	static constexpr float RELATIVE_POS_BODY_UNDER = 5.0f;
 
 	Zombie(void);
 	~Zombie(void)override;

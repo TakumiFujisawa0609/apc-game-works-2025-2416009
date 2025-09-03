@@ -17,5 +17,6 @@ void HundgunBullet::SetParam(void)
 	bullet_.speed_ = SPEED;
 	bullet_.cntAlive_ = CNT_ALIVE;
 	bullet_.collisionRadius_ = COLLISION_RAD;
-	bullet_.damage_ = DAMAGE;
+	bullet_.headDamage_ = HEAD_DAMAGE;
+	bullet_.bodyDamage_ = BODY_DAMAGE;
 }

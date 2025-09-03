@@ -44,5 +44,7 @@ private:
 	// “G
 	EnemyBase* enemy_;
 	int enemyId_;
+
+	void CheckCollisions(void);
 };
 

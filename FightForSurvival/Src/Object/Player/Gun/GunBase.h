@@ -17,7 +17,7 @@ public:
 	static constexpr VECTOR RELATIVE_POS_BULLET = { 0.0f,0.0f,15.0f };
 
 	// プレイヤーとの狙う場所の相対座標
-	static constexpr VECTOR RELATIVE_POS_TARGET = { 0.0f,0.0f,2000.0f };
+	static constexpr float RELATIVE_POS_TARGET = 1000.0f;
 
 
 	enum class STATE

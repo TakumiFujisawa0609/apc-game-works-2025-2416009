@@ -40,9 +40,16 @@ public:
 	// 解放処理
 	void Release(void);
 
+	// 敵の情報を渡す
 	const Unit GetEnemy(void)const { return enemy_; }
+	// 敵の当たり判定座標の情報を渡す
+	CollisionPos GetColPos(void)const { return colPos_; }
 
-	void SetHp(int hp) { enemy_.hp_ = hp; }
+	// 死亡していなかったらtrueを返す
+	bool IsCollisionState(void);
+
+	// HPにダメージを与える
+	void SubHp(int hp);
 
 	// 状態遷移
 	void ChangeState(ENEMY_STATE newState);
@@ -69,6 +76,9 @@ protected:
 	// 状態のテーブル（派生クラスでセットする）
 	EnemyStateFunction stateTable_[ENEMY_STATE_MAX];
 
+	// 当たり判定用(頭、体)
+	CollisionPos colPos_;
+
 	// 状態別更新
 	// 移動処理
 	static void Chase(EnemyBase& enemy);
@@ -83,6 +93,9 @@ protected:
 
 	// プレイヤー側に向く処理
 	void LookPlayer(void);
+
+	// 当たり判定用の座標を更新
+	void UpdateCollisionPositions(void);
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
