@@ -28,6 +28,8 @@ void Handgun::SetParam(void)
 {
 	gunScales_ = SCALE;
 	gunRotate_ = ROTATE;
-	stopDelay_ = STOP_DELAY;
+	recoil = RECOIL;
+	bulletNum_ = bulletCapacity_ = BULLET_CAPACITY;
+	bulletNumMax_ = BULLET_NUM_MAX;
 }
 

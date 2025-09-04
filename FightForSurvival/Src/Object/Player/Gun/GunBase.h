@@ -19,6 +19,10 @@ public:
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RELATIVE_POS_TARGET = 1000.0f;
 
+	// プレイヤーとの狙う場所の相対座標
+	static constexpr float RECOVERY_SPEED = 0.001f;
+
+	static constexpr float RELOAD_TIME = 2.0f;
 
 	enum class STATE
 	{
@@ -48,6 +52,9 @@ public:
 	std::vector<BulletBase*> GetBullets(void)const { return bullets_; }
 
 	bool GetCanShot(void)const { return state_ == STATE::IDLE; }
+	int NowBulletNum(void) { return bulletNum_; }
+
+	void SetIsRecoil(bool flg) { isRecoil_ = flg; }
 
 	void ChangeState(STATE state);
 
@@ -76,8 +83,19 @@ protected:
 	VECTOR targetPos_;
 
 	// 弾発射後の硬直時間計算用
-	float stopDelayCnt_;
-	float stopDelay_;
+	float pitchAngle_;
+	float pitch_;
+	float recoil;
+	bool isRecoil_;
+
+	// 最大弾数
+	int bulletNumMax_;
+	// 装填してある数
+	int bulletNum_;
+	// 最大装填数
+	int bulletCapacity_;
+	// リロード時間
+	float reloadTime_;
 
 	// パラメーター設定
 	virtual void SetParam(void) = 0;

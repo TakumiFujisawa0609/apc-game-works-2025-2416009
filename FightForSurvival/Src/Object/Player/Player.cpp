@@ -72,7 +72,8 @@ void Player::Init(void)
 	staminaCounter_ = 0.0f;
 
 	// 銃を生成
-	switch (ins.GetGunType())
+	gunType_ = ins.GetGunType();
+	switch (gunType_)
 	{
 	case::GUN_TYPE::HANDGUN:
 		gun_ = new Handgun(this);
@@ -279,13 +280,19 @@ void Player::ProcessAngle(void)
 	pitch_ += deltaY * sensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
-	if (pitch_ > 1.5f)
+	if (pitch_ > MAX_VIEW_ANGLE)
 	{
-		pitch_ = 1.5f;
+		pitch_ = MAX_VIEW_ANGLE;
 	}
-	if (pitch_ < -1.5f)
+	if (pitch_ < MIN_VIEW_ANGLE)
 	{
-		pitch_ = -1.5f;
+		pitch_ = MIN_VIEW_ANGLE;
+	}
+
+	// 視点移動があったら反動をなくす
+	if (mouse_.y != Application::SCREEN_SIZE_Y / 2)
+	{
+		gun_->SetIsRecoil(false);
 	}
 
 	//// マウスカーソルを画面中央に戻す
@@ -303,8 +310,26 @@ void Player::ProcessAttack(void)
 	auto& ins = InputManager::GetInstance();
 
 	// 左クリックされたかつ、銃が撃てる状態なら入る
-	if (ins.IsTrgMouseLeft() && gun_->GetCanShot())
+	if (ins.IsTrgMouseLeft())
 	{
-		gun_->ChangeState(GunBase::STATE::ATTACK);
+		if (gun_->GetCanShot())
+		{
+			if (gun_->NowBulletNum() != 0)
+			{
+				// 攻撃に進む
+				gun_->ChangeState(GunBase::STATE::ATTACK);
+			}
+			else
+			{
+				// リロードに進む
+				gun_->ChangeState(GunBase::STATE::RELOAD);
+			}
+		}
+	}
+
+	if (ins.Reload())
+	{
+		// リロードに進む
+		gun_->ChangeState(GunBase::STATE::RELOAD);
 	}
 }

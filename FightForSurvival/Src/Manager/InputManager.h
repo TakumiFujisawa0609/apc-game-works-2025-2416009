@@ -134,6 +134,9 @@ public:
 	// ダッシュキー
 	bool MoveDash(void);
 
+	// リロードキー
+	bool Reload(void);
+
 private:
 
 	// キー情報

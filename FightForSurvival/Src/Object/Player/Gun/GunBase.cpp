@@ -48,10 +48,17 @@ void GunBase::Init(void)
 	state_ = STATE::IDLE;
 
 	// 弾発射の硬直時間
-	stopDelayCnt_ = 0.0f;
+	pitch_ = 0.0f;
+	pitchAngle_ = 0.0f;
+
+	// 強制的に視点を動かすか
+	isRecoil_ = false;
 
 	// 弾の座標
 	bulletPos_ = targetPos_ = AsoUtility::VECTOR_ZERO;
+
+	// リロード時間
+	reloadTime_ = 0.0f;
 }
 
 void GunBase::Update(void)
@@ -93,6 +100,14 @@ void GunBase::Draw(void)
 	// 弾の描画
 	DrawBullet();
 
+	if (state_ == STATE::RELOAD)
+	{
+		// 背景の枠
+		DrawBox(5, 220, 205, 240, 0x696969, true);
+		// プログレスバー本体
+		DrawBox(5, 220, 5 + (100 * reloadTime_), 240, 0xff7f50, true);
+	}
+
 #ifdef _DEBUG
 
 	// 銃の位置仮表示
@@ -103,6 +118,8 @@ void GunBase::Draw(void)
 
 	// 狙う場所の位置目安
 	//DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
+
+	DrawFormatString(0, 200, 0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
 
 #endif // _DEBUG
 
@@ -159,29 +176,79 @@ void GunBase::AttackUpdate(void)
 	BulletBase* bullet = GetValidBullet();
 	// 弾を生成(方向は仮で正面方向)
 	bullet->CreateShot(bulletPos_, dir);
-	// 弾発射後の硬直時間セット
-	stopDelayCnt_ = stopDelay_;
+
+	// 弾発射後の反動を計算
+	pitch_ = player_->GetPitch();
+	pitchAngle_ = pitch_ - recoil;
+	// 上を向きすぎないように制限をかける
+	if (pitchAngle_ < Player::MIN_VIEW_ANGLE)
+	{
+		pitchAngle_ = Player::MIN_VIEW_ANGLE;
+	}
+	isRecoil_ = true;
+	player_->SetPitch(pitchAngle_);
+
+	bulletNum_--;
 
 	ChangeState(STATE::WAIT);
 }
 
 void GunBase::WaitUpdate(void)
 {
-	// 弾発射後の硬直時間を減らしていく
-	if (stopDelayCnt_ > 0.0f)
+
+	if (isRecoil_)
 	{
-		stopDelayCnt_ -= SceneManager::GetInstance().GetDeltaTime();
+		// 弾発射後の反動を設定
+		player_->SetPitch(pitchAngle_);
 	}
 
-	if (stopDelayCnt_ <= 0.0f)
+	// 角度を元の位置に戻す
+	if (pitchAngle_ < pitch_) {
+		pitchAngle_ += RECOVERY_SPEED;
+		if (pitchAngle_ > pitch_) {
+			pitchAngle_ = pitch_;
+		}
+	}
+	else
 	{
-		stopDelayCnt_ = 0.0f;
+		// 元の位置まで戻ったらIDLE状態へ戻す
 		ChangeState(STATE::IDLE);
 	}
 }
 
 void GunBase::ReloadUpdate(void)
 {
+	if (bulletNumMax_ <= 0 || bulletNum_ == bulletCapacity_)
+	{
+		// 残りの弾数が無いか、装填数が最大だったら処理を行わない
+		ChangeState(STATE::IDLE);
+		return;
+	}
+
+	// リロード時間を進める
+	reloadTime_ += SceneManager::GetInstance().GetDeltaTime();
+
+	// リロード時間が既定の時間経ったらIDLE状態へ戻す
+	if (reloadTime_ >= RELOAD_TIME)
+	{
+		reloadTime_ = 0.0f;
+
+		while (bulletNum_ < bulletCapacity_)
+		{
+			if (bulletNumMax_ <= 0)
+			{
+				// 残りの弾数が無かったら処理を抜ける
+				break;
+			}
+
+			// 残りの弾数を減らす
+			bulletNumMax_--;
+			// 装填数を増やす
+			bulletNum_++;
+		}
+
+		ChangeState(STATE::IDLE);
+	}
 }
 
 void GunBase::UpdateBullet(void)
@@ -273,7 +340,7 @@ void GunBase::UpdatePos(void)
 	targetPos_ = VAdd(playerCameraPos, VScale(cameraDir, RELATIVE_POS_TARGET));
 
 	// ターゲットをわずかに上へ補正
-	targetPos_.y += 0.5f; 
+	targetPos_.y += 0.8f; 
 #pragma endregion
 }
 

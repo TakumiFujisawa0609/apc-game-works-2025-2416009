@@ -36,6 +36,12 @@ public:
 	// 衝突判定用半径
 	static constexpr float COLLISION_RADIUS = 50.0f;
 
+	// 視点の最大角度
+	static constexpr float MAX_VIEW_ANGLE = 1.5f;
+
+	// 視点の最小角度
+	static constexpr float MIN_VIEW_ANGLE = -1.5f;
+
 	enum class ABILITY_TYPE
 	{
 		SPEED_UP,
@@ -67,8 +73,9 @@ public:
 
 	const Unit GetPlayer(void)const { return player_; }
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
-	const float GetYaw() const { return yaw_; }
-	const float GetPitch() const { return pitch_; }
+	const float GetYaw(void) const { return yaw_; }
+	const float GetPitch(void) const { return pitch_; }
+	void SetPitch(float newPitch)  { pitch_ = newPitch; }
 
 	GunBase* GetGun(void)const { return gun_; }
 
@@ -98,6 +105,8 @@ private:
 	float sensitivity_;
 
 	float staminaCounter_;
+
+	GUN_TYPE gunType_;
 
 	// 移動処理
 	void ProcessMove(void);

@@ -36,6 +36,8 @@ void InputManager::Init(void)
 	ins.Add(KEY_INPUT_A);
 	ins.Add(KEY_INPUT_S);
 	ins.Add(KEY_INPUT_D);
+	// リロードキー
+	ins.Add(KEY_INPUT_R);
 	ins.Add(KEY_INPUT_Q);
 	ins.Add(KEY_INPUT_E);
 	ins.Add(KEY_INPUT_DOWN);
@@ -393,6 +395,11 @@ bool InputManager::MoveRight(void)
 bool InputManager::MoveDash(void)
 {
 	return IsNew(KEY_INPUT_LSHIFT);
+}
+
+bool InputManager::Reload(void)
+{
+	return IsTrgDown(KEY_INPUT_R);
 }
 
 
