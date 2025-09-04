@@ -16,8 +16,8 @@ public:
 	static constexpr float COLLISION_RAD = 3.0f;
 	
 	// 当たり判定用サイズ
-	static constexpr int HEAD_DAMAGE = 5;
-	static constexpr int BODY_DAMAGE = 10;
+	static constexpr int HEAD_DAMAGE = 10;
+	static constexpr int BODY_DAMAGE = 5;
 
 	HundgunBullet(int baseModelId);
 	~HundgunBullet(void);

@@ -204,14 +204,14 @@ void GameScene::CheckCollisions(void)
 			continue;
 		}
 
-		//// ‘Ì‚Ì“–‚½‚è”»’è
-		//if (CollisionManager::IsCollidingCapsuleSphere(enemyPosBodyTop, enemyPosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad))
-		//{
-		//	// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
-		//	enemy_->SubHp(bulletInfo.bodyDamage_);
-		//	// ’e‚ð”š”­‚³‚¹‚é
-		//	bullet->ChangeState(BulletBase::STATE::BLAST);
-		//}
+		// ‘Ì‚Ì“–‚½‚è”»’è
+		if (CollisionManager::IsCollidingCapsuleSphere(enemyPosBodyTop, enemyPosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad))
+		{
+			// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
+			enemy_->SubHp(bulletInfo.bodyDamage_);
+			// ’e‚ð”š”­‚³‚¹‚é
+			bullet->ChangeState(BulletBase::STATE::BLAST);
+		}
 	}
 
 }

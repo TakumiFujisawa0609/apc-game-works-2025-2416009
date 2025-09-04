@@ -273,7 +273,7 @@ void GunBase::UpdatePos(void)
 	targetPos_ = VAdd(playerCameraPos, VScale(cameraDir, RELATIVE_POS_TARGET));
 
 	// ターゲットをわずかに上へ補正
-	targetPos_.y += 0.5f; // 例として0.5fを加えています。この値は調整が必要です
+	targetPos_.y += 0.5f; 
 #pragma endregion
 }
 

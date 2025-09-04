@@ -11,7 +11,7 @@ class GunBase
 public:
 
 	// プレイヤーとの銃の相対座標
-	static constexpr VECTOR RELATIVE_POS_GUN = { 22.0f,-28.0f,65.0f };
+	static constexpr VECTOR RELATIVE_POS_GUN = {10.0f,-20.0f,60.0f };
 
 	// 銃との弾の発射位置の相対座標
 	static constexpr VECTOR RELATIVE_POS_BULLET = { 0.0f,0.0f,15.0f };
