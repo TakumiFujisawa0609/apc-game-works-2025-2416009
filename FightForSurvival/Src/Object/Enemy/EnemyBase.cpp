@@ -51,6 +51,8 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 
 	enemy_.dir_ = AsoUtility::VECTOR_ZERO;
 
+	animationController_ = new AnimationController(enemy_.modelId_);
+
 	// アニメーション登録
 	AddAnimation();
 
@@ -67,7 +69,7 @@ void EnemyBase::Update(void)
 	}
 
 	// アニメーション更新
-	//animationController_->Update();
+	animationController_->Update();
 }
 
 void EnemyBase::Draw(void)
@@ -141,7 +143,7 @@ void EnemyBase::ChangeState(ENEMY_STATE state)
 	}
 	else
 	{
-		//animationController_->Play(static_cast<int>(state_));
+		animationController_->Play(static_cast<int>(state_));
 	}
 }
 

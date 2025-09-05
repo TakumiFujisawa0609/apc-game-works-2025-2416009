@@ -1,3 +1,6 @@
+#include <DxLib.h>
+#include "../Common/AnimationController.h"
+#include "../../Application.h"
 #include "Zombie.h"
 
 Zombie::Zombie(void)
@@ -26,9 +29,13 @@ void Zombie::SetParam(void)
 
 void Zombie::AddAnimation(void)
 {
-	// ダンステスト
-//std::string pas = "Data/Model/Enemy/Idle.mv1";
-//animationController_->Add(static_cast<int>(ANIM_TYPE::IDLE), 60.0f, pas);
+	std::string enePas = Application::PATH_MODEL + "Enemy/";
+	// 待機モーション
+	std::string pas = enePas + "Zombie Idle.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_IDLE), 60.0f, pas);
+	// 追跡モーション
+	pas = enePas + "Zombie Run.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_CHASE), 60.0f, pas);
 }
 
 void Zombie::Idle(EnemyBase& enemy)
@@ -40,7 +47,7 @@ void Zombie::Idle(EnemyBase& enemy)
 	//}
 	//else
 	//{
-
+		
 	//	if (攻撃制限時間を超えたら入る)
 	//	{
 	//		// 攻撃制限時間を超えているかつ、範囲内に入っていたら攻撃を行う
