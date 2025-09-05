@@ -162,13 +162,34 @@ void GameScene::CheckCollisions(void)
 	CollisionPos eneColPosInfo = enemy_->GetColPos();
 
 	// “G‚ÌÀ•W
-	VECTOR enemyPosHead = eneColPosInfo.posHead_;
-	VECTOR enemyPosBodyTop = eneColPosInfo.posBodyTop_;
-	VECTOR enemyPosBodyUnder = eneColPosInfo.posBodyUnder_;
+	// “ª
+	VECTOR enePosHead = eneColPosInfo.posHead_;
+	// ‘Ì
+	VECTOR enePosBodyTop = eneColPosInfo.posBodyTop_;
+	VECTOR enePosBodyUnder = eneColPosInfo.posBodyUnder_;
+	// ‰E˜r
+	VECTOR enePosArmTopR = eneColPosInfo.posArmTopR_;
+	VECTOR enePosArmUnderR = eneColPosInfo.posArmUnderR_;
+	// ¶˜r
+	VECTOR enePosArmTopL = eneColPosInfo.posArmTopL_;
+	VECTOR enePosArmUnderL = eneColPosInfo.posArmUnderL_;
+	// ‰EŽè
+	VECTOR enePosHandR = eneColPosInfo.posHandR_;
+	// ¶Žè
+	VECTOR enePosHandL = eneColPosInfo.posHandL_;
+	// ‰E‹r
+	VECTOR enePosLegTopR = eneColPosInfo.posLegTopR_;
+	VECTOR enePosLegUnderR = eneColPosInfo.posLegUnderR_;
+	// ¶‹r
+	VECTOR enePosLegTopL = eneColPosInfo.posLegTopL_;
+	VECTOR enePosLegUnderL = eneColPosInfo.posLegUnderL_;
 
 	// “G‚Ì”¼Œa
 	float eneRadHead = eneInfo.collisionRadius_;
 	float eneRadBody = eneInfo.collisionRadiusBody_;
+	float eneRadArm = eneInfo.collisionRadiusArm_;
+	float eneRadHand = eneInfo.collisionRadiusHand_;
+	float eneRadLeg = eneInfo.collisionRadiusLeg_;
 
 	// ’eƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^[Žæ“¾
 	auto bullets = player_->GetGun()->GetBullets();
@@ -193,19 +214,21 @@ void GameScene::CheckCollisions(void)
 		float bulletRad = bulletInfo.collisionRadius_;
 
 		// “ª‚Ì“–‚½‚è”»’è
-		if (CollisionManager::IsCollidingSphereAndSphere(enemyPosHead, eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+		if (CollisionManager::IsCollidingSphereAndSphere(enePosHead, eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
 			enemy_->SubHp(bulletInfo.headDamage_);
 			// ’e‚ð”š”­‚³‚¹‚é
 			bullet->ChangeState(BulletBase::STATE::BLAST);
-
-			// “–‚½‚Á‚Ä‚¢‚½‚çŽŸ‚Ì’e‚Éi‚Þ
-			continue;
 		}
-
 		// ‘Ì‚Ì“–‚½‚è”»’è
-		if (CollisionManager::IsCollidingCapsuleSphere(enemyPosBodyTop, enemyPosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad))
+		else if (CollisionManager::IsCollidingCapsuleSphere(enePosBodyTop, enePosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePosArmTopR, enePosArmUnderR, eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePosArmTopL, enePosArmUnderL, eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereAndSphere(enePosHandR, eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereAndSphere(enePosHandL, eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePosLegTopR, enePosLegUnderR, eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePosLegTopL, enePosLegUnderL, eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// “G‚Éƒ_ƒ[ƒW‚ð—^‚¦‚é
 			enemy_->SubHp(bulletInfo.bodyDamage_);

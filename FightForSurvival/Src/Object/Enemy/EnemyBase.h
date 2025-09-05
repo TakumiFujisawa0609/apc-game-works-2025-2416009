@@ -97,9 +97,15 @@ protected:
 	// 当たり判定用の座標を更新
 	void UpdateCollisionPositions(void);
 
+	// ボーンのワールド座標を取得する
+	VECTOR GetBoneWorldPosition(int bone);
+
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
 	// アニメーション登録
 	virtual void AddAnimation(void) = 0;
+
+	// ボーンフレーム取得
+	int SearchFrame(const std::string& boneName);
 };
 

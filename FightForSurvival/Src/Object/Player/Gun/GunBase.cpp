@@ -105,7 +105,7 @@ void GunBase::Draw(void)
 		// 背景の枠
 		DrawBox(5, 220, 205, 240, 0x696969, true);
 		// プログレスバー本体
-		DrawBox(5, 220, 5 + (100 * reloadTime_), 240, 0xff7f50, true);
+		DrawBox(5, 220, 5 + static_cast<int>((100 * reloadTime_)), 240, 0xff7f50, true);
 	}
 
 #ifdef _DEBUG
