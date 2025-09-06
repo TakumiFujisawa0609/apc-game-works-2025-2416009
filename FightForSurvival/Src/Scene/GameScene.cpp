@@ -159,30 +159,15 @@ void GameScene::CheckCollisions(void)
 
 	// ìGÇÃèÓïÒ
 	Unit eneInfo = enemy_->GetEnemy();
-	CollisionPos eneColPosInfo = enemy_->GetColPos();
+	EnemyCollision eneColInfo = enemy_->GetColPos();
 
 	// ìGÇÃç¿ïW
-	// ì™
-	VECTOR enePosHead = eneColPosInfo.posHead_;
-	// ëÃ
-	VECTOR enePosBodyTop = eneColPosInfo.posBodyTop_;
-	VECTOR enePosBodyUnder = eneColPosInfo.posBodyUnder_;
-	// âEòr
-	VECTOR enePosArmTopR = eneColPosInfo.posArmTopR_;
-	VECTOR enePosArmUnderR = eneColPosInfo.posArmUnderR_;
-	// ç∂òr
-	VECTOR enePosArmTopL = eneColPosInfo.posArmTopL_;
-	VECTOR enePosArmUnderL = eneColPosInfo.posArmUnderL_;
-	// âEéË
-	VECTOR enePosHandR = eneColPosInfo.posHandR_;
-	// ç∂éË
-	VECTOR enePosHandL = eneColPosInfo.posHandL_;
-	// âEãr
-	VECTOR enePosLegTopR = eneColPosInfo.posLegTopR_;
-	VECTOR enePosLegUnderR = eneColPosInfo.posLegUnderR_;
-	// ç∂ãr
-	VECTOR enePosLegTopL = eneColPosInfo.posLegTopL_;
-	VECTOR enePosLegUnderL = eneColPosInfo.posLegUnderL_;
+	VECTOR enePos[COLLISION_POS::MAX];
+
+	for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
+	{
+		enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
+	}
 
 	// ìGÇÃîºåa
 	float eneRadHead = eneInfo.collisionRadius_;
@@ -214,21 +199,21 @@ void GameScene::CheckCollisions(void)
 		float bulletRad = bulletInfo.collisionRadius_;
 
 		// ì™ÇÃìñÇΩÇËîªíË
-		if (CollisionManager::IsCollidingSphereAndSphere(enePosHead, eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+		if (CollisionManager::IsCollidingSphereAndSphere(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// ìGÇ…É_ÉÅÅ[ÉWÇó^Ç¶ÇÈ
 			enemy_->SubHp(bulletInfo.headDamage_);
 			// íeÇîöî≠Ç≥ÇπÇÈ
 			bullet->ChangeState(BulletBase::STATE::BLAST);
 		}
-		// ëÃÇÃìñÇΩÇËîªíË
-		else if (CollisionManager::IsCollidingCapsuleSphere(enePosBodyTop, enePosBodyUnder, eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePosArmTopR, enePosArmUnderR, eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePosArmTopL, enePosArmUnderL, eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereAndSphere(enePosHandR, eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereAndSphere(enePosHandL, eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePosLegTopR, enePosLegUnderR, eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePosLegTopL, enePosLegUnderL, eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
+		// ëÃÅAòrÅAéËÅAãrÇÃìñÇΩÇËîªíË
+		else if (CollisionManager::IsCollidingCapsuleSphere(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereAndSphere(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereAndSphere(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsuleSphere(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// ìGÇ…É_ÉÅÅ[ÉWÇó^Ç¶ÇÈ
 			enemy_->SubHp(bulletInfo.bodyDamage_);

@@ -35,38 +35,38 @@ void Zombie::SetParam(void)
 
 	// 実際のボーンからの座標微調整用の相対座標
 	// 頭
-	colPos_.offsetHead_ = OFFSET_POS_HEAD;
+	collision_.offsetHead_ = OFFSET_POS_HEAD;
 	// 体
-	colPos_.offsetBodyTop_ = OFFSET_POS_BODY_TOP;
-	colPos_.offsetBodyUnder_ = OFFSET_POS_BODY_UNDER;
+	collision_.offsetBodyTop_ = OFFSET_POS_BODY_TOP;
+	collision_.offsetBodyUnder_ = OFFSET_POS_BODY_UNDER;
 	// 腕
-	colPos_.offsetArmTop_ = OFFSET_POS_ARM_TOP;
-	colPos_.offsetArmUnder_ = OFFSET_POS_ARM_UNDER;
+	collision_.offsetArmTop_ = OFFSET_POS_ARM_TOP;
+	collision_.offsetArmUnder_ = OFFSET_POS_ARM_UNDER;
 	// 手
-	colPos_.offsetHand_ = OFFSET_POS_HAND;
+	collision_.offsetHand_ = OFFSET_POS_HAND;
 	// 脚
-	colPos_.offsetLegTop_ = OFFSET_POS_LEG_TOP;
-	colPos_.offsetLegUnder_ = OFFSET_POS_LEG_UNDER;
+	collision_.offsetLegTop_ = OFFSET_POS_LEG_TOP;
+	collision_.offsetLegUnder_ = OFFSET_POS_LEG_UNDER;
 
 	// 頭のボーンフレーム取得
-	colPos_.headBone_ = SearchFrame("Head");
+	collision_.headBone_ = SearchFrame("Head");
 	// 体のボーンフレーム取得
-	colPos_.bodyBoneTop_ = SearchFrame("Spine2");
-	colPos_.bodyBoneUnder_ = SearchFrame("Hips");
+	collision_.bodyBoneTop_ = SearchFrame("Spine2");
+	collision_.bodyBoneUnder_ = SearchFrame("Hips");
 	// 右腕のボーンフレーム取得
-	colPos_.armBoneTopR_ = SearchFrame("RightArm");
+	collision_.armBoneTopR_ = SearchFrame("RightArm");
 	// 右手のボーンフレーム取得
-	colPos_.handBoneR_ = SearchFrame("RightHand");
+	collision_.handBoneR_ = SearchFrame("RightHand");
 	// 左腕のボーンフレーム取得
-	colPos_.armBoneTopL_ = SearchFrame("LeftArm");
+	collision_.armBoneTopL_ = SearchFrame("LeftArm");
 	// 左手のボーンフレーム取得
-	colPos_.handBoneL_ = SearchFrame("LeftHand");
+	collision_.handBoneL_ = SearchFrame("LeftHand");
 	// 右脚のボーンフレーム取得
-	colPos_.legBoneTopR_ = SearchFrame("RightUpLeg");
-	colPos_.legBoneUnderR_ = SearchFrame("RightFoot");
+	collision_.legBoneTopR_ = SearchFrame("RightUpLeg");
+	collision_.legBoneUnderR_ = SearchFrame("RightFoot");
 	// 左脚のボーンフレーム取得
-	colPos_.legBoneTopL_ = SearchFrame("LeftUpLeg");
-	colPos_.legBoneUnderL_ = SearchFrame("LeftFoot");
+	collision_.legBoneTopL_ = SearchFrame("LeftUpLeg");
+	collision_.legBoneUnderL_ = SearchFrame("LeftFoot");
 }
 
 void Zombie::AddAnimation(void)
@@ -76,7 +76,7 @@ void Zombie::AddAnimation(void)
 	std::string pas = enePas + "Zombie Idle.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_IDLE), 60.0f, pas);
 	// 追跡モーション
-	pas = enePas + "Zombie Run.mv1";
+	pas = enePas + "Zombie Running.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_CHASE), 60.0f, pas);
 }
 
@@ -85,7 +85,7 @@ void Zombie::Idle(EnemyBase& enemy)
 	//if (範囲内に入ってなかったら移動)
 	//{
 	//	// 範囲内に入っていなかったら追跡
-		//enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
+		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
 	//}
 	//else
 	//{

@@ -90,28 +90,33 @@ void EnemyBase::Draw(void)
 	// デバッグ用：衝突判定用球体
 	//DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
 	// 頭 デバッグ用：衝突判定用球体
-	DrawSphere3D(colPos_.posHead_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(collision_.colPos_[HEAD], enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
 
 	// 体 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(colPos_.posBodyTop_, colPos_.posBodyUnder_, enemy_.collisionRadiusBody_, 10, 0xff0000, 0xff0000, false);
+	DrawCapsule3D(collision_.colPos_[BODY_TOP], collision_.colPos_[BODY_UNDER],
+		enemy_.collisionRadiusBody_, 10, 0xff0000, 0xff0000, false);
 
 	// 右腕 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(colPos_.posArmTopR_, colPos_.posArmUnderR_, enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
+	DrawCapsule3D(collision_.colPos_[ARM_TOP_R], collision_.colPos_[ARM_UNDER_R],
+		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
 
 	// 左腕 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(colPos_.posArmTopL_, colPos_.posArmUnderL_, enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
+	DrawCapsule3D(collision_.colPos_[ARM_TOP_L], collision_.colPos_[ARM_UNDER_L],
+		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
 
 	// 右手 デバッグ用：衝突判定用球体
-	DrawSphere3D(colPos_.posHandR_, enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(collision_.colPos_[HAND_R],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
 
 	// 左手 デバッグ用：衝突判定用球体
-	DrawSphere3D(colPos_.posHandL_, enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(collision_.colPos_[HAND_L],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
 
 	// 右脚 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(colPos_.posLegTopR_, colPos_.posLegUnderR_, enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
+	DrawCapsule3D(collision_.colPos_[LEG_TOP_R], collision_.colPos_[LEG_UNDER_R],
+		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
 
 	// 左脚 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(colPos_.posLegTopL_, colPos_.posLegUnderL_, enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
+	DrawCapsule3D(collision_.colPos_[LEG_TOP_L], collision_.colPos_[LEG_UNDER_L],
+		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
 #endif // _DEBUG
 }
 
@@ -257,73 +262,65 @@ void EnemyBase::UpdateCollisionPositions(void)
 {
 #pragma region 頭
 
-	colPos_.posHead_ = GetBoneWorldPosition(colPos_.headBone_);
-	colPos_.posHead_.y += colPos_.offsetHead_;
+	collision_.colPos_[HEAD] = GetBoneWorldPosition(collision_.headBone_, collision_.offsetHead_);
 
 #pragma endregion
 
 #pragma region 体
 
-	colPos_.posBodyTop_ = GetBoneWorldPosition(colPos_.bodyBoneTop_);
-	colPos_.posBodyTop_.y += colPos_.offsetBodyTop_;
+	collision_.colPos_[BODY_TOP] = GetBoneWorldPosition(collision_.bodyBoneTop_, collision_.offsetBodyTop_);
 
-	colPos_.posBodyUnder_ = GetBoneWorldPosition(colPos_.bodyBoneUnder_);
-	colPos_.posBodyUnder_.y += colPos_.offsetBodyUnder_;
+	collision_.colPos_[BODY_UNDER] = GetBoneWorldPosition(collision_.bodyBoneUnder_, collision_.offsetBodyUnder_);
 
 #pragma endregion
 
 #pragma region 右腕,右手
 
-	colPos_.posArmTopR_ = GetBoneWorldPosition(colPos_.armBoneTopR_);
-	colPos_.posArmTopR_.y += colPos_.offsetArmTop_;
+	collision_.colPos_[ARM_TOP_R] = GetBoneWorldPosition(collision_.armBoneTopR_, collision_.offsetArmTop_);
 
-	colPos_.posArmUnderR_ = colPos_.posHandR_ = GetBoneWorldPosition(colPos_.handBoneR_);
-	colPos_.posArmUnderR_.y += colPos_.offsetArmUnder_;
+	collision_.colPos_[ARM_UNDER_R] = GetBoneWorldPosition(collision_.handBoneR_, collision_.offsetArmUnder_);
 
-	colPos_.posHandR_.y += colPos_.offsetHand_;
+	// 右手
+	collision_.colPos_[HAND_R] = GetBoneWorldPosition(collision_.handBoneR_, collision_.offsetHand_);
 
 #pragma endregion
 
 #pragma region 左腕,左手
 
-	colPos_.posArmTopL_ = GetBoneWorldPosition(colPos_.armBoneTopL_);
-	colPos_.posArmTopL_.y += colPos_.offsetArmTop_;
+	collision_.colPos_[ARM_TOP_L] = GetBoneWorldPosition(collision_.armBoneTopL_, collision_.offsetArmTop_);
 
-	colPos_.posArmUnderL_ = colPos_.posHandL_ = GetBoneWorldPosition(colPos_.handBoneL_);
-	colPos_.posArmUnderL_.y += colPos_.offsetArmUnder_;
+	collision_.colPos_[ARM_UNDER_L] = GetBoneWorldPosition(collision_.handBoneL_, collision_.offsetArmUnder_);
 
-	colPos_.posHandL_.y += colPos_.offsetHand_;
+	// 左手
+	collision_.colPos_[HAND_L] = GetBoneWorldPosition(collision_.handBoneL_, collision_.offsetHand_);
 
 #pragma endregion
 
 #pragma region 右脚
 
-	colPos_.posLegTopR_ = GetBoneWorldPosition(colPos_.legBoneTopR_);
-	colPos_.posLegTopR_.y += colPos_.offsetLegTop_;
+	collision_.colPos_[LEG_TOP_R] = GetBoneWorldPosition(collision_.legBoneTopR_, collision_.offsetLegTop_);
 
-	colPos_.posLegUnderR_ = GetBoneWorldPosition(colPos_.legBoneUnderR_);
-	colPos_.posLegUnderR_.y += colPos_.offsetLegUnder_;
+	collision_.colPos_[LEG_UNDER_R] = GetBoneWorldPosition(collision_.legBoneUnderR_, collision_.offsetLegUnder_);
 
 #pragma endregion
 
 #pragma region 左脚
 
-	colPos_.posLegTopL_ = GetBoneWorldPosition(colPos_.legBoneTopL_);
-	colPos_.posLegTopL_.y += colPos_.offsetLegTop_;
+	collision_.colPos_[LEG_TOP_L] = GetBoneWorldPosition(collision_.legBoneTopL_, collision_.offsetLegTop_);
 
-	colPos_.posLegUnderL_ = GetBoneWorldPosition(colPos_.legBoneUnderL_);
-	colPos_.posLegUnderL_.y += colPos_.offsetLegUnder_;
+	collision_.colPos_[LEG_UNDER_L] = GetBoneWorldPosition(collision_.legBoneUnderL_, collision_.offsetLegUnder_);
 
 #pragma endregion
 
 }
 
-VECTOR EnemyBase::GetBoneWorldPosition(int bone)
+VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 {
 	// フレームのローカル座標からワールド座標に変換する行列を取得
 	MATRIX boneMatrix = MV1GetFrameLocalWorldMatrix(enemy_.modelId_, bone);
 	// 行列から平行移動の情報を座標に格納する
 	VECTOR retPos = VGet(boneMatrix.m[3][0], boneMatrix.m[3][1], boneMatrix.m[3][2]);
+	retPos.y += offset;
 
 	return retPos;
 }

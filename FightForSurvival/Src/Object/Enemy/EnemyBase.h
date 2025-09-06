@@ -43,7 +43,7 @@ public:
 	// 敵の情報を渡す
 	const Unit GetEnemy(void)const { return enemy_; }
 	// 敵の当たり判定座標の情報を渡す
-	CollisionPos GetColPos(void)const { return colPos_; }
+	EnemyCollision GetColPos(void)const { return collision_; }
 
 	// 死亡していなかったらtrueを返す
 	bool IsCollisionState(void);
@@ -77,7 +77,7 @@ protected:
 	EnemyStateFunction stateTable_[ENEMY_STATE_MAX];
 
 	// 当たり判定用(頭、体)
-	CollisionPos colPos_;
+	EnemyCollision collision_;
 
 	// 状態別更新
 	// 移動処理
@@ -98,7 +98,7 @@ protected:
 	void UpdateCollisionPositions(void);
 
 	// ボーンのワールド座標を取得する
-	VECTOR GetBoneWorldPosition(int bone);
+	VECTOR GetBoneWorldPosition(int bone,float offset);
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
