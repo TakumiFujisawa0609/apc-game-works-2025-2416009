@@ -102,10 +102,15 @@ void GunBase::Draw(void)
 
 	if (state_ == STATE::RELOAD)
 	{
+		int posX = Application::SCREEN_SIZE_X / 2;
+		int posY = Application::SCREEN_SIZE_Y / 2;
+
 		// 背景の枠
-		DrawBox(5, 220, 205, 240, 0x696969, true);
+		DrawBox(posX - 50, posY - 30,
+			posX + 50, posY - 40, 0x696969, true);
 		// プログレスバー本体
-		DrawBox(5, 220, 5 + static_cast<int>((100 * reloadTime_)), 240, 0xff7f50, true);
+		DrawBox(posX - 50, posY - 30,
+			posX - 50 + static_cast<int>((50 * reloadTime_)), posY - 40, 0xff7f50, true);
 	}
 
 #ifdef _DEBUG
@@ -119,7 +124,8 @@ void GunBase::Draw(void)
 	// 狙う場所の位置目安
 	//DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
 
-	DrawFormatString(0, 200, 0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
+	DrawFormatString(Application::SCREEN_SIZE_X - 260, Application::SCREEN_SIZE_Y - 25,
+		0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
 
 #endif // _DEBUG
 

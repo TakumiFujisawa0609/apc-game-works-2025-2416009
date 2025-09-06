@@ -5,6 +5,7 @@
 #include "../Manager/InputManager.h"
 #include "../Object/Player/Player.h"
 #include "../Object/Common/Cursor.h"
+#include "../Common/Score/Score.h"
 #include "../Object/Enemy/Zombie.h"
 #include "../Object/Player/Gun/GunBase.h"
 #include "../Object/Player/Gun/Bullet/BulletBase.h"
@@ -17,6 +18,7 @@ GameScene::GameScene(void)
 	player_ = nullptr;
 	camera_ = nullptr;
 	cursor_ = nullptr;
+	score_ = nullptr;
 	enemy_ = nullptr;
 
 	enemyId_ = -1;
@@ -53,6 +55,10 @@ void GameScene::Init(void)
 	// カーソルの生成
 	cursor_ = new Cursor();
 	cursor_->Init();
+
+	// スコアの生成
+	score_ = new Score();
+	score_->Init();
 
 	// 敵の生成
 	enemyId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str());
@@ -102,6 +108,8 @@ void GameScene::Draw(void)
 	// カーソルの描画
 	cursor_->Draw();
 
+	// スコアの描画
+	score_->Draw();
 }
 
 void GameScene::Release(void)
@@ -115,11 +123,20 @@ void GameScene::Release(void)
 	}
 	MV1DeleteModel(enemyId_);
 
+	// スコアの解放
+	if (score_ != nullptr)
+	{
+		score_->Release();
+		delete score_;
+		score_ = nullptr;
+	}
+
 	// カーソルの解放
 	if (cursor_ != nullptr)
 	{
 		cursor_->Release();
 		delete cursor_;
+		cursor_ = nullptr;
 	}
 
 	// カメラの解放
@@ -127,6 +144,7 @@ void GameScene::Release(void)
 	{
 		camera_->Release();
 		delete camera_;
+		camera_ = nullptr;
 	}
 
 	// プレイヤーの解放

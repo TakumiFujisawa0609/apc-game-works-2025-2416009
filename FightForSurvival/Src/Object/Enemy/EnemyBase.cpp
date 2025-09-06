@@ -2,6 +2,7 @@
 #include "../../Utility/AsoUtility.h"
 #include "../Player/Player.h"
 #include "../Common/AnimationController.h"
+#include "../../Manager/SystemManager.h"
 #include "EnemyBase.h"
 #include "Zombie.h"
 
@@ -14,6 +15,8 @@ EnemyBase::EnemyBase(void)
 	stateTable_[STATE_HIT] = Hit;
 	stateTable_[STATE_DEAD] = Dead;
 	stateTable_[STATE_END] = End;
+
+	animationController_ = nullptr;
 }
 
 EnemyBase::~EnemyBase(void)
@@ -70,7 +73,10 @@ void EnemyBase::Update(void)
 	}
 
 	// アニメーション更新
-	animationController_->Update();
+	if (animationController_ != nullptr)
+	{
+		animationController_->Update();
+	}
 
 	// 頭用座標と体用座標を更新させる
 	UpdateCollisionPositions();
@@ -122,6 +128,14 @@ void EnemyBase::Draw(void)
 
 void EnemyBase::Release(void)
 {
+	// アニメーションクラスの解放
+	if (animationController_ != nullptr)
+	{
+		animationController_->Release();
+		delete animationController_;
+		animationController_ = nullptr;
+	}
+
 	if (enemy_.modelId_ != -1)
 	{
 		// 中にデータが入っていたら解放する
@@ -168,10 +182,23 @@ void EnemyBase::ChangeState(ENEMY_STATE state)
 		//StopEffekseer3DEffect(effectBlastPlayId_);
 		// 生存判定を折る
 		enemy_.isAlive_ = false;
+		auto& sysIns = SystemManager::GetInstance();
+		// 撃破したため、スコア加算する
+		sysIns.SetScore(sysIns.GetScore() + score_);
+	}
+	else if (state_ == ENEMY_STATE::STATE_IDLE || state_ == ENEMY_STATE::STATE_CHASE)
+	{
+		if (animationController_ != nullptr)
+		{
+			animationController_->Play(static_cast<int>(state_));
+		}
 	}
 	else
 	{
-		animationController_->Play(static_cast<int>(state_));
+		if (animationController_ != nullptr)
+		{
+			animationController_->Play(static_cast<int>(state_), false);
+		}
 	}
 }
 
@@ -189,32 +216,42 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	//if (範囲内に入っていたら攻撃)
 	{
 		// 攻撃範囲内に入ったら攻撃を行う
-		//enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		//enemy.ChangeState(ENEMY_STATE::ATTACK);
 	}
 }
 
 void EnemyBase::Retreat(EnemyBase& enemy)
 {
-	//if (アニメーションを終えたら)
+	if (enemy.animationController_ != nullptr)
 	{
-		enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+		if (enemy.animationController_->IsEnd())
+		{
+			enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+		}
 	}
 }
 
 void EnemyBase::Hit(EnemyBase& enemy)
 {
-	//if (アニメーションを終えたら)
+	if (enemy.animationController_ != nullptr)
 	{
-		enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+		if (enemy.animationController_->IsEnd())
+		{
+			//enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+			enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+		}
 	}
 }
 
 void EnemyBase::Dead(EnemyBase& enemy)
 {
-	//if (アニメーション終わったら入る)
+	if (enemy.animationController_ != nullptr)
 	{
-		// 死亡リアクションを終えたらENDへ移行
-		enemy.ChangeState(ENEMY_STATE::STATE_END);
+		if (enemy.animationController_->IsEnd())
+		{
+			// 死亡リアクションを終えたらENDへ移行
+			enemy.ChangeState(ENEMY_STATE::STATE_END);
+		}
 	}
 }
 
@@ -327,7 +364,7 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 
 int EnemyBase::SearchFrame(const std::string& boneName)
 {
-	std::string fullBoneName = "mixamorig5:" + boneName;
+	std::string fullBoneName = "mixamorig" + boneName;
 
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
 }

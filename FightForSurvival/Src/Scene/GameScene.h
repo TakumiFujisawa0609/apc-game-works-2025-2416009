@@ -6,6 +6,7 @@ class Camera;
 class Grid;
 class Player;
 class Cursor;
+class Score;
 class EnemyBase;
 
 class GameScene : public SceneBase
@@ -40,6 +41,9 @@ private:
 	
 	// カーソル
 	Cursor* cursor_;
+
+	// スコア
+	Score* score_;
 
 	// 敵
 	EnemyBase* enemy_;

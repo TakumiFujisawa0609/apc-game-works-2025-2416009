@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\Score\Score.cpp" />
     <ClCompile Include="Src\CollisionManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp" />
@@ -47,6 +48,7 @@
     <ClCompile Include="Src\Object\Enemy\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\Score\Score.h" />
     <ClInclude Include="Src\CollisionManager.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyState.h" />
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />

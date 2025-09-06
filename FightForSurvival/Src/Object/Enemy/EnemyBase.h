@@ -10,9 +10,6 @@ class EnemyBase
 {
 public:
 
-	// 攻撃が確定するフレーム数
-	static constexpr int ATTACK_FRAME_TIMMING = 10;
-
 	// エネミー種別
 	enum class ENEMY_TYPE
 	{
@@ -54,6 +51,8 @@ public:
 	// 状態遷移
 	void ChangeState(ENEMY_STATE newState);
 
+	AnimationController* GetAnimationController(void)const { return animationController_; }
+
 	// 状態を返却
 	ENEMY_STATE GetState() const { return state_; }
 
@@ -66,6 +65,9 @@ protected:
 
 	// エフェクト用モデルハンドルID
 	int baseAttackEffectModelId_;
+
+	// 撃破スコア
+	int score_;
 
 	// 敵の種類
 	ENEMY_TYPE type_;

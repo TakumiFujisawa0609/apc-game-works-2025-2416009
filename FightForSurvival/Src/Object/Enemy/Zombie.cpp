@@ -21,6 +21,8 @@ void Zombie::SetParam(void)
 	enemy_.moveSpeed_ = SPEED;
 	enemy_.isAlive_ = true;
 
+	score_ = SCORE;
+
 	// 当たり判定用の半径
 	// 頭
 	enemy_.collisionRadius_ = COLLISION_RADIUS;
@@ -49,24 +51,24 @@ void Zombie::SetParam(void)
 	collision_.offsetLegUnder_ = OFFSET_POS_LEG_UNDER;
 
 	// 頭のボーンフレーム取得
-	collision_.headBone_ = SearchFrame("Head");
+	collision_.headBone_ = SearchFrame("5:Head");
 	// 体のボーンフレーム取得
-	collision_.bodyBoneTop_ = SearchFrame("Spine2");
-	collision_.bodyBoneUnder_ = SearchFrame("Hips");
+	collision_.bodyBoneTop_ = SearchFrame("5:Spine2");
+	collision_.bodyBoneUnder_ = SearchFrame("5:Hips");
 	// 右腕のボーンフレーム取得
-	collision_.armBoneTopR_ = SearchFrame("RightArm");
+	collision_.armBoneTopR_ = SearchFrame("5:RightArm");
 	// 右手のボーンフレーム取得
-	collision_.handBoneR_ = SearchFrame("RightHand");
+	collision_.handBoneR_ = SearchFrame("5:RightHand");
 	// 左腕のボーンフレーム取得
-	collision_.armBoneTopL_ = SearchFrame("LeftArm");
+	collision_.armBoneTopL_ = SearchFrame("5:LeftArm");
 	// 左手のボーンフレーム取得
-	collision_.handBoneL_ = SearchFrame("LeftHand");
+	collision_.handBoneL_ = SearchFrame("5:LeftHand");
 	// 右脚のボーンフレーム取得
-	collision_.legBoneTopR_ = SearchFrame("RightUpLeg");
-	collision_.legBoneUnderR_ = SearchFrame("RightFoot");
+	collision_.legBoneTopR_ = SearchFrame("5:RightUpLeg");
+	collision_.legBoneUnderR_ = SearchFrame("5:RightFoot");
 	// 左脚のボーンフレーム取得
-	collision_.legBoneTopL_ = SearchFrame("LeftUpLeg");
-	collision_.legBoneUnderL_ = SearchFrame("LeftFoot");
+	collision_.legBoneTopL_ = SearchFrame("5:LeftUpLeg");
+	collision_.legBoneUnderL_ = SearchFrame("5:LeftFoot");
 }
 
 void Zombie::AddAnimation(void)
@@ -78,6 +80,18 @@ void Zombie::AddAnimation(void)
 	// 追跡モーション
 	pas = enePas + "Zombie Running.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_CHASE), 60.0f, pas);
+	// 攻撃モーション
+	pas = enePas + "Standing Melee Attack Downward.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_ATTACK), 60.0f, pas);
+	//// 後退モーション
+	//pas = enePas + "Standing Melee Attack Downward.mv1";
+	//animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_ATTACK), 60.0f, pas);
+	// ダメージ時モーション
+	pas = enePas + "Hit Reaction.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_HIT), 70.0f, pas);
+	// 死亡モーション
+	pas = enePas + "Zombie Dying.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_DEAD), 75.0f, pas);
 }
 
 void Zombie::Idle(EnemyBase& enemy)
@@ -87,22 +101,25 @@ void Zombie::Idle(EnemyBase& enemy)
 	//	// 範囲内に入っていなかったら追跡
 		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
 	//}
-	//else
+	//else if(攻撃制限時間を超えたら入る)
 	//{
 		
-	//	if (攻撃制限時間を超えたら入る)
-	//	{
 	//		// 攻撃制限時間を超えているかつ、範囲内に入っていたら攻撃を行う
-	//		ChangeState(ENEMY_STATE::PUNCH);
-	//	}
+	//		ChangeState(ENEMY_STATE::ATTACK);
 	//}
 }
 
 void Zombie::Attack(EnemyBase& enemy)
 {
-	//if (攻撃終わったらIDLEに戻す)
-	//{
-	//	// 攻撃が終わったら後退させる
-	//	enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
-	//}
+	// ゲッター経由でアクセス
+	AnimationController* animController = enemy.GetAnimationController();
+	// ポインタが有効かチェックする
+	if (animController != nullptr)
+	{
+		if (animController->IsEnd())
+		{
+			// 攻撃が終わったら後退させる
+			enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+		}
+	}
 }

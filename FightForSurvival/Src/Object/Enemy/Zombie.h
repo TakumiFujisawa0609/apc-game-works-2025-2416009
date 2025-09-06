@@ -18,6 +18,9 @@ public:
 	// 速度
 	static constexpr float SPEED = 3.0f;
 
+	// 撃破スコア
+	static constexpr int SCORE = 10;
+
 	// 当たり判定用半径
 	// 頭
 	static constexpr float COLLISION_RADIUS = 15.0f;

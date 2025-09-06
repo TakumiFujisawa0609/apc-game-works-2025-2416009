@@ -118,10 +118,12 @@ void Player::Draw(void)
 	}
 
 #ifdef _DEBUG
-	DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
-	DrawFormatString(0, 70, 0x7fff00, "HP：%.2d", player_.hp_);
-	DrawFormatString(0, 90, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+	int posY = Application::SCREEN_SIZE_Y;
 
+	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2d", player_.hp_);
+	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+
+	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	// プレイヤー頭の位置目安
 	//DrawSphere3D(cameraPos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
 	//DrawSphere3D(player_.pos_, player_.collisionRadius_, 10, 0x00ff00, 0x0000ff, false);
