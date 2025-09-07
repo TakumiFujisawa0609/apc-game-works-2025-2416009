@@ -111,6 +111,7 @@ void GunBase::Draw(void)
 		// プログレスバー本体
 		DrawBox(posX - 50, posY - 30,
 			posX - 50 + static_cast<int>((50 * reloadTime_)), posY - 40, 0xff7f50, true);
+		DrawString(posX - 45, posY - 60, "リロード中", 0xffffff);
 	}
 
 #ifdef _DEBUG

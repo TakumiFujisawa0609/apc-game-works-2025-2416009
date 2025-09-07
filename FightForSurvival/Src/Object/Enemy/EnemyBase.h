@@ -44,6 +44,8 @@ public:
 
 	// €–S‚µ‚Ä‚¢‚È‚©‚Á‚½‚çtrue‚ğ•Ô‚·
 	bool IsCollisionState(void);
+	// UŒ‚ó‘Ô‚¾‚Á‚½‚çtrue‚ğ•Ô‚·
+	bool IsAttack(void) { return state_ == STATE_ATTACK; }
 
 	// HP‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚é
 	void SubHp(int hp);

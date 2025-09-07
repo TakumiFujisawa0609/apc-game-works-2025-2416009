@@ -240,4 +240,10 @@ void GameScene::CheckCollisions(void)
 		}
 	}
 
+	// “G‚ªUŒ‚ó‘Ô‚¾‚Á‚½‚ç“ü‚é
+	if (enemy_->IsAttack())
+	{
+
+	}
+
 }
