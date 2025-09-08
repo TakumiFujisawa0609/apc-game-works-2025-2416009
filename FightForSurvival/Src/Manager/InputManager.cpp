@@ -42,6 +42,9 @@ void InputManager::Init(void)
 	// É|Å[ÉY
 	ins.Add(KEY_INPUT_ESCAPE);
 
+	ins.Add(KEY_INPUT_O);
+	ins.Add(KEY_INPUT_C);
+
 	ins.Add(KEY_INPUT_Q);
 	ins.Add(KEY_INPUT_E);
 	ins.Add(KEY_INPUT_DOWN);

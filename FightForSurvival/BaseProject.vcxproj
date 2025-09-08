@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Scene\OverScene.cpp" />
+    <ClCompile Include="Src\Scene\ClearScene.cpp" />
     <ClCompile Include="Src\Common\Score\Score.cpp" />
     <ClCompile Include="Src\Manager\CollisionManager.cpp" />
     <ClCompile Include="Src\Manager\EndManager.cpp" />
@@ -50,6 +52,8 @@
     <ClCompile Include="Src\Object\Enemy\Zombie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\OverScene.h" />
+    <ClInclude Include="Src\Scene\ClearScene.h" />
     <ClInclude Include="Src\Manager\EndManager.h" />
     <ClInclude Include="Src\Common\Score\Score.h" />
     <ClInclude Include="Src\Manager\CollisionManager.h" />

@@ -21,8 +21,8 @@ public:
 	// デストラクタ
 	~GameScene(void);
 
-	void Load(void) override;
 	void Init(void) override;
+	void Load(void) override;
 	void Update(void) override;
 	void Draw(void) override;
 	void Release(void) override;

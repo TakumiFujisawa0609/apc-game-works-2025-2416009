@@ -10,6 +10,7 @@
 #include "../Object/Player/Gun/GunBase.h"
 #include "../Object/Player/Gun/Bullet/BulletBase.h"
 #include "../Manager/CollisionManager.h"
+#include "../Manager/SceneManager.h"
 #include "../Common/Pause/Pause.h"
 #include "GameScene.h"
 
@@ -31,13 +32,6 @@ GameScene::GameScene(void)
 
 GameScene::~GameScene(void)
 {
-}
-
-void GameScene::Load(void)
-{
-	player_->Load();
-	cursor_->Load();
-	pause_->Load();
 }
 
 void GameScene::Init(void)
@@ -73,6 +67,13 @@ void GameScene::Init(void)
 	enemy_->Init(EnemyBase::ENEMY_TYPE::ZOMBIE, enemyId_, -1, VGet(0.0f, 0.0f, 100.0f), player_);
 }
 
+void GameScene::Load(void)
+{
+	player_->Load();
+	cursor_->Load();
+	pause_->Load();
+}
+
 void GameScene::Update(void)
 {
 	// ポーズモード確認
@@ -103,6 +104,23 @@ void GameScene::Update(void)
 
 	// ポーズモード更新
 	pause_->Update();
+
+#ifdef _DEBUG
+
+	auto& inputIns = InputManager::GetInstance();
+	auto& sceneIns = SceneManager::GetInstance();
+
+	if (inputIns.IsTrgDown(KEY_INPUT_C))
+	{
+		sceneIns.ChangeScene(SceneManager::SCENE_ID::CLEAR);
+	}
+
+	if (inputIns.IsTrgDown(KEY_INPUT_O))
+	{
+		sceneIns.ChangeScene(SceneManager::SCENE_ID::OVER);
+	}
+
+#endif // _DEBUG
 
 }
 

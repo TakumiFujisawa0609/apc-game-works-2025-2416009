@@ -3,6 +3,8 @@
 #include "../Common/Fader.h"
 #include "../Scene/TitleScene.h"
 #include "../Scene/GameScene.h"
+#include "../Scene/ClearScene.h"
+#include "../Scene/OverScene.h"
 #include "SystemManager.h"
 #include "SceneManager.h"
 
@@ -176,6 +178,12 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::GAME:
 		scene_ = new GameScene();
+		break;
+	case SCENE_ID::CLEAR:
+		scene_ = new ClearScene();
+		break;
+	case SCENE_ID::OVER:
+		scene_ = new OverScene();
 		break;
 	}
 
