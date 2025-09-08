@@ -2,6 +2,7 @@
 
 #include "EnemyBase.h"
 
+
 class Zombie : public EnemyBase
 {
 public:
@@ -53,6 +54,9 @@ public:
 	static constexpr float OFFSET_POS_LEG_TOP = -12.0f;
 	// ƒ‚ƒfƒ‹‚Æ‘Ì‚Ì‘Š‘ÎÀ•W(‰º)
 	static constexpr float OFFSET_POS_LEG_UNDER = -5.0f;
+
+	// UŒ‚‰Â”\”ÍˆÍ
+	static constexpr float ATTACK_RANGE = 80;
 
 	Zombie(void);
 	~Zombie(void)override;

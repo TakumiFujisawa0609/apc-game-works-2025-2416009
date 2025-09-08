@@ -69,6 +69,9 @@ void Zombie::SetParam(void)
 	// 左脚のボーンフレーム取得
 	collision_.legBoneTopL_ = SearchFrame("5:LeftUpLeg");
 	collision_.legBoneUnderL_ = SearchFrame("5:LeftFoot");
+
+	// 攻撃可能範囲
+	attackRange_ = ATTACK_RANGE;
 }
 
 void Zombie::AddAnimation(void)
@@ -84,11 +87,11 @@ void Zombie::AddAnimation(void)
 	pas = enePas + "Standing Melee Attack Downward.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_ATTACK), 60.0f, pas);
 	//// 後退モーション
-	//pas = enePas + "Standing Melee Attack Downward.mv1";
-	//animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_ATTACK), 60.0f, pas);
+	pas = enePas + "Standing Walk Back.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_RETREAT), 60.0f, pas);
 	// ダメージ時モーション
-	pas = enePas + "Hit Reaction.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_HIT), 70.0f, pas);
+	pas = enePas + "Zombie HitIdle.mv1";
+	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_HIT), 150.0f, pas);
 	// 死亡モーション
 	pas = enePas + "Zombie Dying.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_DEAD), 75.0f, pas);
@@ -96,11 +99,15 @@ void Zombie::AddAnimation(void)
 
 void Zombie::Idle(EnemyBase& enemy)
 {
-	//if (範囲内に入ってなかったら移動)
-	//{
-	//	// 範囲内に入っていなかったら追跡
+	if (!enemy.SearchAttackRange())
+	{
+		// 範囲内に入っていなかったら追跡
 		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
-	//}
+	}
+	else
+	{
+		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+	}
 	//else if(攻撃制限時間を超えたら入る)
 	//{
 		

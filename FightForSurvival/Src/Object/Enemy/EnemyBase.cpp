@@ -3,6 +3,7 @@
 #include "../Player/Player.h"
 #include "../Common/AnimationController.h"
 #include "../../Manager/SystemManager.h"
+#include "../../Manager/CollisionManager.h"
 #include "EnemyBase.h"
 #include "Zombie.h"
 
@@ -35,8 +36,9 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	baseAttackEffectModelId_ = baseAttackEffectModelId;
 
 	// 指定された座標を設定
-	enemy_.pos_ = pos;
+	enemy_.pos_ = attackRangePos_ = pos;
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+	attackRangePos_.y += ATTACK_RANGE_POS_OFFSET;
 
 	// プレイヤーのポインタを格納
 	player_ = player;
@@ -123,6 +125,9 @@ void EnemyBase::Draw(void)
 	// 左脚 デバッグ用：衝突判定用カプセル
 	DrawCapsule3D(collision_.colPos_[LEG_TOP_L], collision_.colPos_[LEG_UNDER_L],
 		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
+
+	// 攻撃可能範囲
+	DrawSphere3D(attackRangePos_, attackRange_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
@@ -213,10 +218,10 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
 
-	//if (範囲内に入っていたら攻撃)
+	if (enemy.SearchAttackRange())
 	{
-		// 攻撃範囲内に入ったら攻撃を行う
-		//enemy.ChangeState(ENEMY_STATE::ATTACK);
+		 //攻撃範囲内に入ったら攻撃を行う
+		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
 	}
 }
 
@@ -349,6 +354,9 @@ void EnemyBase::UpdateCollisionPositions(void)
 
 #pragma endregion
 
+	attackRangePos_ = enemy_.pos_;
+	attackRangePos_.y += ATTACK_RANGE_POS_OFFSET;
+
 }
 
 VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
@@ -367,4 +375,10 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 	std::string fullBoneName = "mixamorig" + boneName;
 
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
+}
+
+bool EnemyBase::SearchAttackRange(void)
+{
+	// 攻撃可能範囲にプレイヤーがいるか確認
+	return CollisionManager::IsCollidingSphereAndSphere(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }

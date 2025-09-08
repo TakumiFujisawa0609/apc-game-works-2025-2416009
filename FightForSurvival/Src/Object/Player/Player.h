@@ -34,13 +34,17 @@ public:
 	static constexpr float RECOVERY_STAMINA_WAIT_TIME = 1.0f;
 
 	// 衝突判定用半径
-	static constexpr float COLLISION_RADIUS = 50.0f;
+	static constexpr float COLLISION_RADIUS = 35.0f;
 
 	// 視点の最大角度
 	static constexpr float MAX_VIEW_ANGLE = 1.5f;
 
 	// 視点の最小角度
 	static constexpr float MIN_VIEW_ANGLE = -1.5f;
+
+	// 当たり判定用カプセルのプレイヤー座標からのオフセット
+	static constexpr float COLLISION_OFFSET_TOP = 50.0f;
+	static constexpr float COLLISION_OFFSET_UNDER = -50.0f;
 
 	enum class ABILITY_TYPE
 	{
@@ -75,6 +79,8 @@ public:
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const float GetYaw(void) const { return yaw_; }
 	const float GetPitch(void) const { return pitch_; }
+	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
+	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
 	void SetPitch(float newPitch)  { pitch_ = newPitch; }
 
 	GunBase* GetGun(void)const { return gun_; }
@@ -104,9 +110,15 @@ private:
 	// マウスの感度
 	float sensitivity_;
 
+	// スタミナを回復させるまでの時間カウンタ
 	float staminaCounter_;
 
+	// 銃の種類
 	GUN_TYPE gunType_;
+
+	// 当たり判定用カプセル座標
+	VECTOR collisionPosTop_;
+	VECTOR collisionPosUnder_;
 
 	// 移動処理
 	void ProcessMove(void);

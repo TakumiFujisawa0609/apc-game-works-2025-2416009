@@ -33,8 +33,10 @@ void Player::Init(void)
 	auto& ins = SystemManager::GetInstance();
 
 	// 座標の設定
-	player_.pos_ = player_.prevPos_ = cameraPos_ = DEFAULT_POS;
+	player_.pos_ = player_.prevPos_ = cameraPos_ = collisionPosTop_ = collisionPosUnder_ = DEFAULT_POS;
 	cameraPos_.y += RELATIVE_POS_CAMERA;
+	collisionPosTop_.y += COLLISION_OFFSET_TOP;
+	collisionPosUnder_.y += COLLISION_OFFSET_UNDER;
 	//MV1SetPosition(player_.modelId_, player_.pos_);
 
 	// 向きの設定
@@ -122,6 +124,10 @@ void Player::Draw(void)
 
 	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2d", player_.hp_);
 	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+
+	// 体 デバッグ用：衝突判定用カプセル
+	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
+		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 
 	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	// プレイヤー頭の位置目安
@@ -258,6 +264,11 @@ void Player::ProcessMove(void)
 	// カメラ位置の更新
 	cameraPos_ = player_.pos_;
 	cameraPos_.y += RELATIVE_POS_CAMERA;
+
+	// 当たり判定用カプセルの座標更新
+	collisionPosTop_ = collisionPosUnder_ = player_.pos_;
+	collisionPosTop_.y += COLLISION_OFFSET_TOP;
+	collisionPosUnder_.y += COLLISION_OFFSET_UNDER;
 
 }
 

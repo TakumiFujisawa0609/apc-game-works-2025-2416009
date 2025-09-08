@@ -10,6 +10,8 @@ class EnemyBase
 {
 public:
 
+	static constexpr float ATTACK_RANGE_POS_OFFSET = 90.0f;
+
 	// エネミー種別
 	enum class ENEMY_TYPE
 	{
@@ -58,6 +60,8 @@ public:
 	// 状態を返却
 	ENEMY_STATE GetState() const { return state_; }
 
+	// 攻撃範囲内か確認用処理
+	bool SearchAttackRange(void);
 protected:
 	AnimationController* animationController_;
 	Player* player_;
@@ -83,6 +87,10 @@ protected:
 	// 当たり判定用(頭、体)
 	EnemyCollision collision_;
 
+	// 攻撃可能範囲用座標
+	VECTOR attackRangePos_;
+	float attackRange_;
+
 	// 状態別更新
 	// 移動処理
 	static void Chase(EnemyBase& enemy);
@@ -104,12 +112,13 @@ protected:
 	// ボーンのワールド座標を取得する
 	VECTOR GetBoneWorldPosition(int bone,float offset);
 
+	// ボーンフレーム取得
+	int SearchFrame(const std::string& boneName);
+
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
 	// アニメーション登録
 	virtual void AddAnimation(void) = 0;
 
-	// ボーンフレーム取得
-	int SearchFrame(const std::string& boneName);
 };
 
