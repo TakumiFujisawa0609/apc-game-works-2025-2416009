@@ -9,7 +9,8 @@
 #include "../Object/Enemy/Zombie.h"
 #include "../Object/Player/Gun/GunBase.h"
 #include "../Object/Player/Gun/Bullet/BulletBase.h"
-#include "../CollisionManager.h"
+#include "../Manager/CollisionManager.h"
+#include "../Common/Pause/Pause.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -19,6 +20,7 @@ GameScene::GameScene(void)
 	camera_ = nullptr;
 	cursor_ = nullptr;
 	score_ = nullptr;
+	pause_ = nullptr;
 	enemy_ = nullptr;
 
 	enemyId_ = -1;
@@ -35,6 +37,7 @@ void GameScene::Load(void)
 {
 	player_->Load();
 	cursor_->Load();
+	pause_->Load();
 }
 
 void GameScene::Init(void)
@@ -60,6 +63,10 @@ void GameScene::Init(void)
 	score_ = new Score();
 	score_->Init();
 
+	// ポーズモードの生成
+	pause_ = new Pause();
+	pause_->Init();
+
 	// 敵の生成
 	enemyId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str());
 	enemy_ = new Zombie();
@@ -68,20 +75,35 @@ void GameScene::Init(void)
 
 void GameScene::Update(void)
 {
-	// グリッド更新
-	grid_->Update();
+	// ポーズモード確認
+	prevPause_ = nowPause_;
+	nowPause_ = pause_->GetPauseMode();
 
-	// プレイヤー更新
-	player_->Update();
+	if (!prevPause_ && !nowPause_)
+	{
+		// グリッド更新
+		grid_->Update();
 
-	// カメラの更新
-	camera_->Update();
+		// プレイヤー更新
+		player_->Update();
 
-	// 敵の更新
-	enemy_->Update();
+		// カメラの更新
+		camera_->Update();
 
-	// 当たり判定
-	CheckCollisions();
+		// 敵の更新
+		enemy_->Update();
+
+		// 当たり判定
+		CheckCollisions();
+	}
+	else if (prevPause_ && !nowPause_)
+	{
+		//SoundManager::GetInstance()->Play(SoundManager::BGM::GAME, false);
+	}
+
+	// ポーズモード更新
+	pause_->Update();
+
 }
 
 void GameScene::Draw(void)
@@ -92,11 +114,11 @@ void GameScene::Draw(void)
 	// グリッド描画
 	grid_->Draw();
 
-	// プレイヤー描画
-	player_->Draw();
-
 	// 敵の描画
 	enemy_->Draw();
+
+	// プレイヤー描画
+	player_->Draw();
 
 #ifdef _DEBUG
 	DrawString(0, 0, "GameScene", 0xffffff);
@@ -110,6 +132,10 @@ void GameScene::Draw(void)
 
 	// スコアの描画
 	score_->Draw();
+
+	// ポーズモードの描画
+	pause_->Draw();
+
 }
 
 void GameScene::Release(void)
@@ -122,6 +148,14 @@ void GameScene::Release(void)
 		delete enemy_;
 	}
 	MV1DeleteModel(enemyId_);
+
+	// ポーズモードの解放
+	if (pause_ != nullptr)
+	{
+		pause_->Release();
+		delete pause_;
+		pause_ = nullptr;
+	}
 
 	// スコアの解放
 	if (score_ != nullptr)

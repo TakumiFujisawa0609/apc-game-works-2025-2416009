@@ -7,6 +7,7 @@ class Grid;
 class Player;
 class Cursor;
 class Score;
+class Pause;
 class EnemyBase;
 
 class GameScene : public SceneBase
@@ -45,9 +46,16 @@ private:
 	// スコア
 	Score* score_;
 
+	// ポーズモード
+	Pause* pause_;
+
 	// 敵
 	EnemyBase* enemy_;
 	int enemyId_;
+
+	// ポーズモード確認用
+	bool nowPause_;
+	bool prevPause_;
 
 	void CheckCollisions(void);
 };

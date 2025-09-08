@@ -1,7 +1,11 @@
 #pragma once
 
+#include "../Common/Vector2.h"
+
 namespace CollisionManager
 {
+#pragma region 3D
+
 	float VLenSq(VECTOR v);
 
 	// 球の移動経路の線分とカプセルの線分間の最近接距離の2乗を計算
@@ -11,6 +15,13 @@ namespace CollisionManager
 
 	// 球同士の当たり判定
 	bool IsCollidingSphereAndSphere(VECTOR spherePos_1, float sphereRad_1, VECTOR lineStart, VECTOR lineEnd, float sphereRad_2);
+
+#pragma endregion
+
+#pragma region 2D
+	// 矩形と点の当たり判定(左上からの当たり判定)
+	bool RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2);
+#pragma endregion
 
 };
 

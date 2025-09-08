@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Manager/EndManager.h"
 #include "Common/FpsControl.h"
 #include "Application.h"
 
@@ -61,7 +62,6 @@ void Application::Init(void)
 	// 設定する数値によって、ランダムの出方が変わる
 	SRand(date.Year + date.Mon + date.Day + date.Hour + date.Min + date.Sec);
 
-
 	//FPS初期化
 	fps_ = new FpsControl;
 	fps_->Init();
@@ -73,16 +73,19 @@ void Application::Init(void)
 	// シーン管理初期化
 	SceneManager::CreateInstance();
 
+	// 終了管理初期化
+	EndManager::CreateInstance();
+
 }
 
 void Application::Run(void)
 {
-
 	InputManager& inputManager = InputManager::GetInstance();
 	SceneManager& sceneManager = SceneManager::GetInstance();
+	EndManager& endManager = EndManager::GetInstance();
 
 	// ゲームループ
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && !endManager.GetIsEnd())
 	{
 
 		//フレームレート更新
@@ -110,6 +113,9 @@ void Application::Destroy(void)
 	{
 		isReleaseFail_ = true;
 	}
+
+	// 終了管理解放
+	EndManager::GetInstance().Destroy();
 
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();

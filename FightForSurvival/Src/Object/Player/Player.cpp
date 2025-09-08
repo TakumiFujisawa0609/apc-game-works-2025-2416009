@@ -312,18 +312,18 @@ void Player::ProcessAttack(void)
 	auto& ins = InputManager::GetInstance();
 
 	// 左クリックされたかつ、銃が撃てる状態なら入る
-	if (ins.IsTrgMouseLeft())
+	if (ins.Attack())
 	{
 		if (gun_->GetCanShot())
 		{
 			if (gun_->NowBulletNum() != 0)
 			{
-				// 攻撃に進む
+				// 弾があれば攻撃に進む
 				gun_->ChangeState(GunBase::STATE::ATTACK);
 			}
 			else
 			{
-				// リロードに進む
+				// 弾がなければリロードに進む
 				gun_->ChangeState(GunBase::STATE::RELOAD);
 			}
 		}

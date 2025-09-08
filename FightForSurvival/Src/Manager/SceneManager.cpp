@@ -42,6 +42,7 @@ void SceneManager::Init(void)
 
 	//システム管理生成
 	SystemManager::CreateInstance();
+
 }
 
 void SceneManager::Update(void)
@@ -94,6 +95,9 @@ void SceneManager::Draw(void)
 void SceneManager::Destroy(void)
 {
 
+	// システム管理解放
+	SystemManager::GetInstance().Destroy();
+
 	// シーンの解放
 	scene_->Release();
 	delete scene_;
@@ -104,8 +108,6 @@ void SceneManager::Destroy(void)
 	// インスタンスのメモリ解放
 	delete instance_;
 
-	// システム管理解放
-	SystemManager::GetInstance().Destroy();
 }
 
 void SceneManager::ChangeScene(SCENE_ID nextId)

@@ -118,3 +118,16 @@ bool CollisionManager::IsCollidingSphereAndSphere(VECTOR spherePos_1, float sphe
 	// 距離が半径の合計以下かチェック
 	return dist_sq <= total_radius * total_radius;
 }
+
+bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
+{
+	if (pos1.x + wid1 > pos2.x &&
+		pos1.x < pos2.x &&
+		pos1.y + hig1 >pos2.y &&
+		pos1.y < pos2.y)
+	{
+		return true;
+	}
+
+	return false;
+}

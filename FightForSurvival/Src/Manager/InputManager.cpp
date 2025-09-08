@@ -38,6 +38,10 @@ void InputManager::Init(void)
 	ins.Add(KEY_INPUT_D);
 	// リロードキー
 	ins.Add(KEY_INPUT_R);
+
+	// ポーズ
+	ins.Add(KEY_INPUT_ESCAPE);
+
 	ins.Add(KEY_INPUT_Q);
 	ins.Add(KEY_INPUT_E);
 	ins.Add(KEY_INPUT_DOWN);
@@ -369,7 +373,7 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 
 bool InputManager::PushStartKey(void)
 {
-	return IsTrgDown(KEY_INPUT_SPACE);
+	return IsTrgDown(KEY_INPUT_SPACE) || IsTrgMouseLeft();
 }
 
 bool InputManager::MoveFront(void)
@@ -392,6 +396,11 @@ bool InputManager::MoveRight(void)
 	return IsNew(KEY_INPUT_D);
 }
 
+bool InputManager::Attack(void)
+{
+	return IsTrgMouseLeft();
+}
+
 bool InputManager::MoveDash(void)
 {
 	return IsNew(KEY_INPUT_LSHIFT);
@@ -400,6 +409,16 @@ bool InputManager::MoveDash(void)
 bool InputManager::Reload(void)
 {
 	return IsTrgDown(KEY_INPUT_R);
+}
+
+bool InputManager::Confirm(void)
+{
+	return IsTrgMouseLeft();
+}
+
+bool InputManager::PauseKeys(void)
+{
+	return IsTrgDown(KEY_INPUT_ESCAPE);
 }
 
 

@@ -131,11 +131,20 @@ public:
 	// 右
 	bool MoveRight(void);
 
-	// ダッシュキー
+	// 攻撃
+	bool Attack(void);
+
+	// ダッシュ
 	bool MoveDash(void);
 
-	// リロードキー
+	// リロード
 	bool Reload(void);
+
+	// 確定
+	bool Confirm(void);
+
+	// ポーズモード
+	bool PauseKeys(void);
 
 private:
 
