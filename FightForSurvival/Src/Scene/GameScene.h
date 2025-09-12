@@ -58,5 +58,9 @@ private:
 	bool prevPause_;
 
 	void CheckCollisions(void);
+
+	// ゲームクリア・ゲームオーバー遷移条件
+	void IsClear(void);
+	void IsOver(void);
 };
 

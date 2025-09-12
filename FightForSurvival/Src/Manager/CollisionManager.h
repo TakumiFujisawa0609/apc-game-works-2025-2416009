@@ -10,11 +10,14 @@ namespace CollisionManager
 
 	// 球の移動経路の線分とカプセルの線分間の最近接距離の2乗を計算
 	float GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTOR p3, VECTOR p4);
-	// カプセル型と球の当たり判定
-	bool IsCollidingCapsuleSphere(VECTOR capsule1, VECTOR capsule2, float capsuleRad, VECTOR lineStart, VECTOR lineEnd, float sphereRad);
+	// カプセル型同士の当たり判定
+	bool IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Under, float capsule1Rad, VECTOR capsule2Top, VECTOR capsule2Under, float capsule2Rad);
+
+	// 球とカプセル型の当たり判定
+	bool IsCollidingSphereCapsule(VECTOR spherePos, float sphereRad, VECTOR capsuleTop, VECTOR capsuleUnder, float capsuleRad);
 
 	// 球同士の当たり判定
-	bool IsCollidingSphereAndSphere(VECTOR spherePos_1, float sphereRad_1, VECTOR lineStart, VECTOR lineEnd, float sphereRad_2);
+	bool IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad);
 
 #pragma endregion
 

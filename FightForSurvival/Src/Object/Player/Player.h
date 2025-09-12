@@ -75,6 +75,7 @@ public:
 	// 解放処理
 	void Release(void);
 
+	// ゲッターセッター関数
 	const Unit GetPlayer(void)const { return player_; }
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const float GetYaw(void) const { return yaw_; }
@@ -83,9 +84,14 @@ public:
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
 	void SetPitch(float newPitch)  { pitch_ = newPitch; }
 
+	// 銃のポインター受け渡し
 	GunBase* GetGun(void)const { return gun_; }
 
+	// プレイヤー強化処理
 	void SetAbility(ABILITY_TYPE type, float i);
+
+	// HPにダメージを与える
+	void SubHp(int hp);
 
 private:
 

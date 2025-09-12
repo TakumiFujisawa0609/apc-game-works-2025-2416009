@@ -194,6 +194,20 @@ void Player::SetAbility(ABILITY_TYPE type, float i)
 	}
 }
 
+
+void Player::SubHp(int hp)
+{
+	player_.hp_ -= hp;
+
+	if (player_.hp_ <= 0)
+	{
+		player_.hp_ = 0;
+		// UŒ‚‚ðŽó‚¯‚ÄHP‚ª–³‚­‚È‚Á‚½‚çŽ€–S‚³‚¹‚é
+		player_.isAlive_ = false;
+	}
+}
+
+
 void Player::ProcessMove(void)
 {
 

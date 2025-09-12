@@ -104,16 +104,12 @@ void Zombie::Idle(EnemyBase& enemy)
 		// 範囲内に入っていなかったら追跡
 		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
 	}
-	else
+	else if(enemy.GetAttackCooldown() == 0.0f)
 	{
+		// 攻撃範囲に入っていて、攻撃待ち時間が0だったら攻撃へ移行
 		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		enemy.SetIsAttack(true);
 	}
-	//else if(攻撃制限時間を超えたら入る)
-	//{
-		
-	//		// 攻撃制限時間を超えているかつ、範囲内に入っていたら攻撃を行う
-	//		ChangeState(ENEMY_STATE::ATTACK);
-	//}
 }
 
 void Zombie::Attack(EnemyBase& enemy)
@@ -127,6 +123,8 @@ void Zombie::Attack(EnemyBase& enemy)
 		{
 			// 攻撃が終わったら後退させる
 			enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+			// 攻撃待ち時間をセット
+			enemy.SetAttackCooldown(ATTACK_COOLDOWN);
 		}
 	}
 }

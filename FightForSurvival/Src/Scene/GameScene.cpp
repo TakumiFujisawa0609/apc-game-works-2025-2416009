@@ -11,6 +11,7 @@
 #include "../Object/Player/Gun/Bullet/BulletBase.h"
 #include "../Manager/CollisionManager.h"
 #include "../Manager/SceneManager.h"
+#include "../Manager/SystemManager.h"
 #include "../Common/Pause/Pause.h"
 #include "GameScene.h"
 
@@ -36,6 +37,8 @@ GameScene::~GameScene(void)
 
 void GameScene::Init(void)
 {
+	// スコアの初期化
+	SystemManager::GetInstance().ResetGame();
 
 	// グリッド生成
 	grid_ = new Grid();
@@ -96,6 +99,10 @@ void GameScene::Update(void)
 
 		// 当たり判定
 		CheckCollisions();
+
+		// ゲームクリア・ゲームオーバー判定
+		IsClear();
+		IsOver();
 	}
 	else if (prevPause_ && !nowPause_)
 	{
@@ -269,7 +276,7 @@ void GameScene::CheckCollisions(void)
 		float bulletRad = bulletInfo.collisionRadius_;
 
 		// 頭の当たり判定
-		if (CollisionManager::IsCollidingSphereAndSphere(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+		if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// 敵にダメージを与える
 			enemy_->SubHp(bulletInfo.headDamage_);
@@ -277,13 +284,13 @@ void GameScene::CheckCollisions(void)
 			bullet->ChangeState(BulletBase::STATE::BLAST);
 		}
 		// 体、腕、手、脚の当たり判定
-		else if (CollisionManager::IsCollidingCapsuleSphere(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereAndSphere(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereAndSphere(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsuleSphere(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
+		else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
+			|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
 		{
 			// 敵にダメージを与える
 			enemy_->SubHp(bulletInfo.bodyDamage_);
@@ -292,10 +299,41 @@ void GameScene::CheckCollisions(void)
 		}
 	}
 
-	// 敵が攻撃状態だったら入る
-	if (enemy_->IsAttack())
+	if (!enemy_->IsAttack())
 	{
-
+		// 敵が攻撃状態ではなかったら抜ける
+		return;
 	}
 
+	VECTOR plaPos = player_->GetPlayer().pos_;
+	float plaRad = player_->GetPlayer().collisionRadius_;
+
+	// プレイヤーと敵の攻撃の当たり判定
+	if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
+	{
+		// プレイヤーにダメージを与える
+		player_->SubHp(1);
+		enemy_->SetIsAttack(false);
+	}
+
+}
+
+void GameScene::IsClear(void)
+{
+	// WAVEが最終段階かつ、敵全てが死亡していたら
+	if (!enemy_->GetEnemy().isAlive_)
+	{
+		// ゲームクリアに遷移
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+	}
+}
+
+void GameScene::IsOver(void)
+{
+	// プレイヤーが死亡したら
+	if (!player_->GetPlayer().isAlive_)
+	{
+		// ゲームオーバーに遷移
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);
+	}
 }

@@ -4,6 +4,7 @@
 #include "../Common/AnimationController.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/CollisionManager.h"
+#include "../../Manager/SceneManager.h"
 #include "EnemyBase.h"
 #include "Zombie.h"
 
@@ -64,6 +65,13 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 
 	// ‰Šúó‘Ô
 	ChangeState(ENEMY_STATE::STATE_IDLE);
+
+	// UŒ‚‘Ò‚¿ŽžŠÔ‚ð‰Šú‰»
+	attackCooldown_ = 0.0f;
+
+	// UŒ‚’†‚©
+	SetIsAttack(false);
+
 }
 
 void EnemyBase::Update(void)
@@ -72,6 +80,16 @@ void EnemyBase::Update(void)
 	if (stateTable_[state_])
 	{
 		stateTable_[state_](*this);
+	}
+
+	// Idleó‘Ô‚ÌŽžAUŒ‚‘Ò‚¿ŽžŠÔ‚ª0‚æ‚è‘å‚«‚¯‚ê‚Î“ü‚é
+	if (state_ == STATE_IDLE && attackCooldown_ > 0.0f)
+	{
+		attackCooldown_ -= SceneManager::GetInstance().GetDeltaTime();
+		if (attackCooldown_ < 0.0f)
+		{
+			attackCooldown_ = 0.0f;
+		}
 	}
 
 	// ƒAƒjƒ[ƒVƒ‡ƒ“XV
@@ -222,6 +240,8 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	{
 		 //UŒ‚”ÍˆÍ“à‚É“ü‚Á‚½‚çUŒ‚‚ðs‚¤
 		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		// UŒ‚’†‚É‚·‚é
+		enemy.SetIsAttack(true);
 	}
 }
 
@@ -380,5 +400,5 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 bool EnemyBase::SearchAttackRange(void)
 {
 	// UŒ‚‰Â”\”ÍˆÍ‚ÉƒvƒŒƒCƒ„[‚ª‚¢‚é‚©Šm”F
-	return CollisionManager::IsCollidingSphereAndSphere(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
+	return CollisionManager::IsCollidingSphereCapsule(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }

@@ -58,6 +58,9 @@ public:
 	// UŒ‚‰Â”\”ÍˆÍ
 	static constexpr float ATTACK_RANGE = 80;
 
+	// UŒ‚‘Ò‚¿ŠÔ
+	static constexpr float ATTACK_COOLDOWN = 3.0f;
+
 	Zombie(void);
 	~Zombie(void)override;
 

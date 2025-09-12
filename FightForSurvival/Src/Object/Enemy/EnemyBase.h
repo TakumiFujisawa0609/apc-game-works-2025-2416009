@@ -46,8 +46,10 @@ public:
 
 	// 死亡していなかったらtrueを返す
 	bool IsCollisionState(void);
-	// 攻撃状態だったらtrueを返す
-	bool IsAttack(void) { return state_ == STATE_ATTACK; }
+	// 攻撃状態かつ、当たり判定を終えていなかったらtrueを返す
+	bool IsAttack(void) { return state_ == STATE_ATTACK && isAttack_ == true; }
+	// 攻撃有効フラグ
+	void SetIsAttack(bool flg) { isAttack_ = flg; }
 
 	// HPにダメージを与える
 	void SubHp(int hp);
@@ -62,6 +64,13 @@ public:
 
 	// 攻撃範囲内か確認用処理
 	bool SearchAttackRange(void);
+
+	// 攻撃待ち時間を確認
+	float GetAttackCooldown(void) const{ return attackCooldown_; }
+	// 攻撃待ち時間のセットする
+	void SetAttackCooldown(float cooldown) { attackCooldown_ = cooldown; }
+
+
 protected:
 	AnimationController* animationController_;
 	Player* player_;
@@ -90,6 +99,12 @@ protected:
 	// 攻撃可能範囲用座標
 	VECTOR attackRangePos_;
 	float attackRange_;
+
+	// 攻撃待ち時間
+	float attackCooldown_;
+
+	// 攻撃中か
+	bool isAttack_;
 
 	// 状態別更新
 	// 移動処理

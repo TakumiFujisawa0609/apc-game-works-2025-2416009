@@ -69,25 +69,25 @@ float CollisionManager::GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTO
 	return VLenSq(VSub(P1_, P2_));
 }
 
-bool CollisionManager::IsCollidingCapsuleSphere(VECTOR capsule1, VECTOR capsule2, float capsuleRad, VECTOR lineStart, VECTOR lineEnd, float sphereRad)
+bool CollisionManager::IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Under, float capsule1Rad, VECTOR capsule2Top, VECTOR capsule2Under, float capsule2Rad)
 {
 	// 弾の移動経路の線分と敵カプセルの線分間の最近接距離の2乗を計算
-	float distSq = CollisionManager::GetMinDistSqSegmentToSegment(capsule1, capsule2, lineStart, lineEnd);
+	float distSq = CollisionManager::GetMinDistSqSegmentToSegment(capsule1Top, capsule1Under, capsule2Top, capsule2Under);
 
 	// カプセルと球の半径の合計
-	float total_radius = capsuleRad + sphereRad;
+	float total_radius = capsule1Rad + capsule2Rad;
 
 	return distSq <= total_radius * total_radius;
 }
 
-bool CollisionManager::IsCollidingSphereAndSphere(VECTOR spherePos_1, float sphereRad_1, VECTOR lineStart, VECTOR lineEnd, float sphereRad_2)
+bool CollisionManager::IsCollidingSphereCapsule(VECTOR spherePos, float sphereRad, VECTOR capsuleTop, VECTOR capsuleUnder, float capsuleRad)
 {
 	// 敵の球1は、カプセルと判定する対象
-	VECTOR sphere_pos = spherePos_1;
+	VECTOR sphere_pos = spherePos;
 
 	// 球2の移動経路（カプセルの中心線）を定義
-	VECTOR capsule_p1 = lineStart;
-	VECTOR capsule_p2 = lineEnd;
+	VECTOR capsule_p1 = capsuleTop;
+	VECTOR capsule_p2 = capsuleUnder;
 
 	// カプセルの線分を表すベクトル
 	VECTOR AB = VSub(capsule_p2, capsule_p1);
@@ -113,10 +113,23 @@ bool CollisionManager::IsCollidingSphereAndSphere(VECTOR spherePos_1, float sphe
 	float dist_sq = VLenSq(VSub(sphere_pos, C));
 
 	// 静止している球と、カプセル（動く球）の半径の合計
-	float total_radius = sphereRad_1 + sphereRad_2;
+	float total_radius = sphereRad + capsuleRad;
 
 	// 距離が半径の合計以下かチェック
 	return dist_sq <= total_radius * total_radius;
+}
+
+bool CollisionManager::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad)
+{
+	// 中心点間の距離の2乗を計算
+	VECTOR dis = VSub(sphere2Pos, sphere1Pos);
+	float distance = dis.x * dis.x + dis.y * dis.y + dis.z * dis.z;
+
+	// 半径の合計を計算
+	float totalRad = sphere1Rad + sphere2Rad;
+
+	// 距離の2乗が半径の合計の2乗より小さいか判定
+	return (distance < totalRad * totalRad);
 }
 
 bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
