@@ -19,6 +19,7 @@ public:
     void Draw();    // 描画
     void Delete();  // 削除
 
+    const std::vector<std::unique_ptr<EnemyBase>>& GetEnemy(void)const { return enemys_; }
 private:
     // 静的インスタンス
     static EnemyManager* instance_;
