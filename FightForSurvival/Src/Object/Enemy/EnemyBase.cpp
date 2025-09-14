@@ -8,25 +8,11 @@
 #include "EnemyBase.h"
 #include "Zombie.h"
 
-EnemyBase::EnemyBase(void)
+EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 {
 	enemy_.modelId_ = -1;
 	baseAttackEffectModelId_ = -1;
-	stateTable_[STATE_CHASE] = Chase;
-	stateTable_[STATE_RETREAT] = Retreat;
-	stateTable_[STATE_HIT] = Hit;
-	stateTable_[STATE_DEAD] = Dead;
-	stateTable_[STATE_END] = End;
 
-	animationController_ = nullptr;
-}
-
-EnemyBase::~EnemyBase(void)
-{
-}
-
-void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, VECTOR pos, Player* player)
-{
 	// エネミー種別
 	type_ = type;
 
@@ -36,13 +22,31 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	// エフェクト用モデルハンドル
 	baseAttackEffectModelId_ = baseAttackEffectModelId;
 
+	// プレイヤーのポインタを格納
+	player_ = player;
+
+	stateTable_[STATE_CHASE] = Chase;
+	stateTable_[STATE_RETREAT] = Retreat;
+	stateTable_[STATE_HIT] = Hit;
+	stateTable_[STATE_DEAD] = Dead;
+	stateTable_[STATE_END] = End;
+
+	// アニメーションクラスの生成
+	animationController_ = nullptr;
+	animationController_ = new AnimationController(enemy_.modelId_);
+
+}
+
+EnemyBase::~EnemyBase(void)
+{
+}
+
+void EnemyBase::CreateEnemy(VECTOR pos)
+{
 	// 指定された座標を設定
 	enemy_.pos_ = attackRangePos_ = pos;
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 	attackRangePos_.y += ATTACK_RANGE_POS_OFFSET;
-
-	// プレイヤーのポインタを格納
-	player_ = player;
 
 	// パラメータ設定
 	SetParam();
@@ -58,11 +62,6 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 
 	enemy_.dir_ = AsoUtility::VECTOR_ZERO;
 
-	animationController_ = new AnimationController(enemy_.modelId_);
-
-	// アニメーション登録
-	AddAnimation();
-
 	// 初期状態
 	ChangeState(ENEMY_STATE::STATE_IDLE);
 
@@ -71,7 +70,6 @@ void EnemyBase::Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 
 	// 攻撃中か
 	SetIsAttack(false);
-
 }
 
 void EnemyBase::Update(void)
@@ -236,6 +234,7 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
 
+	// 攻撃可能範囲内に入っているか確認
 	if (enemy.SearchAttackRange())
 	{
 		 //攻撃範囲内に入ったら攻撃を行う
@@ -247,6 +246,16 @@ void EnemyBase::Chase(EnemyBase& enemy)
 
 void EnemyBase::Retreat(EnemyBase& enemy)
 {
+	// プレイヤーのほうへ向く
+	enemy.LookPlayer();
+
+	// 方向単位ベクトルに速度(負の値)をかけた数を座標に足しこむ
+	// 負の値を足しこむことで、プレイヤーからは離れていくような動作となる
+	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, -enemy.enemy_.moveSpeed_));
+
+	// 計算した座標をモデルに適用する
+	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
+
 	if (enemy.animationController_ != nullptr)
 	{
 		if (enemy.animationController_->IsEnd())
@@ -390,15 +399,15 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 	return retPos;
 }
 
+bool EnemyBase::SearchAttackRange(void)
+{
+	// 攻撃可能範囲にプレイヤーがいるか確認
+	return CollisionManager::IsCollidingSphereCapsule(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
+}
+
 int EnemyBase::SearchFrame(const std::string& boneName)
 {
 	std::string fullBoneName = "mixamorig" + boneName;
 
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
-}
-
-bool EnemyBase::SearchAttackRange(void)
-{
-	// 攻撃可能範囲にプレイヤーがいるか確認
-	return CollisionManager::IsCollidingSphereCapsule(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }

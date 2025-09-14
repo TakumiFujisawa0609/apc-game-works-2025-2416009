@@ -3,10 +3,17 @@
 #include "../../Application.h"
 #include "Zombie.h"
 
-Zombie::Zombie(void)
+Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
+	: EnemyBase(type, baseModelId, baseAttackEffectModelId, player)
 {
 	stateTable_[STATE_IDLE] = Idle;
 	stateTable_[STATE_ATTACK] = Attack;
+
+	// アニメーション登録
+	AddAnimation();
+
+	// フレーム登録
+	AddFrames();
 }
 
 Zombie::~Zombie(void)
@@ -50,28 +57,9 @@ void Zombie::SetParam(void)
 	collision_.offsetLegTop_ = OFFSET_POS_LEG_TOP;
 	collision_.offsetLegUnder_ = OFFSET_POS_LEG_UNDER;
 
-	// 頭のボーンフレーム取得
-	collision_.headBone_ = SearchFrame("5:Head");
-	// 体のボーンフレーム取得
-	collision_.bodyBoneTop_ = SearchFrame("5:Spine2");
-	collision_.bodyBoneUnder_ = SearchFrame("5:Hips");
-	// 右腕のボーンフレーム取得
-	collision_.armBoneTopR_ = SearchFrame("5:RightArm");
-	// 右手のボーンフレーム取得
-	collision_.handBoneR_ = SearchFrame("5:RightHand");
-	// 左腕のボーンフレーム取得
-	collision_.armBoneTopL_ = SearchFrame("5:LeftArm");
-	// 左手のボーンフレーム取得
-	collision_.handBoneL_ = SearchFrame("5:LeftHand");
-	// 右脚のボーンフレーム取得
-	collision_.legBoneTopR_ = SearchFrame("5:RightUpLeg");
-	collision_.legBoneUnderR_ = SearchFrame("5:RightFoot");
-	// 左脚のボーンフレーム取得
-	collision_.legBoneTopL_ = SearchFrame("5:LeftUpLeg");
-	collision_.legBoneUnderL_ = SearchFrame("5:LeftFoot");
-
 	// 攻撃可能範囲
 	attackRange_ = ATTACK_RANGE;
+
 }
 
 void Zombie::AddAnimation(void)
@@ -95,6 +83,29 @@ void Zombie::AddAnimation(void)
 	// 死亡モーション
 	pas = enePas + "Zombie Dying.mv1";
 	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_DEAD), 75.0f, pas);
+}
+
+void Zombie::AddFrames(void)
+{
+	// 頭のボーンフレーム取得
+	collision_.headBone_ = SearchFrame("5:Head");
+	// 体のボーンフレーム取得
+	collision_.bodyBoneTop_ = SearchFrame("5:Spine2");
+	collision_.bodyBoneUnder_ = SearchFrame("5:Hips");
+	// 右腕のボーンフレーム取得
+	collision_.armBoneTopR_ = SearchFrame("5:RightArm");
+	// 右手のボーンフレーム取得
+	collision_.handBoneR_ = SearchFrame("5:RightHand");
+	// 左腕のボーンフレーム取得
+	collision_.armBoneTopL_ = SearchFrame("5:LeftArm");
+	// 左手のボーンフレーム取得
+	collision_.handBoneL_ = SearchFrame("5:LeftHand");
+	// 右脚のボーンフレーム取得
+	collision_.legBoneTopR_ = SearchFrame("5:RightUpLeg");
+	collision_.legBoneUnderR_ = SearchFrame("5:RightFoot");
+	// 左脚のボーンフレーム取得
+	collision_.legBoneTopL_ = SearchFrame("5:LeftUpLeg");
+	collision_.legBoneUnderL_ = SearchFrame("5:LeftFoot");
 }
 
 void Zombie::Idle(EnemyBase& enemy)

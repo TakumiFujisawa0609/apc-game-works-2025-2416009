@@ -61,7 +61,7 @@ public:
 	// UŒ‚‘Ò‚¿ŠÔ
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
-	Zombie(void);
+	Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
 	~Zombie(void)override;
 
 protected:
@@ -70,7 +70,8 @@ protected:
 	void SetParam(void)override;
 	// ƒAƒjƒ[ƒVƒ‡ƒ““o˜^
 	void AddAnimation(void)override;
-
+	// ƒtƒŒ[ƒ€“o˜^
+	void AddFrames(void)override;
 private:
 
 	// ‘Ò‹@ˆ—

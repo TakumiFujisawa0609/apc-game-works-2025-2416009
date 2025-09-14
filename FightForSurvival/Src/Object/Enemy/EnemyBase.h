@@ -22,13 +22,13 @@ public:
 	};
 
 	// コンストラクタ
-	EnemyBase(void);
+	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
 
 	// デストラクタ
 	virtual ~EnemyBase(void);
 
 	// 初期化処理
-	virtual void Init(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, VECTOR pos, Player* player);
+	virtual void CreateEnemy(VECTOR pos);
 
 	// 更新
 	virtual void Update(void);
@@ -134,6 +134,7 @@ protected:
 	virtual void SetParam(void) = 0;
 	// アニメーション登録
 	virtual void AddAnimation(void) = 0;
-
+	// フレーム登録
+	virtual void AddFrames(void) = 0;
 };
 

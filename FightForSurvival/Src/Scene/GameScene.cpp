@@ -66,8 +66,8 @@ void GameScene::Init(void)
 
 	// “G‚Ì¶¬
 	enemyId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str());
-	enemy_ = new Zombie();
-	enemy_->Init(EnemyBase::ENEMY_TYPE::ZOMBIE, enemyId_, -1, VGet(0.0f, 0.0f, 100.0f), player_);
+	enemy_ = new Zombie(EnemyBase::ENEMY_TYPE::ZOMBIE, enemyId_, -1, player_);
+	enemy_->CreateEnemy(VGet(0.0f, 0.0f, 100.0f));
 }
 
 void GameScene::Load(void)
