@@ -9,17 +9,17 @@ class EnemyManager
 public:
     // シングルトン（生成・取得・削除）
     static void CreateInstance(void) { if (instance_ == nullptr) { instance_ = new EnemyManager(); } };
-    static EnemyManager* GetInstance(void) { return instance_; };
+    static EnemyManager& GetInstance(void) { return *instance_; };
     static void DeleteInstance(void) { if (instance_ != nullptr) { delete instance_; instance_ = nullptr; } }
 
     // 敵の追加
-    void AddEnemy(std::unique_ptr<EnemyBase> enemy);
+    void AddEnemy(EnemyBase* enemy);
 
     void Update();  // 更新
     void Draw();    // 描画
     void Delete();  // 削除
 
-    const std::vector<std::unique_ptr<EnemyBase>>& GetEnemy(void)const { return enemys_; }
+    const std::vector<EnemyBase*> GetEnemy(void)const { return enemys_; }
 private:
     // 静的インスタンス
     static EnemyManager* instance_;
@@ -41,7 +41,7 @@ private:
     // EnemyManager moved = std::move(*EnemyManager::GetInstance());
     
     // 全てのエネミーを管理する
-    std::vector<std::unique_ptr<EnemyBase>> enemys_;
+    std::vector<EnemyBase*> enemys_;
 
 	//void ChangeWave(WAVE wave);
 	//void UpdateWave01(void);

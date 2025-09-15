@@ -13,6 +13,8 @@
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
 #include "../Common/Pause/Pause.h"
+#include "../Wave/WaveManager.h"
+#include "../Object/Enemy/EnemyManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -23,9 +25,7 @@ GameScene::GameScene(void)
 	cursor_ = nullptr;
 	score_ = nullptr;
 	pause_ = nullptr;
-	enemy_ = nullptr;
-
-	enemyId_ = -1;
+	wave_ = nullptr;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -48,6 +48,9 @@ void GameScene::Init(void)
 	player_ = new Player();
 	player_->Init();
 
+	// 敵マネージャの生成
+	EnemyManager::CreateInstance();
+
 	// カメラの生成
 	camera_ = new Camera(player_);
 	camera_->Init();
@@ -64,10 +67,9 @@ void GameScene::Init(void)
 	pause_ = new Pause();
 	pause_->Init();
 
-	// 敵の生成
-	enemyId_ = MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str());
-	enemy_ = new Zombie(EnemyBase::ENEMY_TYPE::ZOMBIE, enemyId_, -1, player_);
-	enemy_->CreateEnemy(VGet(0.0f, 0.0f, 100.0f));
+	// ウェーブの生成
+	wave_ = new WaveManager(player_);
+	wave_->Init();
 }
 
 void GameScene::Load(void)
@@ -75,6 +77,7 @@ void GameScene::Load(void)
 	player_->Load();
 	cursor_->Load();
 	pause_->Load();
+	wave_->Load();
 }
 
 void GameScene::Update(void)
@@ -91,11 +94,14 @@ void GameScene::Update(void)
 		// プレイヤー更新
 		player_->Update();
 
+		// 敵の更新
+		EnemyManager::GetInstance().Update();
+
 		// カメラの更新
 		camera_->Update();
 
-		// 敵の更新
-		enemy_->Update();
+		// ウェーブの更新
+		wave_->Update();
 
 		// 当たり判定
 		CheckCollisions();
@@ -140,7 +146,10 @@ void GameScene::Draw(void)
 	grid_->Draw();
 
 	// 敵の描画
-	enemy_->Draw();
+	wave_->Draw();
+
+	// 敵の描画
+	EnemyManager::GetInstance().Draw();
 
 	// プレイヤー描画
 	player_->Draw();
@@ -166,13 +175,13 @@ void GameScene::Draw(void)
 void GameScene::Release(void)
 {
 
-	// 敵の解放
-	if (enemy_ != nullptr)
+	// ウェーブの解放
+	if (wave_ != nullptr)
 	{
-		enemy_->Release();
-		delete enemy_;
+		wave_->Release();
+		delete wave_;
+		wave_ = nullptr;
 	}
-	MV1DeleteModel(enemyId_);
 
 	// ポーズモードの解放
 	if (pause_ != nullptr)
@@ -206,6 +215,10 @@ void GameScene::Release(void)
 		camera_ = nullptr;
 	}
 
+	// 敵の解放
+	EnemyManager::GetInstance().Delete();
+	EnemyManager::GetInstance().DeleteInstance();
+
 	// プレイヤーの解放
 	if (player_ != nullptr)
 	{
@@ -228,100 +241,125 @@ void GameScene::Release(void)
 
 void GameScene::CheckCollisions(void)
 {
-	if (!enemy_->IsCollisionState())
+	auto& eneManaIns = EnemyManager::GetInstance();
+	// 生成してある敵を取得
+	auto& enemys_ = eneManaIns.GetEnemy();
+
+	for (auto* enemy : enemys_)
 	{
-		// 敵が生存していなければ処理を行わない
-		return;
-	}
 
-	// 敵の情報
-	Unit eneInfo = enemy_->GetEnemy();
-	EnemyCollision eneColInfo = enemy_->GetColPos();
-
-	// 敵の座標
-	VECTOR enePos[COLLISION_POS::MAX];
-
-	for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
-	{
-		enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
-	}
-
-	// 敵の半径
-	float eneRadHead = eneInfo.collisionRadius_;
-	float eneRadBody = eneInfo.collisionRadiusBody_;
-	float eneRadArm = eneInfo.collisionRadiusArm_;
-	float eneRadHand = eneInfo.collisionRadiusHand_;
-	float eneRadLeg = eneInfo.collisionRadiusLeg_;
-
-	// 弾クラスのポインター取得
-	auto bullets = player_->GetGun()->GetBullets();
-
-	// 弾の数分回す
-	for (auto bullet : bullets)
-	{
-		// 弾が生存していなかったら次の弾に進む
-		if (!bullet->IsCollisionState())
+		if (!enemy->IsCollisionState())
 		{
+			// 敵が生存していなければ処理を行わない
 			continue;
 		}
 
-		// 弾の情報
-		auto bulletInfo = bullet->GetBullet();
+		// 敵の情報
+		Unit eneInfo = enemy->GetEnemy();
+		EnemyCollision eneColInfo = enemy->GetColPos();
 
-		// 弾の移動経路の線分を定義
-		VECTOR bulletLineStart = bulletInfo.pos_;
-		VECTOR bulletLineEnd = bulletInfo.prevPos_; // 前のフレームでの弾の位置
+		// 敵の座標
+		VECTOR enePos[COLLISION_POS::MAX];
 
-		// 弾の半径
-		float bulletRad = bulletInfo.collisionRadius_;
-
-		// 頭の当たり判定
-		if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+		for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
 		{
-			// 敵にダメージを与える
-			enemy_->SubHp(bulletInfo.headDamage_);
-			// 弾を爆発させる
-			bullet->ChangeState(BulletBase::STATE::BLAST);
+			enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
 		}
-		// 体、腕、手、脚の当たり判定
-		else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
-			|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
+
+		// 敵の半径
+		float eneRadHead = eneInfo.collisionRadius_;
+		float eneRadBody = eneInfo.collisionRadiusBody_;
+		float eneRadArm = eneInfo.collisionRadiusArm_;
+		float eneRadHand = eneInfo.collisionRadiusHand_;
+		float eneRadLeg = eneInfo.collisionRadiusLeg_;
+
+		// 弾クラスのポインター取得
+		auto bullets = player_->GetGun()->GetBullets();
+
+		// 弾の数分回す
+		for (auto bullet : bullets)
 		{
-			// 敵にダメージを与える
-			enemy_->SubHp(bulletInfo.bodyDamage_);
-			// 弾を爆発させる
-			bullet->ChangeState(BulletBase::STATE::BLAST);
+			// 弾が生存していなかったら次の弾に進む
+			if (!bullet->IsCollisionState())
+			{
+				continue;
+			}
+
+			// 弾の情報
+			auto bulletInfo = bullet->GetBullet();
+
+			// 弾の移動経路の線分を定義
+			VECTOR bulletLineStart = bulletInfo.pos_;
+			VECTOR bulletLineEnd = bulletInfo.prevPos_; // 前のフレームでの弾の位置
+
+			// 弾の半径
+			float bulletRad = bulletInfo.collisionRadius_;
+
+			// 頭の当たり判定
+			if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+			{
+				// 敵にダメージを与える
+				enemy->SubHp(bulletInfo.headDamage_);
+				// 弾を爆発させる
+				bullet->ChangeState(BulletBase::STATE::BLAST);
+			}
+			// 体、腕、手、脚の当たり判定
+			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
+			{
+				// 敵にダメージを与える
+				enemy->SubHp(bulletInfo.bodyDamage_);
+				// 弾を爆発させる
+				bullet->ChangeState(BulletBase::STATE::BLAST);
+			}
 		}
-	}
 
-	if (!enemy_->IsAttack())
-	{
-		// 敵が攻撃状態ではなかったら抜ける
-		return;
-	}
+		if (!enemy->IsAttack())
+		{
+			// 敵が攻撃状態ではなかったら抜ける
+			continue;
+		}
 
-	VECTOR plaPos = player_->GetPlayer().pos_;
-	float plaRad = player_->GetPlayer().collisionRadius_;
+		VECTOR plaPos = player_->GetPlayer().pos_;
+		float plaRad = player_->GetPlayer().collisionRadius_;
 
-	// プレイヤーと敵の攻撃の当たり判定
-	if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
-	{
-		// プレイヤーにダメージを与える
-		player_->SubHp(1);
-		enemy_->SetIsAttack(false);
+		// プレイヤーと敵の攻撃の当たり判定
+		if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
+		{
+			// プレイヤーにダメージを与える
+			player_->SubHp(1);
+			enemy->SetIsAttack(false);
+		}
+
 	}
 
 }
 
 void GameScene::IsClear(void)
 {
+	auto& eneManaIns = EnemyManager::GetInstance();
+
+	auto& enemys_ = eneManaIns.GetEnemy();
+
+	bool isEnd_ = true;
+
+	for (auto& enemy : enemys_)
+	{
+		if (enemy->GetEnemy().isAlive_)
+		{
+			// 敵が一匹でも残っていたら終了しない
+			isEnd_ = false;
+			break;
+		}
+	}
+
 	// WAVEが最終段階かつ、敵全てが死亡していたら
-	if (!enemy_->GetEnemy().isAlive_)
+	if (wave_->GetNowWave() == WAVE_END && isEnd_)
 	{
 		// ゲームクリアに遷移
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);

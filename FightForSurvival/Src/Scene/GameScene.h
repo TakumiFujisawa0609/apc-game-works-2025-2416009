@@ -8,7 +8,7 @@ class Player;
 class Cursor;
 class Score;
 class Pause;
-class EnemyBase;
+class WaveManager;
 
 class GameScene : public SceneBase
 {
@@ -50,8 +50,7 @@ private:
 	Pause* pause_;
 
 	// 敵
-	EnemyBase* enemy_;
-	int enemyId_;
+	WaveManager* wave_;
 
 	// ポーズモード確認用
 	bool nowPause_;

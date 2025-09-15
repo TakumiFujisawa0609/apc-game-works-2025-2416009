@@ -50,7 +50,9 @@
     <ClCompile Include="Src\Scene\TitleScene.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
     <ClCompile Include="Src\Object\Enemy\Zombie.cpp" />
-    <ClCompile Include="Wave\WaveBase.cpp" />
+    <ClCompile Include="Src\Wave\WaveManager.cpp" />
+    <ClCompile Include="Src\Wave\WaveBase.cpp" />
+    <ClCompile Include="Src\Wave\Wave1.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Scene\OverScene.h" />
@@ -86,7 +88,10 @@
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Object\Enemy\Zombie.h" />
-    <ClInclude Include="Wave\WaveBase.h" />
+    <ClInclude Include="Src\Wave\WaveState.h" />
+    <ClInclude Include="Src\Wave\WaveManager.h" />
+    <ClInclude Include="Src\Wave\WaveBase.h" />
+    <ClInclude Include="Src\Wave\Wave1.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

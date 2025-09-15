@@ -25,6 +25,7 @@ EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	// プレイヤーのポインタを格納
 	player_ = player;
 
+	// テーブルに関数のポインタを格納
 	stateTable_[STATE_CHASE] = Chase;
 	stateTable_[STATE_RETREAT] = Retreat;
 	stateTable_[STATE_HIT] = Hit;

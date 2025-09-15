@@ -8,7 +8,7 @@ EnemyManager* EnemyManager::instance_ = nullptr;
 EnemyManager::EnemyManager(void) {}
 EnemyManager::~EnemyManager(void) {}
 
-void EnemyManager::AddEnemy(std::unique_ptr<EnemyBase> enemy)
+void EnemyManager::AddEnemy(EnemyBase* enemy)
 {
 	enemys_.emplace_back(std::move(enemy));
 }

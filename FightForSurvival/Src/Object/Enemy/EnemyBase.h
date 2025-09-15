@@ -2,6 +2,7 @@
 
 #include "../../Base.h"
 #include "EnemyState.h"
+#include <string>
 
 class AnimationController;
 class Player;
@@ -43,6 +44,9 @@ public:
 	const Unit GetEnemy(void)const { return enemy_; }
 	// “G‚Ì“–‚½‚è”»’èÀ•W‚Ìî•ñ‚ğ“n‚·
 	EnemyCollision GetColPos(void)const { return collision_; }
+
+	// “G‚Ìí—Ş‚ğ“n‚·
+	const ENEMY_TYPE GetType(void)const{return type_;}
 
 	// €–S‚µ‚Ä‚¢‚È‚©‚Á‚½‚çtrue‚ğ•Ô‚·
 	bool IsCollisionState(void);
