@@ -302,6 +302,14 @@ void Player::ProcessAngle(void)
 	int deltaX = mouse_.x - Application::SCREEN_SIZE_X / 2;
 	int deltaY = mouse_.y - Application::SCREEN_SIZE_Y / 2;
 
+	// マウスの移動量が一定のしきい値以下であれば処理をスキップ
+	if (std::abs(deltaX) < THRESHOLD && std::abs(deltaY) < THRESHOLD)
+	{
+		// マウスカーソルを画面中央に戻す
+		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+		return;
+	}
+
 	// マウスの移動量からカメラの回転量を更新する
 	yaw_ += deltaX * sensitivity_;
 	pitch_ += deltaY * sensitivity_;
@@ -316,8 +324,8 @@ void Player::ProcessAngle(void)
 		pitch_ = MIN_VIEW_ANGLE;
 	}
 
-	// 視点移動があったら反動をなくす
-	if (mouse_.y != Application::SCREEN_SIZE_Y / 2)
+	// 銃の反動がある中視点移動があったら反動をなくす
+	if (mouse_.y != Application::SCREEN_SIZE_Y / 2 && gun_->GetIsRecoil())
 	{
 		gun_->SetIsRecoil(false);
 	}

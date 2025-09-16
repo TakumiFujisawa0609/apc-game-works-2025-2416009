@@ -54,6 +54,7 @@ public:
 	bool GetCanShot(void)const { return state_ == STATE::IDLE; }
 	int NowBulletNum(void) { return bulletNum_; }
 
+	bool GetIsRecoil(void)const { return isRecoil_; }
 	void SetIsRecoil(bool flg) { isRecoil_ = flg; }
 
 	void ChangeState(STATE state);

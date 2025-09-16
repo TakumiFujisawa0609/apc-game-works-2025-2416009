@@ -46,6 +46,9 @@ public:
 	static constexpr float COLLISION_OFFSET_TOP = 50.0f;
 	static constexpr float COLLISION_OFFSET_UNDER = -50.0f;
 
+	// Ž‹“_‚Ì‚µ‚«‚¢’l
+	static constexpr int THRESHOLD = 2;
+
 	enum class ABILITY_TYPE
 	{
 		SPEED_UP,
