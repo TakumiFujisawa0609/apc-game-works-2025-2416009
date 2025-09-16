@@ -9,6 +9,9 @@
 TitleScene::TitleScene(void)
 {
 	camera_ = nullptr;
+
+	// マウスカーソルを表示
+	SetMouseDispFlag(true);
 }
 
 TitleScene::~TitleScene(void)
