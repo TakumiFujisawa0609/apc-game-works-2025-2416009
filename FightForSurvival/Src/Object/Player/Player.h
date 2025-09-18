@@ -49,14 +49,6 @@ public:
 	// 視点のしきい値
 	static constexpr int THRESHOLD = 2;
 
-	enum class ABILITY_TYPE
-	{
-		SPEED_UP,
-		HEAL_HP,
-		HP_UP,
-		STAMINA_UP,
-	};
-
 	// コンストラクタ
 	Player(void);
 
@@ -90,8 +82,12 @@ public:
 	// 銃のポインター受け渡し
 	GunBase* GetGun(void)const { return gun_; }
 
-	// プレイヤー強化処理
-	void SetAbility(ABILITY_TYPE type, float i);
+	/// <summary>
+	/// プレイヤー強化処理
+	/// </summary>
+	/// <param name="type">強化する能力の種類</param>
+	/// <param name="i">実際に強化させる値</param>
+	//void StrengthenAbility(ABILITY_TYPE type, float i);
 
 	// HPにダメージを与える
 	void SubHp(int hp);

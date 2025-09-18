@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\UpgradeManager.cpp" />
+    <ClCompile Include="Src\Wave\SelectWave.cpp" />
     <ClCompile Include="Src\Scene\OverScene.cpp" />
     <ClCompile Include="Src\Scene\ClearScene.cpp" />
     <ClCompile Include="Src\Common\Score\Score.cpp" />
@@ -55,6 +57,8 @@
     <ClCompile Include="Src\Wave\Wave1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\UpgradeManager.h" />
+    <ClInclude Include="Src\Wave\SelectWave.h" />
     <ClInclude Include="Src\Scene\OverScene.h" />
     <ClInclude Include="Src\Scene\ClearScene.h" />
     <ClInclude Include="Src\Manager\EndManager.h" />

@@ -151,48 +151,45 @@ void Player::Release(void)
 		gun_ = nullptr;
 	}
 }
-
-void Player::SetAbility(ABILITY_TYPE type, float i)
-{
-	int healHp, addHp;
-	healHp = addHp = 0;
-
-	switch (type)
-	{
-	case Player::ABILITY_TYPE::SPEED_UP:
-
-		player_.moveSpeed_ += i;
-
-		break;
-	case Player::ABILITY_TYPE::HEAL_HP:
-
-		healHp = static_cast<int>(i);
-
-		player_.hp_ += healHp;
-		if (player_.hp_ > ability_.hpMax_)
-		{
-			player_.hp_ = ability_.hpMax_;
-		}
-
-		break;
-	case Player::ABILITY_TYPE::HP_UP:
-
-		addHp = static_cast<int>(i);
-
-		player_.hp_ += addHp;
-		ability_.hpMax_ += addHp;
-
-		break;
-	case Player::ABILITY_TYPE::STAMINA_UP:
-
-		ability_.stamina_ += i;
-		ability_.staminaMax_ += i;
-
-		break;
-	default:
-		break;
-	}
-}
+//
+//void Player::StrengthenAbility(ABILITY_TYPE type, float i)
+//{
+//	int healHp, addHp;
+//	healHp = addHp = 0;
+//	healHp = addHp = static_cast<int>(i);
+//
+//	switch (type)
+//	{
+//	case Player::ABILITY_TYPE::SPEED_UP:
+//
+//		player_.moveSpeed_ += i;
+//
+//		break;
+//	case Player::ABILITY_TYPE::HEAL_HP:
+//
+//		player_.hp_ += healHp;
+//		if (player_.hp_ > ability_.hpMax_)
+//		{
+//			player_.hp_ = ability_.hpMax_;
+//		}
+//
+//		break;
+//	case Player::ABILITY_TYPE::HP_UP:
+//
+//		player_.hp_ += addHp;
+//		ability_.hpMax_ += addHp;
+//
+//		break;
+//	case Player::ABILITY_TYPE::STAMINA_UP:
+//
+//		ability_.stamina_ += i;
+//		ability_.staminaMax_ += i;
+//
+//		break;
+//	default:
+//		break;
+//	}
+//}
 
 
 void Player::SubHp(int hp)

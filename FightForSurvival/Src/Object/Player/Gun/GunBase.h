@@ -22,6 +22,7 @@ public:
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RECOVERY_SPEED = 0.001f;
 
+	// リロードする時間
 	static constexpr float RELOAD_TIME = 2.0f;
 
 	enum class STATE
