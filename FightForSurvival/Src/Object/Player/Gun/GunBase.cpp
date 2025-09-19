@@ -114,6 +114,9 @@ void GunBase::Draw(void)
 		DrawString(posX - 45, posY - 60, "リロード中", 0xffffff);
 	}
 
+	DrawFormatString(Application::SCREEN_SIZE_X - 260, Application::SCREEN_SIZE_Y - 25,
+		0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
+
 #ifdef _DEBUG
 
 	// 銃の位置仮表示
@@ -125,8 +128,6 @@ void GunBase::Draw(void)
 	// 狙う場所の位置目安
 	//DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
 
-	DrawFormatString(Application::SCREEN_SIZE_X - 260, Application::SCREEN_SIZE_Y - 25,
-		0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
 
 #endif // _DEBUG
 

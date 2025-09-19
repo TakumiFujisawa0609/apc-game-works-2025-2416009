@@ -119,11 +119,11 @@ void Player::Draw(void)
 		gun_->Draw();
 	}
 
-#ifdef _DEBUG
 	int posY = Application::SCREEN_SIZE_Y;
 
 	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2d", player_.hp_);
 	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+#ifdef _DEBUG
 
 	// 体 デバッグ用：衝突判定用カプセル
 	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
