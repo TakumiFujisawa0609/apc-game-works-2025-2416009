@@ -260,9 +260,6 @@
     <ClInclude Include="Src\Wave\WaveManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\WaveState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Wave\Wave1.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

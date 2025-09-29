@@ -1,170 +1,135 @@
-#include "../Manager/SceneManager.h"
-#include "../Object/Enemy/EnemyManager.h"
-#include "../Object/Enemy/Zombie.h"
-#include "WaveManager.h"
 #include "WaveBase.h"
 
-WaveBase::WaveBase(WaveManager* waveManager)
-{
-	waveManager_ = waveManager;
+#include "../Object/Enemy/EnemyManager.h"
 
-	// テーブルに関数のポインタを格納
-	waveStateTable_[WAIT] = Wait;
-	waveStateTable_[END] = End;
-}
 
-WaveBase::~WaveBase(void)
+WaveBase::WaveBase(int prep, int wave)
+    :state(WaveState::Prepare), prepareTime(prep), waveTime(wave), elapsed(0)
 {
 }
 
-void WaveBase::Init(void)
-{
-	// ステート初期化
-	ChangeWaveState(CREATE);
-
-	// 出現数初期化
-	enemyNums_.enemyNumAll_ = enemyNums_.zombieNumCnt_ = 0;
-
-	// 出現間隔用カウンタの初期化
-	enemyInterval_.zombieSpawnCnt_ = 0.0f;
-
-	// パラメータ初期化
-	SetParam();
-}
 
 void WaveBase::Update(void)
 {
-	// nullチェック
-	if (waveStateTable_[waveState_])
-	{
-		waveStateTable_[waveState_](*this);
-	}
+    // ウェーブクリア済みだったら処理しない
+    if (state == WaveState::Cleared) return;
 
-	// 生成した敵の総数を更新
-	enemyNums_.enemyNumAll_ = enemyNums_.zombieNumCnt_;
+    // 時間を更新
+    elapsed++;
+
+    // 各状態で遷移
+    switch (state)
+    {
+    case WaveState::Prepare:
+        // 準備時間中
+        OnPrepare();
+
+        // 準備時間が経過したら
+        if (elapsed >= prepareTime)
+        {
+            // ウェーブ開始
+            state = WaveState::InWave;
+            elapsed = 0;
+            OnStart();
+        }
+        break;
+    case WaveState::InWave:
+        // ウェーブ中
+        OnWave();
+
+        // スポーンイベントを処理
+        for (auto& event : spawnEvents)
+        {
+            // イベントが発動していないかつイベントの発動フレームになったら
+            if (!event.triggered && elapsed >= event.triggerTime)
+            {
+                // マネージャーが存在するなら
+                // 敵をスポーンさせる
+                EnemyManager::GetInstance().Spawn(event.type, event.pos);
+
+                // イベント発動
+                event.triggered = true;
+            }
+        }
+
+        // ウェーブクリア条件を達成したら
+        if (CheckWaveClear())
+        {
+            // ウェーブクリア
+            state = WaveState::Cleared;
+            OnClear();
+        }
+        break;
+    case WaveState::Cleared:
+        // ウェーブクリア後は特に処理なし
+        break;
+    }
 }
 
-void WaveBase::Release(void)
+void WaveBase::Draw(void)
+{
+    switch (state)
+    {
+    case WaveBase::WaveState::Prepare:
+        DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, prepareTime);
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：Prepare");
+        break;
+    case WaveBase::WaveState::InWave:
+        DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, waveTime);
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：InWave");
+        break;
+    case WaveBase::WaveState::Cleared:
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：Cleared");
+        break;
+    default:
+        break;
+    }
+
+    int cnt = 0;
+
+    // スポーンイベントを処理
+    for (auto& event : spawnEvents)
+    {
+        DrawFormatString(0, 300 + 20 * cnt, 0xffffff, "スポーンの判定 = %d", event.triggered);
+        cnt++;
+    }
+}
+
+void WaveBase::OnStart()
 {
 }
 
-void WaveBase::Wait(WaveBase& waveBase)
-{
-	waveBase.endCounter_ += SceneManager::GetInstance().GetDeltaTime();
-
-	if (waveBase.endCounter_ >= WAVE_END_TIME)
-	{
-		waveBase.ChangeWaveState(END);
-	}
-}
-
-void WaveBase::End(WaveBase& waveBase)
+void WaveBase::OnPrepare()
 {
 }
 
-void WaveBase::EnemyCounter(EnemyBase::ENEMY_TYPE eneType)
+void WaveBase::OnWave()
 {
-	switch (eneType)
-	{
-	case EnemyBase::ENEMY_TYPE::ZOMBIE:
-
-		enemyInterval_.zombieSpawnCnt_ += SceneManager::GetInstance().GetDeltaTime();
-
-		break;
-	case EnemyBase::ENEMY_TYPE::WIZARD:
-		break;
-	case EnemyBase::ENEMY_TYPE::GIANT:
-		break;
-	case EnemyBase::ENEMY_TYPE::MAX:
-		break;
-	default:
-		break;
-	}
 }
 
-void WaveBase::SpawnEnemy(EnemyBase::ENEMY_TYPE eneType, VECTOR spawnPos)
+void WaveBase::OnClear()
 {
-	switch (eneType)
-	{
-	case EnemyBase::ENEMY_TYPE::ZOMBIE:
-
-		// ゾンビが規定量に達していなかったら入る
-		if (enemyNums_.zombieNum_ > enemyNums_.zombieNumCnt_)
-		{
-			// 有効な敵を取得する
-			EnemyBase* enemy = GetValidEnemy(EnemyBase::ENEMY_TYPE::ZOMBIE);
-			// 敵の初期化
-			enemy->CreateEnemy(spawnPos);
-			// 生成したゾンビをカウントに加算
-			enemyNums_.zombieNumCnt_++;
-
-			// 間隔を初期化
-			enemyInterval_.zombieSpawnCnt_ = 0.0f;
-		}
-
-		break;
-	case EnemyBase::ENEMY_TYPE::WIZARD:
-		break;
-	case EnemyBase::ENEMY_TYPE::GIANT:
-		break;
-	case EnemyBase::ENEMY_TYPE::MAX:
-		break;
-	default:
-		break;
-	}
 }
 
-EnemyBase* WaveBase::GetValidEnemy(EnemyBase::ENEMY_TYPE eneType)
+bool WaveBase::CheckWaveClear()
 {
-	auto& ins = EnemyManager::GetInstance();
-	auto& enemys_ = ins.GetEnemy();
+    if (waveTime > 0 && elapsed >= waveTime) return true;
 
-	size_t size = enemys_.size();
+    bool isClear_ = true;
 
-	for (int i = 0; i < size; i++)
-	{
-		// 敵の種類が違ったら次の敵を見る
-		if (enemys_[i]->GetType() != eneType)
-		{
-			continue;
-		}
+    for (auto& event : spawnEvents)
+    {
+        // イベントが発動していないかつイベントの発動フレームになったら
+        if (!event.triggered)
+        {
+            isClear_ = false;
+        }
+    }
 
-		// 弾の種別が同じ、かつ、未使用(生存していない)なら再利用する
-		if (!enemys_[i]->GetEnemy().isAlive_)
-		{
-			return enemys_[i];
-		}
-	}
+    return isClear_;
+}
 
-	// 未使用の敵がいなかった場合新しい敵を生成
-	EnemyBase* enemy = nullptr;
-
-	auto* player = waveManager_->GetPlayerPoint();
-
-	// 新しい敵のインスタンスを生成する
-	switch (eneType)
-	{
-	case EnemyBase::ENEMY_TYPE::ZOMBIE:
-		enemy = new Zombie(eneType, waveManager_->GetEnemyModelIds(static_cast<int>(eneType)), -1, player);
-		break;
-	case EnemyBase::ENEMY_TYPE::WIZARD:
-		break;
-	case EnemyBase::ENEMY_TYPE::GIANT:
-		break;
-	case EnemyBase::ENEMY_TYPE::MAX:
-		break;
-	default:
-		break;
-	}
-
-	// nullチェック
-	if (enemy == nullptr)
-	{
-		return nullptr;
-	}
-
-	// 可変長配列に追加
-	ins.AddEnemy(enemy);
-
-	return enemy;
+void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
+{
+    spawnEvents.push_back({ time, type, pos, false });
 }

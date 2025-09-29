@@ -14,6 +14,7 @@
 #include "../Manager/SystemManager.h"
 #include "../Common/Pause/Pause.h"
 #include "../Wave/WaveManager.h"
+#include "../Wave/Wave1.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "GameScene.h"
 
@@ -25,7 +26,6 @@ GameScene::GameScene(void)
 	cursor_ = nullptr;
 	score_ = nullptr;
 	pause_ = nullptr;
-	wave_ = nullptr;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -50,6 +50,8 @@ void GameScene::Init(void)
 
 	// 敵マネージャの生成
 	EnemyManager::CreateInstance();
+	EnemyManager::GetInstance().Load();
+	EnemyManager::GetInstance().GetPlayyerPoint(player_);
 
 	// カメラの生成
 	camera_ = new Camera(player_);
@@ -66,10 +68,6 @@ void GameScene::Init(void)
 	// ポーズモードの生成
 	pause_ = new Pause();
 	pause_->Init();
-
-	// ウェーブの生成
-	wave_ = new WaveManager(player_);
-	wave_->Init();
 }
 
 void GameScene::Load(void)
@@ -77,7 +75,9 @@ void GameScene::Load(void)
 	player_->Load();
 	cursor_->Load();
 	pause_->Load();
-	wave_->Load();
+
+	WaveManager::CreateInstance();
+	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 }
 
 void GameScene::Update(void)
@@ -101,7 +101,7 @@ void GameScene::Update(void)
 		camera_->Update();
 
 		// ウェーブの更新
-		wave_->Update();
+		WaveManager::GetInstance().Update();
 
 		// 当たり判定
 		CheckCollisions();
@@ -146,7 +146,7 @@ void GameScene::Draw(void)
 	grid_->Draw();
 
 	// 敵の描画
-	wave_->Draw();
+	WaveManager::GetInstance().Draw();
 
 	// 敵の描画
 	EnemyManager::GetInstance().Draw();
@@ -176,12 +176,7 @@ void GameScene::Release(void)
 {
 
 	// ウェーブの解放
-	if (wave_ != nullptr)
-	{
-		wave_->Release();
-		delete wave_;
-		wave_ = nullptr;
-	}
+	WaveManager::GetInstance().DeleteInstance();
 
 	// ポーズモードの解放
 	if (pause_ != nullptr)
@@ -359,7 +354,7 @@ void GameScene::IsClear(void)
 	}
 
 	// WAVEが最終段階かつ、敵全てが死亡していたら
-	if (wave_->GetNowWave() == WAVE_END && isEnd_)
+	if (WaveManager::GetInstance().AllCleared() && isEnd_)
 	{
 		// ゲームクリアに遷移
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);

@@ -8,7 +8,6 @@ class Player;
 class Cursor;
 class Score;
 class Pause;
-class WaveManager;
 
 class GameScene : public SceneBase
 {
@@ -48,9 +47,6 @@ private:
 
 	// ポーズモード
 	Pause* pause_;
-
-	// 敵
-	WaveManager* wave_;
 
 	// ポーズモード確認用
 	bool nowPause_;

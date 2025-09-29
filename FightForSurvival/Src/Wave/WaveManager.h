@@ -1,60 +1,55 @@
 #pragma once
 
-#include <vector>
-#include "WaveState.h"
+#include "WaveBase.h"
 
-class WaveBase;
-class Player;
+#include <memory>
+#include <vector>
 
 class WaveManager
 {
 public:
+    // シングルトン（生成・取得・削除）
+    static void CreateInstance(void) { if (instance_ == nullptr) { instance_ = new WaveManager(); } };
+    static WaveManager& GetInstance(void) { return *instance_; };
+    static void DeleteInstance(void) { if (instance_ != nullptr) { delete instance_; instance_ = nullptr; } }
 
-	// コンストラクタ・デストラクタ
-	WaveManager(Player* player);
-	~WaveManager(void);
+    // ウェーブの追加
+    void AddWave(std::unique_ptr<WaveBase> wave);
 
-	void Init(void);
-	void Load(void);
-	void Update(void);
-	void Draw(void);
-	void Release(void);
+    // 更新
+    void Update(void);
 
-	void ChangeWave(WAVE wave);
+    // 描画
+    void Draw(void);
 
-	// ゲッター関数
-	WAVE GetNowWave(void)const { return wave_; }
-	int GetEnemyModelIds(int i)const { return enemyModelIds_[i]; }
-	Player* GetPlayerPoint(void)const { return player_; }
+    // 現在のウェーブを取得
+    WaveBase* GetCurrentWave(void);
+
+    // ウェーブを全てクリアしているか
+    bool AllCleared(void)const;
 
 private:
-	
-	// プレイヤーのインスタンスポインタ
-	Player* player_;
+    // 静的インスタンス
+    static WaveManager* instance_;
 
-	// ウェーブのインスタンスポインタ
-	WaveBase* wave1_;
-	WaveBase* wave2_;
+    // デフォルトコンストラクタをprivateにして、外部から生成できない様にする
+    WaveManager(void);
+    // デストラクタも同様
+    ~WaveManager(void);
 
-	// 現在のウェーブ
-	WAVE wave_;
+    // コピー・ムーブ操作を禁止
+    WaveManager(const WaveManager&) = delete;
+    WaveManager& operator=(const WaveManager&) = delete;
+    WaveManager(WaveManager&&) = delete;
+    WaveManager& operator=(WaveManager&&) = delete;
 
-	// 状態のテーブル
-	WaveFunction waveTable_[WAVE_MAX][PROCESS_MAX];
+    // 下記をコンパイルエラーさせるため 上記を追加
+    // WaveManager copy = *WaveManager::GetInstance();
+    // WaveManager copied(*WaveManager::GetInstance());
+    // WaveManager moved = std::move(*WaveManager::GetInstance());
 
-	// エネミー用のモデルハンドルID
-	std::vector<int> enemyModelIds_;
-
-	static void Wave1Update(WaveManager& wave);
-	static void Wave2Update(WaveManager& wave);
-	static void SelectUpdate(WaveManager& wave);
-	static void EndUpdate(WaveManager& wave);
-
-	static void Wave1Draw(WaveManager& wave);
-	static void Wave2Draw(WaveManager& wave);
-	static void SelectDraw(WaveManager& wave);
-	static void EndDraw(WaveManager& wave);
-
+    std::vector<std::unique_ptr<WaveBase>> waves;
+    int currentWaveIndex;
 
 };
 

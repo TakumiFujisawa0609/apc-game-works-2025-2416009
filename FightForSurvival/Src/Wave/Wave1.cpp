@@ -1,49 +1,24 @@
 #include "Wave1.h"
 
-Wave1::Wave1(WaveManager* waveManager) : WaveBase(waveManager)
+// 準備30秒 → 戦闘120秒
+Wave1::Wave1(void)
+	: WaveBase(60 * 3, 60 * 120)
 {
-
-	// テーブルに関数のポインタを格納
-	waveStateTable_[CREATE] = Create;
+	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
+	// スポーンタイミング、敵種別、座標
+	AddSpawnEvent(60 * 5, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 20, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 30, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 }
 
-Wave1::~Wave1(void)
+void Wave1::OnStart()
 {
 }
 
-void Wave1::Load(void)
+void Wave1::OnWave()
 {
 }
 
-void Wave1::Draw(void)
+void Wave1::OnClear()
 {
-	DrawString(0, 20, "Wave1", 0xffffff);
-}
-
-void Wave1::SetParam(void)
-{
-	enemyNums_.zombieNum_ = ZOMBIE_NUM;
-}
-
-void Wave1::Create(WaveBase& waveBase)
-{
-	auto zombie = EnemyBase::ENEMY_TYPE::ZOMBIE;
-
-	// スポーン可能時間ではなかったら、
-	if (waveBase.GetEnemyInterval().zombieSpawnCnt_ < ZOMBIE_INTERVAL)
-	{
-		// スポーンカウンタを動かす
-		waveBase.EnemyCounter(zombie);
-	}
-	else
-	{
-		// スピーン可能時間だったらゾンビを生成する
-		waveBase.SpawnEnemy(zombie,VGet(0.0f, 0.0f, 100.0f));
-	}
-
-	// 敵の数が規定量になったら出現処理を終了させる
-	if (waveBase.GetEnemyNum().enemyNumAll_ >= ENEMY_NUM_ALL)
-	{
-		waveBase.ChangeWaveState(WAIT);
-	}
 }

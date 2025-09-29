@@ -6,7 +6,6 @@
 #include "../../Manager/CollisionManager.h"
 #include "../../Manager/SceneManager.h"
 #include "EnemyBase.h"
-#include "Zombie.h"
 
 EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 {
@@ -310,7 +309,9 @@ void EnemyBase::LookPlayer(void)
 
 	if (length == 0.0f)
 	{
-		vec.x = vec.z = 0.0f;
+		// プレイヤーと位置が全く同じだった場合、無理やり移動するように向きの情報を入れる
+		enemy_.dir_.x = 1.0f;
+		return;
 	}
 
 	// 大きさで割って単位ベクトルにする

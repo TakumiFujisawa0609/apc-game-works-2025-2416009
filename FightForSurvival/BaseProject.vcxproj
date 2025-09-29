@@ -92,7 +92,6 @@
     <ClInclude Include="Src\Scene\TitleScene.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
     <ClInclude Include="Src\Object\Enemy\Zombie.h" />
-    <ClInclude Include="Src\Wave\WaveState.h" />
     <ClInclude Include="Src\Wave\WaveManager.h" />
     <ClInclude Include="Src\Wave\WaveBase.h" />
     <ClInclude Include="Src\Wave\Wave1.h" />

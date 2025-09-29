@@ -2,10 +2,12 @@
 
 #include "../../Base.h"
 #include "EnemyState.h"
+#include "EnemyManager.h"
 #include <string>
 
 class AnimationController;
 class Player;
+
 
 class EnemyBase
 {
@@ -13,14 +15,6 @@ public:
 
 	static constexpr float ATTACK_RANGE_POS_OFFSET = 90.0f;
 
-	// エネミー種別
-	enum class ENEMY_TYPE
-	{
-		ZOMBIE,
-		WIZARD,
-		GIANT,
-		MAX,
-	};
 
 	// コンストラクタ
 	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
@@ -46,12 +40,12 @@ public:
 	EnemyCollision GetColPos(void)const { return collision_; }
 
 	// 敵の種類を渡す
-	const ENEMY_TYPE GetType(void)const{return type_;}
+	ENEMY_TYPE GetType(void)const{return type_;}
 
 	// 死亡していなかったらtrueを返す
 	bool IsCollisionState(void);
 	// 攻撃状態かつ、当たり判定を終えていなかったらtrueを返す
-	bool IsAttack(void) { return state_ == STATE_ATTACK && isAttack_ == true; }
+	bool IsAttack(void)const { return state_ == STATE_ATTACK && isAttack_ == true; }
 	// 攻撃有効フラグ
 	void SetIsAttack(bool flg) { isAttack_ = flg; }
 

@@ -2,7 +2,18 @@
 
 #include <vector>
 #include <memory>
+
 #include "EnemyBase.h"
+#include "../Player/Player.h"
+
+// 敵のタイプ(エネミーのマネージャー等で作る！）
+enum class ENEMY_TYPE
+{
+    ZOMBIE,
+    WIZARD,
+    GIANT,
+    MAX,
+};
 
 class EnemyManager
 {
@@ -15,11 +26,17 @@ public:
     // 敵の追加
     void AddEnemy(EnemyBase* enemy);
 
-    void Update();  // 更新
-    void Draw();    // 描画
-    void Delete();  // 削除
+    void Load(void);  // 更新
+    void Update(void);  // 更新
+    void Draw(void);    // 描画
+    void Delete(void);  // 削除
+
+    void Spawn(ENEMY_TYPE type, VECTOR pos);
 
     const std::vector<EnemyBase*> GetEnemy(void)const { return enemys_; }
+
+    void GetPlayyerPoint(Player* player) { player_ = player; }
+
 private:
     // 静的インスタンス
     static EnemyManager* instance_;
@@ -39,14 +56,17 @@ private:
     // EnemyManager copy = *EnemyManager::GetInstance();
     // EnemyManager copied(*EznemyManager::GetInstance());
     // EnemyManager moved = std::move(*EnemyManager::GetInstance());
+    // 敵モデルのの読み込み
     
+    // プレイヤーのポインター
+    Player* player_;
+
     // 全てのエネミーを管理する
     std::vector<EnemyBase*> enemys_;
 
-	//void ChangeWave(WAVE wave);
-	//void UpdateWave01(void);
-	//void UpdateWave02(void);
-	////void UpdateWave03(void);
-	//void UpdateEnd(void);
+    // エネミー用のモデルハンドルID
+    std::vector<int> enemyModelIds_;
+
+   EnemyBase* GetValidEnemy(ENEMY_TYPE type);
 };
 

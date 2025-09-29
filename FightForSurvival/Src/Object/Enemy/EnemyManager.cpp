@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Manager/SceneManager.h"
+#include "Zombie.h"
 #include "EnemyManager.h"
 
 EnemyManager* EnemyManager::instance_ = nullptr;
@@ -13,25 +14,24 @@ void EnemyManager::AddEnemy(EnemyBase* enemy)
 	enemys_.emplace_back(std::move(enemy));
 }
 
-//
-//void EnemyManager::Load(void)
-//{
-//	// エネミーモデルのロード
-//	enemyModelIds_.emplace_back(
-//		MV1LoadModel((Application::PATH_MODEL + "Enemy/Demon.mv1").c_str()));
-//	//enemyModelIds_.emplace_back(
-//	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Wizard.mv1").c_str()));
-//	//enemyModelIds_.emplace_back(
-//	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str()));
-//
-//	//// 攻撃エフェクト用のモデルのロード
-//	//attackEffectModelIds_.emplace_back(
-//	//	MV1LoadModel(
-//	//		(Application::PATH_MODEL + "Effect/Fireball/Fireball.mv1").c_str()));
-//	//attackEffectModelIds_.emplace_back(
-//	//	MV1LoadModel(
-//	//		(Application::PATH_MODEL + "Effect/Rockfall/Rock.mv1").c_str()));
-//}
+void EnemyManager::Load(void)
+{
+	// エネミーモデルのロード
+	enemyModelIds_.emplace_back(MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str()));
+
+	//enemyModelIds_.emplace_back(
+	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Wizard.mv1").c_str()));
+	//enemyModelIds_.emplace_back(
+	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str()));
+
+	//// 攻撃エフェクト用のモデルのロード
+	//attackEffectModelIds_.emplace_back(
+	//	MV1LoadModel(
+	//		(Application::PATH_MODEL + "Effect/Fireball/Fireball.mv1").c_str()));
+	//attackEffectModelIds_.emplace_back(
+	//	MV1LoadModel(
+	//		(Application::PATH_MODEL + "Effect/Rockfall/Rock.mv1").c_str()));
+}
 
 void EnemyManager::Update(void)
 {
@@ -65,61 +65,73 @@ void EnemyManager::Delete(void)
 	//}
 
 	enemys_.clear();
+
+	// エネミーモデルの解放を追加
+	for (int modelId : enemyModelIds_)
+	{
+		MV1DeleteModel(modelId);
+	}
+
+	enemyModelIds_.clear();
 }
 
+void EnemyManager::Spawn(ENEMY_TYPE type, VECTOR pos)
+{
+	// 有効な敵を取得する
+	EnemyBase* enemy = GetValidEnemy(type);
+	// 敵の初期化
+	enemy->CreateEnemy(pos);
+}
 
-//void EnemyManager::ChangeWave(WAVE wave)
-//{
-//	wave_ = wave;
-//}
-//
-//void EnemyManager::UpdateWave01(void)
-//{
-//
-//	// 経過時間の取得
-//	float deltaTime = SceneManager::GetInstance().GetDeltaTime();
-//
-//	frameNum_ += deltaTime;
-//
-//	zombieTime_ += deltaTime;
-//
-//	// 一定間隔でエネミーを出現させる
-//	if (zombieTime_ >= ZOMBIE_SPAWN_INTERVAL)
-//	{
-//		zombieNum_++;
-//		//EnemyBase* enemy = new EnemyDemon();
-//
-//		//enemy->Init(
-//		//	EnemyBase::ENEMY_TYPE::ZOMBIE,
-//		//	enemyModelIds_[static_cast<int>(EnemyBase::ENEMY_TYPE::ZOMBIE)], -1,
-//		//	VGet(0.0f,0.0f,0.0f),player_);
-//
-//		//enemys_.emplace_back(enemy);
-//
-//		zombieTime_ = 0.0f;
-//	}
-//
-//	bool next = true;
-//
-//	for (EnemyBase* enemy : enemys_)
-//	{
-//		if (enemy->GetEnemy().isAlive_)
-//		{
-//			// エネミーが1匹でもいたら進まない
-//			next = false;
-//		}
-//	}
-//
-//	// フレームが超えるか、エネミーが0匹だったらウェーブを進める
-//	if (frameNum_ >= NEXT_WAVE_FRAME || next)
-//	{
-//		frameNum_ = 0.0f;
-//		zombieNum_ = 0;
-//		ChangeWave(nextWave_);
-//		nextWave_ = WAVE::WAVE02;
-//	}
-//}
-//
-//void EnemyManager::UpdateWave02(void)
-//{
-//}
+EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
+{
+	auto& ins = EnemyManager::GetInstance();
+	auto& enemys_ = ins.GetEnemy();
+
+	size_t size = enemys_.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		// 敵の種類が違ったら次の敵を見る
+		if (enemys_[i]->GetType() != type)
+		{
+			continue;
+		}
+
+		// 弾の種別が同じ、かつ、未使用(生存していない)なら再利用する
+		if (!enemys_[i]->GetEnemy().isAlive_)
+		{
+			return enemys_[i];
+		}
+	}
+
+	// 未使用の敵がいなかった場合新しい敵を生成
+	EnemyBase* enemy = nullptr;
+
+	// 新しい敵のインスタンスを生成する
+	switch (type)
+	{
+	case ENEMY_TYPE::ZOMBIE:
+		enemy = new Zombie(type, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, player_);
+		break;
+	case ENEMY_TYPE::WIZARD:
+		break;
+	case ENEMY_TYPE::GIANT:
+		break;
+	case ENEMY_TYPE::MAX:
+		break;
+	default:
+		break;
+	}
+
+	// nullチェック
+	if (enemy == nullptr)
+	{
+		return nullptr;
+	}
+
+	// 可変長配列に追加
+	ins.AddEnemy(enemy);
+
+	return enemy;
+}
