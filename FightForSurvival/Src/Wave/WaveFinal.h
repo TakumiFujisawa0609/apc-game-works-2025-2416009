@@ -4,10 +4,10 @@
 
 #include <DxLib.h>
 
-class Wave1 : public WaveBase
+class WaveFinal : public WaveBase
 {
 public:
-    Wave1(void);
+    WaveFinal(void);
 
     void OnStart(void) override;
     void OnWave(void) override;
@@ -15,5 +15,4 @@ public:
 
     void Draw(void)override;
 };
-
 

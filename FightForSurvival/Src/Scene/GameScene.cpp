@@ -15,6 +15,8 @@
 #include "../Common/Pause/Pause.h"
 #include "../Wave/WaveManager.h"
 #include "../Wave/Wave1.h"
+#include "../Wave/Wave2.h"
+#include "../Wave/WaveFinal.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "GameScene.h"
 
@@ -78,6 +80,8 @@ void GameScene::Load(void)
 
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
+	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
+	WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
 }
 
 void GameScene::Update(void)
@@ -342,6 +346,10 @@ void GameScene::IsClear(void)
 	auto& enemys_ = eneManaIns.GetEnemy();
 
 	bool isEnd_ = true;
+	if ((int)enemys_.size() <= 0)
+	{
+		isEnd_ = false;
+	}
 
 	for (auto& enemy : enemys_)
 	{
@@ -354,7 +362,12 @@ void GameScene::IsClear(void)
 	}
 
 	// WAVE‚ªÅI’iŠK‚©‚ÂA“G‘S‚Ä‚ªŽ€–S‚µ‚Ä‚¢‚½‚ç
-	if (WaveManager::GetInstance().AllCleared() && isEnd_)
+	if (WaveManager::GetInstance().GetCurrentWave() != nullptr)
+	{
+		return;
+	}
+
+	if (WaveManager::GetInstance().AllCleared() || isEnd_)
 	{
 		// ƒQ[ƒ€ƒNƒŠƒA‚É‘JˆÚ
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);

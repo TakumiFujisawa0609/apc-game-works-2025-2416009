@@ -50,8 +50,8 @@ void WaveManager::Draw(void)
 
 WaveBase* WaveManager::GetCurrentWave()
 {
-	// 全てのウェーブが終わっていないなら
-	if (currentWaveIndex < (int)waves.size())
+	// 全てのウェーブが終わっていないなら(WaveFinalだったらnullptrを返すために、+1)
+	if (currentWaveIndex + 1 < (int)waves.size())
 	{
 		// 現在のウェーブを取得
 		return waves[currentWaveIndex].get();

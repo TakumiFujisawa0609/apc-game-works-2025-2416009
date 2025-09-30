@@ -46,6 +46,7 @@ public:
     // クリアしているか？
     bool IsCleared() const { return state_ == WaveState::Cleared; }
 
+    int GetSpawnEventNum(void)const { return (int)spawnEvents_.size(); }
 protected:
 
     // ウェーブ状態

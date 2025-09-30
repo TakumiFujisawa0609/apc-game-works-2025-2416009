@@ -55,6 +55,8 @@
     <ClCompile Include="Src\Wave\WaveManager.cpp" />
     <ClCompile Include="Src\Wave\WaveBase.cpp" />
     <ClCompile Include="Src\Wave\Wave1.cpp" />
+    <ClCompile Include="Src\Wave\WaveFinal.cpp" />
+    <ClCompile Include="Src\Wave\Wave2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\UpgradeManager.h" />
@@ -95,6 +97,8 @@
     <ClInclude Include="Src\Wave\WaveManager.h" />
     <ClInclude Include="Src\Wave\WaveBase.h" />
     <ClInclude Include="Src\Wave\Wave1.h" />
+    <ClInclude Include="Src\Wave\WaveFinal.h" />
+    <ClInclude Include="Src\Wave\Wave2.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
