@@ -7,7 +7,7 @@ class SystemManager
 public:
 
 	// 感度
-	static constexpr float SENSITIVITY = 0.005f;
+	static constexpr float SENSITIVITY = 0.003f;
 
 	// 明示的にインステンスを生成する
 	static void CreateInstance(void);
