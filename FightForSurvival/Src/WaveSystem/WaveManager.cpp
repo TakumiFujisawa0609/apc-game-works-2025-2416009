@@ -1,4 +1,4 @@
-#include "Wave1.h"
+#include "Wave/Wave1.h"
 #include "../Application.h"
 #include "WaveManager.h"
 
@@ -46,6 +46,7 @@ void WaveManager::Draw(void)
 	// 現在のウェーブを取得して更新
 	auto& wave = waves[currentWaveIndex];
 	wave->Draw();
+
 }
 
 WaveBase* WaveManager::GetCurrentWave()

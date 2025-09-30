@@ -138,19 +138,22 @@
     <ClCompile Include="Src\Scene\OverScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Wave\WaveBase.cpp">
+    <ClCompile Include="Src\WaveSystem\WaveBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Wave\WaveManager.cpp">
+    <ClCompile Include="Src\WaveSystem\WaveManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Wave\Wave1.cpp">
+    <ClCompile Include="Src\WaveSystem\Wave\Wave1.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Wave\SelectWave.cpp">
+    <ClCompile Include="Src\WaveSystem\Wave\SelectWave.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Manager\UpgradeManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\WaveSystem\Wave\WaveFinal.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -254,19 +257,22 @@
     <ClInclude Include="Src\Scene\OverScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\WaveBase.h">
+    <ClInclude Include="Src\WaveSystem\WaveBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\WaveManager.h">
+    <ClInclude Include="Src\WaveSystem\WaveManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\Wave1.h">
+    <ClInclude Include="Src\WaveSystem\Wave\Wave1.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\SelectWave.h">
+    <ClInclude Include="Src\WaveSystem\Wave\SelectWave.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Manager\UpgradeManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\WaveSystem\Wave\WaveFinal.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

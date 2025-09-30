@@ -1,22 +1,27 @@
+#include "GameScene.h"
+
 #include <DxLib.h>
-#include "../Object/Grid/Grid.h"
+
 #include "../Application.h"
 #include "../Manager/Camera.h"
 #include "../Manager/InputManager.h"
-#include "../Object/Player/Player.h"
-#include "../Object/Common/Cursor.h"
-#include "../Common/Score/Score.h"
-#include "../Object/Enemy/Zombie.h"
-#include "../Object/Player/Gun/GunBase.h"
-#include "../Object/Player/Gun/Bullet/BulletBase.h"
-#include "../Manager/CollisionManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
-#include "../Common/Pause/Pause.h"
-#include "../Wave/WaveManager.h"
-#include "../Wave/Wave1.h"
+
+#include "../Object/Grid/Grid.h"
+#include "../Object/Player/Player.h"
+#include "../Object/Player/Gun/GunBase.h"
+#include "../Object/Player/Gun/Bullet/BulletBase.h"
+#include "../Object/Common/Cursor.h"
+#include "../Common/Score/Score.h"
 #include "../Object/Enemy/EnemyManager.h"
-#include "GameScene.h"
+#include "../Object/Enemy/Zombie.h"
+#include "../Manager/CollisionManager.h"
+#include "../Common/Pause/Pause.h"
+
+#include "../WaveSystem/WaveManager.h"
+#include "../WaveSystem/Wave/Wave1.h"
+//#include "../WaveSystem/Wave/WaveFinal.h"
 
 GameScene::GameScene(void)
 {
@@ -78,6 +83,7 @@ void GameScene::Load(void)
 
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
+	//WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
 }
 
 void GameScene::Update(void)
@@ -354,7 +360,7 @@ void GameScene::IsClear(void)
 	}
 
 	// WAVE‚ªÅI’iŠK‚©‚ÂA“G‘S‚Ä‚ª€–S‚µ‚Ä‚¢‚½‚ç
-	if (WaveManager::GetInstance().AllCleared() && isEnd_)
+	if (WaveManager::GetInstance().AllCleared() || isEnd_)
 	{
 		// ƒQ[ƒ€ƒNƒŠƒA‚É‘JˆÚ
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
