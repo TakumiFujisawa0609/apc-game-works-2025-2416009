@@ -361,12 +361,13 @@ void GameScene::IsClear(void)
 		}
 	}
 
-	// WAVEが最終段階かつ、敵全てが死亡していたら
+	// WAVEが最終段階でなかったらクリアに遷移しないように処理を終了させる
 	if (WaveManager::GetInstance().GetCurrentWave() != nullptr)
 	{
 		return;
 	}
 
+	// WAVEが最終段階かつ、敵全てが死亡していたら
 	if (WaveManager::GetInstance().AllCleared() || isEnd_)
 	{
 		// ゲームクリアに遷移
