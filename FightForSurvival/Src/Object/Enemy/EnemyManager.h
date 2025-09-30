@@ -6,19 +6,17 @@
 #include "EnemyBase.h"
 #include "../Player/Player.h"
 
+// 敵のタイプ(エネミーのマネージャー等で作る！）
+enum class ENEMY_TYPE
+{
+    ZOMBIE,
+    WIZARD,
+    GIANT,
+    MAX,
+};
 
 class EnemyManager
 {
-public:
-    // 敵のタイプ(エネミーのマネージャー等で作る！）
-    enum class ENEMY_TYPE
-    {
-        ZOMBIE,
-        WIZARD,
-        GIANT,
-        MAX,
-    };
-
 public:
     // シングルトン（生成・取得・削除）
     static void CreateInstance(void) { if (instance_ == nullptr) { instance_ = new EnemyManager(); } };

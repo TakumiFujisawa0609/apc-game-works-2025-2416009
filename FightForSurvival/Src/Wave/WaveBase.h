@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Object/Enemy/EnemyBase.h"
-#include "../Object/Enemy/EnemyManager.h"
 
 #include <DxLib.h>
 
@@ -20,7 +19,7 @@ public:
     struct SpawnEvent
     {
         int triggerTime;            // 何フレーム目にスポーンするのか
-        EnemyManager::ENEMY_TYPE type;            // スポーンする敵の種類
+        ENEMY_TYPE type;            // スポーンする敵の種類
         VECTOR pos;                 // スポーン座標
         bool triggered = false;     // スポーンしたか
     };
@@ -30,7 +29,7 @@ public:
     virtual ~WaveBase() = default;
 
     void Update(void);  // 更新
-    virtual void Draw(void);    // 描画
+    void Draw(void);    // 描画
 
     // 派生先で固有の処理があるなら記述する。
     virtual void OnStart();       // システム起動
@@ -42,7 +41,7 @@ public:
     virtual bool CheckWaveClear();
 
     // スポーンイベントを作成
-    void AddSpawnEvent(int time, EnemyManager::ENEMY_TYPE type, VECTOR pos);
+    void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
 
     // クリアしているか？
     bool IsCleared() const { return state == WaveState::Cleared; }

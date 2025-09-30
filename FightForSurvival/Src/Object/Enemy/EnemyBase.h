@@ -17,7 +17,7 @@ public:
 
 
 	// コンストラクタ
-	EnemyBase(EnemyManager::ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
+	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
 
 	// デストラクタ
 	virtual ~EnemyBase(void);
@@ -40,7 +40,7 @@ public:
 	EnemyCollision GetColPos(void)const { return collision_; }
 
 	// 敵の種類を渡す
-	EnemyManager::ENEMY_TYPE GetType(void)const { return type_; }
+	ENEMY_TYPE GetType(void)const{return type_;}
 
 	// 死亡していなかったらtrueを返す
 	bool IsCollisionState(void);
@@ -64,7 +64,7 @@ public:
 	bool SearchAttackRange(void);
 
 	// 攻撃待ち時間を確認
-	float GetAttackCooldown(void) const { return attackCooldown_; }
+	float GetAttackCooldown(void) const{ return attackCooldown_; }
 	// 攻撃待ち時間のセットする
 	void SetAttackCooldown(float cooldown) { attackCooldown_ = cooldown; }
 
@@ -123,7 +123,7 @@ protected:
 	void UpdateCollisionPositions(void);
 
 	// ボーンのワールド座標を取得する
-	VECTOR GetBoneWorldPosition(int bone, float offset);
+	VECTOR GetBoneWorldPosition(int bone,float offset);
 
 	// ボーンフレーム取得
 	int SearchFrame(const std::string& boneName);
@@ -135,3 +135,4 @@ protected:
 	// フレーム登録
 	virtual void AddFrames(void) = 0;
 };
+

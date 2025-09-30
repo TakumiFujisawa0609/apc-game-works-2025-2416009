@@ -1,6 +1,6 @@
 #include "WaveBase.h"
 
-#include "../Application.h"
+#include "../Object/Enemy/EnemyManager.h"
 
 
 WaveBase::WaveBase(int prep, int wave)
@@ -68,41 +68,31 @@ void WaveBase::Update(void)
 
 void WaveBase::Draw(void)
 {
-    int pos_X = Application::SCREEN_SIZE_X / 2 - 50;
-
-    int time = elapsed / 60;
-    int parameTime = prepareTime / 60;
-    int waveTime = prepareTime / 60;
-
     switch (state)
     {
     case WaveBase::WaveState::Prepare:
-    {
-        DrawFormatString(pos_X, 5, 0xff0000, "%d / %d", time, parameTime);
-        DrawFormatString(0, 60, 0xff0000, "準備");
-    }
+        DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, prepareTime);
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：Prepare");
         break;
     case WaveBase::WaveState::InWave:
-    {
-        DrawFormatString(pos_X, 5, 0xff0000, "%d / %d", time, waveTime);
-        DrawFormatString(0, 60, 0xff0000, "戦い");
-    }
+        DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, waveTime);
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：InWave");
         break;
     case WaveBase::WaveState::Cleared:
-        //DrawFormatString(0, 200, 0xff0000, "現在の状態：Cleared");
+        DrawFormatString(0, 200, 0xff0000, "現在の状態：Cleared");
         break;
     default:
         break;
     }
 
-    //int cnt = 0;
+    int cnt = 0;
 
     // スポーンイベントを処理
-    //for (auto& event : spawnEvents)
-    //{
-    //    DrawFormatString(0, 300 + 20 * cnt, 0xffffff, "スポーンの判定 = %d", event.triggered);
-    //    cnt++;
-    //}
+    for (auto& event : spawnEvents)
+    {
+        DrawFormatString(0, 300 + 20 * cnt, 0xffffff, "スポーンの判定 = %d", event.triggered);
+        cnt++;
+    }
 }
 
 void WaveBase::OnStart()
@@ -125,18 +115,18 @@ bool WaveBase::CheckWaveClear()
 {
     if (waveTime > 0 && elapsed >= waveTime) return true;
 
-    //bool isClear_ = true;
+    bool isClear_ = true;
 
-    //for (auto& event : spawnEvents)
-    //{
-    //    // イベントが発動していないかつイベントの発動フレームになったら
-    //    if (!event.triggered)
-    //    {
-    //        isClear_ = false;
-    //    }
-    //}
+    for (auto& event : spawnEvents)
+    {
+        // イベントが発動していないかつイベントの発動フレームになったら
+        if (!event.triggered)
+        {
+            isClear_ = false;
+        }
+    }
 
-    return false;
+    return isClear_;
 }
 
 void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
