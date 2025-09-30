@@ -155,7 +155,7 @@ void GameScene::Draw(void)
 	player_->Draw();
 
 #ifdef _DEBUG
-	DrawString(0, 0, "GameScene", 0xffffff);
+	//DrawString(0, 0, "GameScene", 0xffffff);
 
 	// カメラのデバック描画
 	camera_->DrawDebug();

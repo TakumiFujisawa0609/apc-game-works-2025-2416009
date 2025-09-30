@@ -36,10 +36,7 @@ void ClearScene::Draw(void)
 	DrawString(POS_X - 50, POS_Y - 50, "最終スコア", 0xffffff);
 	DrawFormatString(POS_X, POS_Y, 0xffffff, "%d", score_);
 
-#ifdef _DEBUG
-	DrawString(0, 0, "ClearScene", 0xffffff);
-#endif // _DEBUG
-
+	DrawString(POS_X - 50,POS_Y - 80, "GameClear!", 0xffffff);
 }
 
 void ClearScene::Release(void)

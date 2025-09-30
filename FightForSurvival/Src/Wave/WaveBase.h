@@ -18,10 +18,10 @@ public:
     // 敵のスポーンイベント
     struct SpawnEvent
     {
-        int triggerTime;            // 何フレーム目にスポーンするのか
-        ENEMY_TYPE type;            // スポーンする敵の種類
-        VECTOR pos;                 // スポーン座標
-        bool triggered = false;     // スポーンしたか
+        int triggerTime_;            // 何フレーム目にスポーンするのか
+        ENEMY_TYPE type_;            // スポーンする敵の種類
+        VECTOR pos_;                 // スポーン座標
+        bool triggered_ = false;     // スポーンしたか
     };
 
     // コンストラクタで設定
@@ -29,7 +29,7 @@ public:
     virtual ~WaveBase() = default;
 
     void Update(void);  // 更新
-    void Draw(void);    // 描画
+    virtual void Draw(void);    // 描画
 
     // 派生先で固有の処理があるなら記述する。
     virtual void OnStart();       // システム起動
@@ -44,17 +44,17 @@ public:
     void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
 
     // クリアしているか？
-    bool IsCleared() const { return state == WaveState::Cleared; }
+    bool IsCleared() const { return state_ == WaveState::Cleared; }
 
 protected:
 
     // ウェーブ状態
-    WaveState state;
+    WaveState state_;
 
-    int prepareTime; // 準備時間
-    int waveTime;    // 戦闘時間
-    int elapsed;     // 経過時間
+    int prepareTime_; // 準備時間
+    int waveTime_;    // 戦闘時間
+    int elapsed_;     // 経過時間
 
-    std::vector<SpawnEvent> spawnEvents;    // スポーンイベントを管理
+    std::vector<SpawnEvent> spawnEvents_;    // スポーンイベントを管理
 
 };

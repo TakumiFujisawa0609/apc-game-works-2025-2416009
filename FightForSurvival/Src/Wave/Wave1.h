@@ -12,6 +12,8 @@ public:
     void OnStart() override;
     void OnWave() override;
     void OnClear() override;
+
+    void Draw(void)override;
 };
 
 
