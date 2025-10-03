@@ -4,17 +4,17 @@
 #include "../../../Base.h"
 
 class Player;
-class BulletBase;
+class MagicBase;
 
-class GunBase
+class WeaponBase
 {
 public:
 
-	// プレイヤーとの銃の相対座標
+	// プレイヤーとの杖の相対座標
 	static constexpr VECTOR RELATIVE_POS_GUN = {10.0f,-20.0f,60.0f };
 
-	// 銃との弾の発射位置の相対座標
-	static constexpr VECTOR RELATIVE_POS_BULLET = { 0.0f,0.0f,15.0f };
+	// 杖との魔法の発射位置の相対座標
+	static constexpr VECTOR RELATIVE_POS_Magic = { 0.0f,0.0f,15.0f };
 
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RELATIVE_POS_TARGET = 1000.0f;
@@ -34,9 +34,9 @@ public:
 	};
 
 	// コンストラクタ
-	GunBase(Player* player);
+	WeaponBase(Player* player);
 	// デストラクタ
-	virtual ~GunBase(void);
+	virtual ~WeaponBase(void);
 
 	// ロード処理
 	virtual void Load(void) = 0;
@@ -49,11 +49,11 @@ public:
 	// 解放処理
 	virtual void Release(void);
 
-	// 弾の取得
-	std::vector<BulletBase*> GetBullets(void)const { return bullets_; }
+	// 魔法の取得
+	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
 
 	bool GetCanShot(void)const { return state_ == STATE::IDLE; }
-	int NowBulletNum(void) { return bulletNum_; }
+	int NowMagicNum(void) { return magicNum_; }
 
 	bool GetIsRecoil(void)const { return isRecoil_; }
 	void SetIsRecoil(bool flg) { isRecoil_ = flg; }
@@ -66,36 +66,36 @@ protected:
 
 	int modelId_;
 
-	VECTOR gunScales_;
-	VECTOR gunRotate_;
-	VECTOR gunPos_;
+	VECTOR scales_;
+	VECTOR rotate_;
+	VECTOR pos_;
 
 	STATE state_;
 
 	// ショット(ポインタ)
-	std::vector<BulletBase*> bullets_;
+	std::vector<MagicBase*> magics_;
 
-	// 弾のモデルID
-	int bulletModelId_;
+	// 魔法のモデルID
+	int magicModelId_;
 
-	// 弾が出る場所
-	VECTOR bulletPos_;
+	// 魔法が出る場所
+	VECTOR magicPos_;
 
-	// 銃を撃つときの狙う場所（銃によって狙う場所の位置が変化する）
+	// 杖を撃つときの狙う場所（杖によって狙う場所の位置が変化する）
 	VECTOR targetPos_;
 
-	// 弾発射後の硬直時間計算用
+	// 魔法発射後の硬直時間計算用
 	float pitchAngle_;
 	float pitch_;
 	float recoil;
 	bool isRecoil_;
 
-	// 最大弾数
-	int bulletNumMax_;
-	// 装填してある数
-	int bulletNum_;
-	// 最大装填数
-	int bulletCapacity_;
+	// MPポーション数
+	int MPPotionNum_;
+	// 魔法攻撃回数
+	int magicNum_;
+	// 最大魔法攻撃回数
+	int magicCapacity_;
 	// リロード時間
 	float reloadTime_;
 
@@ -107,12 +107,12 @@ protected:
 	void WaitUpdate(void);
 	void ReloadUpdate(void);
 
-	// 弾の更新
-	void UpdateBullet(void);
-	// 弾の描画
-	void DrawBullet(void);
+	// 魔法の更新
+	void UpdateMagic(void);
+	// 魔法の描画
+	void DrawMagic(void);
 
-	virtual BulletBase* GetValidBullet(void);
+	virtual MagicBase* GetValidMagic(void);
 	
 	void UpdatePos(void);
 };

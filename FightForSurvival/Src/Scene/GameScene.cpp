@@ -7,8 +7,8 @@
 #include "../Object/Common/Cursor.h"
 #include "../Common/Score/Score.h"
 #include "../Object/Enemy/Zombie.h"
-#include "../Object/Player/Gun/GunBase.h"
-#include "../Object/Player/Gun/Bullet/BulletBase.h"
+#include "../Object/Player/Weapon/WeaponBase.h"
+#include "../Object/Player/Weapon/Magic/MagicBase.h"
 #include "../Manager/CollisionManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
@@ -272,49 +272,49 @@ void GameScene::CheckCollisions(void)
 		float eneRadHand = eneInfo.collisionRadiusHand_;
 		float eneRadLeg = eneInfo.collisionRadiusLeg_;
 
-		// 弾クラスのポインター取得
-		auto bullets = player_->GetGun()->GetBullets();
+		// 魔法クラスのポインター取得
+		auto Magics = player_->GetWeapon()->GetMagics();
 
-		// 弾の数分回す
-		for (auto bullet : bullets)
+		// 魔法の数分回す
+		for (auto Magic : Magics)
 		{
-			// 弾が生存していなかったら次の弾に進む
-			if (!bullet->IsCollisionState())
+			// 魔法が生存していなかったら次の魔法に進む
+			if (!Magic->IsCollisionState())
 			{
 				continue;
 			}
 
-			// 弾の情報
-			auto bulletInfo = bullet->GetBullet();
+			// 魔法の情報
+			auto MagicInfo = Magic->GetMagic();
 
-			// 弾の移動経路の線分を定義
-			VECTOR bulletLineStart = bulletInfo.pos_;
-			VECTOR bulletLineEnd = bulletInfo.prevPos_; // 前のフレームでの弾の位置
+			// 魔法の移動経路の線分を定義
+			VECTOR MagicLineStart = MagicInfo.pos_;
+			VECTOR MagicLineEnd = MagicInfo.prevPos_; // 前のフレームでの魔法の位置
 
-			// 弾の半径
-			float bulletRad = bulletInfo.collisionRadius_;
+			// 魔法の半径
+			float MagicRad = MagicInfo.collisionRadius_;
 
 			// 頭の当たり判定
-			if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, bulletLineStart, bulletLineEnd, bulletRad))
+			if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 敵にダメージを与える
-				enemy->SubHp(bulletInfo.headDamage_);
-				// 弾を爆発させる
-				bullet->ChangeState(BulletBase::STATE::BLAST);
+				enemy->SubHp(MagicInfo.headDamage_);
+				// 魔法を爆発させる
+				Magic->ChangeState(MagicBase::STATE::BLAST);
 			}
 			// 体、腕、手、脚の当たり判定
-			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, bulletLineStart, bulletLineEnd, bulletRad))
+			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 敵にダメージを与える
-				enemy->SubHp(bulletInfo.bodyDamage_);
-				// 弾を爆発させる
-				bullet->ChangeState(BulletBase::STATE::BLAST);
+				enemy->SubHp(MagicInfo.bodyDamage_);
+				// 魔法を爆発させる
+				Magic->ChangeState(MagicBase::STATE::BLAST);
 			}
 		}
 

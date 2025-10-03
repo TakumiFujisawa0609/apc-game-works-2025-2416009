@@ -1,8 +1,8 @@
 #pragma once
 
-#include "BulletBase.h"
+#include "MagicBase.h"
 
-class HundgunBullet : public BulletBase
+class FireMagic : public MagicBase
 {
 public:
 
@@ -19,8 +19,8 @@ public:
 	static constexpr int HEAD_DAMAGE = 10;
 	static constexpr int BODY_DAMAGE = 5;
 
-	HundgunBullet(int baseModelId);
-	~HundgunBullet(void);
+	FireMagic(int baseModelId);
+	~FireMagic(void);
 
 protected:
 

@@ -104,12 +104,6 @@ public:
 	// マウスが右クリックされたか
 	bool IsClickMouseRight(void) const;
 
-	// マウスが左クリックされたか(押しっぱなしはNG)
-	bool IsTrgMouseLeft(void) const;
-
-	// マウスが右クリックされたか(押しっぱなしはNG)
-	bool IsTrgMouseRight(void) const;
-
 	// コントローラの入力情報を取得する
 	JOYPAD_IN_STATE GetJPadInputState(JOYPAD_NO no);
 
@@ -132,7 +126,9 @@ public:
 	bool MoveRight(void);
 
 	// 攻撃
-	bool Attack(void);
+	bool IsTrgDownAttack(void);
+	bool IsNewAttack(void);
+	bool IsTrgUpAttack(void);
 
 	// ダッシュ
 	bool MoveDash(void);

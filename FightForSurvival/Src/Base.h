@@ -56,9 +56,9 @@ struct Ability
 	float staminaMax_;
 };
 
-enum class GUN_TYPE
+enum class weapon_TYPE
 {
-	HANDGUN,
+	Stick,
 	ASSAULT_RIFLE,
 	SHOTGUN,
 };

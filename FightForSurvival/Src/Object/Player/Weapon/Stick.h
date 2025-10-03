@@ -1,8 +1,8 @@
 #pragma once
 
-#include "GunBase.h"
+#include "WeaponBase.h"
 
-class Handgun :public GunBase
+class Stick :public WeaponBase
 {
 public:
 
@@ -12,19 +12,19 @@ public:
 	// モデルの向き
 	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
-	// 弾発射後の硬直時間
+	// 魔法発射後の硬直時間
 	static constexpr float RECOIL = 0.01f;
 
-	// 最大装填数
-	static constexpr int BULLET_CAPACITY = 10;
+	// 最大魔法攻撃回数
+	static constexpr int MAGIC_CAPACITY = 15;
 
-	// 最大弾数
-	static constexpr int BULLET_NUM_MAX = 50;
+	// MPポーション数
+	static constexpr int MP_POTION_NUM = 10;
 
 	// コンストラクタ
-	Handgun(Player* player);
+	Stick(Player* player);
 	// デストラクタ
-	~Handgun(void)override;
+	~Stick(void)override;
 
 protected:
 

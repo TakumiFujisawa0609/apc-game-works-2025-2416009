@@ -3,31 +3,31 @@
 #include "../../../Manager/SceneManager.h"
 #include "../../../Application.h"
 #include "../Player.h"
-#include "Bullet/HundgunBullet.h"
+#include "Magic/FireMagic.h"
 #include "../../../Utility/AsoUtility.h"
-#include "GunBase.h"
+#include "WeaponBase.h"
 
-GunBase::GunBase(Player* player)
+WeaponBase::WeaponBase(Player* player)
 {
 	player_ = player;
 	modelId_ = -1;
-	bulletModelId_ = -1;
+	magicModelId_ = -1;
 }
 
-GunBase::~GunBase(void)
+WeaponBase::~WeaponBase(void)
 {
 }
 
-void GunBase::Init(void)
+void WeaponBase::Init(void)
 {
 	// 画像やモデルなどのロード
 	Load();
 
-	//// 弾のモデルを読み込む
-	//bulletModelId_ = MV1LoadModel(
+	//// 魔法のモデルを読み込む
+	//magicModelId_ = MV1LoadModel(
 	//	(Application::PATH_MODEL + "Cannon/Barrel.mv1").c_str());
 
-	//if (bulletModelId_ == -1)
+	//if (magicModelId_ == -1)
 	//{
 	//	// モデルの読み込みに失敗した場合の処理
 	//	DrawString(0, 0, "CannonBarrel model load failed", GetColor(255, 0, 0));
@@ -36,51 +36,51 @@ void GunBase::Init(void)
 	// パラメータ設定
 	SetParam();
 	
-	MV1SetScale(modelId_, gunScales_);
-	MV1SetRotationXYZ(modelId_, gunRotate_);
+	MV1SetScale(modelId_, scales_);
+	MV1SetRotationXYZ(modelId_, rotate_);
 
-	// 銃の座標設定
-	gunPos_ = player_->GetCameraPos();
-	gunPos_ = VAdd(gunPos_, RELATIVE_POS_GUN);
+	// 杖の座標設定
+	pos_ = player_->GetCameraPos();
+	pos_ = VAdd(pos_, RELATIVE_POS_GUN);
 
-	MV1SetPosition(modelId_, gunPos_);
+	MV1SetPosition(modelId_, pos_);
 
 	state_ = STATE::IDLE;
 
-	// 弾発射の硬直時間
+	// 魔法発射の硬直時間
 	pitch_ = 0.0f;
 	pitchAngle_ = 0.0f;
 
 	// 強制的に視点を動かすか
 	isRecoil_ = false;
 
-	// 弾の座標
-	bulletPos_ = targetPos_ = AsoUtility::VECTOR_ZERO;
+	// 魔法の座標
+	magicPos_ = targetPos_ = AsoUtility::VECTOR_ZERO;
 
 	// リロード時間
 	reloadTime_ = 0.0f;
 }
 
-void GunBase::Update(void)
+void WeaponBase::Update(void)
 {
-	// 銃、弾の座標計算
+	// 杖、魔法の座標計算
 	UpdatePos();
 
-	// 弾の更新
-	UpdateBullet();
+	// 魔法の更新
+	UpdateMagic();
 
 	switch (state_)
 	{
-	case GunBase::STATE::IDLE:
+	case WeaponBase::STATE::IDLE:
 		IdleUpdate();
 		break;
-	case GunBase::STATE::ATTACK:
+	case WeaponBase::STATE::ATTACK:
 		AttackUpdate();
 		break;
-	case GunBase::STATE::WAIT:
+	case WeaponBase::STATE::WAIT:
 		WaitUpdate();
 		break;
-	case GunBase::STATE::RELOAD:
+	case WeaponBase::STATE::RELOAD:
 		ReloadUpdate();
 		break;
 	default:
@@ -89,7 +89,7 @@ void GunBase::Update(void)
 
 }
 
-void GunBase::Draw(void)
+void WeaponBase::Draw(void)
 {
 	if (modelId_ != -1)
 	{
@@ -97,8 +97,8 @@ void GunBase::Draw(void)
 		MV1DrawModel(modelId_);
 	}
 
-	// 弾の描画
-	DrawBullet();
+	// 魔法の描画
+	DrawMagic();
 
 	if (state_ == STATE::RELOAD)
 	{
@@ -111,19 +111,19 @@ void GunBase::Draw(void)
 		// プログレスバー本体
 		DrawBox(posX - 50, posY - 30,
 			posX - 50 + static_cast<int>((50 * reloadTime_)), posY - 40, 0xff7f50, true);
-		DrawString(posX - 45, posY - 60, "リロード中", 0xffffff);
+		DrawString(posX - 70, posY - 60, "ポーション使用中", 0xffffff);
 	}
 
-	DrawFormatString(Application::SCREEN_SIZE_X - 260, Application::SCREEN_SIZE_Y - 25,
-		0xffffff, "装填数：%d　/　残りの弾数：%d", bulletNum_, bulletNumMax_);
+	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
+		0xffffff, "攻撃可能回数：%d　/　残りのMPポーション：%d", magicNum_, MPPotionNum_);
 
 #ifdef _DEBUG
 
-	// 銃の位置仮表示
-	DrawSphere3D(gunPos_, 15.0f, 10, 0xff0000, 0xff0000, false);
+	// 杖の位置仮表示
+	DrawSphere3D(pos_, 15.0f, 10, 0xff0000, 0xff0000, false);
 
-	// 弾の発射位置目安
-	DrawSphere3D(bulletPos_, 3.0f, 10, 0x00ff00, 0x00ff00, true);
+	// 魔法の発射位置目安
+	DrawSphere3D(magicPos_, 3.0f, 10, 0x00ff00, 0x00ff00, true);
 
 	// 狙う場所の位置目安
 	//DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
@@ -133,7 +133,7 @@ void GunBase::Draw(void)
 
 }
 
-void GunBase::Release(void)
+void WeaponBase::Release(void)
 {
 	if (modelId_ != -1)
 	{
@@ -141,51 +141,51 @@ void GunBase::Release(void)
 		MV1DeleteModel(modelId_);
 	}
 
-	if (bulletModelId_ != -1)
+	if (magicModelId_ != -1)
 	{
 		// モデルを何か読み込んでいたら解放させる
-		MV1DeleteModel(bulletModelId_);
+		MV1DeleteModel(magicModelId_);
 	}
 
-	for (BulletBase* bullet : bullets_)
+	for (MagicBase* Magic : magics_)
 	{
-		bullet->Release();
-		delete bullet;
+		Magic->Release();
+		delete Magic;
 	}
 
-	bullets_.clear(); // 弾のポインターをすべて削除
+	magics_.clear(); // 魔法のポインターをすべて削除
 }
 
-void GunBase::ChangeState(STATE state)
+void WeaponBase::ChangeState(STATE state)
 {
 	state_ = state;
 }
 
-void GunBase::IdleUpdate(void)
+void WeaponBase::IdleUpdate(void)
 {
 }
 
-void GunBase::AttackUpdate(void)
+void WeaponBase::AttackUpdate(void)
 {
 
 #pragma region 方向
 
 	VECTOR dir;
 
-	// 狙う場所から弾の発射位置へのベクトルを計算
-	VECTOR vec = VSub(targetPos_, bulletPos_);
+	// 狙う場所から魔法の発射位置へのベクトルを計算
+	VECTOR vec = VSub(targetPos_, magicPos_);
 
-	// ベクトルを正規化し、弾の方向とする
+	// ベクトルを正規化し、魔法の方向とする
 	dir = VNorm(vec);
 
 #pragma endregion
 
-	// 有効な弾を取得する
-	BulletBase* bullet = GetValidBullet();
-	// 弾を生成(方向は仮で正面方向)
-	bullet->CreateShot(bulletPos_, dir);
+	// 有効な魔法を取得する
+	MagicBase* Magic = GetValidMagic();
+	// 魔法を生成(方向は仮で正面方向)
+	Magic->CreateShot(magicPos_, dir);
 
-	// 弾発射後の反動を計算
+	// 魔法発射後の反動を計算
 	pitch_ = player_->GetPitch();
 	pitchAngle_ = pitch_ - recoil;
 	// 上を向きすぎないように制限をかける
@@ -196,17 +196,17 @@ void GunBase::AttackUpdate(void)
 	isRecoil_ = true;
 	player_->SetPitch(pitchAngle_);
 
-	bulletNum_--;
+	magicNum_--;
 
 	ChangeState(STATE::WAIT);
 }
 
-void GunBase::WaitUpdate(void)
+void WeaponBase::WaitUpdate(void)
 {
 
 	if (isRecoil_)
 	{
-		// 弾発射後の反動を設定
+		// 魔法発射後の反動を設定
 		player_->SetPitch(pitchAngle_);
 	}
 
@@ -224,11 +224,11 @@ void GunBase::WaitUpdate(void)
 	}
 }
 
-void GunBase::ReloadUpdate(void)
+void WeaponBase::ReloadUpdate(void)
 {
-	if (bulletNumMax_ <= 0 || bulletNum_ == bulletCapacity_)
+	if (MPPotionNum_ <= 0 || magicNum_ == magicCapacity_)
 	{
-		// 残りの弾数が無いか、装填数が最大だったら処理を行わない
+		// 残りのMPポーションが無いか、攻撃可能回数が最大だったら処理を行わない
 		ChangeState(STATE::IDLE);
 		return;
 	}
@@ -241,74 +241,65 @@ void GunBase::ReloadUpdate(void)
 	{
 		reloadTime_ = 0.0f;
 
-		while (bulletNum_ < bulletCapacity_)
-		{
-			if (bulletNumMax_ <= 0)
-			{
-				// 残りの弾数が無かったら処理を抜ける
-				break;
-			}
-
-			// 残りの弾数を減らす
-			bulletNumMax_--;
-			// 装填数を増やす
-			bulletNum_++;
-		}
+		// 残りのMPポーションを減らす
+		MPPotionNum_--;
+		// 攻撃可能回数を増やす
+		magicNum_ = magicCapacity_;
 
 		ChangeState(STATE::IDLE);
 	}
 }
 
-void GunBase::UpdateBullet(void)
+void WeaponBase::UpdateMagic(void)
 {
-	// 弾の更新
-	for (auto& bullet : bullets_)
+	// 魔法の更新
+	for (auto& Magic : magics_)
 	{
-		if (bullet->GetBullet().isAlive_)
+		if (Magic->GetMagic().isAlive_)
 		{
-			bullet->Update();
+			Magic->Update();
 		}
 	}
 }
 
-void GunBase::DrawBullet(void)
+void WeaponBase::DrawMagic(void)
 {
-	// 弾の更新
-	for (auto& bullet : bullets_)
+	// 魔法の更新
+	for (auto& Magic : magics_)
 	{
-		if (bullet->GetBullet().isAlive_)
+		if (Magic->GetMagic().isAlive_)
 		{
-			bullet->Draw();
+			Magic->Draw();
 		}
 	}
 }
 
-BulletBase* GunBase::GetValidBullet(void)
+MagicBase* WeaponBase::GetValidMagic(void)
 {
-	size_t size = bullets_.size();
+	size_t size = magics_.size();
 
 	for (int i = 0; i < size; i++)
 	{
-		// 未使用(生存していない)で、かつ、弾の種別が同じ
-		if (!bullets_[i]->GetBullet().isAlive_)
+		// 未使用(生存していない)で、かつ、魔法の種別が同じ
+		if (!magics_[i]->GetMagic().isAlive_)
 		{
-			return bullets_[i];
+			return magics_[i];
 		}
 	}
 
-	// 未使用の弾がなかった場合新しい弾を生成
-	BulletBase* bullet;
+	// 未使用の魔法がなかった場合新しい魔法を生成
+	MagicBase* Magic;
 
-	// 新しい弾のインスタンスを生成する
-	bullet = new HundgunBullet(bulletModelId_);
+	// 新しい魔法のインスタンスを生成する
+	Magic = new FireMagic(magicModelId_);
 
 	// 可変長配列に追加
-	bullets_.push_back(bullet);
+	magics_.push_back(Magic);
 
-	return bullet;
+	return Magic;
 }
 
-void GunBase::UpdatePos(void)
+void WeaponBase::UpdatePos(void)
 {
 	VECTOR playerCameraPos = player_->GetCameraPos();
 
@@ -317,21 +308,21 @@ void GunBase::UpdatePos(void)
 	matRot = MMult(matRot, MGetRotX(player_->GetPitch()));
 	matRot = MMult(matRot, MGetRotY(player_->GetYaw()));
 
-#pragma region 銃
+#pragma region 杖
 
 	// 方向と同じ要領で、相対座標を回転
 	VECTOR localPosRot = VTransform(RELATIVE_POS_GUN, matRot);
 
-	gunPos_ = VAdd(playerCameraPos, localPosRot);
+	pos_ = VAdd(playerCameraPos, localPosRot);
 
 #pragma endregion
 
-#pragma region 銃口
+#pragma region 杖口
 
 	// 方向と同じ要領で、相対座標を回転
-	localPosRot = VTransform(RELATIVE_POS_BULLET, matRot);
+	localPosRot = VTransform(RELATIVE_POS_Magic, matRot);
 
-	bulletPos_ = VAdd(gunPos_, localPosRot);
+	magicPos_ = VAdd(pos_, localPosRot);
 
 
 #pragma endregion

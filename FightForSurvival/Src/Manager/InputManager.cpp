@@ -167,16 +167,6 @@ bool InputManager::IsClickMouseRight(void) const
 	return mouseInput_ == MOUSE_INPUT_RIGHT;
 }
 
-bool InputManager::IsTrgMouseLeft(void) const
-{
-	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
-}
-
-bool InputManager::IsTrgMouseRight(void) const
-{
-	return FindMouse(MOUSE_INPUT_RIGHT).keyTrgDown;
-}
-
 InputManager::InputManager(void)
 {
 	mouseInput_ = -1;
@@ -376,7 +366,7 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 
 bool InputManager::PushStartKey(void)
 {
-	return IsTrgDown(KEY_INPUT_SPACE) || IsTrgMouseLeft();
+	return IsTrgDown(KEY_INPUT_SPACE) || FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
 }
 
 bool InputManager::MoveFront(void)
@@ -399,9 +389,19 @@ bool InputManager::MoveRight(void)
 	return IsNew(KEY_INPUT_D);
 }
 
-bool InputManager::Attack(void)
+bool InputManager::IsTrgDownAttack(void)
 {
-	return IsTrgMouseLeft();
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
+}
+
+bool InputManager::IsNewAttack(void)
+{
+	return FindMouse(MOUSE_INPUT_LEFT).keyNew;
+}
+
+bool InputManager::IsTrgUpAttack(void)
+{
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgUp;
 }
 
 bool InputManager::MoveDash(void)
@@ -416,7 +416,7 @@ bool InputManager::Reload(void)
 
 bool InputManager::Confirm(void)
 {
-	return IsTrgMouseLeft();
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
 }
 
 bool InputManager::PauseKeys(void)

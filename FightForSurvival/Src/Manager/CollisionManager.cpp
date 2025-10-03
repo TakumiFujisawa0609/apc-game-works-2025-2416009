@@ -71,7 +71,7 @@ float CollisionManager::GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTO
 
 bool CollisionManager::IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Under, float capsule1Rad, VECTOR capsule2Top, VECTOR capsule2Under, float capsule2Rad)
 {
-	// 弾の移動経路の線分と敵カプセルの線分間の最近接距離の2乗を計算
+	// 魔法の移動経路の線分と敵カプセルの線分間の最近接距離の2乗を計算
 	float distSq = CollisionManager::GetMinDistSqSegmentToSegment(capsule1Top, capsule1Under, capsule2Top, capsule2Under);
 
 	// カプセルと球の半径の合計

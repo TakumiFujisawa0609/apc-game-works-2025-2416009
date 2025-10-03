@@ -2,7 +2,7 @@
 
 #include "../../Base.h"
 
-class GunBase;
+class WeaponBase;
 
 class Player
 {
@@ -14,7 +14,7 @@ public:
 	// 初期位置
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
 
-	// プレイヤーと銃の相対座標
+	// プレイヤーと杖の相対座標
 	static constexpr float RELATIVE_POS_CAMERA = 70.0f;
 
 	// 移動速度
@@ -47,7 +47,7 @@ public:
 	static constexpr float COLLISION_OFFSET_UNDER = -50.0f;
 
 	// 視点のしきい値
-	static constexpr int THRESHOLD = 2;
+	static constexpr float THRESHOLD = 1.1f;
 
 	// コンストラクタ
 	Player(void);
@@ -79,8 +79,8 @@ public:
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
 	void SetPitch(float newPitch)  { pitch_ = newPitch; }
 
-	// 銃のポインター受け渡し
-	GunBase* GetGun(void)const { return gun_; }
+	// 杖のポインター受け渡し
+	WeaponBase* GetWeapon(void)const { return weapon_; }
 
 	/// <summary>
 	/// プレイヤー強化処理
@@ -94,8 +94,8 @@ public:
 
 private:
 
-	// 銃クラスのインスタンス
-	GunBase* gun_;
+	// 杖クラスのインスタンス
+	WeaponBase* weapon_;
 
 	// プレイヤーの情報
 	Unit player_;
@@ -118,8 +118,8 @@ private:
 	// スタミナを回復させるまでの時間カウンタ
 	float staminaCounter_;
 
-	// 銃の種類
-	GUN_TYPE gunType_;
+	// 杖の種類
+	weapon_TYPE gunType_;
 
 	// 当たり判定用カプセル座標
 	VECTOR collisionPosTop_;

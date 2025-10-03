@@ -98,7 +98,7 @@ EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 			continue;
 		}
 
-		// 弾の種別が同じ、かつ、未使用(生存していない)なら再利用する
+		// 魔法の種別が同じ、かつ、未使用(生存していない)なら再利用する
 		if (!enemys_[i]->GetEnemy().isAlive_)
 		{
 			return enemys_[i];

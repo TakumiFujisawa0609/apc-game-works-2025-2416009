@@ -4,13 +4,13 @@
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Utility/AsoUtility.h"
-#include "Gun/Handgun.h"
+#include "Weapon/Stick.h"
 #include "Player.h"
 
 Player::Player(void)
 {
 	player_.modelId_ = -1;
-	gun_ = nullptr;
+	weapon_ = nullptr;
 }
 
 Player::~Player(void)
@@ -21,9 +21,9 @@ void Player::Load(void)
 {
 	//// モデルのロード
 	//player_.modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
-	if (gun_ != nullptr)
+	if (weapon_ != nullptr)
 	{
-		gun_->Load();
+		weapon_->Load();
 	}
 }
 
@@ -73,17 +73,17 @@ void Player::Init(void)
 
 	staminaCounter_ = 0.0f;
 
-	// 銃を生成
-	gunType_ = ins.GetGunType();
+	// 杖を生成
+	gunType_ = ins.GetWeaponType();
 	switch (gunType_)
 	{
-	case::GUN_TYPE::HANDGUN:
-		gun_ = new Handgun(this);
-		gun_->Init();
+	case::weapon_TYPE::Stick:
+		weapon_ = new Stick(this);
+		weapon_->Init();
 		break;
-	case::GUN_TYPE::ASSAULT_RIFLE:
+	case::weapon_TYPE::ASSAULT_RIFLE:
 		break;
-	case::GUN_TYPE::SHOTGUN:
+	case::weapon_TYPE::SHOTGUN:
 		break;
 	default:
 		break;
@@ -103,20 +103,20 @@ void Player::Update(void)
 	// 攻撃
 	ProcessAttack();
 
-	// 銃の更新
-	if (gun_ != nullptr)
+	// 杖の更新
+	if (weapon_ != nullptr)
 	{
-		gun_->Update();
+		weapon_->Update();
 	}
 
 }
 
 void Player::Draw(void)
 {
-	// 銃の描画
-	if (gun_ != nullptr)
+	// 杖の描画
+	if (weapon_ != nullptr)
 	{
-		gun_->Draw();
+		weapon_->Draw();
 	}
 
 	int posY = Application::SCREEN_SIZE_Y;
@@ -144,11 +144,11 @@ void Player::Release(void)
 		MV1DeleteModel(player_.modelId_);
 	}
 
-	if (gun_ != nullptr)
+	if (weapon_ != nullptr)
 	{
-		gun_->Release();
-		delete gun_;
-		gun_ = nullptr;
+		weapon_->Release();
+		delete weapon_;
+		weapon_ = nullptr;
 	}
 }
 //
@@ -300,7 +300,7 @@ void Player::ProcessAngle(void)
 	int deltaY = mouse_.y - Application::SCREEN_SIZE_Y / 2;
 
 	// マウスの移動量が一定のしきい値以下であれば処理をスキップ
-	if (std::abs(deltaX) < THRESHOLD && std::abs(deltaY) < THRESHOLD)
+	if ((float)std::abs(deltaX) < THRESHOLD && (float)std::abs(deltaY) < THRESHOLD)
 	{
 		// マウスカーソルを画面中央に戻す
 		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
@@ -321,10 +321,10 @@ void Player::ProcessAngle(void)
 		pitch_ = MIN_VIEW_ANGLE;
 	}
 
-	// 銃の反動がある中視点移動があったら反動をなくす
-	if (mouse_.y != Application::SCREEN_SIZE_Y / 2 && gun_->GetIsRecoil())
+	// 杖の反動がある中視点移動があったら反動をなくす
+	if (mouse_.y != Application::SCREEN_SIZE_Y / 2 && weapon_->GetIsRecoil())
 	{
-		gun_->SetIsRecoil(false);
+		weapon_->SetIsRecoil(false);
 	}
 
 	//// マウスカーソルを画面中央に戻す
@@ -333,28 +333,28 @@ void Player::ProcessAngle(void)
 
 void Player::ProcessAttack(void)
 {
-	if (gun_ == nullptr)
+	if (weapon_ == nullptr)
 	{
-		// 銃インスタンスの中身がなかったら処理を行わない
+		// 杖インスタンスの中身がなかったら処理を行わない
 		return;
 	}
 
 	auto& ins = InputManager::GetInstance();
 
-	// 左クリックされたかつ、銃が撃てる状態なら入る
-	if (ins.Attack())
+	// 左クリックされたかつ、杖が攻撃できる状態なら入る
+	if (ins.IsTrgDownAttack())
 	{
-		if (gun_->GetCanShot())
+		if (weapon_->GetCanShot())
 		{
-			if (gun_->NowBulletNum() != 0)
+			if (weapon_->NowMagicNum() != 0)
 			{
-				// 弾があれば攻撃に進む
-				gun_->ChangeState(GunBase::STATE::ATTACK);
+				// MPがあれば攻撃に進む
+				weapon_->ChangeState(WeaponBase::STATE::ATTACK);
 			}
 			else
 			{
-				// 弾がなければリロードに進む
-				gun_->ChangeState(GunBase::STATE::RELOAD);
+				// MPがなければリロードに進む
+				weapon_->ChangeState(WeaponBase::STATE::RELOAD);
 			}
 		}
 	}
@@ -362,6 +362,6 @@ void Player::ProcessAttack(void)
 	if (ins.Reload())
 	{
 		// リロードに進む
-		gun_->ChangeState(GunBase::STATE::RELOAD);
+		weapon_->ChangeState(WeaponBase::STATE::RELOAD);
 	}
 }

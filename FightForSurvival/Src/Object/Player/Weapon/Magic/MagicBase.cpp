@@ -1,39 +1,39 @@
 #include <DxLib.h>
 #include "../../../../Manager/SceneManager.h"
-#include "BulletBase.h"
+#include "MagicBase.h"
 
-BulletBase::BulletBase(int baseModelId)
+MagicBase::MagicBase(int baseModelId)
 {
-	bullet_.modelId_ = MV1DuplicateModel(baseModelId);
+	Magic_.modelId_ = MV1DuplicateModel(baseModelId);
 }
 
-BulletBase::~BulletBase(void)
+MagicBase::~MagicBase(void)
 {
 }
 
-void BulletBase::CreateShot(VECTOR pos, VECTOR dir)
+void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 {
-	// 弾の発射位置を設定
-	bullet_.prevPos_ = bullet_.pos_ = pos;
-	// 弾の発射方向の設定
-	bullet_.dir_ = dir;
-	// 弾の生存判定
-	bullet_.isAlive_ = true;
+	// 魔法の発射位置を設定
+	Magic_.prevPos_ = Magic_.pos_ = pos;
+	// 魔法の発射方向の設定
+	Magic_.dir_ = dir;
+	// 魔法の生存判定
+	Magic_.isAlive_ = true;
 	state_ = STATE::SHOT;
 	// パラメータ設定
 	SetParam();
 	// 大きさの設定
-	MV1SetScale(bullet_.modelId_, bullet_.scale_);
+	MV1SetScale(Magic_.modelId_, Magic_.scale_);
 	// 回転の設定
-	MV1SetRotationXYZ(bullet_.modelId_, bullet_.rotate_);
+	MV1SetRotationXYZ(Magic_.modelId_, Magic_.rotate_);
 	// 位置の設定
-	MV1SetPosition(bullet_.modelId_, bullet_.pos_);
+	MV1SetPosition(Magic_.modelId_, Magic_.pos_);
 }
 
-void BulletBase::Update(void)
+void MagicBase::Update(void)
 {
 
-	if (!bullet_.isAlive_)
+	if (!Magic_.isAlive_)
 	{
 		// 生存していなければ処理中断
 		return;
@@ -41,15 +41,15 @@ void BulletBase::Update(void)
 
 	switch (state_)
 	{
-	case BulletBase::STATE::NONE:
+	case MagicBase::STATE::NONE:
 		break;
-	case BulletBase::STATE::SHOT:
+	case MagicBase::STATE::SHOT:
 		UpdateShot();
 		break;
-	case BulletBase::STATE::BLAST:
+	case MagicBase::STATE::BLAST:
 		UpdateBlast();
 		break;
-	case BulletBase::STATE::END:
+	case MagicBase::STATE::END:
 		UpdateEnd();
 		break;
 	default:
@@ -57,49 +57,49 @@ void BulletBase::Update(void)
 	}
 }
 
-void BulletBase::Draw(void)
+void MagicBase::Draw(void)
 {
 
-	if (!bullet_.isAlive_)
+	if (!Magic_.isAlive_)
 	{
 		// 生存していなければ処理中断
 		return;
 	}
 
-	MV1DrawModel(bullet_.modelId_);
+	MV1DrawModel(Magic_.modelId_);
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	DrawSphere3D(bullet_.pos_, bullet_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(Magic_.pos_, Magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
-void BulletBase::Release(void)
+void MagicBase::Release(void)
 {
-	MV1DeleteModel(bullet_.modelId_);
+	MV1DeleteModel(Magic_.modelId_);
 }
 
-bool BulletBase::IsCollisionState(void)
+bool MagicBase::IsCollisionState(void)
 {
 	return state_ == STATE::SHOT;
 }
 
-void BulletBase::ChangeState(STATE state)
+void MagicBase::ChangeState(STATE state)
 {
 	state_ = state;
 
 	switch (state_)
 	{
-	case BulletBase::STATE::NONE:
+	case MagicBase::STATE::NONE:
 		ChangeNon();
 		break;
-	case BulletBase::STATE::SHOT:
+	case MagicBase::STATE::SHOT:
 		ChangeShot();
 		break;
-	case BulletBase::STATE::BLAST:
+	case MagicBase::STATE::BLAST:
 		ChangeBlast();
 		break;
-	case BulletBase::STATE::END:
+	case MagicBase::STATE::END:
 		ChangeEnd();
 		break;
 	default:
@@ -108,25 +108,25 @@ void BulletBase::ChangeState(STATE state)
 }
 
 
-void BulletBase::ReduceCntAlive(void)
+void MagicBase::ReduceCntAlive(void)
 {
 
-	bullet_.cntAlive_-= SceneManager::GetInstance().GetDeltaTime();
-	if (bullet_.cntAlive_ < 0)
+	Magic_.cntAlive_-= SceneManager::GetInstance().GetDeltaTime();
+	if (Magic_.cntAlive_ < 0)
 	{
-		// 弾の存在可能時間が過ぎたら消す
+		// 魔法の存在可能時間が過ぎたら消す
 		ChangeState(STATE::BLAST);
 	}
 
 }
 
-void BulletBase::UpdateShot(void)
+void MagicBase::UpdateShot(void)
 {
 	// 移動前の座標を取得しておく
-	bullet_.prevPos_ = bullet_.pos_;
+	Magic_.prevPos_ = Magic_.pos_;
 
-	// 弾を移動させる
-	bullet_.pos_ = VAdd(bullet_.pos_, VScale(bullet_.dir_, bullet_.speed_));
+	// 魔法を移動させる
+	Magic_.pos_ = VAdd(Magic_.pos_, VScale(Magic_.dir_, Magic_.speed_));
 
 	//// 加速度的に重力を加える
 	//gravityPow_ +=
@@ -134,13 +134,13 @@ void BulletBase::UpdateShot(void)
 	//pos_ = VAdd(pos_, VScale({ 0.0f, -1.0f, 0.0f }, gravityPow_));
 
 	// 位置の設定
-	MV1SetPosition(bullet_.modelId_, bullet_.pos_);
+	MV1SetPosition(Magic_.modelId_, Magic_.pos_);
 
 	// 生存カウンタの減少
 	ReduceCntAlive();
 }
 
-void BulletBase::UpdateBlast(void)
+void MagicBase::UpdateBlast(void)
 {
 	/*if (IsEffekseer3DEffectPlaying(effectBlastPlayId_) == -1)
 	{*/
@@ -148,20 +148,20 @@ void BulletBase::UpdateBlast(void)
 	/*}*/
 }
 
-void BulletBase::UpdateEnd(void)
+void MagicBase::UpdateEnd(void)
 {
-	bullet_.isAlive_ = false;
+	Magic_.isAlive_ = false;
 }
 
-void BulletBase::ChangeNon(void)
-{
-}
-
-void BulletBase::ChangeShot(void)
+void MagicBase::ChangeNon(void)
 {
 }
 
-void BulletBase::ChangeBlast(void)
+void MagicBase::ChangeShot(void)
+{
+}
+
+void MagicBase::ChangeBlast(void)
 {
 	//EffectResManager::TYPE type;
 	//switch (effectType_)
@@ -195,7 +195,7 @@ void BulletBase::ChangeBlast(void)
 	//	effectBlastPlayId_, pos_.x, pos_.y, pos_.z);
 }
 
-void BulletBase::ChangeEnd(void)
+void MagicBase::ChangeEnd(void)
 {
 	// エフェクト停止
 	//StopEffekseer3DEffect(effectBlastPlayId_);

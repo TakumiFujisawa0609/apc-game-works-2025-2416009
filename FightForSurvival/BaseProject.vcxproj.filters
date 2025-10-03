@@ -93,16 +93,16 @@
     <ClCompile Include="Src\Common\FpsControl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\Gun\GunBase.cpp">
+    <ClCompile Include="Src\Object\Player\Weapon\WeaponBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\Gun\Handgun.cpp">
+    <ClCompile Include="Src\Object\Player\Weapon\Stick.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\Gun\Bullet\BulletBase.cpp">
+    <ClCompile Include="Src\Object\Player\Weapon\Magic\MagicBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Player\Gun\Bullet\HundgunBullet.cpp">
+    <ClCompile Include="Src\Object\Player\Weapon\Magic\FireMagic.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Common\Cursor.cpp">
@@ -151,6 +151,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Manager\UpgradeManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Wave\WaveFinal.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Wave\Wave2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -206,16 +212,16 @@
     <ClInclude Include="Src\Common\FpsControl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Gun\GunBase.h">
+    <ClInclude Include="Src\Object\Player\Weapon\WeaponBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Gun\Handgun.h">
+    <ClInclude Include="Src\Object\Player\Weapon\Stick.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Gun\Bullet\BulletBase.h">
+    <ClInclude Include="Src\Object\Player\Weapon\Magic\MagicBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Player\Gun\Bullet\HundgunBullet.h">
+    <ClInclude Include="Src\Object\Player\Weapon\Magic\FireMagic.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Common\Cursor.h">
@@ -267,6 +273,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Manager\UpgradeManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Wave\WaveFinal.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Wave\Wave2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
