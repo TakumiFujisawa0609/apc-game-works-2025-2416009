@@ -8,6 +8,14 @@ class SceneManager
 
 public:
 
+	// 背景色
+	static constexpr int BACKGROUND_COLOR_R = 0;
+	static constexpr int BACKGROUND_COLOR_G = 0;
+	static constexpr int BACKGROUND_COLOR_B = 0;
+
+	// ディレクショナルライトの方向
+	static constexpr VECTOR LIGHT_DIRECTION = { 0.3f, -0.7f, 0.8f };
+
 	// シーン管理用
 	enum class SCENE_ID
 	{
@@ -26,6 +34,9 @@ public:
 
 	// 初期化
 	void Init(void);
+
+	// 3Dの初期化
+	void Init3D(void);
 
 	// 更新
 	void Update(void);

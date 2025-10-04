@@ -315,12 +315,14 @@ void WeaponBase::UpdatePos(void)
 
 	pos_ = VAdd(playerCameraPos, localPosRot);
 
+	MV1SetPosition(modelId_, pos_);
+
 #pragma endregion
 
 #pragma region ñŒû
 
 	// •ûŒü‚Æ“¯‚¶—v—Ì‚ÅA‘Š‘ÎÀ•W‚ğ‰ñ“]
-	localPosRot = VTransform(RELATIVE_POS_Magic, matRot);
+	localPosRot = VTransform(RELATIVE_POS_MAGIC, matRot);
 
 	magicPos_ = VAdd(pos_, localPosRot);
 

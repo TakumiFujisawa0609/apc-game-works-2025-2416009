@@ -15,7 +15,7 @@ void Stick::Load(void)
 {
 	// –‚–@‚Ìƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
 	modelId_ = MV1LoadModel(
-		(Application::PATH_MODEL + "Cannon/Barrel.mv1").c_str());
+		(Application::PATH_PLAYER + "Weapon/WoodenStaff.mv1").c_str());
 
 	if (modelId_ == -1)
 	{

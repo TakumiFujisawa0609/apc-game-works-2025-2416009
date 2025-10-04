@@ -10,6 +10,7 @@ Application* Application::instance_ = nullptr;
 const std::string Application::PATH_DATA = "Data/";
 const std::string Application::PATH_IMAGE = PATH_DATA + "Image/";
 const std::string Application::PATH_MODEL = PATH_DATA + "Model/";
+const std::string Application::PATH_PLAYER = PATH_MODEL + "Player/";
 const std::string Application::PATH_EFFECT = PATH_DATA + "Effect/";
 const std::string Application::PATH_MAP_DATA = PATH_DATA + "MapData/MapData.csv";
 
