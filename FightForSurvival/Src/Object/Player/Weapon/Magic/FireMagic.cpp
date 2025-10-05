@@ -11,12 +11,12 @@ FireMagic::~FireMagic(void)
 
 void FireMagic::SetParam(void)
 {
-	Magic_.scale_ = AsoUtility::VECTOR_ONE;
-	Magic_.rotate_ = AsoUtility::VECTOR_ZERO;
+	magic_.scale_ = AsoUtility::VECTOR_ONE;
+	magic_.rotate_ = AsoUtility::VECTOR_ZERO;
 
-	Magic_.speed_ = SPEED;
-	Magic_.cntAlive_ = CNT_ALIVE;
-	Magic_.collisionRadius_ = COLLISION_RAD;
-	Magic_.headDamage_ = HEAD_DAMAGE;
-	Magic_.bodyDamage_ = BODY_DAMAGE;
+	magic_.speed_ = SPEED;
+	magic_.cntAlive_ = CNT_ALIVE;
+	magic_.collisionRadius_ = COLLISION_RAD;
+	magic_.headDamage_ = HEAD_DAMAGE;
+	magic_.bodyDamage_ = BODY_DAMAGE;
 }

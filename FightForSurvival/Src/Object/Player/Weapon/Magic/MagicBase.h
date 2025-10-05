@@ -63,7 +63,9 @@ public:
 
 	void ChangeState(STATE state);
 
-	Magic GetMagic(void)const { return Magic_; }
+	Magic GetMagic(void)const { return magic_; }
+
+	void SetCollisionRad(float col) { magic_.collisionRadius_ = col; }
 
 	// 爆発させる
 	//void Blast(EFFECT_TYPE type);
@@ -74,7 +76,7 @@ protected:
 	// 魔法の状態
 	STATE state_;
 
-	Magic Magic_;
+	Magic magic_;
 
 	// 爆発エフェクトのプレイハンドル
 	//int effectBlastPlayId_;

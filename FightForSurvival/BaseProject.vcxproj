@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Manager\UpgradeManager.cpp" />
+    <ClCompile Include="Src\Utility\MatrixUtility.cpp" />
     <ClCompile Include="Src\Wave\SelectWave.cpp" />
     <ClCompile Include="Src\Scene\OverScene.cpp" />
     <ClCompile Include="Src\Scene\ClearScene.cpp" />
@@ -60,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Manager\UpgradeManager.h" />
+    <ClInclude Include="Src\Utility\MatrixUtility.h" />
     <ClInclude Include="Src\Wave\SelectWave.h" />
     <ClInclude Include="Src\Scene\OverScene.h" />
     <ClInclude Include="Src\Scene\ClearScene.h" />

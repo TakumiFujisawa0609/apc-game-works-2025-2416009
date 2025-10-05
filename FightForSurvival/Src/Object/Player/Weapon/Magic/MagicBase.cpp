@@ -4,7 +4,7 @@
 
 MagicBase::MagicBase(int baseModelId)
 {
-	Magic_.modelId_ = MV1DuplicateModel(baseModelId);
+	magic_.modelId_ = MV1DuplicateModel(baseModelId);
 }
 
 MagicBase::~MagicBase(void)
@@ -14,26 +14,26 @@ MagicBase::~MagicBase(void)
 void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 {
 	// 魔法の発射位置を設定
-	Magic_.prevPos_ = Magic_.pos_ = pos;
+	magic_.prevPos_ = magic_.pos_ = pos;
 	// 魔法の発射方向の設定
-	Magic_.dir_ = dir;
+	magic_.dir_ = dir;
 	// 魔法の生存判定
-	Magic_.isAlive_ = true;
+	magic_.isAlive_ = true;
 	state_ = STATE::SHOT;
 	// パラメータ設定
 	SetParam();
 	// 大きさの設定
-	MV1SetScale(Magic_.modelId_, Magic_.scale_);
+	MV1SetScale(magic_.modelId_, magic_.scale_);
 	// 回転の設定
-	MV1SetRotationXYZ(Magic_.modelId_, Magic_.rotate_);
+	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
 	// 位置の設定
-	MV1SetPosition(Magic_.modelId_, Magic_.pos_);
+	MV1SetPosition(magic_.modelId_, magic_.pos_);
 }
 
 void MagicBase::Update(void)
 {
 
-	if (!Magic_.isAlive_)
+	if (!magic_.isAlive_)
 	{
 		// 生存していなければ処理中断
 		return;
@@ -60,23 +60,23 @@ void MagicBase::Update(void)
 void MagicBase::Draw(void)
 {
 
-	if (!Magic_.isAlive_)
+	if (!magic_.isAlive_)
 	{
 		// 生存していなければ処理中断
 		return;
 	}
 
-	MV1DrawModel(Magic_.modelId_);
+	MV1DrawModel(magic_.modelId_);
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	DrawSphere3D(Magic_.pos_, Magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(magic_.pos_, magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
 void MagicBase::Release(void)
 {
-	MV1DeleteModel(Magic_.modelId_);
+	MV1DeleteModel(magic_.modelId_);
 }
 
 bool MagicBase::IsCollisionState(void)
@@ -111,8 +111,8 @@ void MagicBase::ChangeState(STATE state)
 void MagicBase::ReduceCntAlive(void)
 {
 
-	Magic_.cntAlive_-= SceneManager::GetInstance().GetDeltaTime();
-	if (Magic_.cntAlive_ < 0)
+	magic_.cntAlive_-= SceneManager::GetInstance().GetDeltaTime();
+	if (magic_.cntAlive_ < 0)
 	{
 		// 魔法の存在可能時間が過ぎたら消す
 		ChangeState(STATE::BLAST);
@@ -123,10 +123,10 @@ void MagicBase::ReduceCntAlive(void)
 void MagicBase::UpdateShot(void)
 {
 	// 移動前の座標を取得しておく
-	Magic_.prevPos_ = Magic_.pos_;
+	magic_.prevPos_ = magic_.pos_;
 
 	// 魔法を移動させる
-	Magic_.pos_ = VAdd(Magic_.pos_, VScale(Magic_.dir_, Magic_.speed_));
+	magic_.pos_ = VAdd(magic_.pos_, VScale(magic_.dir_, magic_.speed_));
 
 	//// 加速度的に重力を加える
 	//gravityPow_ +=
@@ -134,7 +134,7 @@ void MagicBase::UpdateShot(void)
 	//pos_ = VAdd(pos_, VScale({ 0.0f, -1.0f, 0.0f }, gravityPow_));
 
 	// 位置の設定
-	MV1SetPosition(Magic_.modelId_, Magic_.pos_);
+	MV1SetPosition(magic_.modelId_, magic_.pos_);
 
 	// 生存カウンタの減少
 	ReduceCntAlive();
@@ -150,7 +150,7 @@ void MagicBase::UpdateBlast(void)
 
 void MagicBase::UpdateEnd(void)
 {
-	Magic_.isAlive_ = false;
+	magic_.isAlive_ = false;
 }
 
 void MagicBase::ChangeNon(void)

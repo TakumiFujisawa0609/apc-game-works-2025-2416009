@@ -16,12 +16,6 @@ void Stick::Load(void)
 	// –‚–@‚Ìƒ‚ƒfƒ‹‚ğ“Ç‚İ‚Ş
 	modelId_ = MV1LoadModel(
 		(Application::PATH_PLAYER + "Weapon/WoodenStaff.mv1").c_str());
-
-	if (modelId_ == -1)
-	{
-		// ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İ‚É¸”s‚µ‚½ê‡‚Ìˆ—
-		DrawString(0, 0, "CannonBarrel model load failed", GetColor(255, 0, 0));
-	}
 }
 
 void Stick::SetParam(void)

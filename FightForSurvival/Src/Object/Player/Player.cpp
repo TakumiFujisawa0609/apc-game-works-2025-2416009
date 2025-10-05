@@ -11,6 +11,10 @@ Player::Player(void)
 {
 	player_.modelId_ = -1;
 	weapon_ = nullptr;
+
+	stateTable_[ATTACK_STATE_START] = AttackStateStart;
+	stateTable_[ATTACK_STATE_CHARGE] = AttackStateCharge;
+	stateTable_[ATTACK_STATE_SHOT] = AttackStateShot;
 }
 
 Player::~Player(void)
@@ -21,10 +25,6 @@ void Player::Load(void)
 {
 	//// モデルのロード
 	//player_.modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
-	if (weapon_ != nullptr)
-	{
-		weapon_->Load();
-	}
 }
 
 void Player::Init(void)
@@ -63,7 +63,7 @@ void Player::Init(void)
 
 	ability_.stamina_ = ability_.staminaMax_ = DEFAULT_STAMINA;
 
-	mouse_ = { 0,0 }; 
+	mouse_ = { 0,0 };
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 
 	yaw_ = pitch_ = 0.0f;
@@ -73,27 +73,25 @@ void Player::Init(void)
 
 	staminaCounter_ = 0.0f;
 
+	ChangeState(ATTACK_STATE_START);
+
 	// 杖を生成
-	gunType_ = ins.GetWeaponType();
-	switch (gunType_)
-	{
-	case::weapon_TYPE::Stick:
-		weapon_ = new Stick(this);
-		weapon_->Init();
-		break;
-	case::weapon_TYPE::ASSAULT_RIFLE:
-		break;
-	case::weapon_TYPE::SHOTGUN:
-		break;
-	default:
-		break;
-	}
+	weapon_ = new Stick(this);
+	weapon_->Load();
+	weapon_->Init();
 
 }
 
 void Player::Update(void)
 {
 	
+	float nowsensitivity = SystemManager::GetInstance().GetSensitivity();
+	if (nowsensitivity != sensitivity_)
+	{
+		// 感度に変更が加えてあったら適用する
+		sensitivity_ = nowsensitivity;
+	}
+
 	// 移動
 	ProcessMove();
 
@@ -125,9 +123,9 @@ void Player::Draw(void)
 	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
 #ifdef _DEBUG
 
-	// 体 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
-		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
+	//// 体 デバッグ用：衝突判定用カプセル
+	//DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
+	//	player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);s
 
 	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	// プレイヤー頭の位置目安
@@ -285,12 +283,6 @@ void Player::ProcessMove(void)
 
 void Player::ProcessAngle(void)
 {
-	float nowsensitivity = SystemManager::GetInstance().GetSensitivity();
-	if (nowsensitivity != sensitivity_)
-	{
-		// 感度に変更が加えてあったら適用する
-		sensitivity_ = nowsensitivity;
-	}
 
 	// 現在のマウス座標を取得
 	GetMousePoint(&mouse_.x, &mouse_.y);
@@ -339,29 +331,70 @@ void Player::ProcessAttack(void)
 		return;
 	}
 
+	// nullチェック
+	if (stateTable_[attackState_])
+	{
+		stateTable_[attackState_](*this);
+	}
+	
+}
+
+void Player::AttackStateStart(Player& player)
+{
 	auto& ins = InputManager::GetInstance();
 
 	// 左クリックされたかつ、杖が攻撃できる状態なら入る
 	if (ins.IsTrgDownAttack())
 	{
-		if (weapon_->GetCanShot())
+		if (player.weapon_->GetCanShot())
 		{
-			if (weapon_->NowMagicNum() != 0)
-			{
-				// MPがあれば攻撃に進む
-				weapon_->ChangeState(WeaponBase::STATE::ATTACK);
-			}
-			else
-			{
-				// MPがなければリロードに進む
-				weapon_->ChangeState(WeaponBase::STATE::RELOAD);
-			}
+
 		}
 	}
+
+#pragma region リロード
 
 	if (ins.Reload())
 	{
 		// リロードに進む
-		weapon_->ChangeState(WeaponBase::STATE::RELOAD);
+		player.weapon_->ChangeState(WeaponBase::STATE::RELOAD);
 	}
+
+	if (player.weapon_->NowMagicNum() == 0)
+	{
+		// MPがなければリロードに進む
+		player.weapon_->ChangeState(WeaponBase::STATE::RELOAD);
+	}
+
+#pragma endregion
+
+}
+
+void Player::AttackStateCharge(Player& player)
+{
+
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsNewAttack())
+	{
+
+	}
+
+}
+
+void Player::AttackStateShot(Player& player)
+{
+
+	auto& ins = InputManager::GetInstance();
+
+	if (ins.IsTrgUpAttack())
+	{
+		if (player.weapon_->NowMagicNum() != 0)
+		{
+			// MPがあれば攻撃に進む
+			player.weapon_->ChangeState(WeaponBase::STATE::ATTACK);
+		}
+	}
+
+	
 }

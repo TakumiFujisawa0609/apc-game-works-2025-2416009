@@ -33,12 +33,6 @@ public:
 	// スコアを返す
 	const int GetScore() const { return score_; }
 
-	// 杖の種類を格納
-	void SetGunType(const weapon_TYPE gunType) { gunType_ = gunType; }
-
-	// 杖の種類を返す
-	const weapon_TYPE GetWeaponType() const { return gunType_; }
-
 private:
 
 	// 静的インスタンス
@@ -49,9 +43,6 @@ private:
 
 	// スコア
 	int score_;
-
-	// 杖の種類
-	weapon_TYPE gunType_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

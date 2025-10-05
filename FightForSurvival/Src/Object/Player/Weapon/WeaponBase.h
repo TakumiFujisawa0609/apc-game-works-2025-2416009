@@ -11,10 +11,10 @@ class WeaponBase
 public:
 
 	// プレイヤーとの杖の相対座標
-	static constexpr VECTOR RELATIVE_POS_GUN = {10.0f,-20.0f,60.0f };
+	static constexpr VECTOR RELATIVE_POS_STICK = {10.0f,-70.0f,60.0f };
 
 	// 杖との魔法の発射位置の相対座標
-	static constexpr VECTOR RELATIVE_POS_MAGIC = { 0.0f,0.0f,15.0f };
+	static constexpr VECTOR RELATIVE_POS_MAGIC = { 0.0f,50.0f,15.0f };
 
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RELATIVE_POS_TARGET = 1000.0f;

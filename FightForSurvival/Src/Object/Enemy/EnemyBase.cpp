@@ -54,11 +54,11 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 	// 当たり判定用の座標を初期化
 	UpdateCollisionPositions();
 
-	// アングルを設定する
-	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
-
 	// 大きさを設定する
 	MV1SetScale(enemy_.modelId_, enemy_.scales_);
+
+	// アングルを設定する
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
 
 	enemy_.dir_ = AsoUtility::VECTOR_ZERO;
 

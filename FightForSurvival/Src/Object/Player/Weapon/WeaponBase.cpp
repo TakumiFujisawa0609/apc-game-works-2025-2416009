@@ -5,6 +5,7 @@
 #include "../Player.h"
 #include "Magic/FireMagic.h"
 #include "../../../Utility/AsoUtility.h"
+#include "../../../Utility/MatrixUtility.h"
 #include "WeaponBase.h"
 
 WeaponBase::WeaponBase(Player* player)
@@ -20,9 +21,6 @@ WeaponBase::~WeaponBase(void)
 
 void WeaponBase::Init(void)
 {
-	// 画像やモデルなどのロード
-	Load();
-
 	//// 魔法のモデルを読み込む
 	//magicModelId_ = MV1LoadModel(
 	//	(Application::PATH_MODEL + "Cannon/Barrel.mv1").c_str());
@@ -35,13 +33,16 @@ void WeaponBase::Init(void)
 
 	// パラメータ設定
 	SetParam();
-	
+
+	// 大きさを設定する
 	MV1SetScale(modelId_, scales_);
+
+	// アングルを設定する
 	MV1SetRotationXYZ(modelId_, rotate_);
 
 	// 杖の座標設定
 	pos_ = player_->GetCameraPos();
-	pos_ = VAdd(pos_, RELATIVE_POS_GUN);
+	pos_ = VAdd(pos_, RELATIVE_POS_STICK);
 
 	MV1SetPosition(modelId_, pos_);
 
@@ -93,6 +94,7 @@ void WeaponBase::Draw(void)
 {
 	if (modelId_ != -1)
 	{
+
 		// モデルを何か読み込んでいたら描画させる
 		MV1DrawModel(modelId_);
 	}
@@ -126,8 +128,7 @@ void WeaponBase::Draw(void)
 	DrawSphere3D(magicPos_, 3.0f, 10, 0x00ff00, 0x00ff00, true);
 
 	// 狙う場所の位置目安
-	//DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
-
+	DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
 
 #endif // _DEBUG
 
@@ -304,18 +305,32 @@ void WeaponBase::UpdatePos(void)
 	VECTOR playerCameraPos = player_->GetCameraPos();
 
 	// 砲身の回転行列
-	MATRIX matRot = MGetIdent();
-	matRot = MMult(matRot, MGetRotX(player_->GetPitch()));
-	matRot = MMult(matRot, MGetRotY(player_->GetYaw()));
+	VECTOR vec = { player_->GetPitch() ,player_->GetYaw() ,0.0f };
+	MATRIX matRot = MatrixUtility::GetMatrixRotateXYZ(vec);
+
+	// カメラの視線方向のベクトルを計算
+	// DxlibのVTransformを使用
+	VECTOR forward = VGet(0.0f, 0.0f, 1.0f); // 前方向をZ軸とする
+	VECTOR cameraDir = VTransform(forward, matRot);
 
 #pragma region 杖
 
+	// 座標
 	// 方向と同じ要領で、相対座標を回転
-	VECTOR localPosRot = VTransform(RELATIVE_POS_GUN, matRot);
+	VECTOR localPosRot = VTransform(RELATIVE_POS_STICK, matRot);
 
 	pos_ = VAdd(playerCameraPos, localPosRot);
 
 	MV1SetPosition(modelId_, pos_);
+
+	// 回転
+	// 杖の回転を行列にする
+	MATRIX weaponMat = MatrixUtility::GetMatrixRotateXYZ(rotate_);
+
+	// プレイヤーの回転を杖のの回転行列に反映する
+	MATRIX mat = MatrixUtility::Multiplication(weaponMat, matRot);
+	// 回転行列をモデルに反映
+	MV1SetRotationMatrix(modelId_, mat);
 
 #pragma endregion
 
@@ -326,15 +341,9 @@ void WeaponBase::UpdatePos(void)
 
 	magicPos_ = VAdd(pos_, localPosRot);
 
-
 #pragma endregion
 
 #pragma region 狙う場所
-
-	// カメラの視線方向のベクトルを計算
-	// DxlibのVTransformを使用
-	VECTOR forward = VGet(0.0f, 0.0f, 1.0f); // 前方向をZ軸とする
-	VECTOR cameraDir = VTransform(forward, matRot);
 
 	// カメラから遠く離れた点をターゲットとする
 	// カーソルの場所はカメラの視線方向と一致すると仮定

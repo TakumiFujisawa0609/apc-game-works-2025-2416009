@@ -7,10 +7,10 @@ class Stick :public WeaponBase
 public:
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³
-	static constexpr VECTOR SCALE = { 0.5f,0.5f,0.5f };
+	static constexpr VECTOR SCALE = { 0.4f,0.4f,0.4f };
 
 	// ƒ‚ƒfƒ‹‚ÌŒü‚«
-	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
+	static constexpr VECTOR ROTATE = { 0.0f,90.0f * DX_PI_F / 180.0f,0.0f };
 
 	// –‚–@”­ËŒã‚Ìd’¼ŠÔ
 	static constexpr float RECOIL = 0.01f;
