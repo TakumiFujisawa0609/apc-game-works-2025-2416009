@@ -24,6 +24,8 @@ protected:
 		float speed_;
 		// 魔法の生存判定
 		bool isAlive_;
+		// 魔法の描画判定
+		bool isDraw_;
 		// 魔法の生存期間
 		float cntAlive_;
 		// 魔法の衝突判定用半径
@@ -34,6 +36,9 @@ protected:
 	};
 
 public:
+
+	static constexpr float CHARGE_POW = 0.1f;
+	static constexpr float CHARGE_MAX = 20.0f;
 
 	// 魔法の状態
 	enum class STATE
@@ -50,6 +55,7 @@ public:
 	virtual ~MagicBase(void);
 
 	// 魔法の生成(表示開始座標、魔法の進行方向)
+	void Init(void);
 	virtual void CreateShot(VECTOR pos, VECTOR dir);
 	// 更新ステップ
 	virtual void Update(void);
@@ -63,9 +69,16 @@ public:
 
 	void ChangeState(STATE state);
 
+	// ゲッター関数
 	Magic GetMagic(void)const { return magic_; }
-
+	// セッター関数
 	void SetCollisionRad(float col) { magic_.collisionRadius_ = col; }
+
+	// 魔法を大きくする
+	void ChargeMagic(void);
+
+	// 座標を更新
+	void UpdatePos(VECTOR pos);
 
 	// 爆発させる
 	//void Blast(EFFECT_TYPE type);
@@ -92,7 +105,6 @@ protected:
 	void UpdateBlast(void);
 	void UpdateEnd(void);
 
-	void ChangeNon(void);
 	void ChangeShot(void);
 	void ChangeBlast(void);
 	void ChangeEnd(void);

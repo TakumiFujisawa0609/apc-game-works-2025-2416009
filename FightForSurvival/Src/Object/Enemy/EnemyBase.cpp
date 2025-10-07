@@ -157,17 +157,10 @@ void EnemyBase::Release(void)
 		animationController_ = nullptr;
 	}
 
-	if (enemy_.modelId_ != -1)
-	{
-		// 中にデータが入っていたら解放する
-		MV1DeleteModel(enemy_.modelId_);
-	}
-
-	if (baseAttackEffectModelId_ != -1)
-	{
-		// 中にデータが入っていたら解放する
-		MV1DeleteModel(baseAttackEffectModelId_);
-	}
+	// 中にデータが入っていたら解放する
+	MV1DeleteModel(enemy_.modelId_);
+	// 中にデータが入っていたら解放する
+	MV1DeleteModel(baseAttackEffectModelId_);
 }
 
 bool EnemyBase::IsCollisionState(void)

@@ -50,17 +50,6 @@ public:
 	// 視点のしきい値
 	static constexpr float THRESHOLD = 1.1f;
 
-	// 状態関数型
-	typedef void (*AttackStateFunction)(Player&);
-
-	enum ATTACK_STATE
-	{
-		ATTACK_STATE_START,
-		ATTACK_STATE_CHARGE,
-		ATTACK_STATE_SHOT,
-		ATTACK_STATE_MAX,
-	};
-
 	// コンストラクタ
 	Player(void);
 
@@ -93,9 +82,6 @@ public:
 
 	// 杖のポインター受け渡し
 	WeaponBase* GetWeapon(void)const { return weapon_; }
-
-	// 状態遷移
-	void ChangeState(ATTACK_STATE newState) { attackState_ = newState; }
 
 	/// <summary>
 	/// プレイヤー強化処理
@@ -137,9 +123,6 @@ private:
 	VECTOR collisionPosTop_;
 	VECTOR collisionPosUnder_;
 
-	AttackStateFunction stateTable_[ATTACK_STATE_MAX];
-	ATTACK_STATE attackState_;
-
 	// 移動処理
 	void ProcessMove(void);
 	// 視点処理
@@ -147,7 +130,5 @@ private:
 	// 攻撃処理
 	void ProcessAttack(void);
 
-	static void AttackStateStart(Player& player);
-	static void AttackStateCharge(Player& player);
-	static void AttackStateShot(Player& player);
+	void Reload(void);
 };

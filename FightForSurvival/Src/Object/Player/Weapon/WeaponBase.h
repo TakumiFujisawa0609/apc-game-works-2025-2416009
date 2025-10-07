@@ -28,6 +28,8 @@ public:
 	enum class STATE
 	{
 		IDLE,
+		GENERATE_MAGIC,
+		CHARGE_MAGIC,
 		ATTACK,
 		WAIT,
 		RELOAD,
@@ -52,7 +54,7 @@ public:
 	// 魔法の取得
 	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
 
-	bool GetCanShot(void)const { return state_ == STATE::IDLE; }
+	STATE GetState(void)const { return state_; }
 	int NowMagicNum(void) { return magicNum_; }
 
 	bool GetIsRecoil(void)const { return isRecoil_; }
@@ -74,6 +76,7 @@ protected:
 
 	// ショット(ポインタ)
 	std::vector<MagicBase*> magics_;
+	MagicBase* magic_;
 
 	// 魔法のモデルID
 	int magicModelId_;
@@ -99,10 +102,13 @@ protected:
 	// リロード時間
 	float reloadTime_;
 
+
 	// パラメーター設定
 	virtual void SetParam(void) = 0;
 
 	void IdleUpdate(void);
+	void GenerateMagicUpdate(void);
+	void ChargeMagicUpdate(void);
 	void AttackUpdate(void);
 	void WaitUpdate(void);
 	void ReloadUpdate(void);

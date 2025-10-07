@@ -13,6 +13,7 @@ WeaponBase::WeaponBase(Player* player)
 	player_ = player;
 	modelId_ = -1;
 	magicModelId_ = -1;
+	magic_ = nullptr;
 }
 
 WeaponBase::~WeaponBase(void)
@@ -78,6 +79,12 @@ void WeaponBase::Update(void)
 	case WeaponBase::STATE::ATTACK:
 		AttackUpdate();
 		break;
+	case WeaponBase::STATE::GENERATE_MAGIC:
+		GenerateMagicUpdate();
+		break;
+	case WeaponBase::STATE::CHARGE_MAGIC:
+		ChargeMagicUpdate();
+		break;
 	case WeaponBase::STATE::WAIT:
 		WaitUpdate();
 		break;
@@ -94,7 +101,6 @@ void WeaponBase::Draw(void)
 {
 	if (modelId_ != -1)
 	{
-
 		// モデルを何か読み込んでいたら描画させる
 		MV1DrawModel(modelId_);
 	}
@@ -166,6 +172,24 @@ void WeaponBase::IdleUpdate(void)
 {
 }
 
+void WeaponBase::GenerateMagicUpdate(void)
+{
+	// 有効な魔法を取得する
+	magic_ = GetValidMagic();
+	// 初期化処理
+	magic_->Init();
+	// 座標を更新する
+	magic_->UpdatePos(magicPos_);
+
+	ChangeState(STATE::CHARGE_MAGIC);
+}
+
+void WeaponBase::ChargeMagicUpdate(void)
+{
+	magic_->ChargeMagic();
+	magic_->UpdatePos(magicPos_);
+}
+
 void WeaponBase::AttackUpdate(void)
 {
 
@@ -181,10 +205,15 @@ void WeaponBase::AttackUpdate(void)
 
 #pragma endregion
 
-	// 有効な魔法を取得する
-	MagicBase* Magic = GetValidMagic();
-	// 魔法を生成(方向は仮で正面方向)
-	Magic->CreateShot(magicPos_, dir);
+	// 中身がnullptrだったら処理を行わない
+	if (magic_ == nullptr)
+	{
+		return;
+	}
+
+	magic_->CreateShot(magicPos_, dir);
+	// 放ったら中身を消す
+	magic_ = nullptr;
 
 	// 魔法発射後の反動を計算
 	pitch_ = player_->GetPitch();
@@ -268,7 +297,7 @@ void WeaponBase::DrawMagic(void)
 	// 魔法の更新
 	for (auto& Magic : magics_)
 	{
-		if (Magic->GetMagic().isAlive_)
+		if (Magic->GetMagic().isDraw_)
 		{
 			Magic->Draw();
 		}

@@ -11,10 +11,6 @@ Player::Player(void)
 {
 	player_.modelId_ = -1;
 	weapon_ = nullptr;
-
-	stateTable_[ATTACK_STATE_START] = AttackStateStart;
-	stateTable_[ATTACK_STATE_CHARGE] = AttackStateCharge;
-	stateTable_[ATTACK_STATE_SHOT] = AttackStateShot;
 }
 
 Player::~Player(void)
@@ -72,8 +68,6 @@ void Player::Init(void)
 	sensitivity_ = ins.GetSensitivity();
 
 	staminaCounter_ = 0.0f;
-
-	ChangeState(ATTACK_STATE_START);
 
 	// 杖を生成
 	weapon_ = new Stick(this);
@@ -331,70 +325,39 @@ void Player::ProcessAttack(void)
 		return;
 	}
 
-	// nullチェック
-	if (stateTable_[attackState_])
-	{
-		stateTable_[attackState_](*this);
-	}
-	
-}
-
-void Player::AttackStateStart(Player& player)
-{
 	auto& ins = InputManager::GetInstance();
 
-	// 左クリックされたかつ、杖が攻撃できる状態なら入る
-	if (ins.IsTrgDownAttack())
+	// 杖が攻撃できる状態かつ、左クリックされたら入る
+	if (weapon_->GetState() == WeaponBase::STATE::IDLE)
 	{
-		if (player.weapon_->GetCanShot())
+		if (ins.IsTrgDownAttack())
 		{
-
+			if (weapon_->NowMagicNum() == 0)
+			{
+				// MPがなければリロードに進む
+				weapon_->ChangeState(WeaponBase::STATE::RELOAD);
+			}
+			else
+			{
+				// 魔法を生成し描画する
+				weapon_->ChangeState(WeaponBase::STATE::GENERATE_MAGIC);
+			}
+		}
+		else if (ins.Reload())
+		{
+			// リロードに進む
+			weapon_->ChangeState(WeaponBase::STATE::RELOAD);
 		}
 	}
 
-#pragma region リロード
-
-	if (ins.Reload())
+	// 魔法をチャージ状態だったら入る
+	if (weapon_->GetState() == WeaponBase::STATE::CHARGE_MAGIC)
 	{
-		// リロードに進む
-		player.weapon_->ChangeState(WeaponBase::STATE::RELOAD);
-	}
-
-	if (player.weapon_->NowMagicNum() == 0)
-	{
-		// MPがなければリロードに進む
-		player.weapon_->ChangeState(WeaponBase::STATE::RELOAD);
-	}
-
-#pragma endregion
-
-}
-
-void Player::AttackStateCharge(Player& player)
-{
-
-	auto& ins = InputManager::GetInstance();
-
-	if (ins.IsNewAttack())
-	{
-
-	}
-
-}
-
-void Player::AttackStateShot(Player& player)
-{
-
-	auto& ins = InputManager::GetInstance();
-
-	if (ins.IsTrgUpAttack())
-	{
-		if (player.weapon_->NowMagicNum() != 0)
+		if (ins.IsTrgUpAttack())
 		{
-			// MPがあれば攻撃に進む
-			player.weapon_->ChangeState(WeaponBase::STATE::ATTACK);
+			// 攻撃を飛ばす
+			weapon_->ChangeState(WeaponBase::STATE::ATTACK);
 		}
 	}
 
-	
 }

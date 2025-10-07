@@ -35,7 +35,7 @@ public:
 
     const std::vector<EnemyBase*> GetEnemy(void)const { return enemys_; }
 
-    void GetPlayyerPoint(Player* player) { player_ = player; }
+    void GetPlayerPoint(Player* player) { player_ = player; }
 
 private:
     // 静的インスタンス

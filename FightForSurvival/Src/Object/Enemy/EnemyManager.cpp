@@ -67,7 +67,7 @@ void EnemyManager::Delete(void)
 	enemys_.clear();
 
 	// エネミーモデルの解放を追加
-	for (int modelId : enemyModelIds_)
+	for (auto& modelId : enemyModelIds_)
 	{
 		MV1DeleteModel(modelId);
 	}

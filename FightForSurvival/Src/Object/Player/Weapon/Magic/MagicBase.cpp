@@ -11,6 +11,22 @@ MagicBase::~MagicBase(void)
 {
 }
 
+void MagicBase::Init(void)
+{
+	magic_.isAlive_ = false;
+	magic_.isDraw_ = true;
+	state_ = STATE::NONE;
+
+	// パラメータ設定
+	SetParam();
+	// 大きさの設定
+	MV1SetScale(magic_.modelId_, magic_.scale_);
+	// 回転の設定
+	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
+	// 位置の設定
+	MV1SetPosition(magic_.modelId_, magic_.pos_);
+}
+
 void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 {
 	// 魔法の発射位置を設定
@@ -20,14 +36,6 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	// 魔法の生存判定
 	magic_.isAlive_ = true;
 	state_ = STATE::SHOT;
-	// パラメータ設定
-	SetParam();
-	// 大きさの設定
-	MV1SetScale(magic_.modelId_, magic_.scale_);
-	// 回転の設定
-	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
-	// 位置の設定
-	MV1SetPosition(magic_.modelId_, magic_.pos_);
 }
 
 void MagicBase::Update(void)
@@ -60,7 +68,7 @@ void MagicBase::Update(void)
 void MagicBase::Draw(void)
 {
 
-	if (!magic_.isAlive_)
+	if (!magic_.isDraw_)
 	{
 		// 生存していなければ処理中断
 		return;
@@ -91,7 +99,6 @@ void MagicBase::ChangeState(STATE state)
 	switch (state_)
 	{
 	case MagicBase::STATE::NONE:
-		ChangeNon();
 		break;
 	case MagicBase::STATE::SHOT:
 		ChangeShot();
@@ -107,6 +114,27 @@ void MagicBase::ChangeState(STATE state)
 	}
 }
 
+void MagicBase::ChargeMagic(void)
+{
+	// 魔法を徐々に大きくする(チャージする)
+	magic_.collisionRadius_ += CHARGE_POW;
+
+	if (magic_.collisionRadius_ > CHARGE_MAX)
+	{
+		magic_.collisionRadius_ = CHARGE_MAX;
+	}
+
+	// 大きさの設定
+	//MV1SetScale(magic_.modelId_, magic_.scale_);
+}
+
+void MagicBase::UpdatePos(VECTOR pos)
+{
+	// 座標を更新する
+	magic_.pos_ = pos;
+
+	MV1SetPosition(magic_.modelId_, magic_.pos_);
+}
 
 void MagicBase::ReduceCntAlive(void)
 {
@@ -151,10 +179,7 @@ void MagicBase::UpdateBlast(void)
 void MagicBase::UpdateEnd(void)
 {
 	magic_.isAlive_ = false;
-}
-
-void MagicBase::ChangeNon(void)
-{
+	magic_.isDraw_ = false;
 }
 
 void MagicBase::ChangeShot(void)
