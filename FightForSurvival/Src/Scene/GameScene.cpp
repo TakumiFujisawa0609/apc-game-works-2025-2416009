@@ -66,6 +66,7 @@ void GameScene::Load(void)
 	pause_ = new Pause();
 	pause_->Load();
 
+	// ウェーブの作成・各ウェーブの追加
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
@@ -94,6 +95,7 @@ void GameScene::Init(void)
 
 	// ポーズモードの初期化
 	pause_->Init();
+
 }
 
 void GameScene::Update(void)
@@ -167,7 +169,7 @@ void GameScene::Draw(void)
 	// 敵の描画
 	EnemyManager::GetInstance().Draw();
 
-	// プレイヤー描画
+	// プレイヤーの描画
 	player_->Draw();
 
 #ifdef _DEBUG

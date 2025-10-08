@@ -43,8 +43,12 @@ public:
 	// カメラモードの変更
 	void ChangeMode(MODE mode);
 
+	// ゲッター関数
+	const VECTOR& GetPos(void)const { return pos_; }
+
 	// セッター関数
 	void SetHitStop(void) { hitStopCounter_ = HIT_STOP_TIME; }
+
 private:
 
 	const Player* player_;
