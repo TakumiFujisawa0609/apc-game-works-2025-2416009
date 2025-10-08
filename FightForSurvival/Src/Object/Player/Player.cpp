@@ -131,10 +131,7 @@ void Player::Draw(void)
 
 void Player::Release(void)
 {
-	if (player_.modelId_ != -1)
-	{
-		MV1DeleteModel(player_.modelId_);
-	}
+	MV1DeleteModel(player_.modelId_);
 
 	if (weapon_ != nullptr)
 	{

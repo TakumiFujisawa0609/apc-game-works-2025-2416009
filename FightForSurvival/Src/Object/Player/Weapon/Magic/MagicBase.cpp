@@ -76,10 +76,8 @@ void MagicBase::Draw(void)
 
 	MV1DrawModel(magic_.modelId_);
 
-#ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
 	DrawSphere3D(magic_.pos_, magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
-#endif // _DEBUG
 }
 
 void MagicBase::Release(void)

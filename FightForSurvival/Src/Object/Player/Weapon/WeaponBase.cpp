@@ -142,17 +142,11 @@ void WeaponBase::Draw(void)
 
 void WeaponBase::Release(void)
 {
-	if (modelId_ != -1)
-	{
-		// モデルを何か読み込んでいたら解放させる
-		MV1DeleteModel(modelId_);
-	}
+	// モデルを何か読み込んでいたら解放させる
+	MV1DeleteModel(modelId_);
 
-	if (magicModelId_ != -1)
-	{
-		// モデルを何か読み込んでいたら解放させる
-		MV1DeleteModel(magicModelId_);
-	}
+	// モデルを何か読み込んでいたら解放させる
+	MV1DeleteModel(magicModelId_);
 
 	for (MagicBase* Magic : magics_)
 	{
