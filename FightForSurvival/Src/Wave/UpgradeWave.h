@@ -1,6 +1,6 @@
 #pragma once
 
-class SelectWave
+class UpgradeWave
 {
 };
 

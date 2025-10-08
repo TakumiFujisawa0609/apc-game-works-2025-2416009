@@ -147,10 +147,10 @@
     <ClCompile Include="Src\Wave\Wave1.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Wave\SelectWave.cpp">
+    <ClCompile Include="Src\Wave\UpgradeWave.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\UpgradeManager.cpp">
+    <ClCompile Include="Src\Wave\UpgradeManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Wave\WaveFinal.cpp">
@@ -272,10 +272,10 @@
     <ClInclude Include="Src\Wave\Wave1.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Wave\SelectWave.h">
+    <ClInclude Include="Src\Wave\UpgradeWave.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\UpgradeManager.h">
+    <ClInclude Include="Src\Wave\UpgradeManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Wave\WaveFinal.h">
