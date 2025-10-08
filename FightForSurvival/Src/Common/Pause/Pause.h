@@ -38,10 +38,10 @@ public:
 	// デストラクタ
 	~Pause(void);
 
-	// 初期化
-	void Init(void);
 	// ロード関連
 	void Load(void);
+	// 初期化
+	void Init(void);
 	// 更新
 	void Update(void);
 	// 描画

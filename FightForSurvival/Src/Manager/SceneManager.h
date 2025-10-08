@@ -32,6 +32,9 @@ public:
 	// インスタンスの取得
 	static SceneManager& GetInstance(void);
 
+	// ロード
+	void Load(void);
+
 	// 初期化
 	void Init(void);
 

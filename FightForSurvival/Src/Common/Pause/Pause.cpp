@@ -15,6 +15,12 @@ Pause::~Pause(void)
 {
 }
 
+// ロード関連
+void Pause::Load(void)
+{
+	//LoadDivGraph("Data/Image/Pause/pause.png", DRAW_NUM, DRAW_NUM, 1, IMAGE_SIZE_X, IMAGE_SIZE_Y, images_,true);
+}
+
 // 初期化
 void Pause::Init(void)
 {
@@ -30,12 +36,6 @@ void Pause::Init(void)
 
 	// ポーズモード中か確認
 	pauseMode_ = false;
-}
-
-// ロード関連
-void Pause::Load(void)
-{
-	//LoadDivGraph("Data/Image/Pause/pause.png", DRAW_NUM, DRAW_NUM, 1, IMAGE_SIZE_X, IMAGE_SIZE_Y, images_,true);
 }
 
 // 更新

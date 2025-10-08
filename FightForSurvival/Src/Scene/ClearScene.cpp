@@ -12,13 +12,13 @@ ClearScene::~ClearScene(void)
 {
 }
 
+void ClearScene::Load(void)
+{
+}
+
 void ClearScene::Init(void)
 {
 	score_ = SystemManager::GetInstance().GetScore();
-}
-
-void ClearScene::Load(void)
-{
 }
 
 void ClearScene::Update(void)

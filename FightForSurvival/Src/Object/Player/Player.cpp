@@ -21,6 +21,10 @@ void Player::Load(void)
 {
 	//// モデルのロード
 	//player_.modelId_ = MV1LoadModel((Application::PATH_MODEL + "Player/Player.mv1").c_str());
+
+	// 杖を生成・ロード
+	weapon_ = new Stick(this);
+	weapon_->Load();
 }
 
 void Player::Init(void)
@@ -69,9 +73,7 @@ void Player::Init(void)
 
 	staminaCounter_ = 0.0f;
 
-	// 杖を生成
-	weapon_ = new Stick(this);
-	weapon_->Load();
+	// 杖の初期化
 	weapon_->Init();
 
 }

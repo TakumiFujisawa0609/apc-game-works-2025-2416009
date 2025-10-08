@@ -13,6 +13,7 @@ public:
 	Score(void);
 	~Score(void);
 
+	void Load(void);
 	void Init(void);
 	void Draw(void);
 	void Release(void);

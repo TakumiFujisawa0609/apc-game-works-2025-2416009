@@ -10,6 +10,10 @@ Score::~Score(void)
 {
 }
 
+void Score::Load(void)
+{
+}
+
 void Score::Init(void)
 {
 	pos_.x = POS_X;

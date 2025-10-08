@@ -23,16 +23,8 @@ public:
 	// 初期化
 	void Init(Player* player);
 
-
-
 	// 解放処理
 	void Destroy(void);
-
-	// ゲーム終了か
-	void SetIsEnd(const bool flg) { isEnd_ = flg; }
-
-	// ゲーム終了か
-	bool GetIsEnd(void)const { return isEnd_; }
 
 private:
 
@@ -41,9 +33,6 @@ private:
 
 	// プレイヤーのインスタンス
 	Player* player_;
-
-	// ゲーム終了か
-	bool isEnd_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

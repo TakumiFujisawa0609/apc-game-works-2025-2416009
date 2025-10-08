@@ -37,51 +37,63 @@ GameScene::~GameScene(void)
 {
 }
 
-void GameScene::Init(void)
+void GameScene::Load(void)
 {
-	// スコアの初期化
-	SystemManager::GetInstance().ResetGame();
 
 	// グリッド生成
 	grid_ = new Grid();
-	grid_->Init();
 
-	// プレイヤー生成
+	// プレイヤー生成・ロード
 	player_ = new Player();
-	player_->Init();
+	player_->Load();
 
-	// 敵マネージャの生成
+	// 敵マネージャの生成・ロード
 	EnemyManager::CreateInstance();
 	EnemyManager::GetInstance().Load();
 	EnemyManager::GetInstance().GetPlayerPoint(player_);
 
 	// カメラの生成
 	camera_ = new Camera(player_);
-	camera_->Init();
 
 	// カーソルの生成
 	cursor_ = new Cursor();
-	cursor_->Init();
+	cursor_->Load();
 
 	// スコアの生成
 	score_ = new Score();
-	score_->Init();
 
 	// ポーズモードの生成
 	pause_ = new Pause();
-	pause_->Init();
-}
-
-void GameScene::Load(void)
-{
-	player_->Load();
-	cursor_->Load();
 	pause_->Load();
 
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
 	WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
+}
+
+void GameScene::Init(void)
+{
+	// スコアの初期化
+	SystemManager::GetInstance().ResetGame();
+
+	// グリッドの初期化
+	grid_->Init();
+
+	// プレイヤーの初期化
+	player_->Init();
+
+	// カメラの初期化
+	camera_->Init();
+
+	// カーソルの初期化
+	cursor_->Init();
+
+	// スコアの初期化
+	score_->Init();
+
+	// ポーズモードの初期化
+	pause_->Init();
 }
 
 void GameScene::Update(void)

@@ -16,6 +16,7 @@ void SceneManager::CreateInstance()
 	{
 		instance_ = new SceneManager();
 	}
+	instance_->Load();
 	instance_->Init();
 }
 
@@ -24,14 +25,20 @@ SceneManager& SceneManager::GetInstance(void)
 	return *instance_;
 }
 
+void SceneManager::Load(void)
+{
+	// フェード機能の初期化
+	fader_ = new Fader();
+	//システム管理生成
+	SystemManager::CreateInstance();
+}
+
 void SceneManager::Init(void)
 {
 
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
 
-	// フェード機能の初期化
-	fader_ = new Fader();
 	fader_->Init();
 
 	isSceneChanging_ = false;
@@ -44,9 +51,6 @@ void SceneManager::Init(void)
 
 	// 初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
-
-	//システム管理生成
-	SystemManager::CreateInstance();
 
 }
 
@@ -217,8 +221,8 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	}
 
 	// 各シーンの初期化
-	scene_->Init();
 	scene_->Load();
+	scene_->Init();
 
 	ResetDeltaTime();
 
