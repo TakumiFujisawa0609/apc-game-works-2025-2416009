@@ -345,7 +345,7 @@ void GameScene::CheckCollisions(void)
 		if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
 		{
 			// プレイヤーにダメージを与える
-			player_->SubHp(1);
+			player_->Damage(1);
 			enemy->SetIsAttack(false);
 		}
 

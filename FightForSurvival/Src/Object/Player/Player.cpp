@@ -73,6 +73,9 @@ void Player::Init(void)
 
 	staminaCounter_ = 0.0f;
 
+	// アップグレードのタイプの初期化
+	upgradeType_ = PLAYER_UPGRADE::NON;
+
 	// 杖の初期化
 	weapon_->Init();
 
@@ -115,7 +118,7 @@ void Player::Draw(void)
 
 	int posY = Application::SCREEN_SIZE_Y;
 
-	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2d", player_.hp_);
+	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2f", player_.hp_);
 	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
 #ifdef _DEBUG
 
@@ -142,57 +145,70 @@ void Player::Release(void)
 		weapon_ = nullptr;
 	}
 }
-//
-//void Player::StrengthenAbility(ABILITY_TYPE type, float i)
-//{
-//	int healHp, addHp;
-//	healHp = addHp = 0;
-//	healHp = addHp = static_cast<int>(i);
-//
-//	switch (type)
-//	{
-//	case Player::ABILITY_TYPE::SPEED_UP:
-//
-//		player_.moveSpeed_ += i;
-//
-//		break;
-//	case Player::ABILITY_TYPE::HEAL_HP:
-//
-//		player_.hp_ += healHp;
-//		if (player_.hp_ > ability_.hpMax_)
-//		{
-//			player_.hp_ = ability_.hpMax_;
-//		}
-//
-//		break;
-//	case Player::ABILITY_TYPE::HP_UP:
-//
-//		player_.hp_ += addHp;
-//		ability_.hpMax_ += addHp;
-//
-//		break;
-//	case Player::ABILITY_TYPE::STAMINA_UP:
-//
-//		ability_.stamina_ += i;
-//		ability_.staminaMax_ += i;
-//
-//		break;
-//	default:
-//		break;
-//	}
-//}
 
-
-void Player::SubHp(int hp)
+void Player::Damage(float hp)
 {
 	player_.hp_ -= hp;
 
-	if (player_.hp_ <= 0)
+	if (player_.hp_ <= 0.0f)
 	{
-		player_.hp_ = 0;
+		player_.hp_ = 0.0f;
 		// 攻撃を受けてHPが無くなったら死亡させる
 		player_.isAlive_ = false;
 	}
+}
+
+void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
+{
+	// アップデートしたい能力の情報を得る
+	upgradeType_ = type;
+
+	// 種類によって変更する
+	switch (upgradeType_)
+	{
+	case PLAYER_UPGRADE::NON:
+		break;
+	case PLAYER_UPGRADE::RESTOCK_POTION:
+
+		// ポーションのストックを増やす
+
+		break;
+	case PLAYER_UPGRADE::SPEED_UP:
+
+		// スピードを上げる
+		player_.moveSpeed_ += upNum;
+
+		break;
+	case PLAYER_UPGRADE::STAMINA_UP:
+
+		// スタミナの最大値を上げる
+		ability_.stamina_ += upNum;
+		ability_.staminaMax_ += upNum;
+
+		break;
+	case PLAYER_UPGRADE::HP_UP:
+
+		// HPの最大値を上げる
+		player_.hp_ += upNum;
+		ability_.hpMax_ += upNum;
+
+		break;
+	case PLAYER_UPGRADE::HEAL_HP:
+
+		// HPを回復させる
+		player_.hp_ += upNum;
+		if (player_.hp_ > ability_.hpMax_)
+		{
+			player_.hp_ = ability_.hpMax_;
+		}
+
+		break;
+	default:
+		break;
+	}
+
+	// 強化し終わったらNONへ戻す
+	upgradeType_ = PLAYER_UPGRADE::NON;
 }
 
 

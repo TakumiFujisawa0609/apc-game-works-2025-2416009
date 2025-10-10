@@ -5,6 +5,17 @@
 class WeaponBase;
 
 
+enum class PLAYER_UPGRADE
+{
+	NON,
+	RESTOCK_POTION,
+	SPEED_UP,
+	STAMINA_UP,
+	HP_UP,
+	HEAL_HP,
+	MAX,
+};
+
 class Player
 {
 public:
@@ -23,7 +34,7 @@ public:
 	static constexpr float DASH_SPEED = 15.0f;
 
 	// 最大HP
-	static constexpr int DEFAULT_HP = 10;
+	static constexpr float DEFAULT_HP = 10.0f;
 
 	// スタミナ
 	static constexpr float DEFAULT_STAMINA = 20.0f;
@@ -83,15 +94,11 @@ public:
 	// 杖のポインター受け渡し
 	WeaponBase* GetWeapon(void)const { return weapon_; }
 
-	/// <summary>
-	/// プレイヤー強化処理
-	/// </summary>
-	/// <param name="type">強化する能力の種類</param>
-	/// <param name="i">実際に強化させる値</param>
-	//void StrengthenAbility(ABILITY_TYPE type, float i);
-
 	// HPにダメージを与える
-	void SubHp(int hp);
+	void Damage(float hp);
+
+	// プレイヤーの能力を上げる
+	void Upgrade(PLAYER_UPGRADE type, float upNum);
 
 private:
 
@@ -123,6 +130,8 @@ private:
 	VECTOR collisionPosTop_;
 	VECTOR collisionPosUnder_;
 
+	PLAYER_UPGRADE upgradeType_;
+
 	// 移動処理
 	void ProcessMove(void);
 	// 視点処理
@@ -130,5 +139,4 @@ private:
 	// 攻撃処理
 	void ProcessAttack(void);
 
-	void Reload(void);
 };

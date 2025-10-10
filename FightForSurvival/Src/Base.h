@@ -27,7 +27,7 @@ struct Unit
 	VECTOR velocity_;
 
 	// 体力
-	int hp_;
+	float hp_;
 
 	// 速度
 	float moveSpeed_;
@@ -49,7 +49,7 @@ struct Unit
 struct Ability
 {
 	// 最大HP
-	int hpMax_;
+	float hpMax_;
 
 	// スタミナ
 	float stamina_;
