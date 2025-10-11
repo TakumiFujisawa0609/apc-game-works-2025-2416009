@@ -4,7 +4,7 @@
 #include "../Application.h"
 
 WaveBase::WaveBase(int prep, int wave)
-    :state_(WaveState::Prepare), prepareTime_(prep), waveTime_(wave), elapsed_(0)
+    :state_(WaveState::PREPARE), prepareTime_(prep), waveTime_(wave), elapsed_(0)
 {
 }
 
@@ -12,7 +12,7 @@ WaveBase::WaveBase(int prep, int wave)
 void WaveBase::Update(void)
 {
     // ウェーブクリア済みだったら処理しない
-    if (state_ == WaveState::Cleared) return;
+    if (state_ == WaveState::CLEARED) return;
 
     // 時間を更新
     elapsed_++;
@@ -20,7 +20,7 @@ void WaveBase::Update(void)
     // 各状態で遷移
     switch (state_)
     {
-    case WaveState::Prepare:
+    case WaveState::PREPARE:
         // 準備時間中
         OnPrepare();
 
@@ -28,12 +28,10 @@ void WaveBase::Update(void)
         if (elapsed_ >= prepareTime_)
         {
             // ウェーブ開始
-            state_ = WaveState::InWave;
-            elapsed_ = 0;
-            OnStart();
+            StartInWave();
         }
         break;
-    case WaveState::InWave:
+    case WaveState::INWAVE:
         // ウェーブ中
         OnWave();
 
@@ -56,11 +54,11 @@ void WaveBase::Update(void)
         if (CheckWaveClear())
         {
             // ウェーブクリア
-            state_ = WaveState::Cleared;
+            state_ = WaveState::CLEARED;
             OnClear();
         }
         break;
-    case WaveState::Cleared:
+    case WaveState::CLEARED:
         // ウェーブクリア後は特に処理なし
         break;
     }
@@ -76,18 +74,18 @@ void WaveBase::Draw(void)
 
     switch (state_)
     {
-    case WaveBase::WaveState::Prepare:
+    case WaveBase::WaveState::PREPARE:
         DrawFormatString(posX - 15, 5, 0xff0000, "準備");
         DrawFormatString(posX - 5, 40, 0xffffff, "%d", time);
         //DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, prepareTime);
         //DrawFormatString(0, 200, 0xff0000, "現在の状態：Prepare");
         break;
-    case WaveBase::WaveState::InWave:
+    case WaveBase::WaveState::INWAVE:
         DrawFormatString(posX - 5, 40, 0xffffff, "%d", waveTime);
         //DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, waveTime);
         //DrawFormatString(0, 200, 0xff0000, "現在の状態：InWave");
         break;
-    case WaveBase::WaveState::Cleared:
+    case WaveBase::WaveState::CLEARED:
         //DrawFormatString(0, 200, 0xff0000, "現在の状態：Cleared");
         break;
     default:
@@ -143,4 +141,11 @@ bool WaveBase::CheckWaveClear()
 void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
 {
     spawnEvents_.push_back({ time, type, pos, false });
+}
+
+void WaveBase::StartInWave(void)
+{
+    state_ = WaveState::INWAVE;
+    elapsed_ = 0;
+    OnStart();
 }

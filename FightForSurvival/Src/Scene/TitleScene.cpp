@@ -35,9 +35,6 @@ void TitleScene::Init(void)
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
 	pos_[STATE::EXIT] = { EXIT_POS_X ,EXIT_POS_Y };
 
-	// マウス座標
-	mousePos_ = { 0,0 };
-
 	isPrevStart_ = isNowStart_ =  false;
 }
 
@@ -51,11 +48,8 @@ void TitleScene::Update(void)
 
 	if (isPrevStart_ && isNowStart_)
 	{
-		// マウスの位置を取得
-		GetMousePoint(&mousePos_.x, &mousePos_.y);
-
 		// 引数の座標によって選択中のものを変化させる
-		InputDevisUpdate(mousePos_);
+		Collision();
 
 		// 確定処理
 		Confirm();
@@ -162,20 +156,20 @@ void TitleScene::Confirm(void)
 	}
 }
 
-void TitleScene::InputDevisUpdate(Vector2 pos)
+void TitleScene::Collision(void)
 {
-	// カーソルとの当たり判定を行う
-	if (CollisionManager::RectangleAndPoint(pos_[STATE::GAMESTART], COL_SIZE_X, COL_SIZE_Y, pos))
+	// 当たり判定取る
+	for (int i = 0; i < static_cast<int>(STATE::NON); i++)
 	{
-		state_ = STATE::GAMESTART;
-	}
-	else if (CollisionManager::RectangleAndPoint(pos_[STATE::EXIT], COL_SIZE_X, COL_SIZE_Y, pos))
-	{
-		state_ = STATE::EXIT;
-	}
-	else
-	{
-		state_ = STATE::NON;
+		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		{
+			state_ = static_cast<STATE>(i);
+			break;
+		}
+		else
+		{
+			state_ = STATE::NON;
+		}
 	}
 
 }

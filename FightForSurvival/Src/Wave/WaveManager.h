@@ -28,6 +28,8 @@ public:
     // ウェーブを全てクリアしているか
     bool AllCleared(void)const;
 
+    bool CurrWaveIsClear(void)const;
+
 private:
     // 静的インスタンス
     static WaveManager* instance_;

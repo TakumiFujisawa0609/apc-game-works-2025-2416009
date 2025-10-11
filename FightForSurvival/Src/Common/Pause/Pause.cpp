@@ -31,9 +31,6 @@ void Pause::Init(void)
 	pos_[static_cast<int>(PAUSE::CONTINUE)] = { CONTINUE_POS_X ,CONTINUE_POS_Y };
 	pos_[static_cast<int>(PAUSE::TITLE)] = { TITLE_POS_X ,TITLE_POS_Y };
 
-	// マウス座標
-	mousePos_ = { 0,0 };
-
 	// ポーズモード中か確認
 	pauseMode_ = false;
 }
@@ -44,11 +41,8 @@ void Pause::Update(void)
 	// ポーズモード中だったら選択処理できる
 	if (pauseMode_)
 	{
-		// マウスの位置を取得
-		GetMousePoint(&mousePos_.x, &mousePos_.y);
-
 		// 引数の座標によって選択中のものを変化させる
-		InputDevisUpdate(mousePos_);
+		Collision();
 
 		// 確定処理
 		Confirm();
@@ -159,21 +153,20 @@ void Pause::StartPause(void)
 	}
 }
 
-void Pause::InputDevisUpdate(Vector2 pos)
+void Pause::Collision(void)
 {
 
-	// カーソルとの当たり判定を行う
-	if (CollisionManager::RectangleAndPoint(pos_[static_cast<int>(PAUSE::CONTINUE)], COL_SIZE_X, COL_SIZE_Y, pos))
+	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
 	{
-		pause_ = PAUSE::CONTINUE;
-	}
-	else if (CollisionManager::RectangleAndPoint(pos_[static_cast<int>(PAUSE::TITLE)], COL_SIZE_X, COL_SIZE_Y, pos))
-	{
-		pause_ = PAUSE::TITLE;
-	}
-	else
-	{
-		pause_ = PAUSE::NON;
+		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		{
+			pause_ = static_cast<PAUSE>(i);
+			break;
+		}
+		else
+		{
+			pause_ = PAUSE::NON;
+		}
 	}
 
 }

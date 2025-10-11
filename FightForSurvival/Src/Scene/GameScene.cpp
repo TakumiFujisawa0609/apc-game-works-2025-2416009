@@ -18,6 +18,7 @@
 #include "../Wave/Wave2.h"
 #include "../Wave/WaveFinal.h"
 #include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Player/Upgrade/UpgradeManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -71,6 +72,10 @@ void GameScene::Load(void)
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
 	WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
+
+	// アップグレードの作成
+	UpgradeManager::CreateInstance();
+	UpgradeManager::GetInstance().Load(player_);
 }
 
 void GameScene::Init(void)
@@ -96,6 +101,10 @@ void GameScene::Init(void)
 	// ポーズモードの初期化
 	pause_->Init();
 
+	// アップグレードの初期化
+	UpgradeManager::GetInstance().Init();
+
+	ChangeState(STATE::PLAY);
 }
 
 void GameScene::Update(void)
@@ -107,26 +116,45 @@ void GameScene::Update(void)
 	if (!prevPause_ && !nowPause_)
 	{
 		// グリッド更新
-		grid_->Update();
+		switch (state_)
+		{
+		case GameScene::STATE::PLAY:
 
-		// プレイヤー更新
-		player_->Update();
+			grid_->Update();
 
-		// 敵の更新
-		EnemyManager::GetInstance().Update();
+			// プレイヤー更新
+			player_->Update();
 
-		// カメラの更新
-		camera_->Update();
+			// 敵の更新
+			EnemyManager::GetInstance().Update();
+
+			// カメラの更新
+			camera_->Update();
+
+			// 当たり判定
+			CheckCollisions();
+
+			// ゲームクリア・ゲームオーバー判定
+			IsClear();
+			IsOver();
+
+			// アップグレードモードスタート条件
+			StartUpgrade();
+
+			break;
+		case GameScene::STATE::UPGRADE:
+
+			UpgradeManager::GetInstance().Update();
+
+			// アップグレードモード終了条件
+			StopUpgrade();
+
+			break;
+		}
 
 		// ウェーブの更新
 		WaveManager::GetInstance().Update();
 
-		// 当たり判定
-		CheckCollisions();
-
-		// ゲームクリア・ゲームオーバー判定
-		IsClear();
-		IsOver();
 	}
 	else if (prevPause_ && !nowPause_)
 	{
@@ -164,13 +192,26 @@ void GameScene::Draw(void)
 	grid_->Draw();
 
 	// 敵の描画
-	WaveManager::GetInstance().Draw();
-
-	// 敵の描画
 	EnemyManager::GetInstance().Draw();
 
 	// プレイヤーの描画
 	player_->Draw();
+
+
+	// カーソルの描画
+	cursor_->Draw();
+
+	// スコアの描画
+	score_->Draw();
+
+	// アップグレードの描画
+	UpgradeManager::GetInstance().Draw();
+
+	// ウェーブの描画
+	WaveManager::GetInstance().Draw();
+
+	// ポーズモードの描画
+	pause_->Draw();
 
 #ifdef _DEBUG
 	//DrawString(0, 0, "GameScene", 0xffffff);
@@ -179,19 +220,12 @@ void GameScene::Draw(void)
 	camera_->DrawDebug();
 #endif // _DEBUG
 
-	// カーソルの描画
-	cursor_->Draw();
-
-	// スコアの描画
-	score_->Draw();
-
-	// ポーズモードの描画
-	pause_->Draw();
-
 }
 
 void GameScene::Release(void)
 {
+	// アップグレードの開放
+	UpgradeManager::GetInstance().Destroy();
 
 	// ウェーブの解放
 	WaveManager::GetInstance().DeleteInstance();
@@ -398,3 +432,33 @@ void GameScene::IsOver(void)
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);
 	}
 }
+
+void GameScene::StartUpgrade(void)
+{
+	auto* wave = WaveManager::GetInstance().GetCurrentWave();
+
+	//if (wave->GetState() == WaveBase::WaveState::PREPARE)
+	//{
+	//	// アップグレードモードにする
+	//	UpgradeManager::GetInstance().StartIsUpgrade();
+	//	ChangeState(STATE::UPGRADE);
+	//}
+}
+
+void GameScene::StopUpgrade(void)
+{
+	auto* wave = WaveManager::GetInstance().GetCurrentWave();
+
+	if (UpgradeManager::GetInstance().GetIsUpgradeEnd() || wave->GetState() == WaveBase::WaveState::INWAVE)
+	{
+		if (wave->GetState() != WaveBase::WaveState::INWAVE)
+		{
+			// ウェーブが始まっていなければ、強制的にウェーブを始める
+			wave->StartInWave();
+		}
+
+		ChangeState(STATE::PLAY);
+
+	}
+}
+

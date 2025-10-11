@@ -30,7 +30,7 @@ void WaveManager::Update()
 	wave->Update();
 
 	// 現在のウェーブがクリアしていたら
-	if (wave->IsCleared())
+	if (wave->GetState() == WaveBase::WaveState::CLEARED)
 	{
 		// ウェーブを加算
 		currentWaveIndex++;

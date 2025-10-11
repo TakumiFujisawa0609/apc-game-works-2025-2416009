@@ -59,9 +59,6 @@ protected:
 	// ポーズモードの種類
 	PAUSE pause_;
 
-	// マウス座標
-	Vector2 mousePos_;
-
 	// 画像
 	//int images_[DRAW_NUM];
 
@@ -73,7 +70,7 @@ protected:
 	virtual void Confirm(void);
 
 	// カーソルの選択処理
-	virtual void InputDevisUpdate(Vector2 pos);
+	virtual void Collision(void);
 
 };
 

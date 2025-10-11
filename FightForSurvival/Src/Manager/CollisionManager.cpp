@@ -144,3 +144,23 @@ bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vecto
 
 	return false;
 }
+
+bool CollisionManager::RectangleAndMouse(Vector2 pos, int wid, int hig)
+{
+	Vector2 mousePos;
+	// マウスの位置を調べる
+	GetMousePoint(&mousePos.x, &mousePos.y);
+
+	// マウスの位置から矩形と当たっているか調べる
+	if (pos.x + wid > mousePos.x &&
+		pos.x < mousePos.x &&
+		pos.y + hig >mousePos.y &&
+		pos.y < mousePos.y)
+	{
+		// 当たっていたらtrueを返す
+		return true;
+	}
+
+	// 当たっていなかったらfalseを返す
+	return false;
+}

@@ -53,9 +53,6 @@ private:
 	// 座標
 	Vector2 pos_[STATE::NON];
 
-	// マウス座標
-	Vector2 mousePos_;
-
 	// ゲームスタートフラグ
 	bool isPrevStart_;
 	bool isNowStart_;
@@ -64,5 +61,5 @@ private:
 	void Confirm(void);
 
 	// カーソルの選択処理
-	void InputDevisUpdate(Vector2 pos);
+	void Collision(void);
 };

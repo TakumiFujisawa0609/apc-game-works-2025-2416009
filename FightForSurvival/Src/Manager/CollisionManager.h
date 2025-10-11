@@ -24,6 +24,9 @@ namespace CollisionManager
 #pragma region 2D
 	// 矩形と点の当たり判定(左上からの当たり判定)
 	bool RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2);
+
+	// 矩形とマウスの当たり判定(左上からの当たり判定)
+	bool RectangleAndMouse(Vector2 pos, int wid, int hig);
 #pragma endregion
 
 };

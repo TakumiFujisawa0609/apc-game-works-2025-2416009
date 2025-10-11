@@ -34,7 +34,7 @@ void Wave1::Draw()
 	// eƒNƒ‰ƒX‚Ì‹¤’Ê•`‰æ•¨
 	WaveBase::Draw();
 
-	if (state_ != WaveBase::WaveState::Prepare)
+	if (state_ != WaveBase::WaveState::PREPARE)
 	{
 		DrawString(posX - 20, 5, "Wave1", 0xffffff);
 	}

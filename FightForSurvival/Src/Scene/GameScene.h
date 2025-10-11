@@ -14,6 +14,12 @@ class GameScene : public SceneBase
 
 public:
 
+	enum class STATE
+	{
+		PLAY,
+		UPGRADE,
+	};
+
 	// コンストラクタ
 	GameScene(void);
 
@@ -27,6 +33,8 @@ public:
 	void Release(void) override;
 
 	Camera* GetCameraPoint(void) { return camera_; }
+
+	void ChangeState(STATE state) { state_ = state; }
 
 private:
 	// カメラ
@@ -52,10 +60,18 @@ private:
 	bool nowPause_;
 	bool prevPause_;
 
+	// ステート
+	STATE state_;
+
 	void CheckCollisions(void);
 
 	// ゲームクリア・ゲームオーバー遷移条件
 	void IsClear(void);
 	void IsOver(void);
+
+	// アップグレードモードにする条件
+	void StartUpgrade(void);
+	// アップグレードモードを終了させる条件
+	void StopUpgrade(void);
 };
 

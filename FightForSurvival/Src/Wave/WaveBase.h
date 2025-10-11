@@ -10,9 +10,9 @@ public:
     // ウェーブの状態
     enum class WaveState
     {
-        Prepare,   // 準備期間
-        InWave,    // ウェーブ中
-        Cleared    // クリア済み
+        PREPARE,   // 準備期間
+        INWAVE,    // ウェーブ中
+        CLEARED    // クリア済み
     };
 
     // 敵のスポーンイベント
@@ -43,10 +43,12 @@ public:
     // スポーンイベントを作成
     void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
 
-    // クリアしているか？
-    bool IsCleared() const { return state_ == WaveState::Cleared; }
-
     int GetSpawnEventNum(void)const { return (int)spawnEvents_.size(); }
+
+    WaveState GetState(void)const { return state_; }
+
+    // ウェーブ開始させる
+    void StartInWave(void);
 protected:
 
     // ウェーブ状態
