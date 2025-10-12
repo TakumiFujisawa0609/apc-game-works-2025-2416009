@@ -134,7 +134,7 @@ public:
 	bool MoveDash(void);
 
 	// ƒŠƒ[ƒh
-	bool Reload(void);
+	bool HealMp(void);
 
 	// Šm’è
 	bool Confirm(void);

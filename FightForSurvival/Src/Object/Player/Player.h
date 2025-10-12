@@ -31,13 +31,13 @@ public:
 
 	// 移動速度
 	static constexpr float DEFAULT_MOVE_SPEED = 7.0f;
-	static constexpr float DASH_SPEED = 15.0f;
+	static constexpr float DASH_SPEED = 10.0f;
 
 	// 最大HP
 	static constexpr float DEFAULT_HP = 10.0f;
 
 	// スタミナ
-	static constexpr float DEFAULT_STAMINA = 20.0f;
+	static constexpr float DEFAULT_STAMINA = 10.0f;
 
 	// スタミナ回復量
 	static constexpr float RECOVERY_STAMINA = 0.1f;
@@ -60,6 +60,15 @@ public:
 
 	// 視点のしきい値
 	static constexpr float THRESHOLD = 1.1f;
+
+	// 最大魔法攻撃回数
+	static constexpr float MAGIC_CAPACITY = 10;
+
+	// MPポーション数
+	static constexpr float MP_POTION_NUM = 3;
+
+	// リロードする時間
+	static constexpr float RELOAD_TIME = 2.0f;
 
 	// コンストラクタ
 	Player(void);
@@ -132,11 +141,27 @@ private:
 
 	PLAYER_UPGRADE upgradeType_;
 
+	// MPポーション数
+	float MPPotionNum_;
+	// 魔法攻撃可能回数
+	float magicNum_;
+	// 最大魔法攻撃回数
+	float magicCapacity_;
+
+	// MP回復時間
+	float healMPTime_;
+	// MP回復中か
+	bool isHealMP_;
+
 	// 移動処理
 	void ProcessMove(void);
 	// 視点処理
 	void ProcessAngle(void);
 	// 攻撃処理
 	void ProcessAttack(void);
+	// MP回復処理
+	void ProcessHealMP(void);
 
+	// MP回復条件
+	bool StartHealMpTrg(void);
 };

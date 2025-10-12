@@ -15,12 +15,6 @@ public:
 	// 魔法発射後の硬直時間
 	static constexpr float RECOIL = 0.01f;
 
-	// 最大魔法攻撃回数
-	static constexpr int MAGIC_CAPACITY = 15;
-
-	// MPポーション数
-	static constexpr int MP_POTION_NUM = 10;
-
 	// コンストラクタ
 	Stick(Player* player);
 	// デストラクタ

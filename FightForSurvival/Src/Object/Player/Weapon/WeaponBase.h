@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include <vector>
 #include "../../../Base.h"
@@ -22,9 +22,6 @@ public:
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RECOVERY_SPEED = 0.001f;
 
-	// リロードする時間
-	static constexpr float RELOAD_TIME = 2.0f;
-
 	enum class STATE
 	{
 		IDLE,
@@ -32,7 +29,6 @@ public:
 		CHARGE_MAGIC,
 		ATTACK,
 		WAIT,
-		RELOAD,
 	};
 
 	// コンストラクタ
@@ -55,7 +51,6 @@ public:
 	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
 
 	STATE GetState(void)const { return state_; }
-	int NowMagicNum(void) { return magicNum_; }
 
 	bool GetIsRecoil(void)const { return isRecoil_; }
 	void SetIsRecoil(bool flg) { isRecoil_ = flg; }
@@ -93,15 +88,6 @@ protected:
 	float recoil;
 	bool isRecoil_;
 
-	// MPポーション数
-	int MPPotionNum_;
-	// 魔法攻撃回数
-	int magicNum_;
-	// 最大魔法攻撃回数
-	int magicCapacity_;
-	// リロード時間
-	float reloadTime_;
-
 
 	// パラメーター設定
 	virtual void SetParam(void) = 0;
@@ -111,7 +97,6 @@ protected:
 	void ChargeMagicUpdate(void);
 	void AttackUpdate(void);
 	void WaitUpdate(void);
-	void ReloadUpdate(void);
 
 	// 魔法の更新
 	void UpdateMagic(void);

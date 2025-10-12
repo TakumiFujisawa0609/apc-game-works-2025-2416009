@@ -59,8 +59,6 @@ void WeaponBase::Init(void)
 	// 魔法の座標
 	magicPos_ = targetPos_ = AsoUtility::VECTOR_ZERO;
 
-	// リロード時間
-	reloadTime_ = 0.0f;
 }
 
 void WeaponBase::Update(void)
@@ -88,9 +86,6 @@ void WeaponBase::Update(void)
 	case WeaponBase::STATE::WAIT:
 		WaitUpdate();
 		break;
-	case WeaponBase::STATE::RELOAD:
-		ReloadUpdate();
-		break;
 	default:
 		break;
 	}
@@ -108,22 +103,6 @@ void WeaponBase::Draw(void)
 	// 魔法の描画
 	DrawMagic();
 
-	if (state_ == STATE::RELOAD)
-	{
-		int posX = Application::SCREEN_SIZE_X / 2;
-		int posY = Application::SCREEN_SIZE_Y / 2;
-
-		// 背景の枠
-		DrawBox(posX - 50, posY - 30,
-			posX + 50, posY - 40, 0x696969, true);
-		// プログレスバー本体
-		DrawBox(posX - 50, posY - 30,
-			posX - 50 + static_cast<int>((50 * reloadTime_)), posY - 40, 0xff7f50, true);
-		DrawString(posX - 70, posY - 60, "ポーション使用中", 0xffffff);
-	}
-
-	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
-		0xffffff, "攻撃可能回数：%d　/　残りのMPポーション：%d", magicNum_, MPPotionNum_);
 
 #ifdef _DEBUG
 
@@ -220,14 +199,11 @@ void WeaponBase::AttackUpdate(void)
 	isRecoil_ = true;
 	player_->SetPitch(pitchAngle_);
 
-	magicNum_--;
-
 	ChangeState(STATE::WAIT);
 }
 
 void WeaponBase::WaitUpdate(void)
 {
-
 	if (isRecoil_)
 	{
 		// 魔法発射後の反動を設定
@@ -244,32 +220,6 @@ void WeaponBase::WaitUpdate(void)
 	else
 	{
 		// 元の位置まで戻ったらIDLE状態へ戻す
-		ChangeState(STATE::IDLE);
-	}
-}
-
-void WeaponBase::ReloadUpdate(void)
-{
-	if (MPPotionNum_ <= 0 || magicNum_ == magicCapacity_)
-	{
-		// 残りのMPポーションが無いか、攻撃可能回数が最大だったら処理を行わない
-		ChangeState(STATE::IDLE);
-		return;
-	}
-
-	// リロード時間を進める
-	reloadTime_ += SceneManager::GetInstance().GetDeltaTime();
-
-	// リロード時間が既定の時間経ったらIDLE状態へ戻す
-	if (reloadTime_ >= RELOAD_TIME)
-	{
-		reloadTime_ = 0.0f;
-
-		// 残りのMPポーションを減らす
-		MPPotionNum_--;
-		// 攻撃可能回数を増やす
-		magicNum_ = magicCapacity_;
-
 		ChangeState(STATE::IDLE);
 	}
 }

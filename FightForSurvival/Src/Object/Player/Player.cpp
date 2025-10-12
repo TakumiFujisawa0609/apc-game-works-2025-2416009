@@ -76,6 +76,15 @@ void Player::Init(void)
 	// アップグレードのタイプの初期化
 	upgradeType_ = PLAYER_UPGRADE::NON;
 
+	// MPとポーションの初期化
+	magicNum_ = magicCapacity_ = MAGIC_CAPACITY;
+	MPPotionNum_ = MP_POTION_NUM;
+
+	// MP回復時間
+	healMPTime_ = 0.0f;
+	// MP回復中か
+	isHealMP_ = false;
+
 	// 杖の初期化
 	weapon_->Init();
 
@@ -100,6 +109,9 @@ void Player::Update(void)
 	// 攻撃
 	ProcessAttack();
 
+	// MP回復
+	ProcessHealMP();
+
 	// 杖の更新
 	if (weapon_ != nullptr)
 	{
@@ -118,8 +130,27 @@ void Player::Draw(void)
 
 	int posY = Application::SCREEN_SIZE_Y;
 
-	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.2f", player_.hp_);
+	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.f", player_.hp_);
 	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+
+	// リロード中の表示
+	if (isHealMP_)
+	{
+		int posX = Application::SCREEN_SIZE_X / 2;
+		int posY = Application::SCREEN_SIZE_Y / 2;
+
+		// 背景の枠
+		DrawBox(posX - 50, posY - 30,
+			posX + 50, posY - 40, 0x696969, true);
+		// プログレスバー本体
+		DrawBox(posX - 50, posY - 30,
+			posX - 50 + static_cast<int>((50 * healMPTime_)), posY - 40, 0xff7f50, true);
+		DrawString(posX - 70, posY - 60, "ポーション使用中", 0xffffff);
+	}
+
+	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
+		0xffffff, "攻撃可能回数：%.f　/　残りのMPポーション：%.f", magicNum_, MPPotionNum_);
+
 #ifdef _DEBUG
 
 	//// 体 デバッグ用：衝突判定用カプセル
@@ -170,7 +201,8 @@ void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 		break;
 	case PLAYER_UPGRADE::RESTOCK_POTION:
 
-		// ポーションのストックを増やす
+		// ポーションの補充を行う
+		MPPotionNum_ += upNum;
 
 		break;
 	case PLAYER_UPGRADE::SPEED_UP:
@@ -334,34 +366,27 @@ void Player::ProcessAngle(void)
 
 void Player::ProcessAttack(void)
 {
-	if (weapon_ == nullptr)
+	if (weapon_ == nullptr || isHealMP_)
 	{
-		// 杖インスタンスの中身がなかったら処理を行わない
+		// 杖インスタンスの中身がないか、MP回復中だったら処理を行わない
+		return;
+	}
+
+	if (StartHealMpTrg())
+	{
+		// MP回復処理が受け付けられたらこの先の処理を行わない
 		return;
 	}
 
 	auto& ins = InputManager::GetInstance();
 
-	// 杖が攻撃できる状態かつ、左クリックされたら入る
-	if (weapon_->GetState() == WeaponBase::STATE::IDLE)
+	// 杖が攻撃できる状態かつ、MPがあり、左クリックされたら入る
+	if (weapon_->GetState() == WeaponBase::STATE::IDLE && magicNum_ > 0)
 	{
 		if (ins.IsTrgDownAttack())
 		{
-			if (weapon_->NowMagicNum() == 0)
-			{
-				// MPがなければリロードに進む
-				weapon_->ChangeState(WeaponBase::STATE::RELOAD);
-			}
-			else
-			{
-				// 魔法を生成し描画する
-				weapon_->ChangeState(WeaponBase::STATE::GENERATE_MAGIC);
-			}
-		}
-		else if (ins.Reload())
-		{
-			// リロードに進む
-			weapon_->ChangeState(WeaponBase::STATE::RELOAD);
+			// 魔法を生成し描画する
+			weapon_->ChangeState(WeaponBase::STATE::GENERATE_MAGIC);
 		}
 	}
 
@@ -372,7 +397,72 @@ void Player::ProcessAttack(void)
 		{
 			// 攻撃を飛ばす
 			weapon_->ChangeState(WeaponBase::STATE::ATTACK);
+
+			magicNum_--;
+
 		}
 	}
 
+}
+
+void Player::ProcessHealMP(void)
+{
+	if (!isHealMP_)
+	{
+		// リロードの指示がなければ処理を行わない
+		return;
+	}
+
+	// リロード時間を進める
+	healMPTime_ += SceneManager::GetInstance().GetDeltaTime();
+
+	// リロード時間が既定の時間経ったらIDLE状態へ戻す
+	if (healMPTime_ >= RELOAD_TIME)
+	{
+		healMPTime_ = 0.0f;
+
+		// 残りのMPポーションを減らす
+		MPPotionNum_--;
+		// 攻撃可能回数を増やす
+		magicNum_ = magicCapacity_;
+
+		// MP回復を終了させる
+		isHealMP_ = false;
+	}
+}
+
+bool Player::StartHealMpTrg(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// ポーションがない場合
+	if ((ins.IsTrgDownAttack() || ins.HealMp()) && MPPotionNum_ <= 0)
+	{
+		// ポーションが無かったら、SE流して処理せず終わる
+
+		return false;
+	}
+
+	// 左クリックされたら入る
+	if (ins.IsTrgDownAttack())
+	{
+		if (magicNum_ <= 0)
+		{
+			// MPがなければ回復に進む
+			isHealMP_ = true;
+			return true;
+		}
+	}
+	// 回復ボタン押されたら入る
+	else if (ins.HealMp())
+	{
+		if (magicNum_ < magicCapacity_)
+		{
+			// MPが満タンじゃなかったら回復に進む
+			isHealMP_ = true;
+			return true;
+		}
+	}
+
+	return false;
 }

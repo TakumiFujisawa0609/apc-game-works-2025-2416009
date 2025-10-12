@@ -409,7 +409,7 @@ bool InputManager::MoveDash(void)
 	return IsNew(KEY_INPUT_LSHIFT);
 }
 
-bool InputManager::Reload(void)
+bool InputManager::HealMp(void)
 {
 	return IsTrgDown(KEY_INPUT_R);
 }

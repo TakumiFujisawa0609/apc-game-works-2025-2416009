@@ -13,9 +13,9 @@ public:
 	// ポーションの補充値
 	static constexpr float RESTOCK_POTION_NUM = 1.0f;
 	// スピード強化値
-	static constexpr float SPPED_UP_NUM = 3.0f;
+	static constexpr float SPPED_UP_NUM = 5.0f;
 	// スタミナ強化値
-	static constexpr float STAMINA_UP_NUM = 3.0f;
+	static constexpr float STAMINA_UP_NUM = 5.0f;
 	// HP強化値
 	static constexpr float HP_UP_NUM = 2.0f;
 	// HP回復値

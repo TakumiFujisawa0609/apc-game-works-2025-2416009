@@ -33,27 +33,27 @@ void Upgrade::Init(void)
 		case 1:
 			upgradeData_[i].upNum_ = RESTOCK_POTION_NUM;
 			upgradeData_[i].name = "RESTOCK_POTION";
-			upgradeData_[i].desc = "ポーションを補充する";
+			upgradeData_[i].desc = "ポーションを1つ補充する";
 			break;
 		case 2:
 			upgradeData_[i].upNum_ = SPPED_UP_NUM;
 			upgradeData_[i].name = "SPEED_UP";
-			upgradeData_[i].desc = "移動速度を上げる";
+			upgradeData_[i].desc = "移動速度を5上げる";
 			break;
 		case 3:
 			upgradeData_[i].upNum_ = STAMINA_UP_NUM;
 			upgradeData_[i].name = "STAMINA_UP";
-			upgradeData_[i].desc = "スタミナの最大値を上げる";
+			upgradeData_[i].desc = "スタミナの最大値を5上げる";
 			break;
 		case 4:
 			upgradeData_[i].upNum_ = HP_UP_NUM;
 			upgradeData_[i].name = "HP_UP";
-			upgradeData_[i].desc = "HPの最大値を上げる";
+			upgradeData_[i].desc = "HPの最大値を2上げる";
 			break;
 		case 5:
 			upgradeData_[i].upNum_ = HEAL_HP_NUM;
 			upgradeData_[i].name = "HEAL_HP";
-			upgradeData_[i].desc = "HPを回復する";
+			upgradeData_[i].desc = "HPを2回復する";
 			break;
 		default:
 			break;
@@ -135,11 +135,11 @@ void Upgrade::Draw(void)
 
 		// 表示名
 		auto name = (upgradeData_[static_cast<int>(selectUpgrades_[i])].name).c_str();
-		DrawString(pos_[i].x + 40, pos_[i].y + 40, name, charColor);
+		DrawString(pos_[i].x + 40, pos_[i].y + 60, name, charColor);
 
 		// 説明文
 		auto desc = (upgradeData_[static_cast<int>(selectUpgrades_[i])].desc).c_str();
-		DrawString(pos_[i].x + 40, pos_[i].y + 60, desc, charColor);
+		DrawString(pos_[i].x + 40, pos_[i].y + 100, desc, charColor);
 
 		// 画像描画
 		//DrawRotaGraph(pos_[i].x, pos_[i].y, 1.0f, 0.0f, upgrades_[i].image_, true, false);

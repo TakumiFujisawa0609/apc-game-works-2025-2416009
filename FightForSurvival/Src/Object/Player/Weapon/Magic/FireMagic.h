@@ -7,7 +7,7 @@ class FireMagic : public MagicBase
 public:
 
 	// ‘¬“x
-	static constexpr float SPEED = 100.0f;
+	static constexpr float SPEED = 40.0f;
 
 	// ‘¶İ‰Â”\ŠÔ
 	static constexpr float CNT_ALIVE = 1.0f;

@@ -23,7 +23,5 @@ void Stick::SetParam(void)
 	scales_ = SCALE;
 	rotate_ = ROTATE;
 	recoil = RECOIL;
-	magicNum_ = magicCapacity_ = MAGIC_CAPACITY;
-	MPPotionNum_ = MP_POTION_NUM;
 }
 
