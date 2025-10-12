@@ -28,6 +28,7 @@ void SystemManager::ResetGame()
 
 SystemManager::SystemManager(void)
 {
-	sensitivity = SENSITIVITY;
+	MouseSensitivity_ = MOUSE_SENSITIVITY;
+	PadSensitivity_ = PAD_SENSITIVITY;
 	score_ = 0;
 }

@@ -189,7 +189,7 @@ void WeaponBase::AttackUpdate(void)
 	magic_ = nullptr;
 
 	// 魔法発射後の反動を計算
-	pitch_ = player_->GetPitch();
+	pitch_ = player_->GetPlayer().angles_.x;
 	pitchAngle_ = pitch_ - recoil;
 	// 上を向きすぎないように制限をかける
 	if (pitchAngle_ < Player::MIN_VIEW_ANGLE)
@@ -276,9 +276,10 @@ MagicBase* WeaponBase::GetValidMagic(void)
 void WeaponBase::UpdatePos(void)
 {
 	VECTOR playerCameraPos = player_->GetCameraPos();
+	VECTOR playerAngle = player_->GetPlayer().angles_;
 
 	// 砲身の回転行列
-	VECTOR vec = { player_->GetPitch() ,player_->GetYaw() ,0.0f };
+	VECTOR vec = { playerAngle.x ,playerAngle.y ,0.0f };
 	MATRIX matRot = MatrixUtility::GetMatrixRotateXYZ(vec);
 
 	// カメラの視線方向のベクトルを計算

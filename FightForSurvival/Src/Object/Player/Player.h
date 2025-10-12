@@ -94,11 +94,9 @@ public:
 	// ゲッターセッター関数
 	const Unit GetPlayer(void)const { return player_; }
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
-	const float GetYaw(void) const { return yaw_; }
-	const float GetPitch(void) const { return pitch_; }
 	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
-	void SetPitch(float newPitch)  { pitch_ = newPitch; }
+	void SetPitch(float newPitch)  { player_.angles_.x = newPitch; }
 
 	// 杖のポインター受け渡し
 	WeaponBase* GetWeapon(void)const { return weapon_; }
@@ -125,12 +123,11 @@ private:
 	// マウスの座標
 	Vector2 mouse_;
 
-	// ヨー角、ピッチ角
-	float yaw_;
-	float pitch_;
-
 	// マウスの感度
-	float sensitivity_;
+	float MouseSensitivity_;
+
+	// パッドの感度
+	float PadSensitivity_;
 
 	// スタミナを回復させるまでの時間カウンタ
 	float staminaCounter_;
@@ -157,6 +154,8 @@ private:
 	void ProcessMove(void);
 	// 視点処理
 	void ProcessAngle(void);
+	void MouseAngle(void);
+	void PadAngle(void);
 	// 攻撃処理
 	void ProcessAttack(void);
 	// MP回復処理
@@ -164,4 +163,6 @@ private:
 
 	// MP回復条件
 	bool StartHealMpTrg(void);
+
+	void Sensitivity(void);
 };

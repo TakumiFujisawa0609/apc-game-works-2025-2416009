@@ -66,10 +66,9 @@ void Player::Init(void)
 	mouse_ = { 0,0 };
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 
-	yaw_ = pitch_ = 0.0f;
-
 	// 他の場所で設定された感度入れる
-	sensitivity_ = ins.GetSensitivity();
+	MouseSensitivity_ = ins.GetMouseSensitivity();
+	PadSensitivity_ = ins.GetPadSensitivity();
 
 	staminaCounter_ = 0.0f;
 
@@ -92,13 +91,8 @@ void Player::Init(void)
 
 void Player::Update(void)
 {
-	
-	float nowsensitivity = SystemManager::GetInstance().GetSensitivity();
-	if (nowsensitivity != sensitivity_)
-	{
-		// 感度に変更が加えてあったら適用する
-		sensitivity_ = nowsensitivity;
-	}
+	// 感度の変更があったら変更を適用する
+	Sensitivity();
 
 	// 移動
 	ProcessMove();
@@ -252,16 +246,16 @@ void Player::ProcessMove(void)
 
 	// 水平方向の forward ベクトル（y成分を0にする）
 	VECTOR moveForward = VGet(
-		sin(yaw_),
+		sin(player_.angles_.y),
 		0.0f,
-		cos(yaw_)
+		cos(player_.angles_.y)
 	);
 
 	// 水平方向の right ベクトル（y成分を0にする）
 	VECTOR moveRight = VGet(
-		cos(yaw_),
+		cos(player_.angles_.y),
 		0.0f,
-		-sin(yaw_)
+		-sin(player_.angles_.y)
 	);
 
 	// 正規化
@@ -324,7 +318,19 @@ void Player::ProcessMove(void)
 
 void Player::ProcessAngle(void)
 {
+	if (GetJoypadNum() == 0)
+	{
+		MouseAngle();
+	}
+	else
+	{
+		PadAngle();
+	}
 
+}
+
+void Player::MouseAngle(void)
+{
 	// 現在のマウス座標を取得
 	GetMousePoint(&mouse_.x, &mouse_.y);
 
@@ -341,17 +347,17 @@ void Player::ProcessAngle(void)
 	}
 
 	// マウスの移動量からカメラの回転量を更新する
-	yaw_ += deltaX * sensitivity_;
-	pitch_ += deltaY * sensitivity_;
+	player_.angles_.y += deltaX * MouseSensitivity_;
+	player_.angles_.x += deltaY * MouseSensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
-	if (pitch_ > MAX_VIEW_ANGLE)
+	if (player_.angles_.x > MAX_VIEW_ANGLE)
 	{
-		pitch_ = MAX_VIEW_ANGLE;
+		player_.angles_.x = MAX_VIEW_ANGLE;
 	}
-	if (pitch_ < MIN_VIEW_ANGLE)
+	if (player_.angles_.x < MIN_VIEW_ANGLE)
 	{
-		pitch_ = MIN_VIEW_ANGLE;
+		player_.angles_.x = MIN_VIEW_ANGLE;
 	}
 
 	// 杖の反動がある中視点移動があったら反動をなくす
@@ -362,6 +368,20 @@ void Player::ProcessAngle(void)
 
 	//// マウスカーソルを画面中央に戻す
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+}
+
+void Player::PadAngle(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	// 接続されているゲームパッド１の情報を取得
+	InputManager::JOYPAD_IN_STATE padState =
+		ins.GetJPadInputState(InputManager::JOYPAD_NO::PAD1);
+	// アナログキーの入力値から方向を取得
+	VECTOR dir = ins.GetDirectionXZAKey(padState.AKeyRX, padState.AKeyRY);
+
+	player_.angles_.x -= dir.z * PadSensitivity_;
+	player_.angles_.y += dir.x * PadSensitivity_;
 }
 
 void Player::ProcessAttack(void)
@@ -465,4 +485,20 @@ bool Player::StartHealMpTrg(void)
 	}
 
 	return false;
+}
+
+void Player::Sensitivity(void)
+{
+	float nowMouseSensitivity = SystemManager::GetInstance().GetMouseSensitivity();
+	float nowPadSensitivity = SystemManager::GetInstance().GetPadSensitivity();
+	if (nowMouseSensitivity != MouseSensitivity_)
+	{
+		// マウス感度に変更が加えてあったら適用する
+		MouseSensitivity_ = nowMouseSensitivity;
+	}
+	if (nowPadSensitivity != PadSensitivity_)
+	{
+		// パッド感度に変更が加えてあったら適用する
+		PadSensitivity_ = nowPadSensitivity;
+	}
 }

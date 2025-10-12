@@ -139,8 +139,7 @@ void Camera::MoveCamera(void)
 	pos_ = player_->GetCameraPos();
 
 	// プレイヤーの角度をカメラの角度として設定
-	angles_.y = player_->GetYaw();
-	angles_.x = player_->GetPitch();
+	angles_ = player_->GetPlayer().angles_;
 
 }
 

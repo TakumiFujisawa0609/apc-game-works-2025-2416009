@@ -273,17 +273,38 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		// X   B
 		//   A
 
-		idx = static_cast<int>(JOYPAD_BTN::TOP);
-		ret.ButtonsNew[idx] = d.Buttons[3];// Y
-
-		idx = static_cast<int>(JOYPAD_BTN::LEFT);
-		ret.ButtonsNew[idx] = d.Buttons[2];// X
-
-		idx = static_cast<int>(JOYPAD_BTN::RIGHT);
-		ret.ButtonsNew[idx] = d.Buttons[1];// B
+		idx = static_cast<int>(JOYPAD_BTN::UP);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_DPAD_UP)];// ↑
 
 		idx = static_cast<int>(JOYPAD_BTN::DOWN);
-		ret.ButtonsNew[idx] = d.Buttons[0];// A
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_DPAD_DOWN)];// ↓
+
+		idx = static_cast<int>(JOYPAD_BTN::LEFT);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_DPAD_LEFT)];// ←
+
+		idx = static_cast<int>(JOYPAD_BTN::RIGHT);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_DPAD_RIGHT)];// →
+
+		idx = static_cast<int>(JOYPAD_BTN::A);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_A)];// A
+
+		idx = static_cast<int>(JOYPAD_BTN::B);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_B)];// B
+
+		idx = static_cast<int>(JOYPAD_BTN::X);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_X)];// X
+
+		idx = static_cast<int>(JOYPAD_BTN::Y);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_Y)];// Y
+
+		idx = static_cast<int>(JOYPAD_BTN::START);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_START)];// START
+
+		idx = static_cast<int>(JOYPAD_BTN::LB);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_LEFT_SHOULDER)];// LB
+
+		idx = static_cast<int>(JOYPAD_BTN::RB);
+		ret.ButtonsNew[idx] = x.Buttons[static_cast<int>(XINPUT_BUTTON_RIGHT_SHOULDER)];// RB
 
 		idx = static_cast<int>(JOYPAD_BTN::R_TRIGGER);
 		ret.ButtonsNew[idx] = x.RightTrigger;// R_TRIGGER
@@ -313,16 +334,16 @@ InputManager::JOYPAD_IN_STATE InputManager::GetJPadInputState(JOYPAD_NO no)
 		// □  〇
 		//   ×
 
-		idx = static_cast<int>(JOYPAD_BTN::TOP);
+		idx = static_cast<int>(JOYPAD_BTN::Y);
 		ret.ButtonsNew[idx] = d.Buttons[3];// △
 
-		idx = static_cast<int>(JOYPAD_BTN::LEFT);
+		idx = static_cast<int>(JOYPAD_BTN::X);
 		ret.ButtonsNew[idx] = d.Buttons[0];// □
 
-		idx = static_cast<int>(JOYPAD_BTN::RIGHT);
+		idx = static_cast<int>(JOYPAD_BTN::B);
 		ret.ButtonsNew[idx] = d.Buttons[2];// 〇
 
-		idx = static_cast<int>(JOYPAD_BTN::DOWN);
+		idx = static_cast<int>(JOYPAD_BTN::A);
 		ret.ButtonsNew[idx] = d.Buttons[1];// ×
 
 		// 左スティック
@@ -364,64 +385,125 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
+bool InputManager::IsPadLStick(JOYPAD_NO no, JOYPAD_BTN btn) const
+{
+	switch (btn)
+	{
+	case InputManager::JOYPAD_BTN::UP:
+
+		return padInfos_[static_cast<int>(no)].AKeyLY < -THRESHOLD_STICK;
+
+		break;
+	case InputManager::JOYPAD_BTN::DOWN:
+
+		return padInfos_[static_cast<int>(no)].AKeyLY > THRESHOLD_STICK;
+
+		break;
+	case InputManager::JOYPAD_BTN::LEFT:
+
+		return padInfos_[static_cast<int>(no)].AKeyLX < -THRESHOLD_STICK;
+
+		break;
+	case InputManager::JOYPAD_BTN::RIGHT:
+
+		return padInfos_[static_cast<int>(no)].AKeyLX > THRESHOLD_STICK;
+
+		break;
+	}
+}
+
+VECTOR InputManager::GetDirectionXZAKey(int aKeyX, int aKeyY)
+{
+	VECTOR ret = { 0.0f, 0.0f, 0.0f };
+
+	// スティックの個々の入力値は、
+	// -1000.0f ～ 1000.0f の範囲で返ってくるが、
+	// X:1000.0f、Y:1000.0fになることは無い(1000と500くらいが最大)
+	// スティックの入力値を -1.0 ～ 1.0 に正規化
+	float dirX = static_cast<float>(aKeyX) / AKEY_VAL_MAX;
+	float dirZ = static_cast<float>(aKeyY) / AKEY_VAL_MAX;
+
+	// ピタゴラスの定理でニュートラル状態からの長さベクトルにする
+	// ( 円形のデッドゾーンになる )
+	// 平方根により、おおよその最大値が1.0となる
+	float len = sqrtf(dirX * dirX + dirZ * dirZ);
+
+	if (len < THRESHOLD)
+	{
+		// (0.0f, 0.0f, 0.0f)
+		return ret;
+	}
+
+	// デッドゾーン境界からに再スケーリング(可変デッドゾーン)
+	// ( しきい値 0.35 の場合は、 0.0 ～ 0.65 / 0.65 になる )
+	float scale = (len - THRESHOLD) / (1.0f - THRESHOLD);
+	dirX = (dirX / len) * scale;
+	dirZ = (dirZ / len) * scale;
+
+	// Zは前に倒すとマイナス値が返ってくるので反転
+	ret = VNorm({ dirX, 0.0f, -dirZ });
+
+	return ret;
+}
+
 bool InputManager::PushStartKey(void)
 {
-	return IsTrgDown(KEY_INPUT_SPACE) || FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
+	return IsTrgDown(KEY_INPUT_SPACE) || FindMouse(MOUSE_INPUT_LEFT).keyTrgDown || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::A);
 }
 
 bool InputManager::MoveFront(void)
 {
-	return IsNew(KEY_INPUT_W);
+	return IsNew(KEY_INPUT_W) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::UP) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::UP);
 }
 
 bool InputManager::MoveBack(void)
 {
-	return IsNew(KEY_INPUT_S);
+	return IsNew(KEY_INPUT_S) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN);
 }
 
 bool InputManager::MoveLeft(void)
 {
-	return IsNew(KEY_INPUT_A);
+	return IsNew(KEY_INPUT_A) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT);
 }
 
 bool InputManager::MoveRight(void)
 {
-	return IsNew(KEY_INPUT_D);
+	return IsNew(KEY_INPUT_D) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT);
 }
 
 bool InputManager::IsTrgDownAttack(void)
 {
-	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::R_TRIGGER);
 }
 
 bool InputManager::IsNewAttack(void)
 {
-	return FindMouse(MOUSE_INPUT_LEFT).keyNew;
+	return FindMouse(MOUSE_INPUT_LEFT).keyNew || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::R_TRIGGER);
 }
 
 bool InputManager::IsTrgUpAttack(void)
 {
-	return FindMouse(MOUSE_INPUT_LEFT).keyTrgUp;
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgUp || IsPadBtnTrgUp(JOYPAD_NO::PAD1, JOYPAD_BTN::R_TRIGGER);
 }
 
 bool InputManager::MoveDash(void)
 {
-	return IsNew(KEY_INPUT_LSHIFT);
+	return IsNew(KEY_INPUT_LSHIFT) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RB);
 }
 
 bool InputManager::HealMp(void)
 {
-	return IsTrgDown(KEY_INPUT_R);
+	return IsTrgDown(KEY_INPUT_R) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::X);
 }
 
 bool InputManager::Confirm(void)
 {
-	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown;
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::A);
 }
 
 bool InputManager::PauseKeys(void)
 {
-	return IsTrgDown(KEY_INPUT_ESCAPE);
+	return IsTrgDown(KEY_INPUT_ESCAPE) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::START);
 }
 
 
