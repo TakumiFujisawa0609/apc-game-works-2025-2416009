@@ -1,6 +1,7 @@
 #include "Upgrade.h"
 
 #include <random>
+#include <algorithm>
 
 #include "../../../Manager/CollisionManager.h"
 #include "../../../Manager/InputManager.h"
@@ -68,6 +69,9 @@ void Upgrade::Init(void)
 	// vectorの上限値を決める
 	selectUpgrades_.reserve(static_cast<int>(PLACE::MAX));
 
+	// 選択決定内容をNONに初期化する
+	finalizeUpgrade_ = PLAYER_UPGRADE::NON;
+
 	// 座標初期化
 	int i = static_cast<int>(PLACE::TOP_LEFT);
 	for (int y = 0; y < DRAW_NUM_XY; y++)
@@ -115,7 +119,7 @@ void Upgrade::Draw(void)
 	auto boxColor = 0x696969;
 	auto charColor = 0xffffff;
 
-	for (int i = 0; i < static_cast<int>(PLACE::MAX); ++i)
+	for (int i = 0; i < selectUpgrades_.size(); ++i)
 	{
 		boxColor = 0x696969;
 		charColor = 0xffffff;
@@ -149,15 +153,6 @@ void Upgrade::Release(void)
 	selectUpgrades_.clear();
 }
 
-void Upgrade::StartIsSelect(void)
-{
-	// 選択中の本の情報を削除する
-	selectUpgrades_.clear();
-
-	// ステートを選択に移行しアップグレード内容を再選択できるようにする
-	ChangeState(STATE::SELECT);
-}
-
 float Upgrade::GetUpNum(PLAYER_UPGRADE upgradeType)
 {
 	return upgradeData_[static_cast<int>(upgradeType)].upNum_;
@@ -173,8 +168,14 @@ void Upgrade::SelectUpgrade(void)
 	// allUpgrades_をシャッフル
 	std::shuffle(allUpgrades_.begin(), allUpgrades_.end(), gen);
 
+	const int max_choices = static_cast<int>(PLACE::MAX);
+	const int available_upgrades = static_cast<int>(allUpgrades_.size());
+
+	// std::min を std:: のスコープで明示的に呼び出す(基本max_choicesのほうが大きくなるが、vectorのsize外に出ないように比較しておく)
+	int limit = (std::min)(max_choices, available_upgrades);
+
 	// 先頭の４つをselectUpgrades_にコピーする
-	for (int i = 0; i < static_cast<int>(PLACE::MAX); ++i) {
+	for (int i = 0; i < limit; ++i) {
 		selectUpgrades_.push_back(allUpgrades_[i]);
 	}
 
@@ -193,6 +194,7 @@ void Upgrade::ConfirmUpgrade(void)
 	if (ins.Confirm() && place_ != PLACE::MAX)
 	{
 		finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
+
 		ChangeState(STATE::APPLY);
 	}
 }
@@ -212,4 +214,49 @@ void Upgrade::Collision(void)
 			place_ = PLACE::MAX;
 		}
 	}
+}
+
+void Upgrade::ChangeState(STATE state)
+{
+	state_ = state;
+
+	switch (state_)
+	{
+	case Upgrade::STATE::SELECT:
+		SelectInit();
+		break;
+	case Upgrade::STATE::CONFIRM:
+		ConfirmInit();
+		break;
+	case Upgrade::STATE::APPLY:
+		ApplyInit();
+		break;
+	case Upgrade::STATE::NON:
+		break;
+	default:
+		break;
+	}
+
+}
+
+void Upgrade::SelectInit(void)
+{
+	// 選択決定内容をNONに初期化する
+	finalizeUpgrade_ = PLAYER_UPGRADE::NON;
+
+	// マウスを表示させる
+	SetMouseDispFlag(true);
+}
+
+void Upgrade::ConfirmInit(void)
+{
+}
+
+void Upgrade::ApplyInit(void)
+{
+	// マウスを表示させる
+	SetMouseDispFlag(false);
+
+	// マウスの位置を真ん中に初期化する
+	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 }

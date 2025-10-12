@@ -409,8 +409,8 @@ void GameScene::IsClear(void)
 		}
 	}
 
-	// WAVEが最終段階でなかったらクリアに遷移しないように処理を終了させる
-	if (WaveManager::GetInstance().GetCurrentWave() != nullptr)
+	// 次にWAVEが控えていたらクリアに遷移しないように処理を終了させる
+	if (WaveManager::GetInstance().GetNextWave() != nullptr)
 	{
 		return;
 	}
@@ -435,19 +435,23 @@ void GameScene::IsOver(void)
 
 void GameScene::StartUpgrade(void)
 {
-	auto* wave = WaveManager::GetInstance().GetCurrentWave();
-
-	//if (wave->GetState() == WaveBase::WaveState::PREPARE)
-	//{
-	//	// アップグレードモードにする
-	//	UpgradeManager::GetInstance().StartIsUpgrade();
-	//	ChangeState(STATE::UPGRADE);
-	//}
+	if (WaveManager::GetInstance().GetWaveIsClear())
+	{
+		// アップグレードモードにする
+		UpgradeManager::GetInstance().StartIsUpgrade();
+		ChangeState(STATE::UPGRADE);
+	}
 }
 
 void GameScene::StopUpgrade(void)
 {
 	auto* wave = WaveManager::GetInstance().GetCurrentWave();
+
+	if (wave == nullptr)
+	{
+		// 中身がなかったら処理を行わない
+		return;
+	}
 
 	if (UpgradeManager::GetInstance().GetIsUpgradeEnd() || wave->GetState() == WaveBase::WaveState::INWAVE)
 	{
@@ -456,7 +460,14 @@ void GameScene::StopUpgrade(void)
 			// ウェーブが始まっていなければ、強制的にウェーブを始める
 			wave->StartInWave();
 		}
+		else
+		{
+			// 決定する前にINWAVEとなった場合強制的にアップグレードを終了させる
+			UpgradeManager::GetInstance().StopIsUpgrade();
+		}
 
+		// 選択処理が終わったため前ウェーブのクリア情報を消去
+		WaveManager::GetInstance().EndWaveIsClear();
 		ChangeState(STATE::PLAY);
 
 	}

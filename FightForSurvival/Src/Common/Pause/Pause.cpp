@@ -114,30 +114,32 @@ void Pause::Confirm(void)
 
 	InputManager& ins = InputManager::GetInstance();
 
-	switch (pause_)
+	if (ins.Confirm())
 	{
-	case Pause::PAUSE::CONTINUE:
-
-		if (ins.Confirm())
+		switch (pause_)
 		{
+		case Pause::PAUSE::CONTINUE:
+
 			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
 
 			pauseMode_ = false;
-		}
 
-		break;
-	case Pause::PAUSE::TITLE:
+			// マウスの位置を真ん中に初期化する
+			SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 
-		if (ins.Confirm())
-		{
+			break;
+		case Pause::PAUSE::TITLE:
+
+
 			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
 			//SoundManager::GetInstance()->Stop(SoundManager::BGM::GAME);
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+
+
+			break;
 		}
 
-		break;
 	}
-
 }
 
 void Pause::StartPause(void)
@@ -150,6 +152,9 @@ void Pause::StartPause(void)
 		pauseMode_ = !pauseMode_;
 		// マウスカーソルを表示しない
 		SetMouseDispFlag(pauseMode_);
+
+		// マウスの位置を真ん中に初期化する
+		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 	}
 }
 

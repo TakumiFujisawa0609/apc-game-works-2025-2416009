@@ -24,11 +24,15 @@ public:
 
     // 現在のウェーブを取得
     WaveBase* GetCurrentWave(void);
+    // 次のウェーブを取得
+    WaveBase* GetNextWave(void);
 
     // ウェーブを全てクリアしているか
     bool AllCleared(void)const;
 
-    bool CurrWaveIsClear(void)const;
+    // 1ウェーブがクリアしたか
+    bool GetWaveIsClear(void)const { return waveIsClear_; }
+    void EndWaveIsClear(void) { waveIsClear_ = false; }
 
 private:
     // 静的インスタンス
@@ -50,8 +54,11 @@ private:
     // WaveManager copied(*WaveManager::GetInstance());
     // WaveManager moved = std::move(*WaveManager::GetInstance());
 
-    std::vector<std::unique_ptr<WaveBase>> waves;
-    int currentWaveIndex;
+    std::vector<std::unique_ptr<WaveBase>> waves_;
+    int currentWaveIndex_;
+
+    // 1ウェーブがクリアしたか
+    bool waveIsClear_;
 
 };
 

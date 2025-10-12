@@ -3,7 +3,7 @@
 #include "../Application.h"
 
 Wave2::Wave2(void)
-	: WaveBase(60 * 3, 60 * 20)
+	: WaveBase(60 * 30, 60 * 20)
 {
 	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
 	// スポーンタイミング、敵種別、座標

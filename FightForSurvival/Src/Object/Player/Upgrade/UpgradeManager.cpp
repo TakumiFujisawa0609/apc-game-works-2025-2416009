@@ -44,19 +44,12 @@ void UpgradeManager::Update(void)
 
 	upgrade_->Update();
 
-	if(upgrade_->GetState() == Upgrade::STATE::APPLY)
+	if (upgrade_->GetState() == Upgrade::STATE::APPLY)
 	{
 		auto finalizeUpgrade = upgrade_->GetFinalizeUpgrade();
- 
-		if(finalizeUpgrade == PLAYER_UPGRADE::NON)
-		{
-			isUpgradeEnd_ = true;
-		}
-		else
-		{
-			ApplyUpgrade(finalizeUpgrade);
-			isUpgradeEnd_ = true;
-		}
+
+		ApplyUpgrade(finalizeUpgrade);
+		isUpgradeEnd_ = true;
 	}
 }
 
@@ -90,10 +83,15 @@ void UpgradeManager::StartIsUpgrade(void)
 	isUpgradeEnd_ = false;
 
 	// アップグレード内容を選択する
-	upgrade_->StartIsSelect();
+	upgrade_->ChangeState(Upgrade::STATE::SELECT);
+}
 
-	// マウスを表示させる
-	SetMouseDispFlag(true);
+void UpgradeManager::StopIsUpgrade(void)
+{
+	isUpgradeEnd_ = true;
+
+	// アップグレード内容を強制適用
+	upgrade_->ChangeState(Upgrade::STATE::APPLY);
 }
 
 UpgradeManager::UpgradeManager(void)

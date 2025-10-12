@@ -25,6 +25,7 @@ public:
 	void Destroy(void);
 
 	void StartIsUpgrade(void);
+	void StopIsUpgrade(void);
 	bool GetIsUpgradeEnd(void)const { return isUpgradeEnd_; }
 
 private:

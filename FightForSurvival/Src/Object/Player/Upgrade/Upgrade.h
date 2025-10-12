@@ -25,16 +25,16 @@ public:
 	static constexpr int ALPHA = 128;
 
 	// 基準座標
-	static constexpr int POS_X = 50;
-	static constexpr int POS_Y = 50;
-
-	// 画像間(余白)の大きさ
-	static constexpr int SPACE_X = 150;
-	static constexpr int SPACE_Y = 120;
+	static constexpr int POS_X = 200;
+	static constexpr int POS_Y = 100;
 
 	// 当たり判定を行うサイズ
-	static constexpr int COL_SIZE_X = 100;
-	static constexpr int COL_SIZE_Y = 80;
+	static constexpr int COL_SIZE_X = 300;
+	static constexpr int COL_SIZE_Y = 200;
+
+	// 画像間(余白)の大きさ
+	static constexpr int SPACE_X = COL_SIZE_X + 150;
+	static constexpr int SPACE_Y = COL_SIZE_Y + 50;
 
 	// 描画画像の縦横数
 	static constexpr int DRAW_NUM_XY = 2;
@@ -65,13 +65,11 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	void StartIsSelect(void);
-
 	float GetUpNum(PLAYER_UPGRADE upgradeType);
 	PLAYER_UPGRADE GetFinalizeUpgrade(void)const { return finalizeUpgrade_; }
 	STATE GetState(void)const { return state_; }
 
-	void ChangeState(STATE state) { state_ = state; }
+	void ChangeState(STATE state);
 
 private:
 
@@ -110,5 +108,9 @@ private:
 
 	// カーソルの選択処理
 	void Collision(void);
+
+	void SelectInit(void);
+	void ConfirmInit(void);
+	void ApplyInit(void);
 };
 
