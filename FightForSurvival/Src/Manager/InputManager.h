@@ -63,6 +63,16 @@ public:
 		MAX
 	};
 
+	// ゲームコントローラーボタン
+	enum class JOYPAD_STICK
+	{
+		UP = 0,
+		DOWN,
+		LEFT,
+		RIGHT,
+		MAX
+	};
+
 	// ゲームコントローラーの入力情報
 	struct JOYPAD_IN_STATE
 	{
@@ -129,7 +139,9 @@ public:
 	bool IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const;
 
 	// 左スティックの入力
-	bool IsPadLStick(JOYPAD_NO no, JOYPAD_BTN btn)const;
+	bool IsPadLStickNew(JOYPAD_NO no, JOYPAD_STICK stick);
+	bool IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick) const;
+	bool IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick) const;
 
 	// アナログキーの入力値から方向を取得
 	VECTOR GetDirectionXZAKey(int aKeyX, int aKeyY);
@@ -163,6 +175,16 @@ public:
 
 	// ポーズモード
 	bool PauseKeys(void);
+
+	// パッドの選択キー
+	// 上
+	bool SelectUp(void);
+	// 下
+	bool SelectDown(void);
+	// 左
+	bool SelectLeft(void);
+	// 右
+	bool SelectRight(void);
 
 private:
 
@@ -208,6 +230,9 @@ private:
 	
 	// マウスボタンの入力状態
 	int mouseInput_;
+
+	bool prevPadLStick_[static_cast<int>(JOYPAD_STICK::MAX)];
+	bool nowPadLStick_[static_cast<int>(JOYPAD_STICK::MAX)];
 
 	// パッド情報
 	JOYPAD_IN_STATE padInfos_[5];

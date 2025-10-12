@@ -51,6 +51,8 @@ public:
 
 	bool GetPauseMode(void)const { return pauseMode_; }
 
+	void ChangePause(PAUSE pause) { pause_ = pause; }
+
 private:
 	// 座標
 	Vector2 pos_[DRAW_NUM];
@@ -72,5 +74,7 @@ protected:
 	// カーソルの選択処理
 	virtual void Collision(void);
 
+	// パッドの選択処理
+	virtual void PadSelect(void);
 };
 

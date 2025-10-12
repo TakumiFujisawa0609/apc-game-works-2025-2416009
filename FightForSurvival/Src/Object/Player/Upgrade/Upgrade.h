@@ -70,6 +70,7 @@ public:
 	STATE GetState(void)const { return state_; }
 
 	void ChangeState(STATE state);
+	void ChangePlace(PLACE place) { place_ = place; }
 
 private:
 
@@ -106,8 +107,11 @@ private:
 	void SelectUpgrade(void);
 	void ConfirmUpgrade(void);
 
-	// カーソルの選択処理
+	// マウスの選択処理
 	void Collision(void);
+
+	// パッドの選択処理
+	void PadSelect(void);
 
 	void SelectInit(void);
 	void ConfirmInit(void);

@@ -42,6 +42,8 @@ public:
 	void Draw(void) override;
 	void Release(void) override;
 
+	void ChangeState(STATE state) { state_ = state; }
+
 private:
 	STATE state_;
 
@@ -60,6 +62,9 @@ private:
 	// 確定させる
 	void Confirm(void);
 
-	// カーソルの選択処理
+	// マウスの選択処理
 	void Collision(void);
+
+	// パッドの選択処理
+	void PadSelect(void);
 };

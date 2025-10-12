@@ -75,6 +75,10 @@ void InputManager::Init(void)
 	info.keyTrgUp = false;
 	mouseInfos_.emplace(info.key, info);
 
+	for (int i = 0; i < static_cast<int>(JOYPAD_STICK::MAX); i++)
+	{
+		prevPadLStick_[i] = nowPadLStick_[i] = false;
+	}
 }
 
 void InputManager::Update(void)
@@ -107,6 +111,11 @@ void InputManager::Update(void)
 	SetJPadInState(JOYPAD_NO::PAD2);
 	SetJPadInState(JOYPAD_NO::PAD3);
 	SetJPadInState(JOYPAD_NO::PAD4);
+
+	for (int i = 0; i < static_cast<int>(JOYPAD_STICK::MAX); i++)
+	{
+		prevPadLStick_[i] = nowPadLStick_[i] = false;
+	}
 
 }
 
@@ -385,31 +394,57 @@ bool InputManager::IsPadBtnTrgUp(JOYPAD_NO no, JOYPAD_BTN btn) const
 	return padInfos_[static_cast<int>(no)].IsTrgUp[static_cast<int>(btn)];
 }
 
-bool InputManager::IsPadLStick(JOYPAD_NO no, JOYPAD_BTN btn) const
+bool InputManager::IsPadLStickNew(JOYPAD_NO no, JOYPAD_STICK stick)
 {
-	switch (btn)
+	nowPadLStick_[static_cast<int>(stick)] = false;
+
+	switch (stick)
 	{
-	case InputManager::JOYPAD_BTN::UP:
+	case InputManager::JOYPAD_STICK::UP:
 
-		return padInfos_[static_cast<int>(no)].AKeyLY < -THRESHOLD_STICK;
-
-		break;
-	case InputManager::JOYPAD_BTN::DOWN:
-
-		return padInfos_[static_cast<int>(no)].AKeyLY > THRESHOLD_STICK;
+		if (padInfos_[static_cast<int>(no)].AKeyLY < -THRESHOLD_STICK)
+		{
+			nowPadLStick_[static_cast<int>(stick)] = true;
+		}
 
 		break;
-	case InputManager::JOYPAD_BTN::LEFT:
+	case InputManager::JOYPAD_STICK::DOWN:
 
-		return padInfos_[static_cast<int>(no)].AKeyLX < -THRESHOLD_STICK;
+		if (padInfos_[static_cast<int>(no)].AKeyLY > THRESHOLD_STICK)
+		{
+			nowPadLStick_[static_cast<int>(stick)] = true;
+		}
 
 		break;
-	case InputManager::JOYPAD_BTN::RIGHT:
+	case InputManager::JOYPAD_STICK::LEFT:
 
-		return padInfos_[static_cast<int>(no)].AKeyLX > THRESHOLD_STICK;
+		if (padInfos_[static_cast<int>(no)].AKeyLX < -THRESHOLD_STICK)
+		{
+			nowPadLStick_[static_cast<int>(stick)] = true;
+		}
+
+		break;
+	case InputManager::JOYPAD_STICK::RIGHT:
+
+		if (padInfos_[static_cast<int>(no)].AKeyLX > THRESHOLD_STICK)
+		{
+			nowPadLStick_[static_cast<int>(stick)] = true;
+		}
 
 		break;
 	}
+
+	return nowPadLStick_[static_cast<int>(stick)];
+}
+
+bool InputManager::IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick) const
+{
+	return !prevPadLStick_[static_cast<int>(stick)] && nowPadLStick_[static_cast<int>(stick)];
+}
+
+bool InputManager::IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick) const
+{
+	return prevPadLStick_[static_cast<int>(stick)] && !nowPadLStick_[static_cast<int>(stick)];
 }
 
 VECTOR InputManager::GetDirectionXZAKey(int aKeyX, int aKeyY)
@@ -453,22 +488,22 @@ bool InputManager::PushStartKey(void)
 
 bool InputManager::MoveFront(void)
 {
-	return IsNew(KEY_INPUT_W) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::UP) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::UP);
+	return IsNew(KEY_INPUT_W) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::UP) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::UP);
 }
 
 bool InputManager::MoveBack(void)
 {
-	return IsNew(KEY_INPUT_S) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN);
+	return IsNew(KEY_INPUT_S) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::DOWN);
 }
 
 bool InputManager::MoveLeft(void)
 {
-	return IsNew(KEY_INPUT_A) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT);
+	return IsNew(KEY_INPUT_A) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::LEFT);
 }
 
 bool InputManager::MoveRight(void)
 {
-	return IsNew(KEY_INPUT_D) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStick(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT);
+	return IsNew(KEY_INPUT_D) || IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
 }
 
 bool InputManager::IsTrgDownAttack(void)
@@ -504,6 +539,26 @@ bool InputManager::Confirm(void)
 bool InputManager::PauseKeys(void)
 {
 	return IsTrgDown(KEY_INPUT_ESCAPE) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::START);
+}
+
+bool InputManager::SelectUp(void)
+{
+	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::UP) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::UP);
+}
+
+bool InputManager::SelectDown(void)
+{
+	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::DOWN);
+}
+
+bool InputManager::SelectLeft(void)
+{
+	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::LEFT);
+}
+
+bool InputManager::SelectRight(void)
+{
+	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
 }
 
 

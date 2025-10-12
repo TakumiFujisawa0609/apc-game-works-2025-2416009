@@ -25,7 +25,7 @@ void Pause::Load(void)
 void Pause::Init(void)
 {
 	// ポーズモードの種類
-	pause_ = PAUSE::NON;
+	ChangePause(PAUSE::NON);
 
 	// 座標初期化
 	pos_[static_cast<int>(PAUSE::CONTINUE)] = { CONTINUE_POS_X ,CONTINUE_POS_Y };
@@ -41,8 +41,16 @@ void Pause::Update(void)
 	// ポーズモード中だったら選択処理できる
 	if (pauseMode_)
 	{
-		// 引数の座標によって選択中のものを変化させる
-		Collision();
+		if (GetJoypadNum() == 0)
+		{
+			// 引数の座標によって選択中のものを変化させる
+			Collision();
+		}
+		else
+		{
+			// 選択処理
+			PadSelect();
+		}
 
 		// 確定処理
 		Confirm();
@@ -126,6 +134,7 @@ void Pause::Confirm(void)
 
 			// マウスの位置を真ん中に初期化する
 			SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+			SetMouseDispFlag(false);
 
 			break;
 		case Pause::PAUSE::TITLE:
@@ -165,13 +174,46 @@ void Pause::Collision(void)
 	{
 		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
-			pause_ = static_cast<PAUSE>(i);
+			ChangePause(static_cast<PAUSE>(i));
 			break;
 		}
 		else
 		{
-			pause_ = PAUSE::NON;
+			ChangePause(PAUSE::NON);
 		}
+	}
+
+}
+
+void Pause::PadSelect(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	switch (pause_)
+	{
+	case Pause::PAUSE::CONTINUE:
+
+		if (ins.SelectDown())
+		{
+			ChangePause(PAUSE::TITLE);
+		}
+
+		break;
+	case Pause::PAUSE::TITLE:
+
+		if (ins.SelectUp())
+		{
+			ChangePause(PAUSE::CONTINUE);
+		}
+
+		break;
+	case Pause::PAUSE::NON:
+
+		ChangePause(PAUSE::CONTINUE);
+
+		break;
+	default:
+		break;
 	}
 
 }

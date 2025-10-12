@@ -29,7 +29,7 @@ void TitleScene::Init(void)
 	camera_->Init();
 
 	// ポーズモードの種類
-	state_ = STATE::NON;
+	ChangeState(STATE::NON);
 
 	// 座標初期化
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
@@ -48,8 +48,16 @@ void TitleScene::Update(void)
 
 	if (isPrevStart_ && isNowStart_)
 	{
-		// 引数の座標によって選択中のものを変化させる
-		Collision();
+		if (GetJoypadNum() == 0)
+		{
+			// 引数の座標によって選択中のものを変化させる
+			Collision();
+		}
+		else
+		{
+			// 選択処理
+			PadSelect();
+		}
 
 		// 確定処理
 		Confirm();
@@ -163,13 +171,45 @@ void TitleScene::Collision(void)
 	{
 		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
-			state_ = static_cast<STATE>(i);
+			ChangeState(static_cast<STATE>(i));
 			break;
 		}
 		else
 		{
-			state_ = STATE::NON;
+			ChangeState(STATE::NON);
 		}
 	}
 
+}
+
+void TitleScene::PadSelect(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	switch (state_)
+	{
+	case TitleScene::GAMESTART:
+
+		if (ins.SelectDown())
+		{
+			ChangeState(STATE::EXIT);
+		}
+
+		break;
+	case TitleScene::EXIT:
+
+		if (ins.SelectUp())
+		{
+			ChangeState(STATE::GAMESTART);
+		}
+
+		break;
+	case TitleScene::NON:
+
+		ChangeState(STATE::GAMESTART);
+
+		break;
+	default:
+		break;
+	}
 }

@@ -84,6 +84,7 @@ void Upgrade::Init(void)
 	}
 
 	ChangeState(STATE::NON);
+	ChangePlace(PLACE::MAX);
 }
 
 void Upgrade::Update(void)
@@ -181,14 +182,24 @@ void Upgrade::SelectUpgrade(void)
 
 	// ステートを確認に移行
 	ChangeState(STATE::CONFIRM);
+	// 選択を左上にする
+	ChangePlace(PLACE::TOP_LEFT);
 }
 
 void Upgrade::ConfirmUpgrade(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	// 引数の座標によって選択中のものを変化させる
-	Collision();
+	if (GetJoypadNum() == 0)
+	{
+		// 引数の座標によって選択中のものを変化させる
+		Collision();
+	}
+	else
+	{
+		// 選択処理
+		PadSelect();
+	}
 
 	// 何か選択していて、確定ボタンが押されたら処理を行う
 	if (ins.Confirm() && place_ != PLACE::MAX)
@@ -206,13 +217,81 @@ void Upgrade::Collision(void)
 	{
 		if(CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
-			place_ = static_cast<PLACE>(i);
+			ChangePlace(static_cast<PLACE>(i));
 			break;
 		}
 		else
 		{
-			place_ = PLACE::MAX;
+			ChangePlace(PLACE::MAX);
 		}
+	}
+}
+
+void Upgrade::PadSelect(void)
+{
+	auto& ins = InputManager::GetInstance();
+
+	switch (place_)
+	{
+	case Upgrade::PLACE::TOP_LEFT:
+
+		if (ins.SelectDown())
+		{
+			ChangePlace(PLACE::BOTTOM_LEFT);
+		}
+
+		if (ins.SelectRight())
+		{
+			ChangePlace(PLACE::TOP_RIGHT);
+		}
+
+		break;
+	case Upgrade::PLACE::TOP_RIGHT:
+
+		if (ins.SelectDown())
+		{
+			ChangePlace(PLACE::BOTTOM_RIGHT);
+		}
+
+		if (ins.SelectLeft())
+		{
+			ChangePlace(PLACE::TOP_LEFT);
+		}
+
+		break;
+	case Upgrade::PLACE::BOTTOM_LEFT:
+
+		if (ins.SelectUp())
+		{
+			ChangePlace(PLACE::TOP_LEFT);
+		}
+
+		if (ins.SelectRight())
+		{
+			ChangePlace(PLACE::BOTTOM_RIGHT);
+		}
+
+		break;
+	case Upgrade::PLACE::BOTTOM_RIGHT:
+
+		if (ins.SelectUp())
+		{
+			ChangePlace(PLACE::TOP_RIGHT);
+		}
+
+		if (ins.SelectLeft())
+		{
+			ChangePlace(PLACE::BOTTOM_LEFT);
+		}
+
+		break;
+	case Upgrade::PLACE::MAX:
+
+		ChangePlace(PLACE::TOP_LEFT);
+
+		break;
+	default:
+		break;
 	}
 }
 
