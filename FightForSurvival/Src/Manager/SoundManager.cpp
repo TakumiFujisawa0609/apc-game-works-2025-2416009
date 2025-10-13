@@ -108,7 +108,7 @@ void SoundManager::AddSound(void)
 	AddBGM(pas.c_str(),50);
 	// ゲーム
 	pas = bgmPas + "AS_1153557_爽快感のある激しい戦闘曲的オーケストラ.mp3";
-	AddBGM(pas.c_str(),50);
+	AddBGM(pas.c_str(),40);
 	// クリア
 	pas = bgmPas + "AS_22319_43秒／表彰式、クリアに合うオーケストラ.mp3";
 	AddBGM(pas.c_str(),50);
@@ -120,7 +120,7 @@ void SoundManager::AddSound(void)
 	// 決定
 	pas = sePas + "AS_890907_決定／クリック／選択音（ピコンッ）.mp3";
 	AddSE(pas.c_str(), 60);
-	// キャンセル
+	// ポーズモード
 	pas = sePas + "AS_880033_決定／クリック／選択音（ピッ）.mp3";
 	AddSE(pas.c_str(), 60);
 	// 選択
@@ -129,8 +129,14 @@ void SoundManager::AddSound(void)
 	// 攻撃
 	pas = sePas + "AS_60330_炎系魔法（ボウッ！）.mp3";
 	AddSE(pas.c_str(), 60);
+	// アップグレードモード
+	pas = sePas + "AS_1272926_ゲーム中断、ポーズ_A.mp3";
+	AddSE(pas.c_str(), 60);
+	// ポーション使用
+	pas = sePas + "AS_1080278_ポーション、アイテムで体力回復するSE.mp3";
+	AddSE(pas.c_str(), 60);
 	// ダメージ
-	pas = sePas + "AS_1448309_ドス（打撃系ダメージ音）.mp3";
+	pas = sePas + "AS_146989_ザクッ（斬撃／ひっかき／剣／爪）.mp3";
 	AddSE(pas.c_str(), 60);
 	// 敵にダメージ
 	pas = sePas + "AS_104666_炎の魔法／たいまつ／燃やす／ファイア.mp3";

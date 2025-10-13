@@ -5,6 +5,7 @@
 
 #include "../../../Manager/CollisionManager.h"
 #include "../../../Manager/InputManager.h"
+#include "../../../Manager/SoundManager.h"
 #include "../../../Application.h"
 
 Upgrade::Upgrade(void)
@@ -207,11 +208,17 @@ void Upgrade::ConfirmUpgrade(void)
 		finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
 
 		ChangeState(STATE::APPLY);
+
+		// 決定SEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+
 	}
 }
 
 void Upgrade::Collision(void)
 {
+	auto prevPlace = place_;
+
 	// 当たり判定取る
 	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
 	{
@@ -225,11 +232,19 @@ void Upgrade::Collision(void)
 			ChangePlace(PLACE::MAX);
 		}
 	}
+
+	if (place_ != prevPlace && place_ != PLACE::MAX)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
 }
 
 void Upgrade::PadSelect(void)
 {
 	auto& ins = InputManager::GetInstance();
+
+	auto prevPlace = place_;
 
 	switch (place_)
 	{
@@ -288,10 +303,15 @@ void Upgrade::PadSelect(void)
 	case Upgrade::PLACE::MAX:
 
 		ChangePlace(PLACE::TOP_LEFT);
-
 		break;
 	default:
 		break;
+	}
+
+	if (place_ != prevPlace && place_ != PLACE::MAX)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
 	}
 }
 

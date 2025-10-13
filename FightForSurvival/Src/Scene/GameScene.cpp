@@ -12,6 +12,7 @@
 #include "../Manager/CollisionManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
+#include "../Manager/SoundManager.h"
 #include "../Common/Pause/Pause.h"
 #include "../Wave/WaveManager.h"
 #include "../Wave/Wave1.h"
@@ -105,6 +106,9 @@ void GameScene::Init(void)
 	UpgradeManager::GetInstance().Init();
 
 	ChangeState(STATE::PLAY);
+
+	// BGMをかける
+	SoundManager::GetInstance().Play(SoundManager::BGM::GAME);
 }
 
 void GameScene::Update(void)
@@ -284,6 +288,9 @@ void GameScene::Release(void)
 
 	// マウスカーソルを表示させる
 	SetMouseDispFlag(true);
+
+	// BGMをかける
+	SoundManager::GetInstance().Stop(SoundManager::BGM::GAME);
 }
 
 void GameScene::CheckCollisions(void)
@@ -349,6 +356,9 @@ void GameScene::CheckCollisions(void)
 				enemy->SubHp(MagicInfo.headDamage_);
 				// 魔法を爆発させる
 				Magic->ChangeState(MagicBase::STATE::BLAST);
+
+				// ダメージSEをながす
+				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
 			// 体、腕、手、脚の当たり判定
 			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
@@ -363,6 +373,9 @@ void GameScene::CheckCollisions(void)
 				enemy->SubHp(MagicInfo.bodyDamage_);
 				// 魔法を爆発させる
 				Magic->ChangeState(MagicBase::STATE::BLAST);
+
+				// ダメージSEをながす
+				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
 		}
 
@@ -381,6 +394,9 @@ void GameScene::CheckCollisions(void)
 			// プレイヤーにダメージを与える
 			player_->Damage(1);
 			enemy->SetIsAttack(false);
+
+			// ダメージSEをながす
+			SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
 		}
 
 	}
@@ -440,6 +456,9 @@ void GameScene::StartUpgrade(void)
 		// アップグレードモードにする
 		UpgradeManager::GetInstance().StartIsUpgrade();
 		ChangeState(STATE::UPGRADE);
+
+		// アップグレードスタート時SEながす
+		SoundManager::GetInstance().Play(SoundManager::SE::UPGRADE);
 	}
 }
 

@@ -29,7 +29,10 @@ void OverScene::Update(void)
 {
 	if (InputManager::GetInstance().PushStartKey())
 	{
+		// ƒ^ƒCƒgƒ‹‚É‘JˆÚ‚³‚¹‚é
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+		// Œˆ’èSE—¬‚·
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 	}
 }
 

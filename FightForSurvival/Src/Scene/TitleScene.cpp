@@ -47,6 +47,7 @@ void TitleScene::Update(void)
 	isPrevStart_ = isNowStart_;
 	if (InputManager::GetInstance().PushStartKey() && !isNowStart_)
 	{
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 		isNowStart_ = true;
 	}
 
@@ -147,38 +148,42 @@ void TitleScene::Confirm(void)
 
 	InputManager& ins = InputManager::GetInstance();
 
-	switch (state_)
+	if (ins.Confirm())
 	{
-	case STATE::GAMESTART:
-
-		if (ins.Confirm())
+		switch (state_)
 		{
+		case STATE::GAMESTART:
+
 			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
 			// スタートキーが押されたらゲームシーンへ移る
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
-		}
 
-		break;
-	case STATE::EXIT:
+			break;
+		case STATE::EXIT:
 
-		if (ins.Confirm())
-		{
 			// ゲームを終了させる
 			EndManager::GetInstance().SetIsEnd(true);
+
+			break;
 		}
 
-		break;
+		// 決定SEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+
 	}
 }
 
 void TitleScene::Collision(void)
 {
+	auto prevState = state_;
+
 	// 当たり判定取る
 	for (int i = 0; i < static_cast<int>(STATE::NON); i++)
 	{
 		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangeState(static_cast<STATE>(i));
+
 			break;
 		}
 		else
@@ -187,11 +192,18 @@ void TitleScene::Collision(void)
 		}
 	}
 
+	if (state_ != prevState && state_ != STATE::NON)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
+
 }
 
 void TitleScene::PadSelect(void)
 {
 	auto& ins = InputManager::GetInstance();
+	auto prevState = state_;
 
 	switch (state_)
 	{
@@ -218,5 +230,11 @@ void TitleScene::PadSelect(void)
 		break;
 	default:
 		break;
+	}
+
+	if (state_ != prevState && state_ != STATE::NON)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
 	}
 }

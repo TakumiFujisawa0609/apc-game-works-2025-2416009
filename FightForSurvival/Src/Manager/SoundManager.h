@@ -21,9 +21,11 @@ public:
 	enum class SE
 	{
 		DECIDE,
-		CANCEL,
+		PAUSE,
 		SELECT,
 		ATTACK,
+		UPGRADE,
+		POTION,
 		DAMEGED,
 		DAMEGED_ENEMY,
 

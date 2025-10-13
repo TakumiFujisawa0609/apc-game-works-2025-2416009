@@ -3,6 +3,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Manager/SceneManager.h"
 #include "../../Manager/SystemManager.h"
+#include "../../Manager/SoundManager.h"
 #include "../../Utility/AsoUtility.h"
 #include "Weapon/Stick.h"
 #include "Player.h"
@@ -420,6 +421,8 @@ void Player::ProcessAttack(void)
 
 			magicNum_--;
 
+			// 攻撃SEをながす
+			SoundManager::GetInstance().Play(SoundManager::SE::ATTACK);
 		}
 	}
 
@@ -454,6 +457,7 @@ void Player::ProcessHealMP(void)
 bool Player::StartHealMpTrg(void)
 {
 	auto& ins = InputManager::GetInstance();
+	auto& insSound = SoundManager::GetInstance();
 
 	// ポーションがない場合
 	if ((ins.IsTrgDownAttack() || ins.HealMp()) && MPPotionNum_ <= 0)
@@ -470,6 +474,8 @@ bool Player::StartHealMpTrg(void)
 		{
 			// MPがなければ回復に進む
 			isHealMP_ = true;
+			// ポーション使用時SEをながす
+			insSound.Play(SoundManager::SE::POTION);
 			return true;
 		}
 	}
@@ -480,6 +486,8 @@ bool Player::StartHealMpTrg(void)
 		{
 			// MPが満タンじゃなかったら回復に進む
 			isHealMP_ = true;
+			// ポーション使用時SEをながす
+			insSound.Play(SoundManager::SE::POTION);
 			return true;
 		}
 	}

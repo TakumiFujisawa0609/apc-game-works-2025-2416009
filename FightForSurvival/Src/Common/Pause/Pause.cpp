@@ -1,8 +1,8 @@
 #include <DxLib.h>
 #include "../../Manager/InputManager.h"
 #include "../../Manager/SceneManager.h"
+#include "../../Manager/SoundManager.h"
 #include "../../Manager/CollisionManager.h"
-//#include "../Manager/SoundManager/SoundManager.h"
 #include "Pause.h"
 
 // コンストラクタ
@@ -148,6 +148,9 @@ void Pause::Confirm(void)
 			break;
 		}
 
+		// 決定SEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+
 	}
 }
 
@@ -164,11 +167,15 @@ void Pause::StartPause(void)
 
 		// マウスの位置を真ん中に初期化する
 		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+
+		// SEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::PAUSE);
 	}
 }
 
 void Pause::Collision(void)
 {
+	auto prevPause = pause_;
 
 	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
 	{
@@ -183,11 +190,18 @@ void Pause::Collision(void)
 		}
 	}
 
+	if (pause_ != prevPause && pause_ != PAUSE::NON)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
+
 }
 
 void Pause::PadSelect(void)
 {
 	auto& ins = InputManager::GetInstance();
+	auto prevPause = pause_;
 
 	switch (pause_)
 	{
@@ -216,4 +230,9 @@ void Pause::PadSelect(void)
 		break;
 	}
 
+	if (pause_ != prevPause && pause_ != PAUSE::NON)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
 }
