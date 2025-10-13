@@ -8,6 +8,7 @@ class Player;
 class Cursor;
 class Score;
 class Pause;
+class RedDamageEffect;
 
 class GameScene : public SceneBase
 {
@@ -56,6 +57,9 @@ private:
 	// ポーズモード
 	Pause* pause_;
 
+	// エフェクト
+	RedDamageEffect* redEffect_;
+
 	// ポーズモード確認用
 	bool nowPause_;
 	bool prevPause_;
@@ -73,5 +77,6 @@ private:
 	void StartUpgrade(void);
 	// アップグレードモードを終了させる条件
 	void StopUpgrade(void);
+
 };
 

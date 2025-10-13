@@ -14,6 +14,7 @@
 #include "../Manager/SystemManager.h"
 #include "../Manager/SoundManager.h"
 #include "../Common/Pause/Pause.h"
+#include "../Common/Effect/RedDamageEffect.h"
 #include "../Wave/WaveManager.h"
 #include "../Wave/Wave1.h"
 #include "../Wave/Wave2.h"
@@ -30,6 +31,7 @@ GameScene::GameScene(void)
 	cursor_ = nullptr;
 	score_ = nullptr;
 	pause_ = nullptr;
+	redEffect_ = nullptr;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -57,16 +59,20 @@ void GameScene::Load(void)
 	// カメラの生成
 	camera_ = new Camera(player_);
 
-	// カーソルの生成
+	// カーソルの生成・ロード
 	cursor_ = new Cursor();
 	cursor_->Load();
 
 	// スコアの生成
 	score_ = new Score();
 
-	// ポーズモードの生成
+	// ポーズモードの生成・ロード
 	pause_ = new Pause();
 	pause_->Load();
+
+	// エフェクトの生成・ロード
+	redEffect_ = new RedDamageEffect();
+	redEffect_->Load();
 
 	// ウェーブの作成・各ウェーブの追加
 	WaveManager::CreateInstance();
@@ -102,6 +108,9 @@ void GameScene::Init(void)
 	// ポーズモードの初期化
 	pause_->Init();
 
+	// エフェクトの初期化
+	redEffect_->Init();
+
 	// アップグレードの初期化
 	UpgradeManager::GetInstance().Init();
 
@@ -134,6 +143,9 @@ void GameScene::Update(void)
 
 			// カメラの更新
 			camera_->Update();
+
+			// エフェクトの更新
+			redEffect_->Update();
 
 			// 当たり判定
 			CheckCollisions();
@@ -201,6 +213,8 @@ void GameScene::Draw(void)
 	// プレイヤーの描画
 	player_->Draw();
 
+	// エフェクトの描画
+	redEffect_->Draw();
 
 	// カーソルの描画
 	cursor_->Draw();
@@ -233,6 +247,13 @@ void GameScene::Release(void)
 
 	// ウェーブの解放
 	WaveManager::GetInstance().DeleteInstance();
+
+	// ポーズモードの解放
+	if (redEffect_ != nullptr)
+	{
+		delete redEffect_;
+		redEffect_ = nullptr;
+	}
 
 	// ポーズモードの解放
 	if (pause_ != nullptr)
@@ -394,6 +415,12 @@ void GameScene::CheckCollisions(void)
 			// プレイヤーにダメージを与える
 			player_->Damage(1);
 			enemy->SetIsAttack(false);
+
+			// カメラを揺らす
+			camera_->SetHitStop();
+
+			// 画面を赤くするエフェクトを付ける
+			redEffect_->SetRedEffect();
 
 			// ダメージSEをながす
 			SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
