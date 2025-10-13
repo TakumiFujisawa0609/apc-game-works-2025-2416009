@@ -1,6 +1,7 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
+#include "../Manager/SoundManager.h"
 #include "../Application.h"
 #include "ClearScene.h"
 
@@ -19,6 +20,9 @@ void ClearScene::Load(void)
 void ClearScene::Init(void)
 {
 	score_ = SystemManager::GetInstance().GetScore();
+
+	// BGM‚ð‚©‚¯‚é
+	SoundManager::GetInstance().Play(SoundManager::BGM::CLEAR);
 }
 
 void ClearScene::Update(void)
@@ -41,4 +45,6 @@ void ClearScene::Draw(void)
 
 void ClearScene::Release(void)
 {
+	// BGM‚ðŽ~‚ß‚é
+	SoundManager::GetInstance().Stop(SoundManager::BGM::CLEAR);
 }

@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include "Manager/InputManager.h"
 #include "Manager/SceneManager.h"
+#include "Manager/SoundManager.h"
 #include "Manager/EndManager.h"
 #include "Common/FpsControl.h"
 #include "Application.h"
@@ -10,8 +11,11 @@ Application* Application::instance_ = nullptr;
 const std::string Application::PATH_DATA = "Data/";
 const std::string Application::PATH_IMAGE = PATH_DATA + "Image/";
 const std::string Application::PATH_MODEL = PATH_DATA + "Model/";
+const std::string Application::PATH_SOUND = PATH_DATA + "Sound/";
 const std::string Application::PATH_PLAYER = PATH_MODEL + "Player/";
 const std::string Application::PATH_EFFECT = PATH_DATA + "Effect/";
+const std::string Application::PATH_BGM = PATH_SOUND + "BGM/";
+const std::string Application::PATH_SE = PATH_SOUND + "SE/";
 const std::string Application::PATH_MAP_DATA = PATH_DATA + "MapData/MapData.csv";
 
 void Application::CreateInstance(void)
@@ -70,6 +74,10 @@ void Application::Init(void)
 	// 入力制御初期化
 	SetUseDirectInputFlag(true);
 	InputManager::CreateInstance();
+
+	// サウンド管理初期化
+	SoundManager::CreateInstance();
+	SoundManager::GetInstance().Load();
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();

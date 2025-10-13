@@ -4,6 +4,7 @@
 #include "../Manager/EndManager.h"
 #include "../Manager/Camera.h"
 #include "../Manager/CollisionManager.h"
+#include "../Manager/SoundManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
@@ -36,6 +37,9 @@ void TitleScene::Init(void)
 	pos_[STATE::EXIT] = { EXIT_POS_X ,EXIT_POS_Y };
 
 	isPrevStart_ = isNowStart_ =  false;
+
+	// BGM‚ð‚©‚¯‚é
+	SoundManager::GetInstance().Play(SoundManager::BGM::TITLE);
 }
 
 void TitleScene::Update(void)
@@ -133,6 +137,9 @@ void TitleScene::Release(void)
 		camera_->Release();
 		delete camera_;
 	}
+
+	// BGM‚ðŽ~‚ß‚é
+	SoundManager::GetInstance().Stop(SoundManager::BGM::TITLE);
 }
 
 void TitleScene::Confirm(void)

@@ -1,6 +1,7 @@
 #include "../Manager/InputManager.h"
 #include "../Manager/SceneManager.h"
 #include "../Manager/SystemManager.h"
+#include "../Manager/SoundManager.h"
 #include "../Application.h"
 #include "OverScene.h"
 
@@ -12,13 +13,16 @@ OverScene::~OverScene(void)
 {
 }
 
+void OverScene::Load(void)
+{
+}
+
 void OverScene::Init(void)
 {
 	score_ = SystemManager::GetInstance().GetScore();
-}
 
-void OverScene::Load(void)
-{
+	// BGM‚ð‚©‚¯‚é
+	SoundManager::GetInstance().Play(SoundManager::BGM::OVER);
 }
 
 void OverScene::Update(void)
@@ -41,4 +45,6 @@ void OverScene::Draw(void)
 
 void OverScene::Release(void)
 {
+	// BGM‚ðŽ~‚ß‚é
+	SoundManager::GetInstance().Stop(SoundManager::BGM::OVER);
 }
