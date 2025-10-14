@@ -516,6 +516,11 @@ void GameScene::StopUpgrade(void)
 		WaveManager::GetInstance().EndWaveIsClear();
 		ChangeState(STATE::PLAY);
 
+		// 攻撃チャージ状態だったら強制的にアタック状態にする
+		if (player_->GetWeapon()->GetState() == WeaponBase::STATE::CHARGE_MAGIC)
+		{
+			player_->GetWeapon()->ChangeState(WeaponBase::STATE::ATTACK);
+		}
 	}
 }
 
