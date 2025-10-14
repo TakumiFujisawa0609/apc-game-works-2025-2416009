@@ -112,9 +112,10 @@ void EnemyBase::Draw(void)
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
-	//DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xffffff, false);
+
 	// 頭 デバッグ用：衝突判定用球体
-	DrawSphere3D(collision_.colPos_[HEAD], enemy_.collisionRadius_, 10, 0xff0000, 0xff0000, false);
+	DrawSphere3D(collision_.colPos_[HEAD], enemy_.collisionRadiusHead_, 10, 0xff0000, 0xff0000, false);
 
 	// 体 デバッグ用：衝突判定用カプセル
 	DrawCapsule3D(collision_.colPos_[BODY_TOP], collision_.colPos_[BODY_UNDER],
@@ -143,7 +144,7 @@ void EnemyBase::Draw(void)
 		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
 
 	// 攻撃可能範囲
-	DrawSphere3D(attackRangePos_, attackRange_, 10, 0x0000ff, 0x0000ff, false);
+	//DrawSphere3D(attackRangePos_, attackRange_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
@@ -398,6 +399,15 @@ bool EnemyBase::SearchAttackRange(void)
 {
 	// 攻撃可能範囲にプレイヤーがいるか確認
 	return CollisionManager::IsCollidingSphereCapsule(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
+}
+
+void EnemyBase::Extrusion(VECTOR overlap)
+{
+	// 押し出しを行う
+	enemy_.pos_ = VAdd(enemy_.pos_, overlap);
+
+	// 座標をモデルに設定
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 }
 
 int EnemyBase::SearchFrame(const std::string& boneName)

@@ -67,7 +67,12 @@ private:
 	// ステート
 	STATE state_;
 
-	void CheckCollisions(void);
+	// 当たり判定
+	void Collisions(void);
+	// 敵やプレイヤーにダメージが入る当たり判定
+	void DamageCollision(void);
+	// 敵やプレイヤーの押し出し判定
+	void ExtrusionCollision(void);
 
 	// ゲームクリア・ゲームオーバー遷移条件
 	void IsClear(void);

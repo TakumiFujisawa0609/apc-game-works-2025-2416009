@@ -23,8 +23,10 @@ public:
 	static constexpr int SCORE = 10;
 
 	// “–‚½‚è”»’è—p”¼Œa
+	// ‰Ÿ‚µo‚µ—p
+	static constexpr float COLLISION_RADIUS = 50.0f;
 	// “ª
-	static constexpr float COLLISION_RADIUS = 15.0f;
+	static constexpr float COLLISION_RADIUS_HEAD = 15.0f;
 	// ‘Ì
 	static constexpr float COLLISION_RADIUS_BODY = 20.0f;
 	// ˜r

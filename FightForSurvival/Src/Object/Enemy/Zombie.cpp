@@ -30,9 +30,11 @@ void Zombie::SetParam(void)
 
 	score_ = SCORE;
 
+
 	// “–‚½‚è”»’è—p‚Ì”¼Œa
-	// “ª
 	enemy_.collisionRadius_ = COLLISION_RADIUS;
+	// “ª
+	enemy_.collisionRadiusHead_ = COLLISION_RADIUS_HEAD;
 	// ‘Ì
 	enemy_.collisionRadiusBody_ = COLLISION_RADIUS_BODY;
 	// ˜r

@@ -68,6 +68,7 @@ public:
 	// UŒ‚‘Ò‚¿ŠÔ‚ÌƒZƒbƒg‚·‚é
 	void SetAttackCooldown(float cooldown) { attackCooldown_ = cooldown; }
 
+	void Extrusion(VECTOR overlap);
 
 protected:
 	AnimationController* animationController_;

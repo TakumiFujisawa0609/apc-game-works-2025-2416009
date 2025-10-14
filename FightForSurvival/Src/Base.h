@@ -40,6 +40,7 @@ struct Unit
 
 	// Õ“Ë”»’è—p”¼Œa
 	float collisionRadius_;
+	float collisionRadiusHead_;
 	float collisionRadiusBody_;
 	float collisionRadiusArm_;
 	float collisionRadiusHand_;

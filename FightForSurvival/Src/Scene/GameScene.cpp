@@ -148,7 +148,7 @@ void GameScene::Update(void)
 			redEffect_->Update();
 
 			// 当たり判定
-			CheckCollisions();
+			Collisions();
 
 			// ゲームクリア・ゲームオーバー判定
 			IsClear();
@@ -314,7 +314,15 @@ void GameScene::Release(void)
 	SoundManager::GetInstance().Stop(SoundManager::BGM::GAME);
 }
 
-void GameScene::CheckCollisions(void)
+void GameScene::Collisions(void)
+{
+	// 敵やプレイヤーにダメージが入る当たり判定
+	DamageCollision();
+	// 敵やプレイヤーの押し出し判定
+	ExtrusionCollision();
+}
+
+void GameScene::DamageCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
 	// 生成してある敵を取得
@@ -342,7 +350,7 @@ void GameScene::CheckCollisions(void)
 		}
 
 		// 敵の半径
-		float eneRadHead = eneInfo.collisionRadius_;
+		float eneRadHead = eneInfo.collisionRadiusHead_;
 		float eneRadBody = eneInfo.collisionRadiusBody_;
 		float eneRadArm = eneInfo.collisionRadiusArm_;
 		float eneRadHand = eneInfo.collisionRadiusHand_;
@@ -407,7 +415,7 @@ void GameScene::CheckCollisions(void)
 		}
 
 		VECTOR plaPos = player_->GetPlayer().pos_;
-		float plaRad = player_->GetPlayer().collisionRadius_;
+		float plaRad = player_->GetPlayer().collisionRadiusHead_;
 
 		// プレイヤーと敵の攻撃の当たり判定
 		if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
@@ -427,7 +435,58 @@ void GameScene::CheckCollisions(void)
 		}
 
 	}
+}
 
+void GameScene::ExtrusionCollision(void)
+{
+	auto& eneManaIns = EnemyManager::GetInstance();
+	auto& enemys_ = eneManaIns.GetEnemy();
+
+	for (int i = 0; i < enemys_.size(); i++)
+	{
+		for (int j = i + 1; j < enemys_.size(); j++)
+		{
+
+			VECTOR ene1Pos = enemys_[i]->GetEnemy().pos_;
+			VECTOR ene2Pos = enemys_[j]->GetEnemy().pos_;
+
+			// 球体と球体の衝突判定
+			// ２つの座標間の距離をピタゴラスの定理で算出
+
+			VECTOR distance;
+			distance.x = ene2Pos.x - ene1Pos.x;
+			distance.y = ene2Pos.y - ene1Pos.y;
+			distance.z = ene2Pos.z - ene1Pos.z;
+
+			float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+			// お互いの半径を合計する
+			float radius = enemys_[i]->GetEnemy().collisionRadius_ + enemys_[j]->GetEnemy().collisionRadius_;
+
+			// 合計した半径の２乗よりも、
+			// ２つの座標間の距離が小さければ球体は衝突している
+			if (radius * radius > dis && dis != 0.0f)
+			{
+				float length = sqrtf(dis);
+				auto overlap = radius - length;
+
+				// 正規化ベクトル（A -> Bの方向）
+				VECTOR vec = VNorm(distance);
+
+				// 重なり量の半分
+				float push_half = overlap / 2.0f;
+
+				// 敵A (i) の押し出し：Bから離れる方向
+				// A -> Bの逆方向 (-vec) に push_half だけ移動
+				enemys_[i]->Extrusion(VScale(vec, -push_half));
+
+				// 敵B (j) の押し出し：Aから離れる方向
+				// A -> Bの順方向 (+vec) に push_half だけ移動
+				enemys_[j]->Extrusion(VScale(vec, push_half));
+			}
+		}
+
+	}
 }
 
 void GameScene::IsClear(void)
