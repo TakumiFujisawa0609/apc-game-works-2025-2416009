@@ -300,11 +300,24 @@ void Player::ProcessMove(void)
 		}
 	}
 
+	// 移動方向ベクトルを計算
+	VECTOR moveVec = AsoUtility::VECTOR_ZERO;
+
 	// 入力に応じてプレイヤーの位置を更新
-	if (inputIns.MoveFront()) { player_.pos_ = VAdd(player_.pos_, VScale(moveForward, moveSpeed_)); }
-	if (inputIns.MoveBack()) { player_.pos_ = VSub(player_.pos_, VScale(moveForward, moveSpeed_)); }
-	if (inputIns.MoveLeft()) { player_.pos_ = VSub(player_.pos_, VScale(moveRight, moveSpeed_)); }
-	if (inputIns.MoveRight()) { player_.pos_ = VAdd(player_.pos_, VScale(moveRight, moveSpeed_)); }
+	if (inputIns.MoveFront()) { moveVec = VAdd(moveVec, moveForward); }
+	if (inputIns.MoveBack()) { moveVec = VSub(moveVec, moveForward); }
+	if (inputIns.MoveLeft()) { moveVec = VSub(moveVec, moveRight); }
+	if (inputIns.MoveRight()) { moveVec = VAdd(moveVec, moveRight); }
+
+	if (VSize(moveVec) > 0.0001f) // ゼロ判定（VSizeSqはベクトルの長さの2乗）
+	{
+		// ベクトルを正規化し、移動速度を掛ける
+		moveVec = VScale(VNorm(moveVec), moveSpeed_);
+
+		// プレイヤーの位置を更新
+		player_.pos_ = VAdd(player_.pos_, moveVec);
+	}
+
 
 	// カメラ位置の更新
 	cameraPos_ = player_.pos_;
