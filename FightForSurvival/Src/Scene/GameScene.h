@@ -9,6 +9,7 @@ class Cursor;
 class Score;
 class Pause;
 class RedDamageEffect;
+class SkyDome;
 
 class GameScene : public SceneBase
 {
@@ -59,6 +60,9 @@ private:
 
 	// エフェクト
 	RedDamageEffect* redEffect_;
+
+	// スカイドーム
+	SkyDome* skydome_;
 
 	// ポーズモード確認用
 	bool nowPause_;

@@ -19,10 +19,19 @@ void SkyDome::Load(void)
 	modelId_ = MV1LoadModel((Application::PATH_MODEL + "SkyDome/Skydome.mv1").c_str());
 }
 
-void SkyDome::Init(void)
+void SkyDome::Init(const VECTOR& cameraPos)
 {
+	// ‘å‚«‚³‚ğİ’è
+	scale_ = SCALE;
+	MV1SetScale(modelId_, scale_);
+
+	// Œü‚«‚ğİ’è
+	rotate_ = ROTATE;
+	MV1SetRotationXYZ(modelId_, rotate_);
+
 	// À•W‚Ì‰Šú‰»
-	pos_ = AsoUtility::VECTOR_ZERO;
+	pos_ = cameraPos;
+	MV1SetPosition(modelId_, pos_);
 }
 
 void SkyDome::Update(const VECTOR& cameraPos)

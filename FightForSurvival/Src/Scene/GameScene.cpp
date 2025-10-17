@@ -21,6 +21,7 @@
 #include "../Wave/WaveFinal.h"
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Player/Upgrade/UpgradeManager.h"
+#include "../Object/SkyDome/SkyDome.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -32,6 +33,7 @@ GameScene::GameScene(void)
 	score_ = nullptr;
 	pause_ = nullptr;
 	redEffect_ = nullptr;
+	skydome_ = nullptr;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -74,6 +76,10 @@ void GameScene::Load(void)
 	redEffect_ = new RedDamageEffect();
 	redEffect_->Load();
 
+	// スカイドームの生成・ロード
+	skydome_ = new SkyDome();
+	skydome_->Load();
+
 	// ウェーブの作成・各ウェーブの追加
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
@@ -111,6 +117,9 @@ void GameScene::Init(void)
 	// エフェクトの初期化
 	redEffect_->Init();
 
+	// スカイドーム
+	skydome_->Init(camera_->GetPos());
+
 	// アップグレードの初期化
 	UpgradeManager::GetInstance().Init();
 
@@ -146,6 +155,9 @@ void GameScene::Update(void)
 
 			// エフェクトの更新
 			redEffect_->Update();
+
+			// スカイドームの更新
+			skydome_->Update(camera_->GetPos());
 
 			// 当たり判定
 			Collisions();
@@ -213,6 +225,9 @@ void GameScene::Draw(void)
 	// プレイヤーの描画
 	player_->Draw();
 
+	// スカイドームの描画
+	skydome_->Draw();
+
 	// エフェクトの描画
 	redEffect_->Draw();
 
@@ -248,6 +263,14 @@ void GameScene::Release(void)
 	// ウェーブの解放
 	WaveManager::GetInstance().DeleteInstance();
 
+	// ポーズモードの解放
+	if (skydome_ != nullptr)
+	{
+		skydome_->Release();
+		delete skydome_;
+		skydome_ = nullptr;
+	}
+	
 	// ポーズモードの解放
 	if (redEffect_ != nullptr)
 	{
