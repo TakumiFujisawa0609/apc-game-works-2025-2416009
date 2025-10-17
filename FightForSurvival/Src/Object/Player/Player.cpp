@@ -396,6 +396,16 @@ void Player::PadAngle(void)
 
 	player_.angles_.x -= dir.z * PadSensitivity_;
 	player_.angles_.y += dir.x * PadSensitivity_;
+
+	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
+	if (player_.angles_.x > MAX_VIEW_ANGLE)
+	{
+		player_.angles_.x = MAX_VIEW_ANGLE;
+	}
+	if (player_.angles_.x < MIN_VIEW_ANGLE)
+	{
+		player_.angles_.x = MIN_VIEW_ANGLE;
+	}
 }
 
 void Player::ProcessAttack(void)
