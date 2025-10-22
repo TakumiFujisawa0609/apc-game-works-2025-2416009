@@ -7,6 +7,8 @@ class AnimationController
 {
 public:
 
+	static constexpr float BLEND_LATIO = 0.2f;
+
 	// アニメーションデータ
 	struct Animation
 	{
@@ -30,6 +32,7 @@ public:
 	void Add(int type, float speed, const std::string path);
 
 	// アニメーション再生
+	void BlendAnimPlay(int nextPlayType, float duration , bool isLoop = true);
 	void Play(int type, bool isLoop = true);
 
 	void Update(void);
@@ -41,8 +44,6 @@ public:
 
 	// 再生中のアニメーション
 	int GetPlayType(void)const;
-
-	float GetAnimStep(void)const { return playAnim_.step; }
 
 private:
 
@@ -58,6 +59,11 @@ private:
 
 	// アニメーションをループするかしないか
 	bool isLoop_;
+
+	// ブレンド処理用
+	int blendingNextType_;          // 次にブレンドしたいアニメーションのType (-1ならブレンドは行わない)
+	float blendDuration_;           // ブレンドにかける総時間（例: 0.2秒）
+	float blendTimer_;              // 現在のブレンド経過時間
 
 	// アニメーション追加の共通処理
 	void Add(int type, float speed, Animation& animation);

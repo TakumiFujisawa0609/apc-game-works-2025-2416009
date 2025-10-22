@@ -205,14 +205,14 @@ void EnemyBase::ChangeState(ENEMY_STATE state)
 	{
 		if (animationController_ != nullptr)
 		{
-			animationController_->Play(static_cast<int>(state_));
+			animationController_->BlendAnimPlay(static_cast<int>(state_), AnimationController::BLEND_LATIO);
 		}
 	}
 	else
 	{
 		if (animationController_ != nullptr)
 		{
-			animationController_->Play(static_cast<int>(state_), false);
+			animationController_->BlendAnimPlay(static_cast<int>(state_), AnimationController::BLEND_LATIO, false);
 		}
 	}
 }

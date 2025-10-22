@@ -144,6 +144,9 @@ void GameScene::Update(void)
 
 			grid_->Update();
 
+			// スカイドームの更新
+			skydome_->Update(camera_->GetPos());
+
 			// プレイヤー更新
 			player_->Update();
 
@@ -155,9 +158,6 @@ void GameScene::Update(void)
 
 			// エフェクトの更新
 			redEffect_->Update();
-
-			// スカイドームの更新
-			skydome_->Update(camera_->GetPos());
 
 			// 当たり判定
 			Collisions();
@@ -216,6 +216,9 @@ void GameScene::Draw(void)
 	// カメラの設定
 	camera_->SetBeforeDraw();
 
+	// スカイドームの描画
+	skydome_->Draw();
+
 	// グリッド描画
 	grid_->Draw();
 
@@ -224,9 +227,6 @@ void GameScene::Draw(void)
 
 	// プレイヤーの描画
 	player_->Draw();
-
-	// スカイドームの描画
-	skydome_->Draw();
 
 	// エフェクトの描画
 	redEffect_->Draw();
