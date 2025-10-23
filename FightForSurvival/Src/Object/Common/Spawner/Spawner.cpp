@@ -1,6 +1,7 @@
 #include "Spawner.h"
 
 #include "../../../Manager/SceneManager.h"
+#include "../../Enemy/EnemyManager.h"
 
 Spawner::Spawner(void)
 {
@@ -50,7 +51,6 @@ void Spawner::Update(void)
 		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
 		{
 			// 敵をスポーンさせる
-			EnemyManager::GetInstance().Spawn(eneType_[i], pos_[i]);
 		}
 
 		// パターンを変更する
@@ -84,11 +84,6 @@ void Spawner::PatternInsInit(PATTERN pattern)
 	{
 	case Spawner::PATTERN::PATTERN_1:
 
-		eneType_[0] = ENEMY_TYPE::ZOMBIE;
-		eneType_[1] = ENEMY_TYPE::ZOMBIE;
-		eneType_[2] = ENEMY_TYPE::ZOMBIE;
-		eneType_[3] = ENEMY_TYPE::ZOMBIE;
-		eneType_[4] = ENEMY_TYPE::ZOMBIE;
 
 		break;
 	case Spawner::PATTERN::PATTERN_2:

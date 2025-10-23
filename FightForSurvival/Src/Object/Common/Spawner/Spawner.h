@@ -1,7 +1,8 @@
 #pragma once
 
 #include <DxLib.h>
-#include "../../Enemy/EnemyManager.h"
+
+enum class ENEMY_TYPE;
 
 class Spawner
 {
@@ -38,6 +39,8 @@ public:
 	void Draw(void);
 	// ‰ğ•úˆ—
 	void Release(void);
+
+	bool GetIsExists(void)const { return isExists_; }
 
 private:
 

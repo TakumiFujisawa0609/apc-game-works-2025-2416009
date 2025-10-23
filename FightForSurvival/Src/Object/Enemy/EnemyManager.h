@@ -57,7 +57,7 @@ private:
     // EnemyManager copied(*EznemyManager::GetInstance());
     // EnemyManager moved = std::move(*EnemyManager::GetInstance());
     // 敵モデルのの読み込み
-    
+
     // プレイヤーのポインター
     Player* player_;
 
@@ -67,6 +67,6 @@ private:
     // エネミー用のモデルハンドルID
     std::vector<int> enemyModelIds_;
 
-   EnemyBase* GetValidEnemy(ENEMY_TYPE type);
+    // 未使用の敵を再利用する。未使用のものが無ければ生成を行う
+    EnemyBase* GetValidEnemy(ENEMY_TYPE type);
 };
-
