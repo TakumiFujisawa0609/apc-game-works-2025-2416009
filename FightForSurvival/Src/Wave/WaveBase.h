@@ -24,6 +24,15 @@ public:
         bool triggered_ = false;     // スポーンしたか
     };
 
+    // スポナー設置イベント
+    struct SpawnerInstallation
+    {
+        int triggerTime_;            // 何フレーム目にスポーンするのか
+        float interval_;             // スポーンの間隔
+        VECTOR pos_;                 // スポーン座標
+        bool triggered_ = false;     // スポーンしたか
+    };
+
     // コンストラクタで設定
     WaveBase(int prep, int wave);
     virtual ~WaveBase() = default;
@@ -42,6 +51,7 @@ public:
 
     // スポーンイベントを作成
     void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
+    void AddSpawner(int time, float interval, VECTOR pos);
 
     int GetSpawnEventNum(void)const { return (int)spawnEvents_.size(); }
 
@@ -59,5 +69,6 @@ protected:
     int elapsed_;     // 経過時間
 
     std::vector<SpawnEvent> spawnEvents_;    // スポーンイベントを管理
+    std::vector<SpawnerInstallation> spawnerIns_;    // スポナー設置イベントを管理
 
 };

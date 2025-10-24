@@ -3,8 +3,10 @@
 #include "../../../Manager/SceneManager.h"
 #include "../../Enemy/EnemyManager.h"
 
-Spawner::Spawner(void)
+Spawner::Spawner(int modelId)
 {
+	// モデルのロード
+	spawner_->modelId_ = MV1DuplicateModel(modelId);
 }
 
 Spawner::~Spawner(void)
@@ -14,18 +16,18 @@ Spawner::~Spawner(void)
 void Spawner::Create(VECTOR pos, float interval)
 {
 	// 座標取得(この座標が軸となる)
-	pos_[0] = pos;
+	spawner_->pos_[0] = pos;
 	// 軸座標を基に座標を設定
 	PositionInit();
 	
 	// スポーン間隔を取得
-	spawnInterval_ = interval;
+	spawner_->spawnInterval_ = interval;
 
 	// 存在フラグ初期化
-	isExists_ = true;
+	spawner_->isExists_ = true;
 
 	// 時間初期化
-	time_ = 0.0f;
+	spawner_->time_ = 0.0f;
 
 	// 最初の出現パターンを決める
 	SelectPattern();
@@ -34,23 +36,24 @@ void Spawner::Create(VECTOR pos, float interval)
 void Spawner::Update(void)
 {
 	// 存在していなかったら、処理を行わない
-	if (!isExists_)
+	if (!spawner_->isExists_)
 	{
 		return;
 	}
 
 	// 時間を進める
-	time_ += SceneManager::GetInstance().GetDeltaTime();
+	spawner_->time_ += SceneManager::GetInstance().GetDeltaTime();
 
 	// 出現時間になったら
-	if (time_ >= spawnInterval_)
+	if (spawner_->time_ >= spawner_->spawnInterval_)
 	{
 		// 時間を初期化
-		time_ = 0.0f;
+		spawner_->time_ = 0.0f;
 
 		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
 		{
 			// 敵をスポーンさせる
+			EnemyManager::GetInstance().Spawn(spawner_->eneType_[i], spawner_->pos_[i]);
 		}
 
 		// パターンを変更する
@@ -61,21 +64,33 @@ void Spawner::Update(void)
 
 void Spawner::Draw(void)
 {
-	if (!isExists_)
+	if (!spawner_->isExists_)
 	{
 		return;
 	}
+
+#ifdef _DEBUG
+
+	// どこが中心位置か分かるようにデバック表示
+	DrawSphere3D(spawner_->pos_[1], 40.0f, 100, 0xffff00, 0xffff00, false);
+
+#endif // _DEBUG
+
 }
 
 void Spawner::Release(void)
 {
+	// モデルの解放
+	MV1DeleteModel(spawner_->modelId_);
 }
 
 void Spawner::SelectPattern(void)
 {
-	pattern_ = PATTERN::PATTERN_1;
-
 	// ランダムで決める
+	spawner_->pattern_ = PATTERN::PATTERN_1;
+
+	// パターンを設定する
+	PatternInsInit(spawner_->pattern_);
 }
 
 void Spawner::PatternInsInit(PATTERN pattern)
@@ -84,6 +99,10 @@ void Spawner::PatternInsInit(PATTERN pattern)
 	{
 	case Spawner::PATTERN::PATTERN_1:
 
+		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
+		{
+			spawner_->eneType_[i] = ENEMY_TYPE::ZOMBIE;
+		}
 
 		break;
 	case Spawner::PATTERN::PATTERN_2:
@@ -97,13 +116,14 @@ void Spawner::PatternInsInit(PATTERN pattern)
 
 void Spawner::PositionInit(void)
 {
-	for (int i = 1; i < SPAWN_ENEMY_NUM; i++)
-	{
-		pos_[i] = pos_[0];
-	}
+	// 基軸のpos_[1]から他の座標も設定する
+	SetPosition(1, LEFT_UP);
+	SetPosition(2, LEFT_DOWN);
+	SetPosition(3, RIGHT_UP);
+	SetPosition(3, RIGHT_DOWN);
+}
 
-	pos_[1] = VAdd(pos_[1], LEFT_UP);
-	pos_[2] = VAdd(pos_[2], LEFT_DOWN);
-	pos_[3] = VAdd(pos_[3], RIGHT_UP);
-	pos_[4] = VAdd(pos_[4], RIGHT_DOWN);
+void Spawner::SetPosition(int i, VECTOR offset)
+{
+	spawner_->pos_[i] = VAdd(spawner_->pos_[1], offset);
 }

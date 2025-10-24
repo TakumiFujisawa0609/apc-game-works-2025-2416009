@@ -1,6 +1,7 @@
 #include "WaveBase.h"
 
 #include "../Object/Enemy/EnemyManager.h"
+#include "../Object/Common/Spawner/SpawnerManager.h"
 #include "../Application.h"
 
 WaveBase::WaveBase(int prep, int wave)
@@ -47,6 +48,21 @@ void WaveBase::Update(void)
 
                 // イベント発動
                 event.triggered_ = true;
+            }
+        }
+
+        // スポナー設置イベントを処理
+        for (auto& spawner : spawnerIns_)
+        {
+            // イベントが発動していないかつイベントの発動フレームになったら
+            if (!spawner.triggered_ && elapsed_ >= spawner.triggerTime_)
+            {
+                // マネージャーが存在するなら
+                // 敵をスポーンさせる
+                SpawnerManager::GetInstance().SpawnerInstallation(spawner.pos_, spawner.interval_);
+
+                // イベント発動
+                spawner.triggered_ = true;
             }
         }
 
@@ -141,6 +157,11 @@ bool WaveBase::CheckWaveClear()
 void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
 {
     spawnEvents_.push_back({ time, type, pos, false });
+}
+
+void WaveBase::AddSpawner(int time, float interval, VECTOR pos)
+{
+    spawnerIns_.push_back({ time, interval, pos, false });
 }
 
 void WaveBase::StartInWave(void)

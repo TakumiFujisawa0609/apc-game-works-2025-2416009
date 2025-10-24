@@ -27,8 +27,31 @@ public:
 		MAX,
 	};
 
+	struct SpawnerIns
+	{
+		int modelId_;
+
+		// 座標
+		VECTOR pos_[SPAWN_ENEMY_NUM];
+
+		// スポーンさせる間隔
+		float spawnInterval_;
+
+		// 存在フラグ(true/ 存在している false/ 存在していない)
+		bool isExists_;
+
+		// 実際に経った時間
+		float time_;
+
+		// 敵の出現パターン
+		PATTERN pattern_;
+
+		// エネミーのタイプ
+		ENEMY_TYPE eneType_[SPAWN_ENEMY_NUM];
+	};
+
 	// コンストラクタ・デストラクタ
-	Spawner(void);
+	Spawner(int modelId);
 	~Spawner(void);
 	 
 	// スポナー生成処理
@@ -40,27 +63,11 @@ public:
 	// 解放処理
 	void Release(void);
 
-	bool GetIsExists(void)const { return isExists_; }
+	SpawnerIns& GetSpawnerIns(void)const { return *spawner_; }
 
 private:
 
-	// 座標
-	VECTOR pos_[SPAWN_ENEMY_NUM];
-
-	// スポーンさせる間隔
-	float spawnInterval_;
-
-	// 存在フラグ(true/ 存在している false/ 存在していない)
-	bool isExists_;
-
-	// 実際に経った時間
-	float time_;
-
-	// 敵の出現パターン
-	PATTERN pattern_;
-
-	// エネミーのタイプ
-	ENEMY_TYPE eneType_[SPAWN_ENEMY_NUM];
+	SpawnerIns* spawner_;
 
 	// パターン決め(ランダム)
 	void SelectPattern(void);
@@ -69,5 +76,7 @@ private:
 
 	// 座標初期化
 	void PositionInit(void);
+	// 基軸から座標を設定
+	void SetPosition(int i,VECTOR offset);
 };
 

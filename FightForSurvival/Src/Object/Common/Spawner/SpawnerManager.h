@@ -15,17 +15,22 @@ public:
 	// 静的インスタンスの取得
 	static SpawnerManager& GetInstance(void);
 
-	// 解放処理
-	void Destroy(void);
+	// ロード処理
+	void Load(void);
 	// 更新処理
 	void Update(void);
 	// 描画処理
 	void Draw(void);
+	// 解放処理
+	void Destroy(void);
 
 	// スポナーの設置を行う
 	void SpawnerInstallation(VECTOR pos,float interval);
 
 private:
+
+	// スポナーのモデルId
+	int modelId_;
 
 	// スポーンマネージャーのインスタンス
 	static SpawnerManager* instance_;

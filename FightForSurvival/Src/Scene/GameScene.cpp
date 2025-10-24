@@ -22,6 +22,7 @@
 #include "../Object/Enemy/EnemyManager.h"
 #include "../Object/Player/Upgrade/UpgradeManager.h"
 #include "../Object/SkyDome/SkyDome.h"
+#include "../Object/Common/Spawner/SpawnerManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -85,6 +86,10 @@ void GameScene::Load(void)
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
 	WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
+
+	// スポナーを生成・ロード
+	SpawnerManager::CreateInstance();
+	SpawnerManager::GetInstance().Load();
 
 	// アップグレードの作成
 	UpgradeManager::CreateInstance();
@@ -159,6 +164,9 @@ void GameScene::Update(void)
 			// エフェクトの更新
 			redEffect_->Update();
 
+			// スポナーの更新
+			SpawnerManager::GetInstance().Update();
+
 			// 当たり判定
 			Collisions();
 
@@ -225,6 +233,9 @@ void GameScene::Draw(void)
 	// 敵の描画
 	EnemyManager::GetInstance().Draw();
 
+	// スポナーの描画
+	SpawnerManager::GetInstance().Draw();
+
 	// プレイヤーの描画
 	player_->Draw();
 
@@ -259,6 +270,9 @@ void GameScene::Release(void)
 {
 	// アップグレードの開放
 	UpgradeManager::GetInstance().Destroy();
+
+	// スポナーの解放
+	SpawnerManager::GetInstance().Destroy();
 
 	// ウェーブの解放
 	WaveManager::GetInstance().DeleteInstance();

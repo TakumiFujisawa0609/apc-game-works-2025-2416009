@@ -9,7 +9,7 @@ class SceneManager
 public:
 
 	// îwåiêF
-	static constexpr int BACKGROUND_COLOR_R = 0;
+	static constexpr int BACKGROUND_COLOR_R = 250;
 	static constexpr int BACKGROUND_COLOR_G = 128;
 	static constexpr int BACKGROUND_COLOR_B = 0;
 
