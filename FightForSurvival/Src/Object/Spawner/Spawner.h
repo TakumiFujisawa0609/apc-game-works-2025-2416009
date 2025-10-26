@@ -12,10 +12,10 @@ public:
 	static constexpr int SPAWN_ENEMY_NUM = 5;
 
 	// 軸座標から移動させる量(ローカル)
-	static constexpr VECTOR LEFT_UP = {-100.0f,0.0f,100};
-	static constexpr VECTOR LEFT_DOWN = { -100.0f,0.0f,-100 };
-	static constexpr VECTOR RIGHT_UP = { 100.0f,0.0f,100 };
-	static constexpr VECTOR RIGHT_DOWN = { 100.0f,0.0f,-100 };
+	static constexpr VECTOR LEFT_UP = {-150.0f,0.0f,150.0f };
+	static constexpr VECTOR LEFT_DOWN = { -150.0f,0.0f,-150.0f };
+	static constexpr VECTOR RIGHT_UP = { 150.0f,0.0f,150.0f };
+	static constexpr VECTOR RIGHT_DOWN = { 150.0f,0.0f,-150.0f };
 	
 	// 生成する敵の種類のパターン
 	enum class PATTERN
@@ -35,7 +35,7 @@ public:
 		VECTOR pos_[SPAWN_ENEMY_NUM];
 
 		// スポーンさせる間隔
-		float spawnInterval_;
+		int spawnInterval_;
 
 		// 存在フラグ(true/ 存在している false/ 存在していない)
 		bool isExists_;
@@ -55,7 +55,7 @@ public:
 	~Spawner(void);
 	 
 	// スポナー生成処理
-	void Create(VECTOR pos, float interval);
+	void Create(VECTOR pos, int interval);
 	// 更新処理
 	void Update(void);
 	// 描画処理
@@ -63,11 +63,11 @@ public:
 	// 解放処理
 	void Release(void);
 
-	SpawnerIns& GetSpawnerIns(void)const { return *spawner_; }
+	const SpawnerIns& GetSpawnerIns(void)const { return spawner_; }
 
 private:
 
-	SpawnerIns* spawner_;
+	SpawnerIns spawner_;
 
 	// パターン決め(ランダム)
 	void SelectPattern(void);
