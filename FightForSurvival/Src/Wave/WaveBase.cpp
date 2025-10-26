@@ -1,7 +1,7 @@
 #include "WaveBase.h"
 
 #include "../Object/Enemy/EnemyManager.h"
-#include "../Object/Common/Spawner/SpawnerManager.h"
+#include "../Object/Spawner/SpawnerManager.h"
 #include "../Application.h"
 
 WaveBase::WaveBase(int prep, int wave)

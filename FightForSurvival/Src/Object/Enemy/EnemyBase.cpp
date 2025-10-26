@@ -4,7 +4,7 @@
 #include "../Common/AnimationController.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/CollisionManager.h"
-#include "../../Manager/SceneManager.h"
+#include "../../Scene/SceneManager.h"
 #include "EnemyBase.h"
 
 EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)

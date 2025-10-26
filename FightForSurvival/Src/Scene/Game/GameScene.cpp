@@ -1,33 +1,31 @@
 #include <DxLib.h>
-#include "../Object/Grid/Grid.h"
-#include "../Application.h"
-#include "../Manager/Camera.h"
-#include "../Manager/InputManager.h"
-#include "../Object/Player/Player.h"
-#include "../Object/Common/Cursor.h"
-#include "../Common/Score/Score.h"
-#include "../Object/Enemy/Zombie.h"
-#include "../Object/Player/Weapon/WeaponBase.h"
-#include "../Object/Player/Weapon/Magic/MagicBase.h"
-#include "../Manager/CollisionManager.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/SystemManager.h"
-#include "../Manager/SoundManager.h"
-#include "../Common/Pause/Pause.h"
-#include "../Common/Effect/RedDamageEffect.h"
-#include "../Wave/WaveManager.h"
-#include "../Wave/Wave1.h"
-#include "../Wave/Wave2.h"
-#include "../Wave/WaveFinal.h"
-#include "../Object/Enemy/EnemyManager.h"
-#include "../Object/Player/Upgrade/UpgradeManager.h"
-#include "../Object/SkyDome/SkyDome.h"
-#include "../Object/Common/Spawner/SpawnerManager.h"
+#include "../../Application.h"
+#include "../../Manager/Camera.h"
+#include "../../Manager/InputManager.h"
+#include "../../Object/Player/Player.h"
+#include "../../Object/Common/Cursor.h"
+#include "../../Common/Score/Score.h"
+#include "../../Object/Enemy/Zombie.h"
+#include "../../Object/Player/Weapon/WeaponBase.h"
+#include "../../Object/Player/Weapon/Magic/MagicBase.h"
+#include "../../Manager/CollisionManager.h"
+#include "../../Scene/SceneManager.h"
+#include "../../Manager/SystemManager.h"
+#include "../../Manager/SoundManager.h"
+#include "../../Common/Pause/Pause.h"
+#include "../../Common/Effect/RedDamageEffect.h"
+#include "../../Wave/WaveManager.h"
+#include "../../Wave/Wave1.h"
+#include "../../Wave/Wave2.h"
+#include "../../Wave/WaveFinal.h"
+#include "../../Object/Enemy/EnemyManager.h"
+#include "../../Object/Player/Upgrade/UpgradeManager.h"
+#include "../../Object/SkyDome/SkyDome.h"
+#include "../../Object/Spawner/SpawnerManager.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
 {
-	grid_ = nullptr;
 	player_ = nullptr;
 	camera_ = nullptr;
 	cursor_ = nullptr;
@@ -46,9 +44,6 @@ GameScene::~GameScene(void)
 
 void GameScene::Load(void)
 {
-
-	// グリッド生成
-	grid_ = new Grid();
 
 	// プレイヤー生成・ロード
 	player_ = new Player();
@@ -101,9 +96,6 @@ void GameScene::Init(void)
 	// スコアの初期化
 	SystemManager::GetInstance().ResetGame();
 
-	// グリッドの初期化
-	grid_->Init();
-
 	// プレイヤーの初期化
 	player_->Init();
 
@@ -146,8 +138,6 @@ void GameScene::Update(void)
 		switch (state_)
 		{
 		case GameScene::STATE::PLAY:
-
-			grid_->Update();
 
 			// スカイドームの更新
 			skydome_->Update(camera_->GetPos());
@@ -226,9 +216,6 @@ void GameScene::Draw(void)
 
 	// スカイドームの描画
 	skydome_->Draw();
-
-	// グリッド描画
-	grid_->Draw();
 
 	// 敵の描画
 	EnemyManager::GetInstance().Draw();
@@ -334,14 +321,6 @@ void GameScene::Release(void)
 		player_->Release();
 		delete player_;
 		player_ = nullptr;
-	}
-
-	// グリッドの解放
-	if (grid_ != nullptr)
-	{
-		grid_->Release();
-		delete grid_;
-		grid_ = nullptr;
 	}
 
 	// マウスカーソルを表示させる

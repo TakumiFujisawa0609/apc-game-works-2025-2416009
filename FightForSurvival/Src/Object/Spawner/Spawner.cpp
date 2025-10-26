@@ -1,7 +1,7 @@
 #include "Spawner.h"
 
-#include "../../../Manager/SceneManager.h"
-#include "../../Enemy/EnemyManager.h"
+#include "../../Scene/SceneManager.h"
+#include "../Enemy/EnemyManager.h"
 
 Spawner::Spawner(int modelId)
 {

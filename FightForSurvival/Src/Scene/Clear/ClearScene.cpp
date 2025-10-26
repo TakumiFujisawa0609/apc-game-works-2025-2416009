@@ -1,8 +1,8 @@
-#include "../Manager/InputManager.h"
-#include "../Manager/SceneManager.h"
-#include "../Manager/SystemManager.h"
-#include "../Manager/SoundManager.h"
-#include "../Application.h"
+#include "../../Manager/InputManager.h"
+#include "../../Scene/SceneManager.h"
+#include "../../Manager/SystemManager.h"
+#include "../../Manager/SoundManager.h"
+#include "../../Application.h"
 #include "ClearScene.h"
 
 ClearScene::ClearScene(void)

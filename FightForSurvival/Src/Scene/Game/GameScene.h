@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SceneBase.h"
+#include "../Base/SceneBase.h"
 
 class Camera;
-class Grid;
 class Player;
 class Cursor;
 class Score;
@@ -41,9 +40,6 @@ public:
 private:
 	// カメラ
 	Camera* camera_;
-
-	// グリッド線
-	Grid* grid_;
 
 	// オブジェクト
 	// プレイヤー

@@ -1,7 +1,7 @@
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Manager/InputManager.h"
-#include "../../Manager/SceneManager.h"
+#include "../../Scene/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/SoundManager.h"
 #include "../../Utility/AsoUtility.h"

@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "../../../Manager/SystemManager.h"
-#include "../../../Manager/SceneManager.h"
+#include "../../../Scene/SceneManager.h"
 #include "../../../Application.h"
 #include "../Player.h"
 #include "Magic/FireMagic.h"

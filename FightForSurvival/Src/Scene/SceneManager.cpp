@@ -1,11 +1,11 @@
 #include <chrono>
 #include <DxLib.h>
 #include "../Common/Fader.h"
-#include "../Scene/TitleScene.h"
-#include "../Scene/GameScene.h"
-#include "../Scene/ClearScene.h"
-#include "../Scene/OverScene.h"
-#include "SystemManager.h"
+#include "../Scene/Title/TitleScene.h"
+#include "../Scene/Game/GameScene.h"
+#include "../Scene/Clear/ClearScene.h"
+#include "../Scene/Over/OverScene.h"
+#include "../Manager/SystemManager.h"
 #include "SceneManager.h"
 
 SceneManager* SceneManager::instance_ = nullptr;

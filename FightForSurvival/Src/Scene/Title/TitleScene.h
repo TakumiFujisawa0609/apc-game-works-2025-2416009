@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SceneBase.h"
-#include "../Common/Vector2.h"
-#include "../Application.h"
+#include "../Base/SceneBase.h"
+#include "../../Common/Vector2.h"
+#include "../../Application.h"
 
 class Camera;
 

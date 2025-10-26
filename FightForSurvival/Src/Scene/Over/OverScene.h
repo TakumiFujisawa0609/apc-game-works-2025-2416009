@@ -1,16 +1,16 @@
 #pragma once
 
-#include "SceneBase.h"
+#include "../Base/SceneBase.h"
 
-class ClearScene : public SceneBase
+class OverScene : public SceneBase
 {
 public:
 
 	// コンストラクタ
-	ClearScene(void);
+	OverScene(void);
 
 	// デストラクタ
-	~ClearScene(void);
+	~OverScene(void);
 
 	void Load(void) override;
 	void Init(void) override;
@@ -24,3 +24,4 @@ private:
 	int score_;
 
 };
+

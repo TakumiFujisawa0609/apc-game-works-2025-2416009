@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "../../Manager/InputManager.h"
-#include "../../Manager/SceneManager.h"
+#include "../../Scene/SceneManager.h"
 #include "../../Manager/SoundManager.h"
 #include "../../Manager/CollisionManager.h"
 #include "Pause.h"

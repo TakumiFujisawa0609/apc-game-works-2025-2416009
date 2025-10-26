@@ -1,10 +1,10 @@
 #include <DxLib.h>
-#include "../Manager/SceneManager.h"
-#include "../Manager/InputManager.h"
-#include "../Manager/EndManager.h"
-#include "../Manager/Camera.h"
-#include "../Manager/CollisionManager.h"
-#include "../Manager/SoundManager.h"
+#include "../../Scene/SceneManager.h"
+#include "../../Manager/InputManager.h"
+#include "../../Manager/EndManager.h"
+#include "../../Manager/Camera.h"
+#include "../../Manager/CollisionManager.h"
+#include "../../Manager/SoundManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)

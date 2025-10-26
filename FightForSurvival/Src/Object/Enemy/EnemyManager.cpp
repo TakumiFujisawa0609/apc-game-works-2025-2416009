@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "../../Application.h"
-#include "../../Manager/SceneManager.h"
+#include "../../Scene/SceneManager.h"
 #include "Zombie.h"
 #include "EnemyManager.h"
 

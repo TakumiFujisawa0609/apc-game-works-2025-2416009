@@ -54,13 +54,13 @@
     <ClCompile Include="Src\Common\Fader.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\SceneManager.cpp">
+    <ClCompile Include="Src\Scene\SceneManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\SceneBase.cpp">
+    <ClCompile Include="Src\Scene\Base\SceneBase.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\TitleScene.cpp">
+    <ClCompile Include="Src\Scene\Title\TitleScene.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Src\Utility\AsoUtility.cpp">
@@ -78,7 +78,7 @@
     <ClCompile Include="Src\Manager\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\GameScene.cpp">
+    <ClCompile Include="Src\Scene\Game\GameScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Manager\SystemManager.cpp">
@@ -129,10 +129,10 @@
     <ClCompile Include="Src\Manager\EndManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\ClearScene.cpp">
+    <ClCompile Include="Src\Scene\Clear\ClearScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\OverScene.cpp">
+    <ClCompile Include="Src\Scene\Over\OverScene.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Wave\WaveBase.cpp">
@@ -171,10 +171,10 @@
     <ClCompile Include="Src\Object\Common\AnimationController.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Common\Spawner\Spawner.cpp">
+    <ClCompile Include="Src\Object\Spawner\Spawner.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Common\Spawner\SpawnerManager.cpp">
+    <ClCompile Include="Src\Object\Spawner\SpawnerManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -185,13 +185,13 @@
     <ClInclude Include="Src\Common\Quaternion.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\SceneManager.h">
+    <ClInclude Include="Src\Scene\SceneManager.h">
       <Filter>ヘッダー ファイル\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\SceneBase.h">
+    <ClInclude Include="Src\Scene\Base\SceneBase.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\TitleScene.h">
+    <ClInclude Include="Src\Scene\Title\TitleScene.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Src\Utility\AsoUtility.h">
@@ -212,7 +212,7 @@
     <ClInclude Include="Src\Manager\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\GameScene.h">
+    <ClInclude Include="Src\Scene\Game\GameScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Manager\SystemManager.h">
@@ -269,10 +269,10 @@
     <ClInclude Include="Src\Manager\EndManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\ClearScene.h">
+    <ClInclude Include="Src\Scene\Clear\ClearScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\OverScene.h">
+    <ClInclude Include="Src\Scene\Over\OverScene.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Wave\WaveBase.h">
@@ -311,10 +311,10 @@
     <ClInclude Include="Src\Object\Common\AnimationController.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Common\Spawner\Spawner.h">
+    <ClInclude Include="Src\Object\Spawner\Spawner.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Common\Spawner\SpawnerManager.h">
+    <ClInclude Include="Src\Object\Spawner\SpawnerManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
