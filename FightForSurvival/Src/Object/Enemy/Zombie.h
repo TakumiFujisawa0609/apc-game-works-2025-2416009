@@ -32,7 +32,7 @@ public:
 	// 腕
 	static constexpr float COLLISION_RADIUS_ARM = 6.0f;
 	// 手
-	static constexpr float COLLISION_RADIUS_HAND = 10.0f;
+	static constexpr float COLLISION_RADIUS_HAND = 15.0f;
 	// 脚
 	static constexpr float COLLISION_RADIUS_LEG = 10.0f;
 
@@ -50,7 +50,7 @@ public:
 	static constexpr float OFFSET_POS_ARM_UNDER = 5.0f;
 
 	// モデルと手の相対座標
-	static constexpr float OFFSET_POS_HAND = -10.0f;
+	static constexpr float OFFSET_POS_HAND = 15.0f;
 
 	// モデルと体の相対座標(上)
 	static constexpr float OFFSET_POS_LEG_TOP = -12.0f;
@@ -58,7 +58,7 @@ public:
 	static constexpr float OFFSET_POS_LEG_UNDER = -5.0f;
 
 	// 攻撃可能範囲
-	static constexpr float ATTACK_RANGE = 80;
+	static constexpr float ATTACK_RANGE = 75;
 
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;

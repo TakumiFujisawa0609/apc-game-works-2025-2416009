@@ -46,7 +46,7 @@ public:
 	static constexpr float RECOVERY_STAMINA_WAIT_TIME = 1.0f;
 
 	// Õ“Ë”»’è—p”¼Œa
-	static constexpr float COLLISION_RADIUS = 35.0f;
+	static constexpr float COLLISION_RADIUS = 40.0f;
 
 	// ‹“_‚ÌÅ‘åŠp“x
 	static constexpr float MAX_VIEW_ANGLE = 1.5f;

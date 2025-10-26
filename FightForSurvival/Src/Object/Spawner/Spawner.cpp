@@ -32,6 +32,12 @@ void Spawner::Create(VECTOR pos, int interval)
 	// 時間初期化
 	spawner_.time_ = 0.0f;
 
+	// 当たり判定用半径初期化
+	spawner_.collisionRadius_ = COLLISION_RADIUS;
+
+	// 耐久力の初期化
+	spawner_.durability_ = DURABILITY;
+
 	// 最初の出現パターンを決める
 	SelectPattern();
 }
@@ -75,7 +81,7 @@ void Spawner::Draw(void)
 #ifdef _DEBUG
 
 	// どこが中心位置か分かるようにデバック表示
-	DrawSphere3D(spawner_.pos_[0], 40.0f, 100, 0xffff00, 0xffff00, false);
+	DrawSphere3D(spawner_.pos_[0], spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
 
 #endif // _DEBUG
 
@@ -85,6 +91,18 @@ void Spawner::Release(void)
 {
 	// モデルの解放
 	MV1DeleteModel(spawner_.modelId_);
+}
+
+void Spawner::Damage(float durability)
+{
+	spawner_.durability_ -= durability;
+
+	if (spawner_.durability_ <= 0.0f)
+	{
+		spawner_.durability_ = 0.0f;
+		// 攻撃を受けて耐久力が無くなったら、存在をなくす
+		spawner_.isExists_ = false;
+	}
 }
 
 void Spawner::SelectPattern(void)

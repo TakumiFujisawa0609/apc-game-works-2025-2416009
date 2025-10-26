@@ -149,8 +149,8 @@ void Player::Draw(void)
 #ifdef _DEBUG
 
 	//// 体 デバッグ用：衝突判定用カプセル
-	//DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
-	//	player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);s
+	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
+		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 
 	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	// プレイヤー頭の位置目安

@@ -388,9 +388,18 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 {
 	// フレームのローカル座標からワールド座標に変換する行列を取得
 	MATRIX boneMatrix = MV1GetFrameLocalWorldMatrix(enemy_.modelId_, bone);
-	// 行列から平行移動の情報を座標に格納する
-	VECTOR retPos = VGet(boneMatrix.m[3][0], boneMatrix.m[3][1], boneMatrix.m[3][2]);
-	retPos.y += offset;
+
+	// 行列から回転の情報を取得
+	MATRIX boneRotate = MGetRotElem(boneMatrix);
+
+	// ローカルオフセットを回転行列で回転させて、ワールド座標のオフセットを取得する
+	VECTOR WorldOffset = VTransform(VGet(0.0f, offset, 0.0f), boneRotate);
+
+	// 行列から平行移動の情報取得する
+	VECTOR bonePos = MGetTranslateElem(boneMatrix);
+
+	// 平行移動の情報に、ワールド座標のオフセットを加算する
+	VECTOR retPos = VAdd(bonePos, WorldOffset);
 
 	return retPos;
 }

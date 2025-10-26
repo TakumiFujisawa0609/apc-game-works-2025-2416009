@@ -8,14 +8,14 @@ Wave1::Wave1(void)
 {
 	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
 	// スポーンタイミング、敵種別、座標
-	//AddSpawnEvent(60 * 3, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	//AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	//AddSpawnEvent(60 * 10, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	//AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	//AddSpawnEvent(60 * 18, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 3, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 18, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
-	AddSpawner(60 * 2, 8, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawner(60 * 2, 8, VGet(100.0f, 0.0f, 0.0f));
 }
 
 void Wave1::OnStart()

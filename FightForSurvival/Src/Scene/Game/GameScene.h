@@ -9,6 +9,7 @@ class Score;
 class Pause;
 class RedDamageEffect;
 class SkyDome;
+class EnemyBase;
 
 class GameScene : public SceneBase
 {
@@ -71,8 +72,10 @@ private:
 	void Collisions(void);
 	// 敵やプレイヤーにダメージが入る当たり判定
 	void DamageCollision(void);
-	// 敵やプレイヤーの押し出し判定
-	void ExtrusionCollision(void);
+	// 敵同士のの押し出し判定
+	void ExtrusionEnemysCollision(void);
+	// スポナーとプレイヤーの攻撃の当たり判定
+	void SpawnerAndAttackCollision(void);
 
 	// ゲームクリア・ゲームオーバー遷移条件
 	void IsClear(void);

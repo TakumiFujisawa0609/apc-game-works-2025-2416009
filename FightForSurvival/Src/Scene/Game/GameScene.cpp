@@ -22,6 +22,7 @@
 #include "../../Object/Player/Upgrade/UpgradeManager.h"
 #include "../../Object/SkyDome/SkyDome.h"
 #include "../../Object/Spawner/SpawnerManager.h"
+#include "../../Object/Spawner/Spawner.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -334,8 +335,10 @@ void GameScene::Collisions(void)
 {
 	// 敵やプレイヤーにダメージが入る当たり判定
 	DamageCollision();
-	// 敵やプレイヤーの押し出し判定
-	ExtrusionCollision();
+	// 敵同士の押し出し判定
+	ExtrusionEnemysCollision();
+	// スポナーとプレイヤーの攻撃の当たり判定
+	SpawnerAndAttackCollision();
 }
 
 void GameScene::DamageCollision(void)
@@ -453,15 +456,25 @@ void GameScene::DamageCollision(void)
 	}
 }
 
-void GameScene::ExtrusionCollision(void)
+void GameScene::ExtrusionEnemysCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
 	auto& enemys_ = eneManaIns.GetEnemy();
 
 	for (int i = 0; i < enemys_.size(); i++)
 	{
+		if (!enemys_[i]->GetEnemy().isAlive_)
+		{
+			continue;
+		}
+
 		for (int j = i + 1; j < enemys_.size(); j++)
 		{
+
+			if (!enemys_[j]->GetEnemy().isAlive_)
+			{
+				continue;
+			}
 
 			VECTOR ene1Pos = enemys_[i]->GetEnemy().pos_;
 			VECTOR ene2Pos = enemys_[j]->GetEnemy().pos_;
@@ -494,14 +507,73 @@ void GameScene::ExtrusionCollision(void)
 
 				// 敵A (i) の押し出し：Bから離れる方向
 				// A -> Bの逆方向 (-vec) に push_half だけ移動
-				enemys_[i]->Extrusion(VScale(vec, -push_half));
+				VECTOR pushPow = VScale(vec, -push_half);
+				// 上下の押し出しは行わない
+				pushPow.y = 0.0f;
+				enemys_[i]->Extrusion(pushPow);
 
 				// 敵B (j) の押し出し：Aから離れる方向
 				// A -> Bの順方向 (+vec) に push_half だけ移動
-				enemys_[j]->Extrusion(VScale(vec, push_half));
+				pushPow = VScale(vec, push_half);
+				// 上下の押し出しは行わない
+				pushPow.y = 0.0f;
+				enemys_[j]->Extrusion(pushPow);
 			}
 		}
 
+	}
+}
+
+void GameScene::SpawnerAndAttackCollision(void)
+{
+	// スポナーの情報
+	auto spawners = SpawnerManager::GetInstance().GetSpawners();
+
+	// 魔法クラスのポインター取得
+	auto Magics = player_->GetWeapon()->GetMagics();
+
+	// 魔法の数分回す
+	for (auto Magic : Magics)
+	{
+		// 魔法が生存していなかったら次の魔法に進む
+		if (!Magic->IsCollisionState())
+		{
+			continue;
+		}
+		// 魔法の情報
+		auto MagicInfo = Magic->GetMagic();
+
+		// 魔法の移動経路の線分を定義
+		VECTOR MagicLineStart = MagicInfo.pos_;
+		VECTOR MagicLineEnd = MagicInfo.prevPos_; // 前のフレームでの魔法の位置
+
+		// 魔法の半径
+		float MagicRad = MagicInfo.collisionRadius_;
+		for (auto& spawner : spawners)
+		{
+			// 存在していなかったら次のスポナーを見る
+			if (!spawner->GetSpawnerIns().isExists_)
+			{
+				continue;
+			}
+
+			// 座標を取得
+			VECTOR spawnerPos = spawner->GetSpawnerIns().pos_[0];
+
+			// 半径を取得
+			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;
+
+			// 当たり判定
+			if (CollisionManager::IsCollidingSphereCapsule(spawnerPos, spawnerRad, MagicLineStart, MagicLineEnd, MagicRad))
+			{
+				// 当たっていたら
+				// スポナー耐久値にダメージを与える
+				spawner->Damage(1);
+				// 魔法を爆発させる
+				Magic->ChangeState(MagicBase::STATE::BLAST);
+
+			}
+		}
 	}
 }
 

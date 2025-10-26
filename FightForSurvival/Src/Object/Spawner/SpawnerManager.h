@@ -27,6 +27,8 @@ public:
 	// スポナーの設置を行う
 	void SpawnerInstallation(VECTOR pos,float interval);
 
+	std::vector<Spawner*> GetSpawners(void)const { return spawners_; }
+
 private:
 
 	// スポナーのモデルId
