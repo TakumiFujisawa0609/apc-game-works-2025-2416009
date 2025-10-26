@@ -23,6 +23,7 @@
 #include "../../Object/SkyDome/SkyDome.h"
 #include "../../Object/Spawner/SpawnerManager.h"
 #include "../../Object/Spawner/Spawner.h"
+#include "../../Utility/AsoUtility.h"
 #include "GameScene.h"
 
 GameScene::GameScene(void)
@@ -148,6 +149,9 @@ void GameScene::Update(void)
 
 			// 敵の更新
 			EnemyManager::GetInstance().Update();
+
+			// プレイヤーと敵の押し出し判定
+			PlayerAndEnemyExtrusionCollison();
 
 			// カメラの更新
 			camera_->Update();
@@ -336,7 +340,8 @@ void GameScene::Collisions(void)
 	// 敵やプレイヤーにダメージが入る当たり判定
 	DamageCollision();
 	// 敵同士の押し出し判定
-	ExtrusionEnemysCollision();
+	EnemysExtrusionCollision();
+
 	// スポナーとプレイヤーの攻撃の当たり判定
 	SpawnerAndAttackCollision();
 }
@@ -456,7 +461,7 @@ void GameScene::DamageCollision(void)
 	}
 }
 
-void GameScene::ExtrusionEnemysCollision(void)
+void GameScene::EnemysExtrusionCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
 	auto& enemys_ = eneManaIns.GetEnemy();
@@ -476,52 +481,107 @@ void GameScene::ExtrusionEnemysCollision(void)
 				continue;
 			}
 
+			// 敵１の情報
 			VECTOR ene1Pos = enemys_[i]->GetEnemy().pos_;
+			float ene1CollRad = enemys_[i]->GetEnemy().collisionRadius_;
+
+			// 敵2の情報
 			VECTOR ene2Pos = enemys_[j]->GetEnemy().pos_;
+			float ene2CollRad = enemys_[j]->GetEnemy().collisionRadius_;
 
-			// 球体と球体の衝突判定
-			// ２つの座標間の距離をピタゴラスの定理で算出
+			// 押し出し判定を行う
+			VECTOR pushPow = ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
 
-			VECTOR distance;
-			distance.x = ene2Pos.x - ene1Pos.x;
-			distance.y = ene2Pos.y - ene1Pos.y;
-			distance.z = ene2Pos.z - ene1Pos.z;
+			// 敵1の押し出しを行う
+			enemys_[i]->Extrusion(pushPow);
 
-			float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-
-			// お互いの半径を合計する
-			float radius = enemys_[i]->GetEnemy().collisionRadius_ + enemys_[j]->GetEnemy().collisionRadius_;
-
-			// 合計した半径の２乗よりも、
-			// ２つの座標間の距離が小さければ球体は衝突している
-			if (radius * radius > dis && dis != 0.0f)
-			{
-				float length = sqrtf(dis);
-				auto overlap = radius - length;
-
-				// 正規化ベクトル（A -> Bの方向）
-				VECTOR vec = VNorm(distance);
-
-				// 重なり量の半分
-				float push_half = overlap / 2.0f;
-
-				// 敵A (i) の押し出し：Bから離れる方向
-				// A -> Bの逆方向 (-vec) に push_half だけ移動
-				VECTOR pushPow = VScale(vec, -push_half);
-				// 上下の押し出しは行わない
-				pushPow.y = 0.0f;
-				enemys_[i]->Extrusion(pushPow);
-
-				// 敵B (j) の押し出し：Aから離れる方向
-				// A -> Bの順方向 (+vec) に push_half だけ移動
-				pushPow = VScale(vec, push_half);
-				// 上下の押し出しは行わない
-				pushPow.y = 0.0f;
-				enemys_[j]->Extrusion(pushPow);
-			}
+			// 敵1の方向とは逆のほうへ押し出しを行うように符号反転させる
+			pushPow = VScale(pushPow, -1.0f);
+			// 敵2の押し出しを行う
+			enemys_[j]->Extrusion(pushPow);
 		}
-
 	}
+}
+
+void GameScene::PlayerAndEnemyExtrusionCollison(void)
+{
+	// 敵の情報
+	auto& eneManaIns = EnemyManager::GetInstance();
+	auto& enemys = eneManaIns.GetEnemy();
+
+	for (int i = 0; i < 3; i++)
+	{
+
+		// プレイヤーの情報
+		VECTOR plaPos = player_->GetPlayer().pos_;
+		// 当たり判定用半径
+		float plaCollRad = player_->GetPlayer().collisionRadius_;
+
+		for (auto& enemy : enemys)
+		{
+			if (!enemy->GetEnemy().isAlive_)
+			{
+				// 生きていなかったら処理を行わず次の敵を見る
+				continue;
+			}
+
+			// 敵１の情報
+			VECTOR enePos = enemy->GetEnemy().pos_;
+			float eneCollRad = enemy->GetEnemy().collisionRadius_;
+
+			// 押し出し判定を行う
+			VECTOR pushPow = ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
+
+			// プレイヤーの押し出しを行う
+			player_->Extrusion(pushPow);
+
+			// プレイヤーの方向とは逆のほうへ押し出しを行うように符号反転させる
+			pushPow = VScale(pushPow, -1.0f);
+			// 敵2の押し出しを行う
+			enemy->Extrusion(pushPow);
+
+		}
+	}
+
+}
+
+VECTOR GameScene::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
+{
+	VECTOR pushPow = AsoUtility::VECTOR_ZERO;
+
+	// 球体と球体の衝突判定
+	// ２つの座標間の距離をピタゴラスの定理で算出
+
+	VECTOR distance;
+	distance.x = pos2.x - pos1.x;
+	distance.y = pos2.y - pos1.y;
+	distance.z = pos2.z - pos1.z;
+
+	float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+	// お互いの半径を合計する
+	float radius = collRad1 + collRad2;
+
+	// 合計した半径の２乗よりも、
+	// ２つの座標間の距離が小さければ球体は衝突している
+	if (radius * radius > dis && dis != 0.0f)
+	{
+		float length = sqrtf(dis);
+		auto overlap = radius - length;
+
+		// 正規化ベクトル（A -> Bの方向）
+		VECTOR vec = VNorm(distance);
+
+		// 重なり量の半分
+		float push_half = overlap / 2.0f;
+
+		// 押し出し量を計算
+		pushPow = VScale(vec, -push_half);
+		// 上下の押し出しは行わない
+		pushPow.y = 0.0f;
+	}
+
+	return pushPow;
 }
 
 void GameScene::SpawnerAndAttackCollision(void)

@@ -104,6 +104,9 @@ public:
 	// HPにダメージを与える
 	void Damage(float hp);
 
+	// 押し出しを行う
+	void Extrusion(VECTOR overlap);
+
 	// プレイヤーの能力を上げる
 	void Upgrade(PLAYER_UPGRADE type, float upNum);
 

@@ -184,6 +184,15 @@ void Player::Damage(float hp)
 	}
 }
 
+void Player::Extrusion(VECTOR overlap)
+{
+	// 押し出しを行う
+	player_.pos_ = VAdd(player_.pos_, overlap);
+
+	// 座標をモデルに設定
+	MV1SetPosition(player_.modelId_, player_.pos_);
+}
+
 void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 {
 	// アップデートしたい能力の情報を得る
