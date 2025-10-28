@@ -13,7 +13,7 @@ class EnemyBase
 {
 public:
 
-	static constexpr float ATTACK_RANGE_POS_OFFSET = 90.0f;
+	static constexpr float ATTACK_RANGE_POS_OFFSET = 80.0f;
 
 
 	// コンストラクタ

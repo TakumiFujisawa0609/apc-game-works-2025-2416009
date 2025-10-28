@@ -226,7 +226,7 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, enemy.enemy_.moveSpeed_));
 
 	// 左右移動を付ける
-
+	
 
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
@@ -268,8 +268,7 @@ void EnemyBase::Hit(EnemyBase& enemy)
 	{
 		if (enemy.animationController_->IsEnd())
 		{
-			//enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
-			enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+			enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
 		}
 	}
 }

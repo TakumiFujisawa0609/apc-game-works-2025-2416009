@@ -150,9 +150,6 @@ void GameScene::Update(void)
 			// 敵の更新
 			EnemyManager::GetInstance().Update();
 
-			// プレイヤーと敵の押し出し判定
-			PlayerAndEnemyExtrusionCollison();
-
 			// カメラの更新
 			camera_->Update();
 
@@ -175,6 +172,12 @@ void GameScene::Update(void)
 			break;
 		case GameScene::STATE::UPGRADE:
 
+			if (!GetMouseDispFlag())
+			{
+				// 表示が行われていなかったら表示する
+				SetMouseDispFlag(true);
+			}
+
 			UpgradeManager::GetInstance().Update();
 
 			// アップグレードモード終了条件
@@ -186,10 +189,6 @@ void GameScene::Update(void)
 		// ウェーブの更新
 		WaveManager::GetInstance().Update();
 
-	}
-	else if (prevPause_ && !nowPause_)
-	{
-		//SoundManager::GetInstance()->Play(SoundManager::BGM::GAME, false);
 	}
 
 	// ポーズモード更新
@@ -341,7 +340,8 @@ void GameScene::Collisions(void)
 	DamageCollision();
 	// 敵同士の押し出し判定
 	EnemysExtrusionCollision();
-
+	// プレイヤーと敵の押し出し判定
+	PlayerAndEnemyExtrusionCollison();
 	// スポナーとプレイヤーの攻撃の当たり判定
 	SpawnerAndAttackCollision();
 }
@@ -438,11 +438,12 @@ void GameScene::DamageCollision(void)
 			continue;
 		}
 
-		VECTOR plaPos = player_->GetPlayer().pos_;
-		float plaRad = player_->GetPlayer().collisionRadiusHead_;
+		VECTOR plaPosTop = player_->GetCollisionPosTop();
+		VECTOR plaPosUnder = player_->GetCollisionPosUnder();
+		float plaRad = player_->GetPlayer().collisionRadius_;
 
 		// プレイヤーと敵の攻撃の当たり判定
-		if (CollisionManager::IsCollidingSpheres(plaPos, plaRad, enePos[HAND_R], eneRadHand))
+		if (CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, plaPosTop, plaPosUnder, plaRad))
 		{
 			// プレイヤーにダメージを与える
 			player_->Damage(1);
@@ -506,41 +507,36 @@ void GameScene::EnemysExtrusionCollision(void)
 void GameScene::PlayerAndEnemyExtrusionCollison(void)
 {
 	// 敵の情報
-	auto& eneManaIns = EnemyManager::GetInstance();
-	auto& enemys = eneManaIns.GetEnemy();
+	auto& enemys = EnemyManager::GetInstance().GetEnemy();
 
-	for (int i = 0; i < 3; i++)
+	// プレイヤーの情報
+	VECTOR plaPos = player_->GetPlayer().pos_;
+	// 当たり判定用半径
+	float plaCollRad = player_->GetPlayer().collisionRadius_;
+
+	for (auto& enemy : enemys)
 	{
-
-		// プレイヤーの情報
-		VECTOR plaPos = player_->GetPlayer().pos_;
-		// 当たり判定用半径
-		float plaCollRad = player_->GetPlayer().collisionRadius_;
-
-		for (auto& enemy : enemys)
+		if (!enemy->GetEnemy().isAlive_)
 		{
-			if (!enemy->GetEnemy().isAlive_)
-			{
-				// 生きていなかったら処理を行わず次の敵を見る
-				continue;
-			}
-
-			// 敵１の情報
-			VECTOR enePos = enemy->GetEnemy().pos_;
-			float eneCollRad = enemy->GetEnemy().collisionRadius_;
-
-			// 押し出し判定を行う
-			VECTOR pushPow = CollisionManager::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
-
-			// プレイヤーの押し出しを行う
-			player_->Extrusion(pushPow);
-
-			// プレイヤーの方向とは逆のほうへ押し出しを行うように符号反転させる
-			pushPow = VScale(pushPow, -1.0f);
-			// 敵2の押し出しを行う
-			enemy->Extrusion(pushPow);
-
+			// 生きていなかったら処理を行わず次の敵を見る
+			continue;
 		}
+
+		// 敵１の情報
+		VECTOR enePos = enemy->GetEnemy().pos_;
+		float eneCollRad = enemy->GetEnemy().collisionRadius_;
+
+		// 押し出し判定を行う
+		VECTOR pushPow = CollisionManager::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
+
+		// プレイヤーの押し出しを行う
+		player_->Extrusion(pushPow);
+
+		// プレイヤーの方向とは逆のほうへ押し出しを行うように符号反転させる
+		pushPow = VScale(pushPow, -1.0f);
+		// 敵2の押し出しを行う
+		enemy->Extrusion(pushPow);
+
 	}
 
 }
@@ -689,6 +685,7 @@ void GameScene::StopUpgrade(void)
 		{
 			player_->GetWeapon()->ChangeState(WeaponBase::STATE::ATTACK);
 		}
+
 	}
 }
 

@@ -17,7 +17,7 @@ public:
 	static constexpr int HP = 10;
 
 	// 速度
-	static constexpr float SPEED = 3.0f;
+	static constexpr float SPEED = 4.0f;
 
 	// 撃破スコア
 	static constexpr int SCORE = 10;

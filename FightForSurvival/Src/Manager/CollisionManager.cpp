@@ -140,10 +140,7 @@ VECTOR CollisionManager::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR 
 	// 球体と球体の衝突判定
 	// ２つの座標間の距離をピタゴラスの定理で算出
 
-	VECTOR distance;
-	distance.x = pos2.x - pos1.x;
-	distance.y = pos2.y - pos1.y;
-	distance.z = pos2.z - pos1.z;
+	VECTOR distance = VSub(pos1, pos2);
 
 	float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
 
@@ -164,7 +161,7 @@ VECTOR CollisionManager::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR 
 		float push_half = overlap / 2.0f;
 
 		// 押し出し量を計算
-		pushPow = VScale(vec, -push_half);
+		pushPow = VScale(vec, push_half);
 		// 上下の押し出しは行わない
 		pushPow.y = 0.0f;
 	}
