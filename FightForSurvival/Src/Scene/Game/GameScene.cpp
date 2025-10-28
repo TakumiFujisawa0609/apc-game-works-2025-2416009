@@ -490,7 +490,7 @@ void GameScene::EnemysExtrusionCollision(void)
 			float ene2CollRad = enemys_[j]->GetEnemy().collisionRadius_;
 
 			// 押し出し判定を行う
-			VECTOR pushPow = ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
+			VECTOR pushPow = CollisionManager::ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
 
 			// 敵1の押し出しを行う
 			enemys_[i]->Extrusion(pushPow);
@@ -530,7 +530,7 @@ void GameScene::PlayerAndEnemyExtrusionCollison(void)
 			float eneCollRad = enemy->GetEnemy().collisionRadius_;
 
 			// 押し出し判定を行う
-			VECTOR pushPow = ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
+			VECTOR pushPow = CollisionManager::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
 
 			// プレイヤーの押し出しを行う
 			player_->Extrusion(pushPow);
@@ -543,45 +543,6 @@ void GameScene::PlayerAndEnemyExtrusionCollison(void)
 		}
 	}
 
-}
-
-VECTOR GameScene::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
-{
-	VECTOR pushPow = AsoUtility::VECTOR_ZERO;
-
-	// 球体と球体の衝突判定
-	// ２つの座標間の距離をピタゴラスの定理で算出
-
-	VECTOR distance;
-	distance.x = pos2.x - pos1.x;
-	distance.y = pos2.y - pos1.y;
-	distance.z = pos2.z - pos1.z;
-
-	float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
-
-	// お互いの半径を合計する
-	float radius = collRad1 + collRad2;
-
-	// 合計した半径の２乗よりも、
-	// ２つの座標間の距離が小さければ球体は衝突している
-	if (radius * radius > dis && dis != 0.0f)
-	{
-		float length = sqrtf(dis);
-		auto overlap = radius - length;
-
-		// 正規化ベクトル（A -> Bの方向）
-		VECTOR vec = VNorm(distance);
-
-		// 重なり量の半分
-		float push_half = overlap / 2.0f;
-
-		// 押し出し量を計算
-		pushPow = VScale(vec, -push_half);
-		// 上下の押し出しは行わない
-		pushPow.y = 0.0f;
-	}
-
-	return pushPow;
 }
 
 void GameScene::SpawnerAndAttackCollision(void)

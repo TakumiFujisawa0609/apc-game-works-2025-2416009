@@ -19,6 +19,9 @@ namespace CollisionManager
 	// ‹…“¯m‚Ì“–‚½‚è”»’è
 	bool IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad);
 
+	// ‰Ÿ‚µo‚µ”»’è(‰Ÿ‚µo‚µ—Ê‚ğ“n‚µ‚Ä‚­‚ê‚é)
+	VECTOR ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2);
+
 #pragma endregion
 
 #pragma region 2D

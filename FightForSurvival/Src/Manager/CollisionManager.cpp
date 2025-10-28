@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include "../Utility/AsoUtility.h"
 #include "CollisionManager.h"
 
 float CollisionManager::VLenSq(VECTOR v)
@@ -130,6 +131,45 @@ bool CollisionManager::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, V
 
 	// 距離の2乗が半径の合計の2乗より小さいか判定
 	return (distance < totalRad * totalRad);
+}
+
+VECTOR CollisionManager::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
+{
+	VECTOR pushPow = AsoUtility::VECTOR_ZERO;
+
+	// 球体と球体の衝突判定
+	// ２つの座標間の距離をピタゴラスの定理で算出
+
+	VECTOR distance;
+	distance.x = pos2.x - pos1.x;
+	distance.y = pos2.y - pos1.y;
+	distance.z = pos2.z - pos1.z;
+
+	float dis = distance.x * distance.x + distance.y * distance.y + distance.z * distance.z;
+
+	// お互いの半径を合計する
+	float radius = collRad1 + collRad2;
+
+	// 合計した半径の２乗よりも、
+	// ２つの座標間の距離が小さければ球体は衝突している
+	if (radius * radius > dis && dis != 0.0f)
+	{
+		float length = sqrtf(dis);
+		auto overlap = radius - length;
+
+		// 正規化ベクトル（A -> Bの方向）
+		VECTOR vec = VNorm(distance);
+
+		// 重なり量の半分
+		float push_half = overlap / 2.0f;
+
+		// 押し出し量を計算
+		pushPow = VScale(vec, -push_half);
+		// 上下の押し出しは行わない
+		pushPow.y = 0.0f;
+	}
+
+	return pushPow;
 }
 
 bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)

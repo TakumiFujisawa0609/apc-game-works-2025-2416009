@@ -225,6 +225,9 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	// 方向単位ベクトルに速度をかけた数を座標に足しこむ
 	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, enemy.enemy_.moveSpeed_));
 
+	// 左右移動を付ける
+
+
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
 

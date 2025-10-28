@@ -76,8 +76,6 @@ private:
 	void EnemysExtrusionCollision(void);
 	// 敵とプレイヤーの押し出し判定
 	void PlayerAndEnemyExtrusionCollison(void);
-	// 押し出し判定
-	VECTOR ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2);
 	// スポナーとプレイヤーの攻撃の当たり判定
 	void SpawnerAndAttackCollision(void);
 
