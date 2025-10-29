@@ -92,16 +92,16 @@ EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 
 	for (int i = 0; i < size; i++)
 	{
-		// “G‚ÌŽí—Þ‚ªˆá‚Á‚½‚çŽŸ‚Ì“G‚ðŒ©‚é
-		if (enemys_[i]->GetType() != type)
-		{
-			continue;
-		}
-
 		// –‚–@‚ÌŽí•Ê‚ª“¯‚¶A‚©‚ÂA–¢Žg—p(¶‘¶‚µ‚Ä‚¢‚È‚¢)‚È‚çÄ—˜—p‚·‚é
 		if (!enemys_[i]->GetEnemy().isAlive_)
 		{
 			return enemys_[i];
+		}
+
+		// “G‚ÌŽí—Þ‚ªˆá‚Á‚½‚çŽŸ‚Ì“G‚ðŒ©‚é
+		if (enemys_[i]->GetType() != type)
+		{
+			continue;
 		}
 	}
 

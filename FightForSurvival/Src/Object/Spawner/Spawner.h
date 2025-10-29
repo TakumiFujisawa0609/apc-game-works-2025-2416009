@@ -37,7 +37,7 @@ public:
 		VECTOR pos_[SPAWN_ENEMY_NUM];
 
 		// スポーンさせる間隔
-		int spawnInterval_;
+		float spawnInterval_;
 
 		// 存在フラグ(true/ 存在している false/ 存在していない)
 		bool isExists_;
@@ -64,7 +64,7 @@ public:
 	~Spawner(void);
 	 
 	// スポナー生成処理
-	void Create(VECTOR pos, int interval);
+	void Create(VECTOR pos, float interval);
 	// 更新処理
 	void Update(void);
 	// 描画処理

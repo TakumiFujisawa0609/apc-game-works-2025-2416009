@@ -37,12 +37,6 @@ enum COLLISION_POS
 	HAND_R,
 	// 左手
 	HAND_L,
-	// 右腕(カプセル型なので上側と下側の座標)
-	LEG_TOP_R,
-	LEG_UNDER_R,
-	// 左腕(カプセル型なので上側と下側の座標)
-	LEG_TOP_L,
-	LEG_UNDER_L,
 
 	MAX
 };
@@ -63,9 +57,6 @@ struct EnemyCollision
 	float offsetArmUnder_;
 	// 手
 	float offsetHand_;
-	// 脚(カプセル型なので上側と下側の座標)
-	float offsetLegTop_;
-	float offsetLegUnder_;
 
 	// モデルについている部分ボーンの格納変数
 	// 頭
@@ -81,11 +72,5 @@ struct EnemyCollision
 	int handBoneR_;
 	// 左手
 	int handBoneL_;
-	// 右脚
-	int legBoneTopR_;
-	int legBoneUnderR_;
-	// 左脚
-	int legBoneTopL_;
-	int legBoneUnderL_;
 
 };

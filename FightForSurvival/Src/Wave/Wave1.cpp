@@ -15,7 +15,7 @@ Wave1::Wave1(void)
 	AddSpawnEvent(60 * 18, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
-	AddSpawner(60 * 2, 8, VGet(100.0f, 0.0f, 0.0f));
+	AddSpawner(60 * 2, 15, VGet(100.0f, 0.0f, 0.0f));
 }
 
 void Wave1::OnStart()

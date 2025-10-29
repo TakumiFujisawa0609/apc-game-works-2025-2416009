@@ -16,7 +16,7 @@ Spawner::~Spawner(void)
 {
 }
 
-void Spawner::Create(VECTOR pos, int interval)
+void Spawner::Create(VECTOR pos, float interval)
 {
 	// À•Wæ“¾(‚±‚ÌÀ•W‚ª²‚Æ‚È‚é)
 	spawner_.pos_[0] = pos;

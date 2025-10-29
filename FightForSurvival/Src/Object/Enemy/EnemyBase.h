@@ -19,6 +19,9 @@ public:
 	static constexpr float CHANGE_RATE_MAX = 1.0f;
 	static constexpr float CHANGE_RATE_MIN = -1.0f;
 
+	// 座標更新のタイミング(5フレームごとに1回)
+	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
+
 	// コンストラクタ
 	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
 
@@ -113,6 +116,9 @@ protected:
 
 	// 左右移動量
 	float leftAndRightRate_;
+
+	// 座標更新のタイミング
+	int updateCollPosCounter_;
 
 	// 状態別更新
 	// 移動処理

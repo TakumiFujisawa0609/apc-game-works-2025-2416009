@@ -41,8 +41,6 @@ void Zombie::SetParam(void)
 	enemy_.collisionRadiusArm_ = COLLISION_RADIUS_ARM;
 	// 手
 	enemy_.collisionRadiusHand_ = COLLISION_RADIUS_HAND;
-	// 脚
-	enemy_.collisionRadiusLeg_ = COLLISION_RADIUS_LEG;
 
 	// 実際のボーンからの座標微調整用の相対座標
 	// 頭
@@ -55,9 +53,6 @@ void Zombie::SetParam(void)
 	collision_.offsetArmUnder_ = OFFSET_POS_ARM_UNDER;
 	// 手
 	collision_.offsetHand_ = OFFSET_POS_HAND;
-	// 脚
-	collision_.offsetLegTop_ = OFFSET_POS_LEG_TOP;
-	collision_.offsetLegUnder_ = OFFSET_POS_LEG_UNDER;
 
 	// 攻撃可能範囲
 	attackRange_ = ATTACK_RANGE;
@@ -102,12 +97,6 @@ void Zombie::AddFrames(void)
 	collision_.armBoneTopL_ = SearchFrame("5:LeftArm");
 	// 左手のボーンフレーム取得
 	collision_.handBoneL_ = SearchFrame("5:LeftHand");
-	// 右脚のボーンフレーム取得
-	collision_.legBoneTopR_ = SearchFrame("5:RightUpLeg");
-	collision_.legBoneUnderR_ = SearchFrame("5:RightFoot");
-	// 左脚のボーンフレーム取得
-	collision_.legBoneTopL_ = SearchFrame("5:LeftUpLeg");
-	collision_.legBoneUnderL_ = SearchFrame("5:LeftFoot");
 }
 
 void Zombie::Idle(EnemyBase& enemy)

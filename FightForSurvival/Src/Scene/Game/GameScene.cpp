@@ -413,14 +413,12 @@ void GameScene::DamageCollision(void)
 				// ダメージSEをながす
 				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
-			// 体、腕、手、脚の当たり判定
+			// 体、腕、手の当たり判定
 			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
 				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
 				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
 				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_R], enePos[LEG_UNDER_R], eneRadLeg, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[LEG_TOP_L], enePos[LEG_UNDER_L], eneRadLeg, MagicLineStart, MagicLineEnd, MagicRad))
+				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 敵にダメージを与える
 				enemy->SubHp(MagicInfo.bodyDamage_);

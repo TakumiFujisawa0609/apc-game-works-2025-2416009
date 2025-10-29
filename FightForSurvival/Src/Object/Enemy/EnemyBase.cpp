@@ -76,10 +76,16 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 
 	// タイマーを初期化
 	leftAndRightRate_ = CHANGE_RATE_MAX;
+
+	// 座標更新のタイミング
+	updateCollPosCounter_ = 0;
 }
 
 void EnemyBase::Update(void)
 {
+	// 座標更新のタイミング用カウンター
+	updateCollPosCounter_++;
+
 	// nullチェック
 	if (stateTable_[state_])
 	{
@@ -102,8 +108,14 @@ void EnemyBase::Update(void)
 		animationController_->Update();
 	}
 
-	// 頭用座標と体用座標を更新させる
-	UpdateCollisionPositions();
+	// 座標更新のタイミングがきたら入る
+	if (updateCollPosCounter_ > COLLISION_UPDATE_INTERVAL)
+	{
+		// 頭用座標と体用座標を更新させる
+		UpdateCollisionPositions();
+		// 初期化
+		updateCollPosCounter_ = 0;
+	}
 }
 
 void EnemyBase::Draw(void)
@@ -140,14 +152,6 @@ void EnemyBase::Draw(void)
 
 	// 左手 デバッグ用：衝突判定用球体
 	DrawSphere3D(collision_.colPos_[HAND_L],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
-
-	// 右脚 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collision_.colPos_[LEG_TOP_R], collision_.colPos_[LEG_UNDER_R],
-		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
-
-	// 左脚 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collision_.colPos_[LEG_TOP_L], collision_.colPos_[LEG_UNDER_L],
-		enemy_.collisionRadiusLeg_, 10, 0xff0000, 0xff0000, false);
 
 	// 攻撃可能範囲
 	//DrawSphere3D(attackRangePos_, attackRange_, 10, 0x0000ff, 0x0000ff, false);
@@ -368,22 +372,6 @@ void EnemyBase::UpdateCollisionPositions(void)
 
 	// 左手
 	collision_.colPos_[HAND_L] = GetBoneWorldPosition(collision_.handBoneL_, collision_.offsetHand_);
-
-#pragma endregion
-
-#pragma region 右脚
-
-	collision_.colPos_[LEG_TOP_R] = GetBoneWorldPosition(collision_.legBoneTopR_, collision_.offsetLegTop_);
-
-	collision_.colPos_[LEG_UNDER_R] = GetBoneWorldPosition(collision_.legBoneUnderR_, collision_.offsetLegUnder_);
-
-#pragma endregion
-
-#pragma region 左脚
-
-	collision_.colPos_[LEG_TOP_L] = GetBoneWorldPosition(collision_.legBoneTopL_, collision_.offsetLegTop_);
-
-	collision_.colPos_[LEG_UNDER_L] = GetBoneWorldPosition(collision_.legBoneUnderL_, collision_.offsetLegUnder_);
 
 #pragma endregion
 
