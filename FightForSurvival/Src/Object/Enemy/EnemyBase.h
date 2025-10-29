@@ -15,6 +15,9 @@ public:
 
 	static constexpr float ATTACK_RANGE_POS_OFFSET = 80.0f;
 
+	// 左右移動の左右を変更するタイミング
+	static constexpr float CHANGE_RATE_MAX = 1.0f;
+	static constexpr float CHANGE_RATE_MIN = -1.0f;
 
 	// コンストラクタ
 	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
@@ -105,6 +108,12 @@ protected:
 	// 攻撃中か
 	bool isAttack_;
 
+	// 左右フラグ(true / 敵から見て左進むようにする, false / 敵から見て右に進むようにする)
+	bool isLeftFlg_;
+
+	// 左右移動量
+	float leftAndRightRate_;
+
 	// 状態別更新
 	// 移動処理
 	static void Chase(EnemyBase& enemy);
@@ -135,5 +144,8 @@ protected:
 	virtual void AddAnimation(void) = 0;
 	// フレーム登録
 	virtual void AddFrames(void) = 0;
+
+	// 左右移動
+	void MoveLeftAndRight(void);
 };
 

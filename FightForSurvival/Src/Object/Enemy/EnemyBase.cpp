@@ -70,6 +70,12 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 
 	// 攻撃中か
 	SetIsAttack(false);
+
+	// 左右フラグ
+	isLeftFlg_ = true;
+
+	// タイマーを初期化
+	leftAndRightRate_ = CHANGE_RATE_MAX;
 }
 
 void EnemyBase::Update(void)
@@ -222,11 +228,11 @@ void EnemyBase::Chase(EnemyBase& enemy)
 	// プレイヤーのほうへ向く
 	enemy.LookPlayer();
 
+	// 左右移動を付ける
+	enemy.MoveLeftAndRight();
+	
 	// 方向単位ベクトルに速度をかけた数を座標に足しこむ
 	enemy.enemy_.pos_ = VAdd(enemy.enemy_.pos_, VScale(enemy.enemy_.dir_, enemy.enemy_.moveSpeed_));
-
-	// 左右移動を付ける
-	
 
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy.enemy_.modelId_, enemy.enemy_.pos_);
@@ -426,4 +432,32 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 	std::string fullBoneName = "mixamorig" + boneName;
 
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
+}
+
+void EnemyBase::MoveLeftAndRight(void)
+{
+	if (isLeftFlg_)
+	{
+		// 左率を上げる
+		leftAndRightRate_ -= SceneManager::GetInstance().GetDeltaTime();
+
+		if (leftAndRightRate_ < CHANGE_RATE_MIN)
+		{
+			isLeftFlg_ = !isLeftFlg_;
+		}
+	}
+	else
+	{
+		// 右率を上げる
+		leftAndRightRate_ += SceneManager::GetInstance().GetDeltaTime();
+
+		if (leftAndRightRate_ > CHANGE_RATE_MAX)
+		{
+			isLeftFlg_ = !isLeftFlg_;
+		}
+	}
+
+	VECTOR moveDir = VGet(leftAndRightRate_, 0.0f, 0.0f);
+
+	enemy_.dir_ = VAdd(enemy_.dir_, moveDir);
 }
