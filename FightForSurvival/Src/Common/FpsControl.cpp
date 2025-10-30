@@ -75,7 +75,6 @@ void FpsControl::CalcFrameRate(void)
 
 void FpsControl::DrawFrameRate(void)
 {
-#ifdef _DEBUG
 
 	//フレームレートを表示
 	DrawFormatString(
@@ -86,5 +85,4 @@ void FpsControl::DrawFrameRate(void)
 		frameRate_
 	);
 
-#endif // _DEBUG
 }

@@ -44,6 +44,9 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Draw(void)
 {
+
+	DrawFormatString(0, 200, 0xffffff, "“G‚Ì‘” = %d", enemys_.size());
+
 	for (auto& enemy : enemys_)
 	{
 		enemy->Draw();
