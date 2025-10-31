@@ -1,5 +1,5 @@
 #include <DxLib.h>
-#include "../Application.h"
+#include "../../Application.h"
 #include "Fader.h"
 
 Fader::STATE Fader::GetState(void) const

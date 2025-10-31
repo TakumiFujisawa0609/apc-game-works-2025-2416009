@@ -1,13 +1,17 @@
 #include <DxLib.h>
-#include "../../Utility/AsoUtility.h"
-#include "../Player/Player.h"
-#include "../Common/AnimationController.h"
-#include "../../Manager/SystemManager.h"
-#include "../../Manager/CollisionManager.h"
-#include "../../Scene/SceneManager.h"
+#include "../../../Utility/AsoUtility.h"
+#include "../../../Utility/Collision/CollisionUtility.h"
+#include "../../Player/Player.h"
+#include "../../Common/AnimationController.h"
+#include "../../../Manager/SystemManager.h"
+#include "../../../Scene/SceneManager.h"
 #include "EnemyBase.h"
 
 EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
+	:
+	player_(nullptr),
+	updateCollPosCounter_(0),
+	score_(0)
 {
 	enemy_.modelId_ = -1;
 	baseAttackEffectModelId_ = -1;
@@ -25,11 +29,11 @@ EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	player_ = player;
 
 	// テーブルに関数のポインタを格納
-	stateTable_[STATE_CHASE] = Chase;
-	stateTable_[STATE_RETREAT] = Retreat;
-	stateTable_[STATE_HIT] = Hit;
-	stateTable_[STATE_DEAD] = Dead;
-	stateTable_[STATE_END] = End;
+	state_.stateTable_[STATE_CHASE] = Chase;
+	state_.stateTable_[STATE_RETREAT] = Retreat;
+	state_.stateTable_[STATE_HIT] = Hit;
+	state_.stateTable_[STATE_DEAD] = Dead;
+	state_.stateTable_[STATE_END] = End;
 
 	// アニメーションクラスの生成
 	animationController_ = nullptr;
@@ -44,9 +48,9 @@ EnemyBase::~EnemyBase(void)
 void EnemyBase::CreateEnemy(VECTOR pos)
 {
 	// 指定された座標を設定
-	enemy_.pos_ = attackRangePos_ = pos;
+	enemy_.pos_ = attack_.rangePos_ = pos;
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
-	attackRangePos_.y += ATTACK_RANGE_POS_OFFSET;
+	attack_.rangePos_.y += ATTACK_RANGE_POS_OFFSET;
 
 	// パラメータ設定
 	SetParam();
@@ -66,16 +70,16 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 	ChangeState(ENEMY_STATE::STATE_IDLE);
 
 	// 攻撃待ち時間を初期化
-	attackCooldown_ = 0.0f;
+	attack_.cooldown_ = 0.0f;
 
 	// 攻撃中か
 	SetIsAttack(false);
 
 	// 左右フラグ
-	isLeftFlg_ = true;
+	move_.isLeft_ = true;
 
 	// タイマーを初期化
-	leftAndRightRate_ = CHANGE_RATE_MAX;
+	move_.leftRightRate_ = CHANGE_RATE_MAX;
 
 	// 座標更新のタイミング
 	updateCollPosCounter_ = 0;
@@ -87,18 +91,18 @@ void EnemyBase::Update(void)
 	updateCollPosCounter_++;
 
 	// nullチェック
-	if (stateTable_[state_])
+	if (state_.stateTable_[state_.state_])
 	{
-		stateTable_[state_](*this);
+		state_.stateTable_[state_.state_](*this);
 	}
 
 	// Idle状態の時、攻撃待ち時間が0より大きければ入る
-	if (state_ == STATE_IDLE && attackCooldown_ > 0.0f)
+	if (state_.state_ == STATE_IDLE && attack_.cooldown_ > 0.0f)
 	{
-		attackCooldown_ -= SceneManager::GetInstance().GetDeltaTime();
-		if (attackCooldown_ < 0.0f)
+		attack_.cooldown_ -= SceneManager::GetInstance().GetDeltaTime();
+		if (attack_.cooldown_ < 0.0f)
 		{
-			attackCooldown_ = 0.0f;
+			attack_.cooldown_ = 0.0f;
 		}
 	}
 
@@ -177,7 +181,7 @@ void EnemyBase::Release(void)
 bool EnemyBase::IsCollisionState(void)
 {
 	// 死亡していなかったらtrueを返す
-	return !(state_ == STATE_DEAD || state_ == STATE_END);
+	return !(state_.state_ == STATE_DEAD || state_.state_ == STATE_END);
 }
 
 void EnemyBase::SubHp(int hp)
@@ -199,9 +203,9 @@ void EnemyBase::SubHp(int hp)
 
 void EnemyBase::ChangeState(ENEMY_STATE state)
 {
-	state_ = state;
+	state_.state_ = state;
 
-	if (state_ == ENEMY_STATE::STATE_END)
+	if (state_.state_ == ENEMY_STATE::STATE_END)
 	{
 		// エフェクト停止
 		//StopEffekseer3DEffect(effectBlastPlayId_);
@@ -211,18 +215,18 @@ void EnemyBase::ChangeState(ENEMY_STATE state)
 		// 撃破したため、スコア加算する
 		sysIns.SetScore(sysIns.GetScore() + score_);
 	}
-	else if (state_ == ENEMY_STATE::STATE_IDLE || state_ == ENEMY_STATE::STATE_CHASE)
+	else if (state_.state_ == ENEMY_STATE::STATE_IDLE || state_.state_ == ENEMY_STATE::STATE_CHASE)
 	{
 		if (animationController_ != nullptr)
 		{
-			animationController_->BlendAnimPlay(static_cast<int>(state_), AnimationController::BLEND_LATIO);
+			animationController_->BlendAnimPlay(static_cast<int>(state_.state_), AnimationController::BLEND_LATIO);
 		}
 	}
 	else
 	{
 		if (animationController_ != nullptr)
 		{
-			animationController_->BlendAnimPlay(static_cast<int>(state_), AnimationController::BLEND_LATIO, false);
+			animationController_->BlendAnimPlay(static_cast<int>(state_.state_), AnimationController::BLEND_LATIO, false);
 		}
 	}
 }
@@ -375,8 +379,9 @@ void EnemyBase::UpdateCollisionPositions(void)
 
 #pragma endregion
 
-	attackRangePos_ = enemy_.pos_;
-	attackRangePos_.y += ATTACK_RANGE_POS_OFFSET;
+	// 攻撃範囲判定用の
+	attack_.rangePos_ = enemy_.pos_;
+	attack_.rangePos_.y += ATTACK_RANGE_POS_OFFSET;
 
 }
 
@@ -403,7 +408,7 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 bool EnemyBase::SearchAttackRange(void)
 {
 	// 攻撃可能範囲にプレイヤーがいるか確認
-	return CollisionManager::IsCollidingSphereCapsule(attackRangePos_,attackRange_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
+	return CollisionUtility::IsCollidingSphereCapsule(attack_.rangePos_,attack_.range_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }
 
 void EnemyBase::Extrusion(VECTOR overlap)
@@ -424,28 +429,28 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 
 void EnemyBase::MoveLeftAndRight(void)
 {
-	if (isLeftFlg_)
+	if (move_.isLeft_)
 	{
 		// 左率を上げる
-		leftAndRightRate_ -= SceneManager::GetInstance().GetDeltaTime();
+		move_.leftRightRate_ -= SceneManager::GetInstance().GetDeltaTime();
 
-		if (leftAndRightRate_ < CHANGE_RATE_MIN)
+		if (move_.leftRightRate_ < CHANGE_RATE_MIN)
 		{
-			isLeftFlg_ = !isLeftFlg_;
+			move_.isLeft_ = !move_.isLeft_;
 		}
 	}
 	else
 	{
 		// 右率を上げる
-		leftAndRightRate_ += SceneManager::GetInstance().GetDeltaTime();
+		move_.leftRightRate_ += SceneManager::GetInstance().GetDeltaTime();
 
-		if (leftAndRightRate_ > CHANGE_RATE_MAX)
+		if (move_.leftRightRate_ > CHANGE_RATE_MAX)
 		{
-			isLeftFlg_ = !isLeftFlg_;
+			move_.isLeft_ = !move_.isLeft_;
 		}
 	}
 
-	VECTOR moveDir = VGet(leftAndRightRate_, 0.0f, 0.0f);
+	VECTOR moveDir = VGet(move_.leftRightRate_, 0.0f, 0.0f);
 
 	enemy_.dir_ = VAdd(enemy_.dir_, moveDir);
 }

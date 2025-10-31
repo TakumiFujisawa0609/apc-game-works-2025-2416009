@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../Player.h"
-#include "../../../Common/Vector2.h"
+#include "../../../Common/Vector2/Vector2.h"
 
 class Upgrade
 {

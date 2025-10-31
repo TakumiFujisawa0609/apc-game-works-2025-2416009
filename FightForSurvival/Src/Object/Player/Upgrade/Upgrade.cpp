@@ -3,7 +3,7 @@
 #include <random>
 #include <algorithm>
 
-#include "../../../Manager/CollisionManager.h"
+#include "../../../Utility/Collision/CollisionUtility.h"
 #include "../../../Manager/InputManager.h"
 #include "../../../Manager/SoundManager.h"
 #include "../../../Application.h"
@@ -222,7 +222,7 @@ void Upgrade::Collision(void)
 	// “–‚½‚è”»’èŽæ‚é
 	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
 	{
-		if(CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		if(CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePlace(static_cast<PLACE>(i));
 			break;

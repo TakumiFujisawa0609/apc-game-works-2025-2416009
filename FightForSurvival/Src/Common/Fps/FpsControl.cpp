@@ -1,6 +1,6 @@
 #include <DxLib.h>
 #include "FpsControl.h"
-#include "../Application.h"
+#include "../../Application.h"
 
 //　コンストラクタ
 FpsControl::FpsControl()

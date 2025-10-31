@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Common/Vector2.h"
+#include "../../Common/Vector2/Vector2.h"
 
 class Cursor
 {

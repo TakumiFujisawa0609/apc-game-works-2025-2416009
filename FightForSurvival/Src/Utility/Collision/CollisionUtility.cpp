@@ -1,13 +1,13 @@
 #include <DxLib.h>
-#include "../Utility/AsoUtility.h"
-#include "CollisionManager.h"
+#include "../AsoUtility.h"
+#include "CollisionUtility.h"
 
-float CollisionManager::VLenSq(VECTOR v)
+float CollisionUtility::VLenSq(VECTOR v)
 {
 	return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
-float CollisionManager::GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTOR p3, VECTOR p4)
+float CollisionUtility::GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTOR p3, VECTOR p4)
 {
 	VECTOR d1 = VSub(p2, p1); // 線分1のベクトル
 	VECTOR d2 = VSub(p4, p3); // 線分2のベクトル
@@ -70,10 +70,10 @@ float CollisionManager::GetMinDistSqSegmentToSegment(VECTOR p1, VECTOR p2, VECTO
 	return VLenSq(VSub(P1_, P2_));
 }
 
-bool CollisionManager::IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Under, float capsule1Rad, VECTOR capsule2Top, VECTOR capsule2Under, float capsule2Rad)
+bool CollisionUtility::IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Under, float capsule1Rad, VECTOR capsule2Top, VECTOR capsule2Under, float capsule2Rad)
 {
 	// 魔法の移動経路の線分と敵カプセルの線分間の最近接距離の2乗を計算
-	float distSq = CollisionManager::GetMinDistSqSegmentToSegment(capsule1Top, capsule1Under, capsule2Top, capsule2Under);
+	float distSq = CollisionUtility::GetMinDistSqSegmentToSegment(capsule1Top, capsule1Under, capsule2Top, capsule2Under);
 
 	// カプセルと球の半径の合計
 	float total_radius = capsule1Rad + capsule2Rad;
@@ -81,7 +81,7 @@ bool CollisionManager::IsCollidingCapsules(VECTOR capsule1Top, VECTOR capsule1Un
 	return distSq <= total_radius * total_radius;
 }
 
-bool CollisionManager::IsCollidingSphereCapsule(VECTOR spherePos, float sphereRad, VECTOR capsuleTop, VECTOR capsuleUnder, float capsuleRad)
+bool CollisionUtility::IsCollidingSphereCapsule(VECTOR spherePos, float sphereRad, VECTOR capsuleTop, VECTOR capsuleUnder, float capsuleRad)
 {
 	// 敵の球1は、カプセルと判定する対象
 	VECTOR sphere_pos = spherePos;
@@ -120,7 +120,7 @@ bool CollisionManager::IsCollidingSphereCapsule(VECTOR spherePos, float sphereRa
 	return dist_sq <= total_radius * total_radius;
 }
 
-bool CollisionManager::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad)
+bool CollisionUtility::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad)
 {
 	// 中心点間の距離の2乗を計算
 	VECTOR dis = VSub(sphere2Pos, sphere1Pos);
@@ -133,7 +133,7 @@ bool CollisionManager::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, V
 	return (distance < totalRad * totalRad);
 }
 
-VECTOR CollisionManager::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
+VECTOR CollisionUtility::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
 {
 	VECTOR pushPow = AsoUtility::VECTOR_ZERO;
 
@@ -169,7 +169,7 @@ VECTOR CollisionManager::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR 
 	return pushPow;
 }
 
-bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
+bool CollisionUtility::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
 {
 	if (pos1.x + wid1 > pos2.x &&
 		pos1.x < pos2.x &&
@@ -182,7 +182,7 @@ bool CollisionManager::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vecto
 	return false;
 }
 
-bool CollisionManager::RectangleAndMouse(Vector2 pos, int wid, int hig)
+bool CollisionUtility::RectangleAndMouse(Vector2 pos, int wid, int hig)
 {
 	Vector2 mousePos;
 	// マウスの位置を調べる

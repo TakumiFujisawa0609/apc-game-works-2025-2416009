@@ -51,7 +51,7 @@
     <ClCompile Include="Src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\Fader.cpp">
+    <ClCompile Include="Src\Common\Fader\Fader.cpp">
       <Filter>ソース ファイル\Common</Filter>
     </ClCompile>
     <ClCompile Include="Src\Scene\SceneManager.cpp">
@@ -69,9 +69,6 @@
     <ClCompile Include="Src\Manager\InputManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\Quaternion.cpp">
-      <Filter>ソース ファイル\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Object\Grid\Grid.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -87,7 +84,7 @@
     <ClCompile Include="Src\Object\Player\Player.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\FpsControl.cpp">
+    <ClCompile Include="Src\Common\Fps\FpsControl.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Player\Weapon\WeaponBase.cpp">
@@ -105,19 +102,19 @@
     <ClCompile Include="Src\Object\Common\Cursor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\Vector2.cpp">
+    <ClCompile Include="Src\Common\Vector2\Vector2.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Enemy\EnemyBase.cpp">
+    <ClCompile Include="Src\Object\Enemy\Base\EnemyBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Enemy\Zombie.cpp">
+    <ClCompile Include="Src\Object\Enemy\Zombie\Zombie.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Manager\CollisionManager.cpp">
+    <ClCompile Include="Src\Utility\Collision\CollisionUtility.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Common\Score\Score.cpp">
@@ -177,12 +174,12 @@
     <ClCompile Include="Src\Object\Spawner\SpawnerManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Common\Quaternion\Quaternion.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Common\Fader.h">
-      <Filter>ヘッダー ファイル\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Common\Quaternion.h">
+    <ClInclude Include="Src\Common\Fader\Fader.h">
       <Filter>ヘッダー ファイル\Common</Filter>
     </ClInclude>
     <ClInclude Include="Src\Scene\SceneManager.h">
@@ -224,7 +221,7 @@
     <ClInclude Include="Src\Base.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Common\FpsControl.h">
+    <ClInclude Include="Src\Common\Fps\FpsControl.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Player\Weapon\WeaponBase.h">
@@ -242,22 +239,22 @@
     <ClInclude Include="Src\Object\Common\Cursor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Common\Vector2.h">
+    <ClInclude Include="Src\Common\Vector2\Vector2.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Enemy\EnemyBase.h">
+    <ClInclude Include="Src\Object\Enemy\Base\EnemyBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Enemy\EnemyState.h">
+    <ClInclude Include="Src\Object\Enemy\EnemyInfo.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Enemy\Zombie.h">
+    <ClInclude Include="Src\Object\Enemy\Zombie\Zombie.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Manager\CollisionManager.h">
+    <ClInclude Include="Src\Utility\Collision\CollisionUtility.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Common\Score\Score.h">
@@ -315,6 +312,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Spawner\SpawnerManager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Common\Quaternion\Quaternion.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

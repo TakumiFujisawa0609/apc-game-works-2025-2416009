@@ -1,7 +1,7 @@
 #pragma once
 
-#include "EnemyBase.h"
-#include "EnemyManager.h"
+#include "../Base/EnemyBase.h"
+#include "../EnemyManager.h"
 
 class Zombie : public EnemyBase
 {

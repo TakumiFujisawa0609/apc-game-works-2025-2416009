@@ -1,6 +1,6 @@
 #include <chrono>
 #include <DxLib.h>
-#include "../Common/Fader.h"
+#include "../Common/Fader/Fader.h"
 #include "../Scene/Title/TitleScene.h"
 #include "../Scene/Game/GameScene.h"
 #include "../Scene/Clear/ClearScene.h"

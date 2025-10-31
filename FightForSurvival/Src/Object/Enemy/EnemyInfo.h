@@ -3,7 +3,7 @@
 class EnemyBase; // ‘O•ûéŒ¾
 
 // ó‘ÔŠÖ”Œ^
-typedef void (*EnemyStateFunction)(EnemyBase&);
+typedef void (*enemiestateFunction)(EnemyBase&);
 
 // “G‚Ìó‘Ôi‹¤’Êj
 enum ENEMY_STATE
@@ -72,5 +72,24 @@ struct EnemyCollision
 	int handBoneR_;
 	// ¶è
 	int handBoneL_;
+};
 
+struct enemiestateCtrl
+{
+	ENEMY_STATE state_;
+	enemiestateFunction stateTable_[ENEMY_STATE_MAX];
+};
+
+struct EnemyMove
+{
+	bool isLeft_;
+	float leftRightRate_;
+};
+
+struct EnemyAttack
+{
+	VECTOR rangePos_;
+	float range_;
+	float cooldown_;
+	bool isAttacking_;
 };

@@ -3,7 +3,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Manager/EndManager.h"
 #include "../../Manager/Camera.h"
-#include "../../Manager/CollisionManager.h"
+#include "../../Utility/Collision/CollisionUtility.h"
 #include "../../Manager/SoundManager.h"
 #include "TitleScene.h"
 
@@ -180,7 +180,7 @@ void TitleScene::Collision(void)
 	// “–‚½‚è”»’èŽæ‚é
 	for (int i = 0; i < static_cast<int>(STATE::NON); i++)
 	{
-		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangeState(static_cast<STATE>(i));
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Object/Enemy/EnemyBase.h"
+#include "../Object/Enemy/Base/EnemyBase.h"
 
 #include <DxLib.h>
 

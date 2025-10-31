@@ -73,7 +73,7 @@ private:
 	// 敵やプレイヤーにダメージが入る当たり判定
 	void DamageCollision(void);
 	// 敵同士のの押し出し判定
-	void EnemysExtrusionCollision(void);
+	void enemiesExtrusionCollision(void);
 	// 敵とプレイヤーの押し出し判定
 	void PlayerAndEnemyExtrusionCollison(void);
 	// スポナーとプレイヤーの攻撃の当たり判定

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../../Base.h"
-#include "EnemyState.h"
-#include "EnemyManager.h"
+#include "../../../Base.h"
+#include "../EnemyInfo.h"
+#include "../EnemyManager.h"
 #include <string>
 
 class AnimationController;
@@ -51,9 +51,9 @@ public:
 	// 死亡していなかったらtrueを返す
 	bool IsCollisionState(void);
 	// 攻撃状態かつ、当たり判定を終えていなかったらtrueを返す
-	bool IsAttack(void)const { return state_ == STATE_ATTACK && isAttack_ == true; }
+	bool IsAttack(void)const { return state_.state_ == STATE_ATTACK && attack_.isAttacking_ == true; }
 	// 攻撃有効フラグ
-	void SetIsAttack(bool flg) { isAttack_ = flg; }
+	void SetIsAttack(bool flg) { attack_.isAttacking_ = flg; }
 
 	// HPにダメージを与える
 	void SubHp(int hp);
@@ -64,15 +64,15 @@ public:
 	AnimationController* GetAnimationController(void)const { return animationController_; }
 
 	// 状態を返却
-	ENEMY_STATE GetState() const { return state_; }
+	ENEMY_STATE GetState() const { return state_.state_; }
 
 	// 攻撃範囲内か確認用処理
 	bool SearchAttackRange(void);
 
 	// 攻撃待ち時間を確認
-	float GetAttackCooldown(void) const{ return attackCooldown_; }
+	float GetAttackCooldown(void) const{ return attack_.cooldown_; }
 	// 攻撃待ち時間のセットする
-	void SetAttackCooldown(float cooldown) { attackCooldown_ = cooldown; }
+	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
 	void Extrusion(VECTOR overlap);
 
@@ -86,36 +86,23 @@ protected:
 	// エフェクト用モデルハンドルID
 	int baseAttackEffectModelId_;
 
-	// 撃破スコア
+	// 撃破スコア(敵ごとにスコア数を変更するため)
 	int score_;
 
 	// 敵の種類
 	ENEMY_TYPE type_;
 
-	// ステート
-	ENEMY_STATE state_;
-
-	// 状態のテーブル（派生クラスでセットする）
-	EnemyStateFunction stateTable_[ENEMY_STATE_MAX];
+	// 敵の状態情報
+	enemiestateCtrl state_;
 
 	// 当たり判定用(頭、体)
 	EnemyCollision collision_;
 
-	// 攻撃可能範囲用座標
-	VECTOR attackRangePos_;
-	float attackRange_;
+	// 攻撃用の情報
+	EnemyAttack attack_;
 
-	// 攻撃待ち時間
-	float attackCooldown_;
-
-	// 攻撃中か
-	bool isAttack_;
-
-	// 左右フラグ(true / 敵から見て左進むようにする, false / 敵から見て右に進むようにする)
-	bool isLeftFlg_;
-
-	// 左右移動量
-	float leftAndRightRate_;
+	// 左右移動用の情報
+	EnemyMove move_;
 
 	// 座標更新のタイミング
 	int updateCollPosCounter_;

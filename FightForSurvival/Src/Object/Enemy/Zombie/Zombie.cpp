@@ -1,13 +1,13 @@
 #include <DxLib.h>
-#include "../Common/AnimationController.h"
-#include "../../Application.h"
+#include "../../Common/AnimationController.h"
+#include "../../../Application.h"
 #include "Zombie.h"
 
 Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
 	: EnemyBase(type, baseModelId, baseAttackEffectModelId, player)
 {
-	stateTable_[STATE_IDLE] = Idle;
-	stateTable_[STATE_ATTACK] = Attack;
+	state_.stateTable_[STATE_IDLE] = Idle;
+	state_.stateTable_[STATE_ATTACK] = Attack;
 
 	// アニメーション登録
 	AddAnimation();
@@ -55,7 +55,7 @@ void Zombie::SetParam(void)
 	collision_.offsetHand_ = OFFSET_POS_HAND;
 
 	// 攻撃可能範囲
-	attackRange_ = ATTACK_RANGE;
+	attack_.range_ = ATTACK_RANGE;
 
 }
 

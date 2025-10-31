@@ -1,7 +1,7 @@
 #include <DxLib.h>
 #include "../../Application.h"
 #include "../../Scene/SceneManager.h"
-#include "Zombie.h"
+#include "Zombie/Zombie.h"
 #include "EnemyManager.h"
 
 EnemyManager* EnemyManager::instance_ = nullptr;
@@ -11,7 +11,7 @@ EnemyManager::~EnemyManager(void) {}
 
 void EnemyManager::AddEnemy(EnemyBase* enemy)
 {
-	enemys_.emplace_back(std::move(enemy));
+	enemies_.emplace_back(std::move(enemy));
 }
 
 void EnemyManager::Load(void)
@@ -36,7 +36,7 @@ void EnemyManager::Load(void)
 void EnemyManager::Update(void)
 {
 	// エネミーの更新
-	for (auto& enemy : enemys_)
+	for (auto& enemy : enemies_)
 	{
 		enemy->Update();
 	}
@@ -45,9 +45,9 @@ void EnemyManager::Update(void)
 void EnemyManager::Draw(void)
 {
 
-	DrawFormatString(0, 200, 0xffffff, "敵の総数 = %d", enemys_.size());
+	DrawFormatString(0, 200, 0xffffff, "敵の総数 = %d", enemies_.size());
 
-	for (auto& enemy : enemys_)
+	for (auto& enemy : enemies_)
 	{
 		enemy->Draw();
 	}
@@ -56,7 +56,7 @@ void EnemyManager::Draw(void)
 void EnemyManager::Delete(void)
 {
 	// Enemyクラスのメモリ解放
-	for (auto& enemy : enemys_)
+	for (auto& enemy : enemies_)
 	{
 		enemy->Release();
 	}
@@ -67,7 +67,7 @@ void EnemyManager::Delete(void)
 	//	MV1DeleteModel(id);
 	//}
 
-	enemys_.clear();
+	enemies_.clear();
 
 	// エネミーモデルの解放を追加
 	for (auto& modelId : enemyModelIds_)
@@ -89,20 +89,20 @@ void EnemyManager::Spawn(ENEMY_TYPE type, VECTOR pos)
 EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 {
 	auto& ins = EnemyManager::GetInstance();
-	auto& enemys_ = ins.GetEnemy();
+	auto& enemies_ = ins.GetEnemy();
 
-	size_t size = enemys_.size();
+	size_t size = enemies_.size();
 
 	for (int i = 0; i < size; i++)
 	{
 		// 魔法の種別が同じ、かつ、未使用(生存していない)なら再利用する
-		if (!enemys_[i]->GetEnemy().isAlive_)
+		if (!enemies_[i]->GetEnemy().isAlive_)
 		{
-			return enemys_[i];
+			return enemies_[i];
 		}
 
 		// 敵の種類が違ったら次の敵を見る
-		if (enemys_[i]->GetType() != type)
+		if (enemies_[i]->GetType() != type)
 		{
 			continue;
 		}
@@ -117,9 +117,9 @@ EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 	case ENEMY_TYPE::ZOMBIE:
 		enemy = new Zombie(type, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, player_);
 		break;
-	case ENEMY_TYPE::WIZARD:
+	case ENEMY_TYPE::BAT:
 		break;
-	case ENEMY_TYPE::GIANT:
+	case ENEMY_TYPE::DRAGON:
 		break;
 	case ENEMY_TYPE::MAX:
 		break;

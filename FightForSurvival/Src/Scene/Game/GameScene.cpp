@@ -5,10 +5,10 @@
 #include "../../Object/Player/Player.h"
 #include "../../Object/Common/Cursor.h"
 #include "../../Common/Score/Score.h"
-#include "../../Object/Enemy/Zombie.h"
+#include "../../Object/Enemy/Zombie/Zombie.h"
 #include "../../Object/Player/Weapon/WeaponBase.h"
 #include "../../Object/Player/Weapon/Magic/MagicBase.h"
-#include "../../Manager/CollisionManager.h"
+#include "../../Utility/Collision/CollisionUtility.h"
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/SoundManager.h"
@@ -339,7 +339,7 @@ void GameScene::Collisions(void)
 	// 敵やプレイヤーにダメージが入る当たり判定
 	DamageCollision();
 	// 敵同士の押し出し判定
-	EnemysExtrusionCollision();
+	enemiesExtrusionCollision();
 	// プレイヤーと敵の押し出し判定
 	PlayerAndEnemyExtrusionCollison();
 	// スポナーとプレイヤーの攻撃の当たり判定
@@ -350,9 +350,9 @@ void GameScene::DamageCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
 	// 生成してある敵を取得
-	auto& enemys_ = eneManaIns.GetEnemy();
+	auto& enemies_ = eneManaIns.GetEnemy();
 
-	for (auto* enemy : enemys_)
+	for (auto* enemy : enemies_)
 	{
 
 		if (!enemy->IsCollisionState())
@@ -403,7 +403,7 @@ void GameScene::DamageCollision(void)
 			float MagicRad = MagicInfo.collisionRadius_;
 
 			// 頭の当たり判定
-			if (CollisionManager::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, MagicLineStart, MagicLineEnd, MagicRad))
+			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 敵にダメージを与える
 				enemy->SubHp(MagicInfo.headDamage_);
@@ -414,11 +414,11 @@ void GameScene::DamageCollision(void)
 				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
 			// 体、腕、手の当たり判定
-			else if (CollisionManager::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionManager::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad))
+			else if (CollisionUtility::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
+				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 敵にダメージを与える
 				enemy->SubHp(MagicInfo.bodyDamage_);
@@ -441,7 +441,7 @@ void GameScene::DamageCollision(void)
 		float plaRad = player_->GetPlayer().collisionRadius_;
 
 		// プレイヤーと敵の攻撃の当たり判定
-		if (CollisionManager::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, plaPosTop, plaPosUnder, plaRad))
+		if (CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, plaPosTop, plaPosUnder, plaRad))
 		{
 			// プレイヤーにダメージを与える
 			player_->Damage(1);
@@ -460,44 +460,44 @@ void GameScene::DamageCollision(void)
 	}
 }
 
-void GameScene::EnemysExtrusionCollision(void)
+void GameScene::enemiesExtrusionCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
-	auto& enemys_ = eneManaIns.GetEnemy();
+	auto& enemies_ = eneManaIns.GetEnemy();
 
-	for (int i = 0; i < enemys_.size(); i++)
+	for (int i = 0; i < enemies_.size(); i++)
 	{
-		if (!enemys_[i]->GetEnemy().isAlive_)
+		if (!enemies_[i]->GetEnemy().isAlive_)
 		{
 			continue;
 		}
 
-		for (int j = i + 1; j < enemys_.size(); j++)
+		for (int j = i + 1; j < enemies_.size(); j++)
 		{
 
-			if (!enemys_[j]->GetEnemy().isAlive_)
+			if (!enemies_[j]->GetEnemy().isAlive_)
 			{
 				continue;
 			}
 
 			// 敵１の情報
-			VECTOR ene1Pos = enemys_[i]->GetEnemy().pos_;
-			float ene1CollRad = enemys_[i]->GetEnemy().collisionRadius_;
+			VECTOR ene1Pos = enemies_[i]->GetEnemy().pos_;
+			float ene1CollRad = enemies_[i]->GetEnemy().collisionRadius_;
 
 			// 敵2の情報
-			VECTOR ene2Pos = enemys_[j]->GetEnemy().pos_;
-			float ene2CollRad = enemys_[j]->GetEnemy().collisionRadius_;
+			VECTOR ene2Pos = enemies_[j]->GetEnemy().pos_;
+			float ene2CollRad = enemies_[j]->GetEnemy().collisionRadius_;
 
 			// 押し出し判定を行う
-			VECTOR pushPow = CollisionManager::ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
+			VECTOR pushPow = CollisionUtility::ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
 
 			// 敵1の押し出しを行う
-			enemys_[i]->Extrusion(pushPow);
+			enemies_[i]->Extrusion(pushPow);
 
 			// 敵1の方向とは逆のほうへ押し出しを行うように符号反転させる
 			pushPow = VScale(pushPow, -1.0f);
 			// 敵2の押し出しを行う
-			enemys_[j]->Extrusion(pushPow);
+			enemies_[j]->Extrusion(pushPow);
 		}
 	}
 }
@@ -505,14 +505,14 @@ void GameScene::EnemysExtrusionCollision(void)
 void GameScene::PlayerAndEnemyExtrusionCollison(void)
 {
 	// 敵の情報
-	auto& enemys = EnemyManager::GetInstance().GetEnemy();
+	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 
 	// プレイヤーの情報
 	VECTOR plaPos = player_->GetPlayer().pos_;
 	// 当たり判定用半径
 	float plaCollRad = player_->GetPlayer().collisionRadius_;
 
-	for (auto& enemy : enemys)
+	for (auto& enemy : enemies)
 	{
 		if (!enemy->GetEnemy().isAlive_)
 		{
@@ -525,7 +525,7 @@ void GameScene::PlayerAndEnemyExtrusionCollison(void)
 		float eneCollRad = enemy->GetEnemy().collisionRadius_;
 
 		// 押し出し判定を行う
-		VECTOR pushPow = CollisionManager::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
+		VECTOR pushPow = CollisionUtility::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
 
 		// プレイヤーの押し出しを行う
 		player_->Extrusion(pushPow);
@@ -579,7 +579,7 @@ void GameScene::SpawnerAndAttackCollision(void)
 			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;
 
 			// 当たり判定
-			if (CollisionManager::IsCollidingSphereCapsule(spawnerPos, spawnerRad, MagicLineStart, MagicLineEnd, MagicRad))
+			if (CollisionUtility::IsCollidingSphereCapsule(spawnerPos, spawnerRad, MagicLineStart, MagicLineEnd, MagicRad))
 			{
 				// 当たっていたら
 				// スポナー耐久値にダメージを与える
@@ -596,15 +596,15 @@ void GameScene::IsClear(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
 
-	auto& enemys_ = eneManaIns.GetEnemy();
+	auto& enemies_ = eneManaIns.GetEnemy();
 
 	bool isEnd_ = true;
-	if ((int)enemys_.size() <= 0)
+	if ((int)enemies_.size() <= 0)
 	{
 		isEnd_ = false;
 	}
 
-	for (auto& enemy : enemys_)
+	for (auto& enemy : enemies_)
 	{
 		if (enemy->GetEnemy().isAlive_)
 		{

@@ -2,7 +2,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SoundManager.h"
-#include "../../Manager/CollisionManager.h"
+#include "../../Utility/Collision/CollisionUtility.h"
 #include "Pause.h"
 
 // コンストラクタ
@@ -179,7 +179,7 @@ void Pause::Collision(void)
 
 	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
 	{
-		if (CollisionManager::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePause(static_cast<PAUSE>(i));
 			break;

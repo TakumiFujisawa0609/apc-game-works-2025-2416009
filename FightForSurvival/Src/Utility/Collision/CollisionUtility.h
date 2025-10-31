@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Common/Vector2.h"
+#include "../../Common/Vector2/Vector2.h"
 
-namespace CollisionManager
+namespace CollisionUtility
 {
 #pragma region 3D
 

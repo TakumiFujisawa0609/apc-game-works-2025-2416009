@@ -1,7 +1,7 @@
 #pragma once
 
 #include <DxLib.h>
-#include "Common/Vector2.h"
+#include "Common/Vector2/Vector2.h"
 
 struct Unit
 {

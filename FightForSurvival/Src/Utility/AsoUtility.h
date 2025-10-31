@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include <DxLib.h>
-#include "../Common/Vector2.h"
-#include "../Common/Quaternion.h"
+#include "../Common/Vector2/Vector2.h"
+#include "../Common/Quaternion/Quaternion.h"
 class AsoUtility
 {
 

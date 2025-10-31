@@ -3,15 +3,15 @@
 #include <vector>
 #include <memory>
 
-#include "EnemyBase.h"
+#include "Base/EnemyBase.h"
 #include "../Player/Player.h"
 
 // 敵のタイプ(エネミーのマネージャー等で作る！）
 enum class ENEMY_TYPE
 {
     ZOMBIE,
-    WIZARD,
-    GIANT,
+    BAT,
+    DRAGON,
     MAX,
 };
 
@@ -33,7 +33,7 @@ public:
 
     void Spawn(ENEMY_TYPE type, VECTOR pos);
 
-    const std::vector<EnemyBase*> GetEnemy(void)const { return enemys_; }
+    const std::vector<EnemyBase*> GetEnemy(void)const { return enemies_; }
 
     void GetPlayerPoint(Player* player) { player_ = player; }
 
@@ -62,7 +62,7 @@ private:
     Player* player_;
 
     // 全てのエネミーを管理する
-    std::vector<EnemyBase*> enemys_;
+    std::vector<EnemyBase*> enemies_;
 
     // エネミー用のモデルハンドルID
     std::vector<int> enemyModelIds_;
