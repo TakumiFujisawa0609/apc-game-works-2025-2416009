@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Enemy\Bat\Bat.cpp" />
     <ClCompile Include="Src\Common\Effect\RedDamageEffect.cpp" />
     <ClCompile Include="Src\Common\Quaternion\Quaternion.cpp" />
     <ClCompile Include="Src\Manager\SoundManager.cpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Enemy\Bat\Bat.h" />
     <ClInclude Include="Src\Common\Effect\RedDamageEffect.h" />
     <ClInclude Include="Src\Common\Quaternion\Quaternion.h" />
     <ClInclude Include="Src\Manager\SoundManager.h" />
