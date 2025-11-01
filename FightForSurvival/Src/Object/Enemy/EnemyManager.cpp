@@ -16,8 +16,19 @@ void EnemyManager::AddEnemy(EnemyBase* enemy)
 
 void EnemyManager::Load(void)
 {
+	// 敵へのパス
+	std::string enePas = Application::PATH_MODEL + "Enemy/";
+
 	// エネミーモデルのロード
-	enemyModelIds_.emplace_back(MV1LoadModel((Application::PATH_MODEL + "Enemy/Zombie.mv1").c_str()));
+	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie.mv1").c_str()));
+
+	// アニメーションのロード
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Idle.mv1").c_str()));
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Running.mv1").c_str()));
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Standing Melee Attack Downward.mv1").c_str()));
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Standing Walk Back.mv1").c_str()));
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie HitIdle.mv1").c_str()));
+	animModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Dying.mv1").c_str()));
 
 	//enemyModelIds_.emplace_back(
 	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Wizard.mv1").c_str()));
@@ -76,6 +87,7 @@ void EnemyManager::Delete(void)
 	}
 
 	enemyModelIds_.clear();
+	animModelIds_.clear();
 }
 
 void EnemyManager::Spawn(ENEMY_TYPE type, VECTOR pos)
@@ -115,7 +127,7 @@ EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 	switch (type)
 	{
 	case ENEMY_TYPE::ZOMBIE:
-		enemy = new Zombie(type, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, player_);
+		enemy = new Zombie(type, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1,animModelIds_, player_);
 		break;
 	case ENEMY_TYPE::BAT:
 		break;

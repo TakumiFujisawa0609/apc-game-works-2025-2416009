@@ -23,7 +23,7 @@ public:
 	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
 
 	// コンストラクタ
-	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
+	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
 
 	// デストラクタ
 	virtual ~EnemyBase(void);
@@ -107,6 +107,9 @@ protected:
 	// 座標更新のタイミング
 	int updateCollPosCounter_;
 
+	// アニメーション用のスピード(アニメーションと連動させる必要ある)
+	std::vector<float> speed;
+
 	// 状態別更新
 	// 移動処理
 	static void Chase(EnemyBase& enemy);
@@ -131,10 +134,10 @@ protected:
 	// ボーンフレーム取得
 	int SearchFrame(const std::string& boneName);
 
+	// アニメーション登録
+	virtual void DuplicateAnimation(int type, std::vector<float> speed, std::vector<int> animModelIds);
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
-	// アニメーション登録
-	virtual void AddAnimation(void) = 0;
 	// フレーム登録
 	virtual void AddFrames(void) = 0;
 

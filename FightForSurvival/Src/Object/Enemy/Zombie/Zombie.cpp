@@ -3,14 +3,14 @@
 #include "../../../Application.h"
 #include "Zombie.h"
 
-Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
-	: EnemyBase(type, baseModelId, baseAttackEffectModelId, player)
+Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
+	: EnemyBase(type, baseModelId, baseAttackEffectModelId,animModelIds, player)
 {
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
 
 	// アニメーション登録
-	AddAnimation();
+	//DuplicateAnimation();
 
 	// フレーム登録
 	AddFrames();
@@ -57,29 +57,6 @@ void Zombie::SetParam(void)
 	// 攻撃可能範囲
 	attack_.range_ = ATTACK_RANGE;
 
-}
-
-void Zombie::AddAnimation(void)
-{
-	std::string enePas = Application::PATH_MODEL + "Enemy/";
-	// 待機モーション
-	std::string pas = enePas + "Zombie Idle.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_IDLE), 60.0f, pas);
-	// 追跡モーション
-	pas = enePas + "Zombie Running.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_CHASE), 60.0f, pas);
-	// 攻撃モーション
-	pas = enePas + "Standing Melee Attack Downward.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_ATTACK), 60.0f, pas);
-	//// 後退モーション
-	pas = enePas + "Standing Walk Back.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_RETREAT), 60.0f, pas);
-	// ダメージ時モーション
-	pas = enePas + "Zombie HitIdle.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_HIT), 150.0f, pas);
-	// 死亡モーション
-	pas = enePas + "Zombie Dying.mv1";
-	animationController_->Add(static_cast<int>(ENEMY_STATE::STATE_DEAD), 75.0f, pas);
 }
 
 void Zombie::AddFrames(void)

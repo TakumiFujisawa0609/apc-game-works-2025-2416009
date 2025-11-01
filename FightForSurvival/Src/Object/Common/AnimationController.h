@@ -31,13 +31,15 @@ public:
 	// 外部FBXからアニメーション追加
 	void Add(int type, float speed, const std::string path);
 
+	// 指定のモデルと同じ基礎データを使用してモデルを作成する
+	void Duplicate(int type, float speed, const int modelId);
+
 	// アニメーション再生
 	void BlendAnimPlay(int nextPlayType, float duration , bool isLoop = true);
 	void Play(int type, bool isLoop = true);
 
 	void Update(void);
 	void Release(void);
-
 
 	// 再生終了
 	bool IsEnd(void)const;

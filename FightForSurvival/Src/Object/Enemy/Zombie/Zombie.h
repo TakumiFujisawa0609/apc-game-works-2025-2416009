@@ -56,15 +56,13 @@ public:
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
-	Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
+	Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
 	~Zombie(void)override;
 
 protected:
 
 	// パラメータ設定
 	void SetParam(void)override;
-	// アニメーション登録
-	void AddAnimation(void)override;
 	// フレーム登録
 	void AddFrames(void)override;
 private:

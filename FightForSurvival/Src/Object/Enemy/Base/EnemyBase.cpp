@@ -7,7 +7,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "EnemyBase.h"
 
-EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player)
+EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
 	:
 	player_(nullptr),
 	updateCollPosCounter_(0),
@@ -38,7 +38,6 @@ EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	// アニメーションクラスの生成
 	animationController_ = nullptr;
 	animationController_ = new AnimationController(enemy_.modelId_);
-
 }
 
 EnemyBase::~EnemyBase(void)
@@ -425,6 +424,14 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 	std::string fullBoneName = "mixamorig" + boneName;
 
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
+}
+
+void EnemyBase::DuplicateAnimation(int type, std::vector<float> speed, std::vector<int> animModelIds)
+{
+	for (int i = 0; i < animModelIds.size(); i++)
+	{
+		animationController_->Duplicate(type, speed[i], animModelIds[i]);
+	}
 }
 
 void EnemyBase::MoveLeftAndRight(void)

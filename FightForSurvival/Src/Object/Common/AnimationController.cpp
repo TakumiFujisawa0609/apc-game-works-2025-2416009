@@ -52,6 +52,21 @@ void AnimationController::Add(int type, float speed, const std::string path)
 	Add(type, speed, animation);
 }
 
+void AnimationController::Duplicate(int type, float speed, const int modelId)
+{
+	Animation animation;
+	animation.model = MV1DuplicateModel(modelId);
+	animation.animIndex = 0;
+
+	// モデルにアニメーションをアタッチする
+	animation.attachNo = MV1AttachAnim(modelId_, animation.animIndex, animation.model);
+	// ブレンド率を全て0にする
+	MV1SetAttachAnimBlendRate(modelId_, animation.attachNo, 0.0f);
+
+	// アニメーション追加の共通処理
+	Add(type, speed, animation);
+}
+
 void AnimationController::BlendAnimPlay(int nextPlayType, float duration, bool isLoop)
 {
 	if (playType_ == -1)
