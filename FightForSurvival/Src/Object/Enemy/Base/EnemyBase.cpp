@@ -39,6 +39,8 @@ EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	animationController_ = nullptr;
 	animationController_ = new AnimationController(enemy_.modelId_);
 
+	// 生成時には生きていない状態にする
+	enemy_.isAlive_ = false;
 }
 
 EnemyBase::~EnemyBase(void)
@@ -87,6 +89,12 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 
 void EnemyBase::Update(void)
 {
+	if (!enemy_.isAlive_)
+	{
+		// 生存していなければ処理を行わない
+		return;
+	}
+
 	// 座標更新のタイミング用カウンター
 	updateCollPosCounter_++;
 
@@ -217,21 +225,12 @@ void EnemyBase::ChangeState(ENEMY_STATE state)
 		auto& sysIns = SystemManager::GetInstance();
 		// 撃破したため、スコア加算する
 		sysIns.SetScore(sysIns.GetScore() + score_);
+
+		return;
 	}
-	else if (state_.state_ == ENEMY_STATE::STATE_IDLE || state_.state_ == ENEMY_STATE::STATE_CHASE)
-	{
-		if (animationController_ != nullptr)
-		{
-			animationController_->BlendAnimPlay(static_cast<int>(state_.state_), AnimationController::BLEND_LATIO);
-		}
-	}
-	else
-	{
-		if (animationController_ != nullptr)
-		{
-			animationController_->BlendAnimPlay(static_cast<int>(state_.state_), AnimationController::BLEND_LATIO, false);
-		}
-	}
+
+	// 死亡していないのであれば、そのステートに合ったアニメーションを再生する
+	PlayAnim();
 }
 
 void EnemyBase::Chase(EnemyBase& enemy)
@@ -423,13 +422,6 @@ void EnemyBase::Extrusion(VECTOR overlap)
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 }
 
-int EnemyBase::SearchFrame(const std::string& boneName)
-{
-	std::string fullBoneName = "mixamorig" + boneName;
-
-	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
-}
-
 void EnemyBase::DuplicateAnimation(std::vector<float> speed, std::vector<int> animModelIds)
 {
 	for (int i = 0; i < animModelIds.size(); i++)
@@ -464,4 +456,38 @@ void EnemyBase::MoveLeftAndRight(void)
 	VECTOR moveDir = VGet(move_.leftRightRate_, 0.0f, 0.0f);
 
 	enemy_.dir_ = VAdd(enemy_.dir_, moveDir);
+}
+
+void EnemyBase::PlayAnim(void)
+{
+	if (animationController_ == nullptr)
+	{
+		// アニメーションコントローラーの中身が空だったら処理を行わない
+		return;
+	}
+
+	switch (state_.state_)
+	{
+	case ENEMY_STATE::STATE_IDLE:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_IDLE), AnimationController::BLEND_LATIO);
+		break;
+	case ENEMY_STATE::STATE_CHASE:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_CHASE), AnimationController::BLEND_LATIO);
+		break;
+	case ENEMY_STATE::STATE_ATTACK:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_ATTACK), AnimationController::BLEND_LATIO, false);
+		break;
+	case ENEMY_STATE::STATE_RETREAT:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_RETREAT), AnimationController::BLEND_LATIO, false);
+		break;
+	case ENEMY_STATE::STATE_HIT:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_HIT), AnimationController::BLEND_LATIO, false);
+		break;
+	case ENEMY_STATE::STATE_DEAD:
+		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_DEAD), AnimationController::BLEND_LATIO, false);
+		break;
+	default:
+		break;
+	}
+
 }

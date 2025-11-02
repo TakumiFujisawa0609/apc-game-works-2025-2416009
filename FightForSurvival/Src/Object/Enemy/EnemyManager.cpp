@@ -2,6 +2,7 @@
 #include "../../Application.h"
 #include "../../Scene/SceneManager.h"
 #include "Zombie/Zombie.h"
+#include "Bat/Bat.h"
 #include "EnemyManager.h"
 
 EnemyManager* EnemyManager::instance_ = nullptr;
@@ -21,6 +22,15 @@ void EnemyManager::Load(void)
 
 	// エネミーモデルのロード
 	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie.mv1").c_str()));
+	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Bat.mv1").c_str()));
+
+	// 空のVector型を渡すためにアニメーションのロードの前にコウモリのメモリ確保を行う
+	for (int i = 0; i < BAT_NUM; i++)
+	{
+		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
+		auto enemy = new Bat(ENEMY_TYPE::BAT, enemyModelIds_[static_cast<int>(ENEMY_TYPE::BAT)],-1,zombieAnimModelIds_, player_);
+		AddEnemy(enemy);
+	}
 
 	// アニメーションのロード
 	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Idle.mv1").c_str()));
@@ -30,10 +40,12 @@ void EnemyManager::Load(void)
 	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie HitIdle.mv1").c_str()));
 	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Dying.mv1").c_str()));
 
-	//enemyModelIds_.emplace_back(
-	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Wizard.mv1").c_str()));
-	//enemyModelIds_.emplace_back(
-	//	MV1LoadModel((Application::PATH_MODEL + "Enemy/Giant.mv1").c_str()));
+	for (int i = 0; i < ZOMBIE_NUM; i++)
+	{
+		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
+		auto enemy = new Zombie(ENEMY_TYPE::ZOMBIE, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, zombieAnimModelIds_, player_);
+		AddEnemy(enemy);
+	}
 
 	//// 攻撃エフェクト用のモデルのロード
 	//attackEffectModelIds_.emplace_back(
@@ -94,6 +106,13 @@ void EnemyManager::Spawn(ENEMY_TYPE type, VECTOR pos)
 {
 	// 有効な敵を取得する
 	EnemyBase* enemy = GetValidEnemy(type);
+
+	if (enemy == nullptr)
+	{
+		// 使われていない敵がいなかったら復活処理は行わない
+		return;
+	}
+
 	// 敵の初期化
 	enemy->CreateEnemy(pos);
 }
@@ -107,46 +126,18 @@ EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 
 	for (int i = 0; i < size; i++)
 	{
-		// 魔法の種別が同じ、かつ、未使用(生存していない)なら再利用する
-		if (!enemies_[i]->GetEnemy().isAlive_)
-		{
-			return enemies_[i];
-		}
-
 		// 敵の種類が違ったら次の敵を見る
 		if (enemies_[i]->GetType() != type)
 		{
 			continue;
 		}
+
+		// 魔法の種別が同じ、かつ、未使用(生存していない)なら再利用する
+		if (!enemies_[i]->GetEnemy().isAlive_)
+		{
+			return enemies_[i];
+		}
 	}
 
-	// 未使用の敵がいなかった場合新しい敵を生成
-	EnemyBase* enemy = nullptr;
-
-	// 新しい敵のインスタンスを生成する
-	switch (type)
-	{
-	case ENEMY_TYPE::ZOMBIE:
-		enemy = new Zombie(type, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, zombieAnimModelIds_, player_);
-		break;
-	case ENEMY_TYPE::BAT:
-		break;
-	case ENEMY_TYPE::DRAGON:
-		break;
-	case ENEMY_TYPE::MAX:
-		break;
-	default:
-		break;
-	}
-
-	// nullチェック
-	if (enemy == nullptr)
-	{
-		return nullptr;
-	}
-
-	// 可変長配列に追加
-	ins.AddEnemy(enemy);
-
-	return enemy;
+	return nullptr;
 }

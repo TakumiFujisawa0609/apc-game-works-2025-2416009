@@ -18,6 +18,13 @@ enum class ENEMY_TYPE
 class EnemyManager
 {
 public:
+
+    // ゾンビを出現させることができる最大数
+    static constexpr int ZOMBIE_NUM = 50;
+
+    // コウモリを出現させることができる最大数
+    static constexpr int BAT_NUM = 50;
+
     // シングルトン（生成・取得・削除）
     static void CreateInstance(void) { if (instance_ == nullptr) { instance_ = new EnemyManager(); } };
     static EnemyManager& GetInstance(void) { return *instance_; };
@@ -38,6 +45,7 @@ public:
     void GetPlayerPoint(Player* player) { player_ = player; }
 
 private:
+
     // 静的インスタンス
     static EnemyManager* instance_;
 

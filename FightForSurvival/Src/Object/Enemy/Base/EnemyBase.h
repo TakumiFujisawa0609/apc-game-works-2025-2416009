@@ -74,8 +74,11 @@ public:
 	// 攻撃待ち時間のセットする
 	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
+	// 押し出し処理
 	void Extrusion(VECTOR overlap);
 
+	// プレイヤー側に向く処理
+	void LookPlayer(void);
 protected:
 	AnimationController* animationController_;
 	Player* player_;
@@ -122,17 +125,11 @@ protected:
 	// 完全死亡
 	static void End(EnemyBase& enemy);
 
-	// プレイヤー側に向く処理
-	void LookPlayer(void);
-
 	// 当たり判定用の座標を更新
 	void UpdateCollisionPositions(void);
 
 	// ボーンのワールド座標を取得する
 	VECTOR GetBoneWorldPosition(int bone,float offset);
-
-	// ボーンフレーム取得
-	int SearchFrame(const std::string& boneName);
 
 	// アニメーション登録
 	virtual void DuplicateAnimation(std::vector<float> speed, std::vector<int> animModelIds);
@@ -143,5 +140,8 @@ protected:
 
 	// 左右移動
 	void MoveLeftAndRight(void);
+
+	// ステート別アニメーション再生
+	virtual void PlayAnim(void);
 };
 

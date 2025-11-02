@@ -53,8 +53,8 @@ void GameScene::Load(void)
 
 	// “Gƒ}ƒl[ƒWƒƒ‚Ì¶¬Eƒ[ƒh
 	EnemyManager::CreateInstance();
-	EnemyManager::GetInstance().Load();
 	EnemyManager::GetInstance().GetPlayerPoint(player_);
+	EnemyManager::GetInstance().Load();
 
 	// ƒJƒƒ‰‚Ì¶¬
 	camera_ = new Camera(player_);
@@ -352,6 +352,11 @@ void GameScene::DamageCollision(void)
 
 	for (auto* enemy : enemies_)
 	{
+		if (!enemy->GetEnemy().isAlive_)
+		{
+			// ¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—‚ðs‚í‚È‚¢
+			continue;
+		}
 
 		if (!enemy->IsCollisionState())
 		{
@@ -461,41 +466,41 @@ void GameScene::DamageCollision(void)
 void GameScene::enemiesExtrusionCollision(void)
 {
 	auto& eneManaIns = EnemyManager::GetInstance();
-	auto& enemies_ = eneManaIns.GetEnemy();
+	auto& enemies = eneManaIns.GetEnemy();
 
-	for (int i = 0; i < enemies_.size(); i++)
+	for (int i = 0; i < enemies.size(); i++)
 	{
-		if (!enemies_[i]->GetEnemy().isAlive_)
+		if (!enemies[i]->GetEnemy().isAlive_)
 		{
 			continue;
 		}
 
-		for (int j = i + 1; j < enemies_.size(); j++)
+		for (int j = i + 1; j < enemies.size(); j++)
 		{
 
-			if (!enemies_[j]->GetEnemy().isAlive_)
+			if (!enemies[j]->GetEnemy().isAlive_)
 			{
 				continue;
 			}
 
 			// “G‚P‚Ìî•ñ
-			VECTOR ene1Pos = enemies_[i]->GetEnemy().pos_;
-			float ene1CollRad = enemies_[i]->GetEnemy().collisionRadius_;
+			VECTOR ene1Pos = enemies[i]->GetEnemy().pos_;
+			float ene1CollRad = enemies[i]->GetEnemy().collisionRadius_;
 
 			// “G2‚Ìî•ñ
-			VECTOR ene2Pos = enemies_[j]->GetEnemy().pos_;
-			float ene2CollRad = enemies_[j]->GetEnemy().collisionRadius_;
+			VECTOR ene2Pos = enemies[j]->GetEnemy().pos_;
+			float ene2CollRad = enemies[j]->GetEnemy().collisionRadius_;
 
 			// ‰Ÿ‚µo‚µ”»’è‚ðs‚¤
 			VECTOR pushPow = CollisionUtility::ExtrusionCollision(ene1Pos, ene1CollRad, ene2Pos, ene2CollRad);
 
 			// “G1‚Ì‰Ÿ‚µo‚µ‚ðs‚¤
-			enemies_[i]->Extrusion(pushPow);
+			enemies[i]->Extrusion(pushPow);
 
 			// “G1‚Ì•ûŒü‚Æ‚Í‹t‚Ì‚Ù‚¤‚Ö‰Ÿ‚µo‚µ‚ðs‚¤‚æ‚¤‚É•„†”½“]‚³‚¹‚é
 			pushPow = VScale(pushPow, -1.0f);
 			// “G2‚Ì‰Ÿ‚µo‚µ‚ðs‚¤
-			enemies_[j]->Extrusion(pushPow);
+			enemies[j]->Extrusion(pushPow);
 		}
 	}
 }

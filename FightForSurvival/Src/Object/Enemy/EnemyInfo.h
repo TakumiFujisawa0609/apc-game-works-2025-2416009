@@ -19,6 +19,17 @@ enum ENEMY_STATE
     ENEMY_STATE_MAX,    // 敵の全状態
 };
 
+// アニメーション種別
+enum class ANIM_TYPE_FLY
+{
+	ATTACK,
+	ATTACK_2,
+	DEATH,
+	FLYING,
+	HIT,
+	MAX,
+};
+
 // 当たり判定部位座標
 enum COLLISION_POS
 {

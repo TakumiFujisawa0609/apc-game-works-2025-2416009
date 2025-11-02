@@ -69,19 +69,21 @@ void Zombie::SetParam(void)
 
 void Zombie::AddFrames(void)
 {
+	std::string name = "mixamorig5:";
+
 	// 頭のボーンフレーム取得
-	collision_.headBone_ = SearchFrame("5:Head");
+	collision_.headBone_ = MV1SearchFrame(enemy_.modelId_, (name+ "Head").c_str());
 	// 体のボーンフレーム取得
-	collision_.bodyBoneTop_ = SearchFrame("5:Spine2");
-	collision_.bodyBoneUnder_ = SearchFrame("5:Hips");
+	collision_.bodyBoneTop_ = MV1SearchFrame(enemy_.modelId_, (name + "Spine2").c_str());
+	collision_.bodyBoneUnder_ = MV1SearchFrame(enemy_.modelId_, (name + "Hips").c_str());
 	// 右腕のボーンフレーム取得
-	collision_.armBoneTopR_ = SearchFrame("5:RightArm");
+	collision_.armBoneTopR_ = MV1SearchFrame(enemy_.modelId_, (name + "RightArm").c_str());
 	// 右手のボーンフレーム取得
-	collision_.handBoneR_ = SearchFrame("5:RightHand");
+	collision_.handBoneR_ = MV1SearchFrame(enemy_.modelId_, (name + "RightHand").c_str());
 	// 左腕のボーンフレーム取得
-	collision_.armBoneTopL_ = SearchFrame("5:LeftArm");
+	collision_.armBoneTopL_ = MV1SearchFrame(enemy_.modelId_, (name + "LeftArm").c_str());
 	// 左手のボーンフレーム取得
-	collision_.handBoneL_ = SearchFrame("5:LeftHand");
+	collision_.handBoneL_ = MV1SearchFrame(enemy_.modelId_, (name + "LeftHand").c_str());
 }
 
 void Zombie::Idle(EnemyBase& enemy)

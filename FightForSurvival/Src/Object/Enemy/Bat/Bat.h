@@ -11,7 +11,7 @@ public:
 	static constexpr VECTOR ANGLE = { 0.0f,0.0f,0.0f };
 
 	// モデルの大きさ
-	static constexpr VECTOR SCALE = { 1.0f,1.0f,1.0f };
+	static constexpr VECTOR SCALE = { 0.5f,0.5f,0.5f };
 
 	// 体力
 	static constexpr int HP = 10;
@@ -35,28 +35,28 @@ public:
 	static constexpr float COLLISION_RADIUS_HAND = 15.0f;
 
 	// モデルと頭の相対座標
-	static constexpr float OFFSET_POS_HEAD = 10.0f;
+	static constexpr float OFFSET_POS_HEAD = 0.0f;
 
 	// モデルと体の相対座標(上)
-	static constexpr float OFFSET_POS_BODY_TOP = -2.0f;
+	static constexpr float OFFSET_POS_BODY_TOP = -0.0f;
 	// モデルと体の相対座標(下)
-	static constexpr float OFFSET_POS_BODY_UNDER = -60.0f;
+	static constexpr float OFFSET_POS_BODY_UNDER = 0.0f;
 
 	// モデルと腕の相対座標(上)
-	static constexpr float OFFSET_POS_ARM_TOP = -2.0f;
+	static constexpr float OFFSET_POS_ARM_TOP = -0.0f;
 	// モデルと腕の相対座標(下)
-	static constexpr float OFFSET_POS_ARM_UNDER = 5.0f;
+	static constexpr float OFFSET_POS_ARM_UNDER = 0.0f;
 
 	// モデルと手の相対座標
-	static constexpr float OFFSET_POS_HAND = 15.0f;
+	static constexpr float OFFSET_POS_HAND = 0.0f;
 
 	// 攻撃可能範囲
-	static constexpr float ATTACK_RANGE = 75;
+	static constexpr float ATTACK_RANGE = 100.0f;
 
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
-	Bat(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, Player* player);
+	Bat(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
 	~Bat(void)override;
 
 protected:
@@ -65,6 +65,9 @@ protected:
 	void SetParam(void)override;
 	// フレーム登録
 	void AddFrames(void)override;
+
+	// ステート別アニメーション再生
+	void PlayAnim(void)override;
 private:
 
 	// 待機処理
