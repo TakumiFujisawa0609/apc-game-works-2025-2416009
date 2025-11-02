@@ -38,6 +38,7 @@ EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModel
 	// アニメーションクラスの生成
 	animationController_ = nullptr;
 	animationController_ = new AnimationController(enemy_.modelId_);
+
 }
 
 EnemyBase::~EnemyBase(void)
@@ -170,6 +171,9 @@ void EnemyBase::Release(void)
 		delete animationController_;
 		animationController_ = nullptr;
 	}
+
+	// 中身解放
+	speed_.clear();
 
 	// 中にデータが入っていたら解放する
 	MV1DeleteModel(enemy_.modelId_);
@@ -426,11 +430,11 @@ int EnemyBase::SearchFrame(const std::string& boneName)
 	return MV1SearchFrame(enemy_.modelId_, fullBoneName.c_str());
 }
 
-void EnemyBase::DuplicateAnimation(int type, std::vector<float> speed, std::vector<int> animModelIds)
+void EnemyBase::DuplicateAnimation(std::vector<float> speed, std::vector<int> animModelIds)
 {
 	for (int i = 0; i < animModelIds.size(); i++)
 	{
-		animationController_->Duplicate(type, speed[i], animModelIds[i]);
+		animationController_->Duplicate(i, speed[i], animModelIds[i]);
 	}
 }
 

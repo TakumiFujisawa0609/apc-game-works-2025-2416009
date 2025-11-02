@@ -108,7 +108,7 @@ protected:
 	int updateCollPosCounter_;
 
 	// アニメーション用のスピード(アニメーションと連動させる必要ある)
-	std::vector<float> speed;
+	std::vector<float> speed_;
 
 	// 状態別更新
 	// 移動処理
@@ -135,7 +135,7 @@ protected:
 	int SearchFrame(const std::string& boneName);
 
 	// アニメーション登録
-	virtual void DuplicateAnimation(int type, std::vector<float> speed, std::vector<int> animModelIds);
+	virtual void DuplicateAnimation(std::vector<float> speed, std::vector<int> animModelIds);
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
 	// フレーム登録

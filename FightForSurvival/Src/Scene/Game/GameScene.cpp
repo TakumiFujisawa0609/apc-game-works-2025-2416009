@@ -340,8 +340,6 @@ void GameScene::Collisions(void)
 	DamageCollision();
 	// 敵同士の押し出し判定
 	enemiesExtrusionCollision();
-	// プレイヤーと敵の押し出し判定
-	PlayerAndEnemyExtrusionCollison();
 	// スポナーとプレイヤーの攻撃の当たり判定
 	SpawnerAndAttackCollision();
 }
@@ -500,43 +498,6 @@ void GameScene::enemiesExtrusionCollision(void)
 			enemies_[j]->Extrusion(pushPow);
 		}
 	}
-}
-
-void GameScene::PlayerAndEnemyExtrusionCollison(void)
-{
-	// 敵の情報
-	auto& enemies = EnemyManager::GetInstance().GetEnemy();
-
-	// プレイヤーの情報
-	VECTOR plaPos = player_->GetPlayer().pos_;
-	// 当たり判定用半径
-	float plaCollRad = player_->GetPlayer().collisionRadius_;
-
-	for (auto& enemy : enemies)
-	{
-		if (!enemy->GetEnemy().isAlive_)
-		{
-			// 生きていなかったら処理を行わず次の敵を見る
-			continue;
-		}
-
-		// 敵１の情報
-		VECTOR enePos = enemy->GetEnemy().pos_;
-		float eneCollRad = enemy->GetEnemy().collisionRadius_;
-
-		// 押し出し判定を行う
-		VECTOR pushPow = CollisionUtility::ExtrusionCollision(plaPos, plaCollRad, enePos, eneCollRad);
-
-		// プレイヤーの押し出しを行う
-		player_->Extrusion(pushPow);
-
-		// プレイヤーの方向とは逆のほうへ押し出しを行うように符号反転させる
-		pushPow = VScale(pushPow, -1.0f);
-		// 敵2の押し出しを行う
-		enemy->Extrusion(pushPow);
-
-	}
-
 }
 
 void GameScene::SpawnerAndAttackCollision(void)

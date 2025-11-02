@@ -63,8 +63,6 @@ protected:
 
 	// パラメータ設定
 	void SetParam(void)override;
-	// アニメーション登録
-	void DuplicateAnimation(int type, std::vector<float> speed, std::vector<int> animModelIds)override;
 	// フレーム登録
 	void AddFrames(void)override;
 private:

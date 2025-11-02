@@ -74,8 +74,6 @@ private:
 	void DamageCollision(void);
 	// 敵同士のの押し出し判定
 	void enemiesExtrusionCollision(void);
-	// 敵とプレイヤーの押し出し判定
-	void PlayerAndEnemyExtrusionCollison(void);
 	// スポナーとプレイヤーの攻撃の当たり判定
 	void SpawnerAndAttackCollision(void);
 

@@ -9,8 +9,16 @@ Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, st
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
 
+	// アニメーション用のスピード登録
+	speed_.emplace_back(60.0f);
+	speed_.emplace_back(60.0f);
+	speed_.emplace_back(60.0f);
+	speed_.emplace_back(60.0f);
+	speed_.emplace_back(150.0f);
+	speed_.emplace_back(75.0f);
+
 	// アニメーション登録
-	//DuplicateAnimation();
+	DuplicateAnimation(speed_, animModelIds);
 
 	// フレーム登録
 	AddFrames();
