@@ -3,10 +3,13 @@
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SoundManager.h"
 #include "../../Utility/Collision/CollisionUtility.h"
+#include "Setting/Setting.h"
 #include "Pause.h"
 
 // コンストラクタ
 Pause::Pause(void)
+	:
+	setting_(nullptr)
 {
 }
 
@@ -19,6 +22,10 @@ Pause::~Pause(void)
 void Pause::Load(void)
 {
 	//LoadDivGraph("Data/Image/Pause/pause.png", DRAW_NUM, DRAW_NUM, 1, IMAGE_SIZE_X, IMAGE_SIZE_Y, images_,true);
+
+	// 設定のインスタンスを生成
+	setting_ = new Setting();
+	setting_->Load();
 }
 
 // 初期化
@@ -34,21 +41,29 @@ void Pause::Init(void)
 
 	// ポーズモード中か確認
 	pauseMode_ = false;
+
+	// 設定中か
+	isSetting_ = false;
+
+	// 設定の初期化
+	setting_->Init();
 }
 
 // 更新
 void Pause::Update(void)
 {
-	if (isSetting_)
-	{
-		// 設定時は設定の処理のみ受け付ける
-		//setting_->Update();
-		return;
-	}
-
 	// ポーズモード中だったら選択処理できる
 	if (pauseMode_)
 	{
+
+		isSetting_ = setting_->GetIsSetting();
+		if (isSetting_)
+		{
+			// 設定時は設定の処理のみ受け付ける
+			setting_->Update();
+			return;
+		}
+
 		if (GetJoypadNum() == 0)
 		{
 			// 引数の座標によって選択中のものを変化させる
@@ -71,8 +86,17 @@ void Pause::Update(void)
 // 描画
 void Pause::Draw(void)
 {
+
 	if (pauseMode_)
 	{
+
+		if (isSetting_)
+		{
+			// 設定の描画
+			setting_->Draw();
+			return;
+		}
+
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
 		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
@@ -136,17 +160,18 @@ void Pause::Draw(void)
 #endif // _DEBUG
 
 
-		if (isSetting_)
-		{
-			// 設定の描画
-			//setting_->Draw();
-		}
 	}
 }
 
 // 解放
 void Pause::Release(void)
 {
+	if (setting_ != nullptr)
+	{
+		setting_->Release();
+		delete setting_;
+		setting_ = nullptr;
+	}
 }
 
 void Pause::Confirm(void)
@@ -170,7 +195,7 @@ void Pause::Confirm(void)
 		case Pause::PAUSE::SETTING:
 
 			// 設定モードに入る
-			isSetting_ = true;
+			setting_->SetIsSetting(true);
 
 			break;
 		case Pause::PAUSE::TITLE:

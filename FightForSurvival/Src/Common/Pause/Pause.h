@@ -3,6 +3,8 @@
 #include "../Vector2/Vector2.h"
 #include "../../Application.h"
 
+class Setting;
+
 class Pause
 {
 public:
@@ -63,6 +65,10 @@ private:
 	Vector2 pos_[DRAW_NUM];
 
 protected:
+
+	// 設定のインスタンスポインタ
+	Setting* setting_;
+
 	// ポーズモードの種類
 	PAUSE pause_;
 
