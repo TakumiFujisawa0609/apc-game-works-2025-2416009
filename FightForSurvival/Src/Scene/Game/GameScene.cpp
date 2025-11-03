@@ -7,7 +7,7 @@
 #include "../../Common/Score/Score.h"
 #include "../../Object/Enemy/Zombie/Zombie.h"
 #include "../../Object/Player/Weapon/WeaponBase.h"
-#include "../../Object/Player/Weapon/Magic/MagicBase.h"
+#include "../../Object/Magic/MagicBase.h"
 #include "../../Utility/Collision/CollisionUtility.h"
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SystemManager.h"

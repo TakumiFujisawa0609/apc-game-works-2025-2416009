@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../WeaponBase.h"
+#include "../Player/Weapon/WeaponBase.h"
 class WeaponBase;
 
 class MagicBase

@@ -108,14 +108,20 @@ void Bat::PlayAnim(void)
 
 void Bat::Idle(EnemyBase& enemy)
 {
-	if (enemy.GetAttackCooldown() <= 0.0f)
+	if (enemy.SearchAttackRange())
 	{
+		// UŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚½‚ç
 		// ƒvƒŒƒCƒ„[‚Ì‚Ù‚¤‚ÖŒü‚­
 		enemy.LookPlayer();
 
-		// UŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚ÄAUŒ‚‘Ò‚¿ŽžŠÔ‚ª0‚¾‚Á‚½‚çUŒ‚‚ÖˆÚs
-		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
-		enemy.SetIsAttack(true);
+		if (enemy.GetAttackCooldown() <= 0.0f)
+		{
+			// –‚–@‚ð”­“®(¶¬)
+			enemy.CraateMagic();
+
+			// UŒ‚”ÍˆÍ‚É“ü‚Á‚Ä‚¢‚ÄAUŒ‚‘Ò‚¿ŽžŠÔ‚ª0‚¾‚Á‚½‚çUŒ‚‚ÖˆÚs
+			enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		}
 	}
 }
 

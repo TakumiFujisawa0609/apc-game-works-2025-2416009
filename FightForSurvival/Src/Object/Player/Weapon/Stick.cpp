@@ -1,5 +1,5 @@
 #include <DxLib.h>
-#include "Magic/MagicBase.h"
+#include "../../Magic/MagicBase.h"
 #include "../../../Application.h"
 #include "Stick.h"
 

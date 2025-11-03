@@ -3,7 +3,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../Application.h"
 #include "../Player.h"
-#include "Magic/FireMagic.h"
+#include "../../Magic/FireMagic.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../../../Utility/MatrixUtility.h"
 #include "WeaponBase.h"

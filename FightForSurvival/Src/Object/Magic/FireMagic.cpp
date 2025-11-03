@@ -1,4 +1,3 @@
-#include "../../../../Utility/AsoUtility.h"
 #include "FireMagic.h"
 
 FireMagic::FireMagic(int baseModelId) :MagicBase(baseModelId)
@@ -11,8 +10,8 @@ FireMagic::~FireMagic(void)
 
 void FireMagic::SetParam(void)
 {
-	magic_.scale_ = AsoUtility::VECTOR_ONE;
-	magic_.rotate_ = AsoUtility::VECTOR_ZERO;
+	magic_.scale_ = SCALE;
+	magic_.rotate_ = ROTATE;
 
 	magic_.speed_ = SPEED;
 	magic_.cntAlive_ = CNT_ALIVE;

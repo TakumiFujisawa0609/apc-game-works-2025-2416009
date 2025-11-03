@@ -97,6 +97,7 @@ void Zombie::Idle(EnemyBase& enemy)
 	{
 		// 攻撃範囲に入っていて、攻撃待ち時間が0だったら攻撃へ移行
 		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		// 攻撃当たり判定用目印
 		enemy.SetIsAttack(true);
 	}
 }
@@ -114,6 +115,8 @@ void Zombie::Attack(EnemyBase& enemy)
 			enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
 			// 攻撃待ち時間をセット
 			enemy.SetAttackCooldown(ATTACK_COOLDOWN);
+			// 攻撃当たり判定用目印
+			enemy.SetIsAttack(false);
 		}
 	}
 }

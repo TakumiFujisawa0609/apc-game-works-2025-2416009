@@ -11,7 +11,7 @@ public:
 	static constexpr VECTOR ANGLE = { 0.0f,0.0f,0.0f };
 
 	// モデルの大きさ
-	static constexpr VECTOR SCALE = { 0.5f,0.5f,0.5f };
+	static constexpr VECTOR SCALE = { 0.4f,0.4f,0.4f };
 
 	// 体力
 	static constexpr int HP = 10;
@@ -20,7 +20,7 @@ public:
 	static constexpr float SPEED = 4.0f;
 
 	// 撃破スコア
-	static constexpr int SCORE = 10;
+	static constexpr int SCORE = 50;
 
 	// 当たり判定用半径
 	// 押し出し用
@@ -51,7 +51,7 @@ public:
 	static constexpr float OFFSET_POS_HAND = 0.0f;
 
 	// 攻撃可能範囲
-	static constexpr float ATTACK_RANGE = 100.0f;
+	static constexpr float ATTACK_RANGE = 1200.0f;
 
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;

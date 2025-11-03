@@ -98,8 +98,9 @@ void AnimationController::BlendAnimPlay(int nextPlayType, float duration, bool i
 // アニメーション再生
 void AnimationController::Play(int type, bool isLoop)
 {
-	if (playType_ == type)
+	if (playType_ == type && isLoop_ == isLoop)
 	{
+		// Loopも一緒で用途が同じだったら処理を行わない
 		return;
 	}
 

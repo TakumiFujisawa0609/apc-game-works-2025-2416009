@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Magic\BatMagic\BatMagic.cpp" />
     <ClCompile Include="Src\Object\Enemy\Bat\Bat.cpp" />
     <ClCompile Include="Src\Common\Effect\RedDamageEffect.cpp" />
     <ClCompile Include="Src\Common\Quaternion\Quaternion.cpp" />
@@ -38,8 +39,8 @@
     <ClCompile Include="Src\Object\Enemy\Base\EnemyBase.cpp" />
     <ClCompile Include="Src\Common\Vector2\Vector2.cpp" />
     <ClCompile Include="Src\Object\Common\Cursor.cpp" />
-    <ClCompile Include="Src\Object\Player\Weapon\Magic\FireMagic.cpp" />
-    <ClCompile Include="Src\Object\Player\Weapon\Magic\MagicBase.cpp" />
+    <ClCompile Include="Src\Object\Magic\FireMagic.cpp" />
+    <ClCompile Include="Src\Object\Magic\MagicBase.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\Stick.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\WeaponBase.cpp" />
     <ClCompile Include="Src\Common\Fps\FpsControl.cpp" />
@@ -66,6 +67,7 @@
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Magic\BatMagic\BatMagic.h" />
     <ClInclude Include="Src\Object\Enemy\Bat\Bat.h" />
     <ClInclude Include="Src\Common\Effect\RedDamageEffect.h" />
     <ClInclude Include="Src\Common\Quaternion\Quaternion.h" />
@@ -86,8 +88,8 @@
     <ClInclude Include="Src\Object\Enemy\Base\EnemyBase.h" />
     <ClInclude Include="Src\Common\Vector2\Vector2.h" />
     <ClInclude Include="Src\Object\Common\Cursor.h" />
-    <ClInclude Include="Src\Object\Player\Weapon\Magic\FireMagic.h" />
-    <ClInclude Include="Src\Object\Player\Weapon\Magic\MagicBase.h" />
+    <ClInclude Include="Src\Object\Magic\FireMagic.h" />
+    <ClInclude Include="Src\Object\Magic\MagicBase.h" />
     <ClInclude Include="Src\Object\Player\Weapon\Stick.h" />
     <ClInclude Include="Src\Object\Player\Weapon\WeaponBase.h" />
     <ClInclude Include="Src\Base.h" />

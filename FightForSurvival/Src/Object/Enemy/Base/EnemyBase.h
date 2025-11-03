@@ -7,7 +7,7 @@
 
 class AnimationController;
 class Player;
-
+class MagicBase;
 
 class EnemyBase
 {
@@ -21,6 +21,9 @@ public:
 
 	// 座標更新のタイミング(5フレームごとに1回)
 	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
+
+	// 魔法の位置の相対座標(ローカル)
+	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,70.0f,-80.0f };
 
 	// コンストラクタ
 	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
@@ -79,9 +82,13 @@ public:
 
 	// プレイヤー側に向く処理
 	void LookPlayer(void);
+
+	// 魔法生成処理
+	void CraateMagic(void);
 protected:
 	AnimationController* animationController_;
 	Player* player_;
+	std::vector<MagicBase*> magics_;
 
 	// プレイヤーの情報
 	Unit enemy_;
@@ -143,5 +150,12 @@ protected:
 
 	// ステート別アニメーション再生
 	virtual void PlayAnim(void);
+
+	// 魔法の更新
+	void UpdateMagic(void);
+	// 魔法の描画
+	void DrawMagic(void);
+
+	virtual MagicBase* GetValidMagic(void);
 };
 

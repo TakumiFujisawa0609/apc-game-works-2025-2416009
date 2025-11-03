@@ -1,10 +1,12 @@
 #include <DxLib.h>
 #include "../../../Utility/AsoUtility.h"
+#include "../../../Utility/MatrixUtility.h"
 #include "../../../Utility/Collision/CollisionUtility.h"
 #include "../../Player/Player.h"
 #include "../../Common/AnimationController.h"
 #include "../../../Manager/SystemManager.h"
 #include "../../../Scene/SceneManager.h"
+#include "../../Magic/BatMagic/BatMagic.h"
 #include "EnemyBase.h"
 
 EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
@@ -128,6 +130,9 @@ void EnemyBase::Update(void)
 		// 初期化
 		updateCollPosCounter_ = 0;
 	}
+
+	// 魔法の更新
+	UpdateMagic();
 }
 
 void EnemyBase::Draw(void)
@@ -139,6 +144,9 @@ void EnemyBase::Draw(void)
 	}
 
 	MV1DrawModel(enemy_.modelId_);
+
+	// 魔法の描画
+	DrawMagic();
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
@@ -166,7 +174,7 @@ void EnemyBase::Draw(void)
 	DrawSphere3D(collision_.colPos_[HAND_L],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
 
 	// 攻撃可能範囲
-	//DrawSphere3D(attackRangePos_, attackRange_, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(attack_.rangePos_, attack_.range_, 10, 0x0000ff, 0x0000ff, false);
 #endif // _DEBUG
 }
 
@@ -343,6 +351,25 @@ void EnemyBase::LookPlayer(void)
 	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
 }
 
+void EnemyBase::CraateMagic(void)
+{
+	// 有効な魔法を取得する
+	auto* magic = GetValidMagic();
+	// 初期化処理
+	magic->Init();
+
+	// モデルの回転行列取得
+	MATRIX matRot = MatrixUtility::GetMatrixRotateXYZ(enemy_.angles_);
+
+	// 方向と同じ要領で、相対座標を回転
+	VECTOR localPosRot = VTransform(RELATIVE_MAGIC_POS, matRot);
+
+	VECTOR pos = VAdd(enemy_.pos_, localPosRot);
+
+	// 座標を更新する
+	magic->CreateShot(pos, enemy_.dir_);
+}
+
 void EnemyBase::UpdateCollisionPositions(void)
 {
 #pragma region 頭
@@ -490,4 +517,53 @@ void EnemyBase::PlayAnim(void)
 		break;
 	}
 
+}
+
+void EnemyBase::UpdateMagic(void)
+{
+	// 魔法の更新
+	for (auto& Magic : magics_)
+	{
+		if (Magic->GetMagic().isAlive_)
+		{
+			Magic->Update();
+		}
+	}
+}
+
+void EnemyBase::DrawMagic(void)
+{
+	// 魔法の更新
+	for (auto& Magic : magics_)
+	{
+		if (Magic->GetMagic().isAlive_)
+		{
+			Magic->Draw();
+		}
+	}
+}
+
+MagicBase* EnemyBase::GetValidMagic(void)
+{
+	size_t size = magics_.size();
+
+	for (int i = 0; i < size; i++)
+	{
+		// 未使用(生存していない)で、かつ、魔法の種別が同じ
+		if (!magics_[i]->GetMagic().isAlive_)
+		{
+			return magics_[i];
+		}
+	}
+
+	// 未使用の魔法がなかった場合新しい魔法を生成
+	MagicBase* Magic;
+
+	// 新しい魔法のインスタンスを生成する
+	Magic = new BatMagic(baseAttackEffectModelId_);
+
+	// 可変長配列に追加
+	magics_.push_back(Magic);
+
+	return Magic;
 }
