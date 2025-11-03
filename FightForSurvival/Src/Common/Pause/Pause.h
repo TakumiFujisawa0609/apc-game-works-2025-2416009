@@ -16,11 +16,15 @@ public:
 
 	// コンテニューの座標
 	static constexpr int CONTINUE_POS_X = Application::SCREEN_SIZE_X / 2 - 30;
-	static constexpr int CONTINUE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 15;
+	static constexpr int CONTINUE_POS_Y = Application::SCREEN_SIZE_Y / 2 - 46;
+
+	// 設定の座標
+	static constexpr int SETTING_POS_X = Application::SCREEN_SIZE_X / 2 - 30;
+	static constexpr int SETTING_POS_Y = Application::SCREEN_SIZE_Y / 2 - 7;
 
 	// タイトルの座標
 	static constexpr int TITLE_POS_X = Application::SCREEN_SIZE_X / 2 - 30;
-	static constexpr int TITLE_POS_Y = Application::SCREEN_SIZE_Y / 2 + 15;
+	static constexpr int TITLE_POS_Y = Application::SCREEN_SIZE_Y / 2 + 44;
 
 	// 描画枚数
 	static constexpr int DRAW_NUM = 3;
@@ -28,6 +32,7 @@ public:
 	enum class PAUSE
 	{
 		CONTINUE,
+		SETTING,
 		TITLE,
 		NON,
 
@@ -65,6 +70,8 @@ protected:
 	//int images_[DRAW_NUM];
 
 	bool pauseMode_;
+
+	bool isSetting_;
 
 	void StartPause(void);
 

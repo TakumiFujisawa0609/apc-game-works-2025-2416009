@@ -20,7 +20,7 @@ public:
 	static constexpr float SPEED = 4.0f;
 
 	// 撃破スコア
-	static constexpr int SCORE = 10;
+	static constexpr int SCORE = 100;
 
 	// 当たり判定用半径
 	// 押し出し用

@@ -29,6 +29,7 @@ void Pause::Init(void)
 
 	// 座標初期化
 	pos_[static_cast<int>(PAUSE::CONTINUE)] = { CONTINUE_POS_X ,CONTINUE_POS_Y };
+	pos_[static_cast<int>(PAUSE::SETTING)] = { SETTING_POS_X ,SETTING_POS_Y };
 	pos_[static_cast<int>(PAUSE::TITLE)] = { TITLE_POS_X ,TITLE_POS_Y };
 
 	// ポーズモード中か確認
@@ -38,6 +39,13 @@ void Pause::Init(void)
 // 更新
 void Pause::Update(void)
 {
+	if (isSetting_)
+	{
+		// 設定時は設定の処理のみ受け付ける
+		//setting_->Update();
+		return;
+	}
+
 	// ポーズモード中だったら選択処理できる
 	if (pauseMode_)
 	{
@@ -75,6 +83,16 @@ void Pause::Draw(void)
 			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::CONTINUE)], true);
 
 			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0x00ff00);
+			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
+			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
+
+			break;
+		case Pause::PAUSE::SETTING:
+
+			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::TITLE)], true);
+
+			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
+			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0x00ff00);
 			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
 
 			break;
@@ -83,6 +101,7 @@ void Pause::Draw(void)
 			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::TITLE)], true);
 
 			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
+			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
 			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0x00ff00);
 
 			break;
@@ -91,6 +110,7 @@ void Pause::Draw(void)
 			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::NON)], true);
 
 			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
+			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
 			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
 
 			break;
@@ -103,12 +123,24 @@ void Pause::Draw(void)
 			pos_[static_cast<int>(PAUSE::CONTINUE)].x + COL_SIZE_X,
 			pos_[static_cast<int>(PAUSE::CONTINUE)].y + COL_SIZE_Y, 0xff0000, false);
 
+		DrawBox(pos_[static_cast<int>(PAUSE::SETTING)].x,
+			pos_[static_cast<int>(PAUSE::SETTING)].y,
+			pos_[static_cast<int>(PAUSE::SETTING)].x + COL_SIZE_X,
+			pos_[static_cast<int>(PAUSE::SETTING)].y + COL_SIZE_Y, 0xff0000, false);
+
 		DrawBox(pos_[static_cast<int>(PAUSE::TITLE)].x,
 			pos_[static_cast<int>(PAUSE::TITLE)].y,
 			pos_[static_cast<int>(PAUSE::TITLE)].x + COL_SIZE_X,
 			pos_[static_cast<int>(PAUSE::TITLE)].y + COL_SIZE_Y, 0xff0000, false);
 
 #endif // _DEBUG
+
+
+		if (isSetting_)
+		{
+			// 設定の描画
+			//setting_->Draw();
+		}
 	}
 }
 
@@ -128,8 +160,6 @@ void Pause::Confirm(void)
 		{
 		case Pause::PAUSE::CONTINUE:
 
-			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
-
 			pauseMode_ = false;
 
 			// マウスの位置を真ん中に初期化する
@@ -137,13 +167,15 @@ void Pause::Confirm(void)
 			SetMouseDispFlag(false);
 
 			break;
+		case Pause::PAUSE::SETTING:
+
+			// 設定モードに入る
+			isSetting_ = true;
+
+			break;
 		case Pause::PAUSE::TITLE:
 
-
-			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
-			//SoundManager::GetInstance()->Stop(SoundManager::BGM::GAME);
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-
 
 			break;
 		}
@@ -209,6 +241,19 @@ void Pause::PadSelect(void)
 
 		if (ins.SelectDown())
 		{
+			ChangePause(PAUSE::SETTING);
+		}
+
+		break;
+	case Pause::PAUSE::SETTING:
+
+		if (ins.SelectUp())
+		{
+			ChangePause(PAUSE::CONTINUE);
+		}
+
+		if (ins.SelectDown())
+		{
 			ChangePause(PAUSE::TITLE);
 		}
 
@@ -217,7 +262,7 @@ void Pause::PadSelect(void)
 
 		if (ins.SelectUp())
 		{
-			ChangePause(PAUSE::CONTINUE);
+			ChangePause(PAUSE::SETTING);
 		}
 
 		break;
