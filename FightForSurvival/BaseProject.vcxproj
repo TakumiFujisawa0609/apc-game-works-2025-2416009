@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Common\Pause\Setting\Setting.cpp" />
     <ClCompile Include="Src\Object\Magic\BatMagic\BatMagic.cpp" />
     <ClCompile Include="Src\Object\Enemy\Bat\Bat.cpp" />
     <ClCompile Include="Src\Common\Effect\RedDamageEffect.cpp" />
@@ -67,6 +68,7 @@
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Common\Pause\Setting\Setting.h" />
     <ClInclude Include="Src\Object\Magic\BatMagic\BatMagic.h" />
     <ClInclude Include="Src\Object\Enemy\Bat\Bat.h" />
     <ClInclude Include="Src\Common\Effect\RedDamageEffect.h" />
