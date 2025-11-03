@@ -9,8 +9,8 @@ Wave2::Wave2(void)
 	// スポーンタイミング、敵種別、座標
 	AddSpawnEvent(60 * 3, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 	AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	AddSpawnEvent(60 * 10, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
-	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(0.0f, 0.0f, 0.0f));
+	AddSpawnEvent(60 * 15, ENEMY_TYPE::BAT, VGet(0.0f, 0.0f, 0.0f));
 	AddSpawnEvent(60 * 18, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 }
 

@@ -9,15 +9,15 @@ class Spawner
 public:
 
 	// 出現させる敵の数
-	static constexpr int SPAWN_ENEMY_NUM = 5;
+	static constexpr int SPAWN_ENEMY_NUM = 4;
 	static constexpr float COLLISION_RADIUS = 40.0f;
 	static constexpr float DURABILITY = 3.0f;
 
 	// 軸座標から移動させる量(ローカル)
-	static constexpr VECTOR LEFT_UP = {-150.0f,0.0f,150.0f };
-	static constexpr VECTOR LEFT_DOWN = { -150.0f,0.0f,-150.0f };
-	static constexpr VECTOR RIGHT_UP = { 150.0f,0.0f,150.0f };
-	static constexpr VECTOR RIGHT_DOWN = { 150.0f,0.0f,-150.0f };
+	static constexpr VECTOR LEFT_UP = {-300.0f,0.0f,300.0f };
+	static constexpr VECTOR LEFT_DOWN = { -300.0f,0.0f,-300.0f };
+	static constexpr VECTOR RIGHT_UP = { 300.0f,0.0f,300.0f };
+	static constexpr VECTOR RIGHT_DOWN = { 300.0f,0.0f,-300.0f };
 	
 	// 生成する敵の種類のパターン
 	enum class PATTERN
@@ -32,6 +32,8 @@ public:
 	struct SpawnerIns
 	{
 		int modelId_;
+
+		VECTOR basePos_;
 
 		// 座標
 		VECTOR pos_[SPAWN_ENEMY_NUM];

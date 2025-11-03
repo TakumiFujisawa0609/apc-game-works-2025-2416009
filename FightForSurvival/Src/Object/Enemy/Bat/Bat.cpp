@@ -110,21 +110,21 @@ void Bat::PlayAnim(void)
 
 void Bat::Idle(EnemyBase& enemy)
 {
-	//if (enemy.SearchAttackRange())
-	//{
-	//	// 攻撃範囲に入っていたら
-	//	// プレイヤーのほうへ向く
-	//	enemy.LookPlayer();
+	if (enemy.SearchAttackRange())
+	{
+		// 攻撃範囲に入っていたら
+		// プレイヤーのほうへ向く
+		enemy.LookPlayer();
 
-	//	if (enemy.GetAttackCooldown() <= 0.0f)
-	//	{
-	//		// 魔法を発動(生成)
-	//		enemy.CraateMagic();
+		if (enemy.GetAttackCooldown() <= 0.0f)
+		{
+			// 魔法を発動(生成)
+			enemy.CraateMagic();
 
-	//		// 攻撃範囲に入っていて、攻撃待ち時間が0だったら攻撃へ移行
-	//		enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
-	//	}
-	//}
+			// 攻撃範囲に入っていて、攻撃待ち時間が0だったら攻撃へ移行
+			enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+		}
+	}
 }
 
 void Bat::Attack(EnemyBase& enemy)

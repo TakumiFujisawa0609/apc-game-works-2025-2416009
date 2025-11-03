@@ -19,7 +19,7 @@ Spawner::~Spawner(void)
 void Spawner::Create(VECTOR pos, float interval)
 {
 	// 座標取得(この座標が軸となる)
-	spawner_.pos_[0] = pos;
+	spawner_.basePos_ = pos;
 	// 軸座標を基に座標を設定
 	PositionInit();
 	
@@ -78,12 +78,8 @@ void Spawner::Draw(void)
 		return;
 	}
 
-#ifdef _DEBUG
-
 	// どこが中心位置か分かるようにデバック表示
 	DrawSphere3D(spawner_.pos_[0], spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
-
-#endif // _DEBUG
 
 }
 
@@ -108,7 +104,7 @@ void Spawner::Damage(float durability)
 void Spawner::SelectPattern(void)
 {
 	// ランダムで決める
-	spawner_.pattern_ = PATTERN::PATTERN_1;
+	spawner_.pattern_ = static_cast<PATTERN>(GetRand(2));
 
 	// パターンを設定する
 	PatternInsInit(spawner_.pattern_);
@@ -127,8 +123,20 @@ void Spawner::PatternInsInit(PATTERN pattern)
 
 		break;
 	case Spawner::PATTERN::PATTERN_2:
+
+		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
+		{
+			spawner_.eneType_[i] = ENEMY_TYPE::BAT;
+		}
+
 		break;
 	case Spawner::PATTERN::PATTERN_3:
+
+		spawner_.eneType_[0] = ENEMY_TYPE::ZOMBIE;
+		spawner_.eneType_[1] = ENEMY_TYPE::ZOMBIE;
+		spawner_.eneType_[2] = ENEMY_TYPE::BAT;
+		spawner_.eneType_[3] = ENEMY_TYPE::BAT;
+
 		break;
 	default:
 		break;
@@ -146,5 +154,5 @@ void Spawner::PositionInit(void)
 
 void Spawner::SetPosition(int i, VECTOR offset)
 {
-	spawner_.pos_[i] = VAdd(spawner_.pos_[0], offset);
+	spawner_.pos_[i] = VAdd(spawner_.basePos_, offset);
 }
