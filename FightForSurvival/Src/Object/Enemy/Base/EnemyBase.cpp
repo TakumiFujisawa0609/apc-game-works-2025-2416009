@@ -419,11 +419,17 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 	// フレームのローカル座標からワールド座標に変換する行列を取得
 	MATRIX boneMatrix = MV1GetFrameLocalWorldMatrix(enemy_.modelId_, bone);
 
+	// ローカルY軸方向の単位ベクトルをワールド座標系で取得
+	VECTOR boneYAxis = VGet(boneMatrix.m[1][0], boneMatrix.m[1][1], boneMatrix.m[1][2]);
+
+	// 単位ベクトルにする（スケールがかかっていても正規化して純粋な方向ベクトルにする）
+	boneYAxis = VNorm(boneYAxis);
+
 	// 行列から回転の情報を取得
 	MATRIX boneRotate = MGetRotElem(boneMatrix);
 
-	// ローカルオフセットを回転行列で回転させて、ワールド座標のオフセットを取得する
-	VECTOR WorldOffset = VTransform(VGet(0.0f, offset, 0.0f), boneRotate);
+	// ローカルオフセット(offset)をワールド座標のオフセットに変換
+	VECTOR WorldOffset = VScale(boneYAxis, offset);
 
 	// 行列から平行移動の情報取得する
 	VECTOR bonePos = MGetTranslateElem(boneMatrix);

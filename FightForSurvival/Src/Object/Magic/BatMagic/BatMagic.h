@@ -14,7 +14,7 @@ public:
 	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
 	// ë¨ìx
-	static constexpr float SPEED = 15.0f;
+	static constexpr float SPEED = 12.0f;
 
 	// ë∂ç›â¬î\éûä‘
 	static constexpr float CNT_ALIVE = 3.0f;

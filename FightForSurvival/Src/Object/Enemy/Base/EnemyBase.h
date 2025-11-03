@@ -77,6 +77,9 @@ public:
 	// 攻撃待ち時間のセットする
 	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
+	// 魔法の取得
+	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
+
 	// 押し出し処理
 	void Extrusion(VECTOR overlap);
 

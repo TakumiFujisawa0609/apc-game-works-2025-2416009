@@ -382,6 +382,7 @@ void GameScene::DamageCollision(void)
 		float eneRadArm = eneInfo.collisionRadiusArm_;
 		float eneRadHand = eneInfo.collisionRadiusHand_;
 		float eneRadLeg = eneInfo.collisionRadiusLeg_;
+#pragma region プレイヤーの攻撃当たり判定
 
 		// 魔法クラスのポインター取得
 		auto Magics = player_->GetWeapon()->GetMagics();
@@ -433,21 +434,97 @@ void GameScene::DamageCollision(void)
 			}
 		}
 
-		if (!enemy->IsAttack())
+#pragma endregion
+
+		switch (enemy->GetType())
 		{
-			// 敵が攻撃状態ではなかったら抜ける
+		case ENEMY_TYPE::ZOMBIE:
+
+			if (!enemy->IsAttack())
+			{
+				// 敵が攻撃状態ではなかったら抜ける
+				continue;
+			}
+
+			ZombieAttackCollision(enemy, enePos[HAND_R], eneRadHand);
+
+			break;
+		case ENEMY_TYPE::BAT:
+
+			BatAttackCollision(enemy);
+
+			break;
+		case ENEMY_TYPE::DRAGON:
+			break;
+		default:
+			break;
+		}
+
+
+
+	}
+}
+
+void GameScene::ZombieAttackCollision(EnemyBase* enemy, VECTOR handPos, float handRad)
+{
+	VECTOR plaPosTop = player_->GetCollisionPosTop();
+	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
+	float plaRad = player_->GetPlayer().collisionRadius_;
+
+	// プレイヤーと敵の攻撃の当たり判定
+	if (CollisionUtility::IsCollidingSphereCapsule(handPos, handRad, plaPosTop, plaPosUnder, plaRad))
+	{
+		// プレイヤーにダメージを与える
+		player_->Damage(1);
+		enemy->SetIsAttack(false);
+
+		// カメラを揺らす
+		camera_->SetHitStop();
+
+		// 画面を赤くするエフェクトを付ける
+		redEffect_->SetRedEffect();
+
+		// ダメージSEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+	}
+}
+
+void GameScene::BatAttackCollision(EnemyBase* enemy)
+{
+	// 魔法クラスのポインター取得
+	auto magics = enemy->GetMagics();
+
+	VECTOR plaPosTop = player_->GetCollisionPosTop();
+	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
+	float plaRad = player_->GetPlayer().collisionRadius_;
+
+	// 魔法の数分回す
+	for (auto magic : magics)
+	{
+		// 魔法が生存していなかったら次の魔法に進む
+		if (!magic->IsCollisionState())
+		{
 			continue;
 		}
 
-		VECTOR plaPosTop = player_->GetCollisionPosTop();
-		VECTOR plaPosUnder = player_->GetCollisionPosUnder();
-		float plaRad = player_->GetPlayer().collisionRadius_;
+		// 魔法の情報
+		auto magicInfo = magic->GetMagic();
+
+		// 魔法の移動経路の線分を定義
+		VECTOR magicLineStart = magicInfo.pos_;
+		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
+
+		// 魔法の半径
+		float MagicRad = magicInfo.collisionRadius_;
 
 		// プレイヤーと敵の攻撃の当たり判定
-		if (CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, plaPosTop, plaPosUnder, plaRad))
+		if (CollisionUtility::IsCollidingCapsules(plaPosTop, plaPosUnder, plaRad, magicLineStart, magicLineEnd, MagicRad))
 		{
+			// 魔法を爆発させる
+			magic->ChangeState(MagicBase::STATE::BLAST);
+
 			// プレイヤーにダメージを与える
-			player_->Damage(1);
+			player_->Damage(magic->GetMagic().bodyDamage_);
 			enemy->SetIsAttack(false);
 
 			// カメラを揺らす
@@ -459,7 +536,6 @@ void GameScene::DamageCollision(void)
 			// ダメージSEをながす
 			SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
 		}
-
 	}
 }
 
