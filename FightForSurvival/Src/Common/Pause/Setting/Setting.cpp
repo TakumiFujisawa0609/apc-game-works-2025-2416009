@@ -23,6 +23,7 @@ void Setting::Init(void)
 	pos_.y = DONE_POS_Y;
 	isSetting_ = false;
 	isDone_ = false;
+	isDrag_ = false;
 
 	// 感度の初期化
 	auto& ins = SystemManager::GetInstance();
@@ -212,7 +213,12 @@ void Setting::MouseBarUpdate(void)
 	Vector2 setMousePos = { (BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) +
 	static_cast<int>((mouseSensitivity_ * 100) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y };
 
-	if (CollisionUtility::CircleAndMouse(setMousePos, CIRCLE_RAD) && ins.IsClickMouseLeft())
+	if (CollisionUtility::CircleAndMouse(setMousePos, CIRCLE_RAD) && ins.IsClickMouseLeft() && !isDrag_)
+	{
+		isDrag_ = true;
+	}
+
+	if (isDrag_)
 	{
 		// 前の座標をもっておく
 		Vector2 prevMousePos = mousePos_;
@@ -221,7 +227,7 @@ void Setting::MouseBarUpdate(void)
 
 		int disX = mousePos_.x - prevMousePos.x;
 
-		if (disX > 1)
+		if (disX > 0.1)
 		{
 			mouseSensitivity_ += SENSITIVITY_MOUSE;
 			// 最大値を超えないようにする
@@ -230,7 +236,7 @@ void Setting::MouseBarUpdate(void)
 				mouseSensitivity_ = SENSITIVITY_MAX_MOUSE;
 			}
 		}
-		else if (disX < -1)
+		else if (disX < -0.1)
 		{
 			mouseSensitivity_ -= SENSITIVITY_MOUSE;
 			// 最小値を超えないようにする
@@ -239,13 +245,17 @@ void Setting::MouseBarUpdate(void)
 				mouseSensitivity_ = SENSITIVITY_MIN_MOUSE;
 			}
 		}
-
 	}
 
 	if (prevSensitivity != mouseSensitivity_)
 	{
 		// 変更が行われていたら処理を行う
 		sysIns.SetMouseSensitivity(mouseSensitivity_);
+	}
+
+	if (isDrag_ && !ins.IsClickMouseLeft())
+	{
+		isDrag_ = false;
 	}
 }
 

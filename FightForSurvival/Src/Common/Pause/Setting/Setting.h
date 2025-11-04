@@ -32,8 +32,8 @@ public:
 	static constexpr float SENSITIVITY_MIN_PAD = 0.01f;
 
 	//　加算したり減算する感度の量
-	static constexpr float SENSITIVITY_MOUSE = 0.001f;
-	static constexpr float SENSITIVITY_PAD = 0.01f;
+	static constexpr float SENSITIVITY_MOUSE = 0.0001f;
+	static constexpr float SENSITIVITY_PAD = 0.001f;
 
 	// バーの始まりの位置
 	static constexpr int BAR_START_POS_X = Application::SCREEN_SIZE_X / 2 - 160;
@@ -75,6 +75,8 @@ private:
 	// 格納する感度
 	float mouseSensitivity_;
 	float padSensitivity_;
+
+	bool isDrag_;
 
 	// 確定させる
 	void Confirm(void);
