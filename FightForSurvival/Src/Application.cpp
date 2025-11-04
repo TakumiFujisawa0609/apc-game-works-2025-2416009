@@ -45,7 +45,7 @@ void Application::Init(void)
 	ChangeWindowMode(true);
 #else
 	// フルスクリーンにする
-	ChangeWindowMode(true);
+	ChangeWindowMode(false);
 #endif // _DEBUG
 
 	// DxLibの初期化

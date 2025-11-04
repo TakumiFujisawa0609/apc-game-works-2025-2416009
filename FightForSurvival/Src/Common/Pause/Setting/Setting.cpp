@@ -244,10 +244,6 @@ void Setting::MouseBarUpdate(void)
 
 	if (prevSensitivity != mouseSensitivity_)
 	{
-		setMousePos = { (BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) +
-	static_cast<int>((mouseSensitivity_ * 100) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y };
-		SetMousePoint(setMousePos.x, setMousePos.y);
-
 		// •ÏX‚ªs‚í‚ê‚Ä‚¢‚½‚çˆ—‚ğs‚¤
 		sysIns.SetMouseSensitivity(mouseSensitivity_);
 	}
