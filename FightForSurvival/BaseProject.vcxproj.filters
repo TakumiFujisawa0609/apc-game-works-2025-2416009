@@ -186,7 +186,7 @@
     <ClCompile Include="Src\Common\Pause\Setting\Setting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\Pause\Setting\Bar\SensitivityBar.cpp">
+    <ClCompile Include="Src\Common\Pause\Setting\Bar\Bar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -338,7 +338,7 @@
     <ClInclude Include="Src\Common\Pause\Setting\Setting.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Common\Pause\Setting\Bar\SensitivityBar.h">
+    <ClInclude Include="Src\Common\Pause\Setting\Bar\Bar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
