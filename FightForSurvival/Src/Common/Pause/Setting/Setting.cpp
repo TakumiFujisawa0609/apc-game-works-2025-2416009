@@ -78,17 +78,30 @@ void Setting::Draw(void)
 
 	if (GetJoypadNum() == 0)
 	{
-		//DrawCircle();
+		Vector2 setMousePos = { (BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) +
+	static_cast<int>((mouseSensitivity_ * 100) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y };
+
+		if(!isDone_ && CollisionUtility::CircleAndMouse(setMousePos, CIRCLE_RAD))
+		{
+			DrawCircle(setMousePos.x, setMousePos.y, CIRCLE_RAD, 0xffff00, true);
+		}
+		else
+		{
+			DrawCircle(setMousePos.x, setMousePos.y, CIRCLE_RAD, 0xffffff, true);
+
+		}
 	}
 	else
 	{
 		if (isDone_)
 		{
-			DrawCircle(BAR_START_POS_X + static_cast<int>((padSensitivity_ * 10) * (BAR_END_POS_X - BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 10))), 310, 15, 0xffffff, true);
+			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
+				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0xffffff, true);
 		}
 		else
 		{
-			DrawCircle(BAR_START_POS_X + static_cast<int>((padSensitivity_ * 10) * (BAR_END_POS_X - BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 10))), 310, 15, 0xffff00, true);
+			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
+				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0xffff00, true);
 		}
 	}
 
@@ -184,13 +197,57 @@ void Setting::BarUpdate(void)
 
 void Setting::MouseBarUpdate(void)
 {
+	auto& ins = InputManager::GetInstance();
+	if (!ins.IsClickMouseLeft())
+	{
+		// 左クリックが押されていなかったら処理を行わない
+		return;
+	}
+
+	// マウス感度の情報を取得
 	auto& sysIns = SystemManager::GetInstance();
 	mouseSensitivity_ = sysIns.GetMouseSensitivity();
 	float prevSensitivity = mouseSensitivity_;
 
+	Vector2 setMousePos = { (BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) +
+	static_cast<int>((mouseSensitivity_ * 100) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y };
+
+	if (CollisionUtility::CircleAndMouse(setMousePos, CIRCLE_RAD) && ins.IsClickMouseLeft())
+	{
+		// 前の座標をもっておく
+		Vector2 prevMousePos = mousePos_;
+		// 移動後の座標を取得
+		GetMousePoint(&mousePos_.x, &mousePos_.y);
+
+		int disX = mousePos_.x - prevMousePos.x;
+
+		if (disX > 1)
+		{
+			mouseSensitivity_ += SENSITIVITY_MOUSE;
+			// 最大値を超えないようにする
+			if (mouseSensitivity_ > SENSITIVITY_MAX_MOUSE)
+			{
+				mouseSensitivity_ = SENSITIVITY_MAX_MOUSE;
+			}
+		}
+		else if (disX < -1)
+		{
+			mouseSensitivity_ -= SENSITIVITY_MOUSE;
+			// 最小値を超えないようにする
+			if (mouseSensitivity_ < SENSITIVITY_MIN_MOUSE)
+			{
+				mouseSensitivity_ = SENSITIVITY_MIN_MOUSE;
+			}
+		}
+
+	}
 
 	if (prevSensitivity != mouseSensitivity_)
 	{
+		setMousePos = { (BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) +
+	static_cast<int>((mouseSensitivity_ * 100) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y };
+		SetMousePoint(setMousePos.x, setMousePos.y);
+
 		// 変更が行われていたら処理を行う
 		sysIns.SetMouseSensitivity(mouseSensitivity_);
 	}
@@ -198,6 +255,7 @@ void Setting::MouseBarUpdate(void)
 
 void Setting::PadBarUpdate(void)
 {
+	// ゲームパッド感度の情報を取得
 	auto& sysIns = SystemManager::GetInstance();
 	padSensitivity_ = sysIns.GetPadSensitivity();
 	float prevSensitivity = padSensitivity_;

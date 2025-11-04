@@ -201,3 +201,27 @@ bool CollisionUtility::RectangleAndMouse(Vector2 pos, int wid, int hig)
 	// 当たっていなかったらfalseを返す
 	return false;
 }
+
+bool CollisionUtility::CircleAndMouse(Vector2 pos, int rad)
+{
+	Vector2 mousePos;
+	// マウスの位置を調べる
+	GetMousePoint(&mousePos.x, &mousePos.y);
+
+	Vector2 dis;
+	// マウスの位置と円の距離を求める
+	dis.x = pos.x - mousePos.x;
+	dis.y = pos.y - mousePos.y;
+
+	int distance = dis.x * dis.x + dis.y * dis.y;
+
+	// 距離の内積が半径の2乗よりも小さければ当たっている
+	if (distance < rad * rad)
+	{
+		// 当たっていたらtrueを返す
+		return true;
+	}
+
+	// 当たっていなかったらfalseを返す
+	return false;
+}

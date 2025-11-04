@@ -42,6 +42,11 @@ public:
 	static constexpr int BAR_END_POS_X = Application::SCREEN_SIZE_X / 2 + 180;
 	static constexpr int BAR_END_POS_Y = Application::SCREEN_SIZE_Y / 2 + 5;
 
+	// バーの円のY座標
+	static constexpr int CIRCLE_POS_Y = 310;
+	// バーの円の半径
+	static constexpr int CIRCLE_RAD = 15;
+
 	Setting(void);
 	~Setting(void);
 

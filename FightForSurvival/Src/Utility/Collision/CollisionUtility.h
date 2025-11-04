@@ -30,6 +30,9 @@ namespace CollisionUtility
 
 	// 矩形とマウスの当たり判定(左上からの当たり判定)
 	bool RectangleAndMouse(Vector2 pos, int wid, int hig);
+
+	// 円形とマウスの当たり判定
+	bool CircleAndMouse(Vector2 pos, int rad);
 #pragma endregion
 
 };
