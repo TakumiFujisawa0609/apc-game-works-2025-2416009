@@ -68,8 +68,8 @@ void Player::Init(void)
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
 
 	// 他の場所で設定された感度入れる
-	MouseSensitivity_ = ins.GetMouseSensitivity();
-	PadSensitivity_ = ins.GetPadSensitivity();
+	mouseSensitivity_ = ins.GetMouseSensitivity();
+	padSensitivity_ = ins.GetPadSensitivity();
 
 	staminaCounter_ = 0.0f;
 
@@ -370,8 +370,8 @@ void Player::MouseAngle(void)
 	}
 
 	// マウスの移動量からカメラの回転量を更新する
-	player_.angles_.y += deltaX * MouseSensitivity_;
-	player_.angles_.x += deltaY * MouseSensitivity_;
+	player_.angles_.y += deltaX * mouseSensitivity_;
+	player_.angles_.x += deltaY * mouseSensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
 	if (player_.angles_.x > MAX_VIEW_ANGLE)
@@ -403,8 +403,8 @@ void Player::PadAngle(void)
 	// アナログキーの入力値から方向を取得
 	VECTOR dir = ins.GetDirectionXZAKey(padState.AKeyRX, padState.AKeyRY);
 
-	player_.angles_.x -= dir.z * PadSensitivity_;
-	player_.angles_.y += dir.x * PadSensitivity_;
+	player_.angles_.x -= dir.z * padSensitivity_;
+	player_.angles_.y += dir.x * padSensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
 	if (player_.angles_.x > MAX_VIEW_ANGLE)
@@ -531,14 +531,14 @@ void Player::Sensitivity(void)
 {
 	float nowMouseSensitivity = SystemManager::GetInstance().GetMouseSensitivity();
 	float nowPadSensitivity = SystemManager::GetInstance().GetPadSensitivity();
-	if (nowMouseSensitivity != MouseSensitivity_)
+	if (nowMouseSensitivity != mouseSensitivity_)
 	{
 		// マウス感度に変更が加えてあったら適用する
-		MouseSensitivity_ = nowMouseSensitivity;
+		mouseSensitivity_ = nowMouseSensitivity;
 	}
-	if (nowPadSensitivity != PadSensitivity_)
+	if (nowPadSensitivity != padSensitivity_)
 	{
 		// パッド感度に変更が加えてあったら適用する
-		PadSensitivity_ = nowPadSensitivity;
+		padSensitivity_ = nowPadSensitivity;
 	}
 }

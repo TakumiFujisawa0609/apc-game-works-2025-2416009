@@ -1,7 +1,7 @@
 #pragma once
 
 #include <DxLib.h>
-#include "../MagicBase.h"
+#include "../Base/MagicBase.h"
 
 class BatMagic : public MagicBase
 {

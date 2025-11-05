@@ -41,8 +41,8 @@
     <ClCompile Include="Src\Object\Enemy\Base\EnemyBase.cpp" />
     <ClCompile Include="Src\Common\Vector2\Vector2.cpp" />
     <ClCompile Include="Src\Object\Common\Cursor.cpp" />
-    <ClCompile Include="Src\Object\Magic\FireMagic.cpp" />
-    <ClCompile Include="Src\Object\Magic\MagicBase.cpp" />
+    <ClCompile Include="Src\Object\Magic\FireMagic\FireMagic.cpp" />
+    <ClCompile Include="Src\Object\Magic\Base\MagicBase.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\Stick.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\WeaponBase.cpp" />
     <ClCompile Include="Src\Common\Fps\FpsControl.cpp" />
@@ -92,8 +92,8 @@
     <ClInclude Include="Src\Object\Enemy\Base\EnemyBase.h" />
     <ClInclude Include="Src\Common\Vector2\Vector2.h" />
     <ClInclude Include="Src\Object\Common\Cursor.h" />
-    <ClInclude Include="Src\Object\Magic\FireMagic.h" />
-    <ClInclude Include="Src\Object\Magic\MagicBase.h" />
+    <ClInclude Include="Src\Object\Magic\FireMagic\FireMagic.h" />
+    <ClInclude Include="Src\Object\Magic\Base\MagicBase.h" />
     <ClInclude Include="Src\Object\Player\Weapon\Stick.h" />
     <ClInclude Include="Src\Object\Player\Weapon\WeaponBase.h" />
     <ClInclude Include="Src\Base.h" />

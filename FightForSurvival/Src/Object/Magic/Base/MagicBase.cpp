@@ -1,5 +1,5 @@
 #include <DxLib.h>
-#include "../../Scene/SceneManager.h"
+#include "../../../Scene/SceneManager.h"
 #include "MagicBase.h"
 
 MagicBase::MagicBase(int baseModelId)

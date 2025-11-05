@@ -4,7 +4,6 @@
 
 class WeaponBase;
 
-
 enum class PLAYER_UPGRADE
 {
 	NON,
@@ -127,10 +126,10 @@ private:
 	Vector2 mouse_;
 
 	// マウスの感度
-	float MouseSensitivity_;
+	float mouseSensitivity_;
 
 	// パッドの感度
-	float PadSensitivity_;
+	float padSensitivity_;
 
 	// スタミナを回復させるまでの時間カウンタ
 	float staminaCounter_;
