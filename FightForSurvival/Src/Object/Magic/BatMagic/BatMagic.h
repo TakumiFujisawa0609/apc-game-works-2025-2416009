@@ -32,6 +32,7 @@ protected:
 
 	// パラメータ設定
 	void SetParam(void) override;
-
+	// ステート変更時の設定事項
+	void ChangeShot(void)override;
 };
 

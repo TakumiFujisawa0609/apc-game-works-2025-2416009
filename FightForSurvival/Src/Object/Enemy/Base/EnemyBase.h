@@ -49,7 +49,7 @@ public:
 	EnemyCollision GetColPos(void)const { return collision_; }
 
 	// “G‚Ìí—Ş‚ğ“n‚·
-	ENEMY_TYPE GetType(void)const{return type_;}
+	ENEMY_TYPE GetType(void) const { return type_;}
 
 	// €–S‚µ‚Ä‚¢‚È‚©‚Á‚½‚çtrue‚ğ•Ô‚·
 	bool IsCollisionState(void);
@@ -59,7 +59,7 @@ public:
 	void SetIsAttack(bool flg) { attack_.isAttacking_ = flg; }
 
 	// HP‚Éƒ_ƒ[ƒW‚ğ—^‚¦‚é
-	void SubHp(int hp);
+	void SubHp(float hp);
 
 	// ó‘Ô‘JˆÚ
 	void ChangeState(ENEMY_STATE newState);

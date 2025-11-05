@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "../../../Base.h"
+#include "../../Magic/MagicInfo.h"
 
 class Player;
 class MagicBase;
@@ -88,6 +89,7 @@ protected:
 	float recoil;
 	bool isRecoil_;
 
+	TYPE_MAGIC typeMagic_;
 
 	// パラメーター設定
 	virtual void SetParam(void) = 0;

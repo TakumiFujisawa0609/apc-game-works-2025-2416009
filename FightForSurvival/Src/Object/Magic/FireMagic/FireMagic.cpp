@@ -1,6 +1,8 @@
 #include "FireMagic.h"
 
-FireMagic::FireMagic(int baseModelId) :MagicBase(baseModelId)
+FireMagic::FireMagic(int baseModelId) 
+	:
+	MagicBase(baseModelId)
 {
 }
 
@@ -18,4 +20,20 @@ void FireMagic::SetParam(void)
 	magic_.collisionRadius_ = COLLISION_RAD;
 	magic_.headDamage_ = HEAD_DAMAGE;
 	magic_.bodyDamage_ = BODY_DAMAGE;
+}
+
+void FireMagic::ChangeShot(void)
+{
+	if (magic_.collisionRadius_ >= CHARGE_MAX)
+	{
+		// チャージが最大だったら、攻撃力を5上げる
+		magic_.headDamage_ += ADD_DAMEGE;
+		magic_.bodyDamage_ += ADD_DAMEGE;
+	}
+	else
+	{
+		// チャージが最大でなければ、通常時の攻撃力とする
+		magic_.headDamage_ = HEAD_DAMAGE;
+		magic_.bodyDamage_ = BODY_DAMAGE;
+	}
 }

@@ -3,7 +3,7 @@
 #include <DxLib.h>
 #include "../Base/MagicBase.h"
 
-class FireMagic : public MagicBase
+class WindMagic : public MagicBase
 {
 public:
 	// 大きさ
@@ -13,29 +13,43 @@ public:
 	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
 	// 速度
-	static constexpr float SPEED = 40.0f;
+	static constexpr float SPEED = 30.0f;
 
 	// 存在可能時間
 	static constexpr float CNT_ALIVE = 1.0f;
-	
+
 	// 当たり判定用サイズ
 	static constexpr float COLLISION_RAD = 3.0f;
-	
+
 	// 当たり判定用ダメージ
 	// 頭
 	static constexpr int HEAD_DAMAGE = 10;
 	// 体
 	static constexpr int BODY_DAMAGE = 5;
 
-	FireMagic(int baseModelId);
-	~FireMagic(void)override;
+	WindMagic(int baseModelId);
+	~WindMagic(void)override;
 
 protected:
 
 	// パラメータ設定
 	void SetParam(void) override;
 
+	// 魔法の移動処理
+	void UpdateShot(void)override;
+
 	// ステート変更時の設定事項
 	void ChangeShot(void)override;
+
+private:
+
+	// ターゲットの座標
+	VECTOR targetPos_;
+
+	// ターゲットが見つかったか
+	bool targetFound_;
+
+	// 最短距離にいる敵までの向きを計算
+	void LookTargetEnemy(void);
 };
 

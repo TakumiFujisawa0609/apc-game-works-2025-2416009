@@ -31,4 +31,5 @@ SystemManager::SystemManager(void)
 	MouseSensitivity_ = MOUSE_SENSITIVITY;
 	PadSensitivity_ = PAD_SENSITIVITY;
 	score_ = 0;
+	typeMagic_ = TYPE_MAGIC::WIND_MAGIC;
 }

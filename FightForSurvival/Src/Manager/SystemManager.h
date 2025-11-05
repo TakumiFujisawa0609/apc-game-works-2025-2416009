@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "../Base.h"
+#include "../Object/Magic/MagicInfo.h"
 
 class SystemManager
 {
@@ -42,6 +43,12 @@ public:
 	// スコアを返す
 	const int GetScore() const { return score_; }
 
+	// 魔法の種類を格納
+	void SetTypeMagic(const TYPE_MAGIC type) { typeMagic_ = type; }
+
+	// 魔法種類を返す
+	const TYPE_MAGIC GetTypeMagic() const { return typeMagic_; }
+
 private:
 
 	// 静的インスタンス
@@ -55,6 +62,9 @@ private:
 
 	// スコア
 	int score_;
+
+	// 魔法の種類
+	TYPE_MAGIC typeMagic_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

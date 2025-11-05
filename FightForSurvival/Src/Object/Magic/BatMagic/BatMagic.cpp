@@ -18,3 +18,7 @@ void BatMagic::SetParam(void)
 	magic_.collisionRadius_ = COLLISION_RAD;
 	magic_.bodyDamage_ = DAMAGE;
 }
+
+void BatMagic::ChangeShot(void)
+{
+}

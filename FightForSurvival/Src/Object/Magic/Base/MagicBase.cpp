@@ -35,7 +35,8 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	magic_.dir_ = dir;
 	// –‚–@‚Ì¶‘¶”»’è
 	magic_.isAlive_ = true;
-	state_ = STATE::SHOT;
+	// Œ‚‚Á‚½ó‘Ô‚É•ÏX
+	ChangeState(STATE::SHOT);
 }
 
 void MagicBase::Update(void)

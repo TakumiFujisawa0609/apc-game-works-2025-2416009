@@ -1,44 +1,20 @@
 #pragma once
 
 #include "../../Player/Weapon/WeaponBase.h"
+#include "../MagicInfo.h"
 class WeaponBase;
 
 class MagicBase
 {
-protected:
-
-	struct Magic
-	{
-		// 魔法のモデルID
-		int modelId_;
-		// 方向
-		VECTOR dir_;
-		// 魔法の大きさ
-		VECTOR scale_;
-		// 魔法の回転
-		VECTOR rotate_;
-		// 魔法の座標
-		VECTOR pos_;
-		VECTOR prevPos_;
-		// 魔法の移動速度
-		float speed_;
-		// 魔法の生存判定
-		bool isAlive_;
-		// 魔法の描画判定
-		bool isDraw_;
-		// 魔法の生存期間
-		float cntAlive_;
-		// 魔法の衝突判定用半径
-		float collisionRadius_;
-		// ダメージ数
-		int headDamage_;
-		int bodyDamage_;
-	};
-
 public:
 
+	// 魔法をチャージする量
 	static constexpr float CHARGE_POW = 0.1f;
+	// 魔法の最大チャージ量
 	static constexpr float CHARGE_MAX = 20.0f;
+
+	// 最大チャージに加算する攻撃力
+	static constexpr float ADD_DAMEGE = 5.0f;
 
 	// 魔法の状態
 	enum class STATE
@@ -101,11 +77,15 @@ protected:
 	// 魔法の生存期間の減少
 	void ReduceCntAlive(void);
 
-	void UpdateShot(void);
+	// 魔法の更新(移動)処理
+	virtual void UpdateShot(void);
+	// 魔法の爆発処理
 	void UpdateBlast(void);
+	// 爆発後の魔法の処理
 	void UpdateEnd(void);
 
-	void ChangeShot(void);
+	// ステート変更時の設定事項
+	virtual void ChangeShot(void) = 0;
 	void ChangeBlast(void);
 	void ChangeEnd(void);
 

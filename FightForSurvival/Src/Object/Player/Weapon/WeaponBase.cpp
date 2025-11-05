@@ -3,7 +3,8 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../Application.h"
 #include "../Player.h"
-#include "../../Magic/FireMagic.h"
+#include "../../Magic/FireMagic/FireMagic.h"
+#include "../../Magic/WindMagic/WindMagic.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../../../Utility/MatrixUtility.h"
 #include "WeaponBase.h"
@@ -22,15 +23,24 @@ WeaponBase::~WeaponBase(void)
 
 void WeaponBase::Init(void)
 {
-	//// 魔法のモデルを読み込む
-	//magicModelId_ = MV1LoadModel(
-	//	(Application::PATH_MODEL + "Cannon/Barrel.mv1").c_str());
+	// 魔法の種類を取得
+	typeMagic_ = SystemManager::GetInstance().GetTypeMagic();
 
-	//if (magicModelId_ == -1)
-	//{
-	//	// モデルの読み込みに失敗した場合の処理
-	//	DrawString(0, 0, "CannonBarrel model load failed", GetColor(255, 0, 0));
-	//}
+	// 種類によって読み込むモデルを変える
+	// 魔法のモデルを読み込む
+	switch (typeMagic_)
+	{
+	case TYPE_MAGIC::FIRE_MAGIC:
+	//magicModelId_ = MV1LoadModel(
+	//	(Application::PATH_MODEL + "Effect/Fire.mv1").c_str());
+		break;
+	case TYPE_MAGIC::WIND_MAGIC:
+		break;
+	case TYPE_MAGIC::EXPLOSION_MAGIC:
+		break;
+	default:
+		break;
+	}
 
 	// パラメータ設定
 	SetParam();
@@ -264,8 +274,29 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	// 未使用の魔法がなかった場合新しい魔法を生成
 	MagicBase* Magic;
 
-	// 新しい魔法のインスタンスを生成する
-	Magic = new FireMagic(magicModelId_);
+	switch (typeMagic_)
+	{
+	case TYPE_MAGIC::FIRE_MAGIC:
+
+		// 炎魔法のインスタンスを生成する
+		Magic = new FireMagic(magicModelId_);
+
+		break;
+	case TYPE_MAGIC::WIND_MAGIC:
+
+		// 風魔法のインスタンスを生成する
+		Magic = new WindMagic(magicModelId_);
+
+		break;
+	case TYPE_MAGIC::EXPLOSION_MAGIC:
+
+		// 爆発魔法のインスタンスを生成する
+		//Magic = new ExplosionMagic(magicModelId_);
+
+		break;
+	default:
+		break;
+	}
 
 	// 可変長配列に追加
 	magics_.push_back(Magic);

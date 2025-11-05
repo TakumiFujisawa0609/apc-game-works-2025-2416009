@@ -3,7 +3,7 @@
 #include <vector>
 #include <memory>
 
-#include "Base/EnemyBase.h"
+class EnemyBase;
 #include "../Player/Player.h"
 
 // 敵のタイプ(エネミーのマネージャー等で作る！）

@@ -67,6 +67,7 @@
     <ClCompile Include="Src\Wave\WaveFinal.cpp" />
     <ClCompile Include="Src\Wave\Wave2.cpp" />
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
+    <ClCompile Include="Src\Object\Magic\WindMagic\WindMagic.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Common\Pause\Setting\Bar\Bar.h" />
@@ -77,6 +78,7 @@
     <ClInclude Include="Src\Common\Quaternion\Quaternion.h" />
     <ClInclude Include="Src\Manager\SoundManager.h" />
     <ClInclude Include="Src\Object\Common\AnimationController.h" />
+    <ClInclude Include="Src\Object\Magic\MagicInfo.h" />
     <ClInclude Include="Src\Object\Spawner\Spawner.h" />
     <ClInclude Include="Src\Object\Spawner\SpawnerManager.h" />
     <ClInclude Include="Src\Object\Player\Upgrade\UpgradeManager.h" />
@@ -119,6 +121,7 @@
     <ClInclude Include="Src\Wave\WaveFinal.h" />
     <ClInclude Include="Src\Wave\Wave2.h" />
     <ClInclude Include="Src\Object\Player\Upgrade\Upgrade.h" />
+    <ClInclude Include="Src\Object\Magic\WindMagic\WindMagic.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

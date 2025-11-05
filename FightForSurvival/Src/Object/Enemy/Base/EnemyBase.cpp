@@ -203,7 +203,7 @@ bool EnemyBase::IsCollisionState(void)
 	return !(state_.state_ == STATE_DEAD || state_.state_ == STATE_END);
 }
 
-void EnemyBase::SubHp(int hp)
+void EnemyBase::SubHp(float hp)
 {
 	enemy_.hp_ -= hp;
 
