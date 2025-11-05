@@ -437,14 +437,14 @@ bool InputManager::IsPadLStickNew(JOYPAD_NO no, JOYPAD_STICK stick)
 	return nowPadLStick_[static_cast<int>(stick)];
 }
 
-bool InputManager::IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick) const
+bool InputManager::IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick)
 {
-	return !prevPadLStick_[static_cast<int>(stick)] && nowPadLStick_[static_cast<int>(stick)];
+	return !prevPadLStick_[static_cast<int>(stick)] && IsPadLStickNew(no,stick);
 }
 
-bool InputManager::IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick) const
+bool InputManager::IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick)
 {
-	return prevPadLStick_[static_cast<int>(stick)] && !nowPadLStick_[static_cast<int>(stick)];
+	return prevPadLStick_[static_cast<int>(stick)] && !IsPadLStickNew(no, stick);
 }
 
 VECTOR InputManager::GetDirectionXZAKey(int aKeyX, int aKeyY)

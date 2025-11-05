@@ -32,7 +32,6 @@ public:
 	static constexpr float SENSITIVITY_MIN_PAD = 0.01f;
 
 	//　加算したり減算する感度の量
-	static constexpr float SENSITIVITY_MOUSE = 0.0001f;
 	static constexpr float SENSITIVITY_PAD = 0.001f;
 
 	// バーの始まりの位置
@@ -66,6 +65,7 @@ private:
 
 	// マウス座標
 	Vector2 mousePos_;
+	Vector2 circlePos_;
 
 	bool isSetting_;
 

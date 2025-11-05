@@ -6,30 +6,32 @@ class Bar
 {
 public:
 
-	Bar(void);
-	~Bar(void);
+	Bar(Vector2 pos, Vector2 size, unsigned int color, float max, float min, float now);
+	virtual ~Bar(void);
 
 	void Init(void);
-	void Update(float now);
-	void Draw(void);
+	virtual void Draw(void);
 	void Release(void);
 
 	void SetNowValue(float now) { now_ = now; }
 
 protected:
 
+	// バーの始点
 	Vector2 pos_;
-
+	// バーのサイズ
 	Vector2 size_;
+	// バーの色
+	unsigned int color_;
 
+	// 最大値
 	float max_;
+	// 最小値
 	float min_;
+	// 現在値
 	float now_;
 
-	float dis_;
-	float value_;
-
-	virtual void SetParam(void) = 0;
-
+	float range_;
+	float pixelBerUnit_;
 };
 

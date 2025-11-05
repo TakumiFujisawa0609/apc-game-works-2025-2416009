@@ -140,8 +140,8 @@ public:
 
 	// 左スティックの入力
 	bool IsPadLStickNew(JOYPAD_NO no, JOYPAD_STICK stick);
-	bool IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick) const;
-	bool IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick) const;
+	bool IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick);
+	bool IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick);
 
 	// アナログキーの入力値から方向を取得
 	VECTOR GetDirectionXZAKey(int aKeyX, int aKeyY);
