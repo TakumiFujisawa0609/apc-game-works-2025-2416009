@@ -11,7 +11,7 @@ public:
 	// 出現させる敵の数
 	static constexpr int SPAWN_ENEMY_NUM = 4;
 	static constexpr float COLLISION_RADIUS = 40.0f;
-	static constexpr float DURABILITY = 3.0f;
+	static constexpr float DURABILITY = 15.0f;
 
 	// 軸座標から移動させる量(ローカル)
 	static constexpr VECTOR LEFT_UP = {-300.0f,0.0f,300.0f };

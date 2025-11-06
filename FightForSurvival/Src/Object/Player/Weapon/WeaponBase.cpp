@@ -5,6 +5,7 @@
 #include "../Player.h"
 #include "../../Magic/FireMagic/FireMagic.h"
 #include "../../Magic/WindMagic/WindMagic.h"
+#include "../../Magic/ExplosionMagic/ExplosionMagic.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../../../Utility/MatrixUtility.h"
 #include "WeaponBase.h"
@@ -239,10 +240,7 @@ void WeaponBase::UpdateMagic(void)
 	// 魔法の更新
 	for (auto& Magic : magics_)
 	{
-		if (Magic->GetMagic().isAlive_)
-		{
-			Magic->Update();
-		}
+		Magic->Update();
 	}
 }
 
@@ -265,7 +263,7 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	for (int i = 0; i < size; i++)
 	{
 		// 未使用(生存していない)で、かつ、魔法の種別が同じ
-		if (!magics_[i]->GetMagic().isAlive_)
+		if (!magics_[i]->GetMagic().isExists_)
 		{
 			return magics_[i];
 		}
@@ -291,7 +289,7 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	case TYPE_MAGIC::EXPLOSION_MAGIC:
 
 		// 爆発魔法のインスタンスを生成する
-		//Magic = new ExplosionMagic(magicModelId_);
+		Magic = new ExplosionMagic(magicModelId_);
 
 		break;
 	default:

@@ -19,6 +19,9 @@ namespace CollisionUtility
 	// ‹…“¯m‚Ì“–‚½‚è”»’è
 	bool IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad);
 
+	// ‹…‚ÆÀ•W‚Ì“–‚½‚è”»’è
+	bool IsCollidingSphereAndPos(VECTOR sphere1Pos, float sphere1Rad, VECTOR pos);
+
 	// ‰Ÿ‚µo‚µ”»’è(‰Ÿ‚µo‚µ—Ê‚ğ“n‚µ‚Ä‚­‚ê‚é)
 	VECTOR ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2);
 

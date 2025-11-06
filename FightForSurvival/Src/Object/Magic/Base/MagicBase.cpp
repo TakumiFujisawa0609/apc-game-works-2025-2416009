@@ -13,7 +13,7 @@ MagicBase::~MagicBase(void)
 
 void MagicBase::Init(void)
 {
-	magic_.isAlive_ = false;
+	magic_.isExists_ = false;
 	magic_.isDraw_ = true;
 	state_ = STATE::NONE;
 
@@ -34,15 +34,14 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	// –‚–@‚Ì”­Ë•ûŒü‚Ìİ’è
 	magic_.dir_ = dir;
 	// –‚–@‚Ì¶‘¶”»’è
-	magic_.isAlive_ = true;
+	magic_.isExists_ = true;
 	// Œ‚‚Á‚½ó‘Ô‚É•ÏX
 	ChangeState(STATE::SHOT);
 }
 
 void MagicBase::Update(void)
 {
-
-	if (!magic_.isAlive_)
+	if (!magic_.isExists_ && !magic_.isDraw_)
 	{
 		// ¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—’†’f
 		return;
@@ -68,10 +67,9 @@ void MagicBase::Update(void)
 
 void MagicBase::Draw(void)
 {
-
 	if (!magic_.isDraw_)
 	{
-		// ¶‘¶‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—’†’f
+		// •`‰æ‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—’†’f
 		return;
 	}
 
@@ -84,11 +82,6 @@ void MagicBase::Draw(void)
 void MagicBase::Release(void)
 {
 	MV1DeleteModel(magic_.modelId_);
-}
-
-bool MagicBase::IsCollisionState(void)
-{
-	return state_ == STATE::SHOT;
 }
 
 void MagicBase::ChangeState(STATE state)
@@ -177,7 +170,7 @@ void MagicBase::UpdateBlast(void)
 
 void MagicBase::UpdateEnd(void)
 {
-	magic_.isAlive_ = false;
+	magic_.isExists_ = false;
 	magic_.isDraw_ = false;
 }
 

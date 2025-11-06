@@ -66,7 +66,7 @@ void WindMagic::ChangeShot(void)
 
 	for (auto& enemy : enemies)
 	{
-		if (!enemy->GetEnemy().isAlive_)
+		if (!enemy->IsCollisionState() || !enemy->GetEnemy().isAlive_)
 		{
 			// 生きていないなら処理を行わない
 			continue;
@@ -100,19 +100,22 @@ void WindMagic::LookTargetEnemy(void)
 {
 	// 相手へのベクトルを計算(引き算)
 	VECTOR vec;
-	vec = VSub(targetPos_,magic_.pos_);
+	vec.x = targetPos_.x - magic_.pos_.x;
+	vec.y = targetPos_.y - magic_.pos_.y;
+	vec.z = targetPos_.z - magic_.pos_.z;
 
 	// ベクトルの正規化で単位ベクトル(方向)を取得する
 	float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
 
 	if (length == 0.0f)
 	{
-		vec.x = vec.z = 0.0f;
+		vec.x = vec.z = vec.y = 0.0f;
 		return;
 	}
 
 	// 大きさで割って単位ベクトルにする
 	magic_.dir_.x = vec.x / length;
+	magic_.dir_.y = vec.y / length;
 	magic_.dir_.z = vec.z / length;
 
 	// 方向から角度を出す

@@ -70,14 +70,22 @@ private:
 
 	// 当たり判定
 	void Collisions(void);
-	// 敵やプレイヤーにダメージが入る当たり判定
-	void DamageCollision(void);
+
+	// 魔法の当たり判定
+	void MagicCollision(void);
+	// 爆発魔法の当たり判定
+	void ExplosionMagicCollision(void);
+
+	// 敵の攻撃の当たり判定
+	void EnemiesAttackCollision(void);
 	// ゾンビの攻撃当たり判定
 	void ZombieAttackCollision(EnemyBase* enemy,VECTOR handPos,float handRad);
 	// コウモリの攻撃当たり判定
 	void BatAttackCollision(EnemyBase* enemy);
+
 	// 敵同士の押し出し判定
-	void enemiesExtrusionCollision(void);
+	void EnemiesExtrusionCollision(void);
+
 	// スポナーとプレイヤーの攻撃の当たり判定
 	void SpawnerAndAttackCollision(void);
 

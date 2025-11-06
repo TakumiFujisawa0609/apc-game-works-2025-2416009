@@ -24,8 +24,8 @@ struct Magic
 	VECTOR prevPos_;
 	// 魔法の移動速度
 	float speed_;
-	// 魔法の生存判定
-	bool isAlive_;
+	// 魔法の存在判定
+	bool isExists_;
 	// 魔法の描画判定
 	bool isDraw_;
 	// 魔法の生存期間

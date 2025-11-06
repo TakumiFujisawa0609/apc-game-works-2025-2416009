@@ -133,6 +133,16 @@ bool CollisionUtility::IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, V
 	return (distance < totalRad * totalRad);
 }
 
+bool CollisionUtility::IsCollidingSphereAndPos(VECTOR sphere1Pos, float sphere1Rad, VECTOR pos)
+{
+	// ’†S“_ŠÔ‚Ì‹——£‚Ì2æ‚ðŒvŽZ
+	VECTOR dis = VSub(pos, sphere1Pos);
+	float distance = dis.x * dis.x + dis.y * dis.y + dis.z * dis.z;
+
+	// ‹——£‚Ì2æ‚ª”¼Œa‚Ì‡Œv‚Ì2æ‚æ‚è¬‚³‚¢‚©”»’è
+	return (distance < sphere1Rad * sphere1Rad);
+}
+
 VECTOR CollisionUtility::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2)
 {
 	VECTOR pushPow = AsoUtility::VECTOR_ZERO;

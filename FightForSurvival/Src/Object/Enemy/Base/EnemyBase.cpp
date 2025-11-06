@@ -530,7 +530,7 @@ void EnemyBase::UpdateMagic(void)
 	// 魔法の更新
 	for (auto& Magic : magics_)
 	{
-		if (Magic->GetMagic().isAlive_)
+		if (Magic->GetMagic().isExists_)
 		{
 			Magic->Update();
 		}
@@ -542,7 +542,7 @@ void EnemyBase::DrawMagic(void)
 	// 魔法の更新
 	for (auto& Magic : magics_)
 	{
-		if (Magic->GetMagic().isAlive_)
+		if (Magic->GetMagic().isExists_)
 		{
 			Magic->Draw();
 		}
@@ -556,7 +556,7 @@ MagicBase* EnemyBase::GetValidMagic(void)
 	for (int i = 0; i < size; i++)
 	{
 		// 未使用(生存していない)で、かつ、魔法の種別が同じ
-		if (!magics_[i]->GetMagic().isAlive_)
+		if (!magics_[i]->GetMagic().isExists_ && !magics_[i]->GetMagic().isDraw_)
 		{
 			return magics_[i];
 		}

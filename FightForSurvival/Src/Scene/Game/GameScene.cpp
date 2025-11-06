@@ -336,105 +336,167 @@ void GameScene::Release(void)
 
 void GameScene::Collisions(void)
 {
-	// 敵やプレイヤーにダメージが入る当たり判定
-	DamageCollision();
+	// プレイヤーの魔法当たり判定
+	MagicCollision();
+	// 爆発魔法
+	ExplosionMagicCollision();
+
+	// 敵の攻撃の当たり判定
+	EnemiesAttackCollision();
 	// 敵同士の押し出し判定
-	enemiesExtrusionCollision();
+	EnemiesExtrusionCollision();
 	// スポナーとプレイヤーの攻撃の当たり判定
 	SpawnerAndAttackCollision();
 }
 
-void GameScene::DamageCollision(void)
+void GameScene::MagicCollision(void)
 {
-	auto& eneManaIns = EnemyManager::GetInstance();
 	// 生成してある敵を取得
-	auto& enemies_ = eneManaIns.GetEnemy();
+	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
 
-	for (auto* enemy : enemies_)
+	// 魔法クラスのポインター取得
+	auto magics = player_->GetWeapon()->GetMagics();
+
+	// 魔法が爆発魔法か見る
+	bool isExplosionMagic = { SystemManager::GetInstance().GetTypeMagic() == TYPE_MAGIC::EXPLOSION_MAGIC };
+
+	// 魔法の数分回す
+	for (auto& magic : magics)
 	{
-		if (!enemy->GetEnemy().isAlive_)
+		// 魔法がSHOT状態でなければ処理を飛ばす
+		if (magic->GetState() != MagicBase::STATE::SHOT)
 		{
-			// 生存していなければ処理を行わない
 			continue;
 		}
 
-		if (!enemy->IsCollisionState())
+		// 魔法の情報
+		Magic magicInfo = magic->GetMagic();
+
+		// 魔法の移動経路の線分を定義
+		VECTOR magicLineStart = magicInfo.pos_;
+		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
+
+		// 魔法の半径
+		float magicRad = magicInfo.collisionRadius_;
+		for (auto* enemy : enemies_)
 		{
-			// 敵が生存していなければ処理を行わない
+			if (!enemy->IsCollisionState() || !enemy->GetEnemy().isAlive_)
+			{
+				// 生存していなければ処理を行わない
+				continue;
+			}
+
+			// 敵の情報
+			Unit eneInfo = enemy->GetEnemy();
+			EnemyCollision eneColInfo = enemy->GetColPos();
+
+			// 敵の座標
+			VECTOR enePos[COLLISION_POS::MAX];
+
+			for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
+			{
+				enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
+			}
+
+			// 敵の半径
+			float eneRadHead = eneInfo.collisionRadiusHead_;
+			float eneRadBody = eneInfo.collisionRadiusBody_;
+			float eneRadArm = eneInfo.collisionRadiusArm_;
+			float eneRadHand = eneInfo.collisionRadiusHand_;
+			float eneRadLeg = eneInfo.collisionRadiusLeg_;
+
+			// 頭の当たり判定
+			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, magicLineStart, magicLineEnd, magicRad))
+			{
+				// 敵にダメージを与える
+				enemy->SubHp(magicInfo.headDamage_);
+				// 魔法を爆発させる
+				magic->ChangeState(MagicBase::STATE::BLAST);
+
+				// ダメージSEをながす
+				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
+			}
+			// 体、腕、手の当たり判定
+			else if (CollisionUtility::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, magicLineStart, magicLineEnd, magicRad)
+				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, magicLineStart, magicLineEnd, magicRad)
+				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, magicLineStart, magicLineEnd, magicRad)
+				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, magicLineStart, magicLineEnd, magicRad)
+				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, magicLineStart, magicLineEnd, magicRad))
+			{
+				// 敵にダメージを与える
+				enemy->SubHp(magicInfo.bodyDamage_);
+				// 魔法を爆発させる
+				magic->ChangeState(MagicBase::STATE::BLAST);
+
+				// ダメージSEをながす
+				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
+			}
+		}
+	}
+}
+
+void GameScene::ExplosionMagicCollision(void)
+{
+	// 魔法クラスのポインター取得
+	auto magics = player_->GetWeapon()->GetMagics();
+
+	// 魔法が爆発魔法か見る
+	bool isExplosionMagic = { SystemManager::GetInstance().GetTypeMagic() == TYPE_MAGIC::EXPLOSION_MAGIC };
+
+	// 魔法の数分回す
+	for (auto& magic : magics)
+	{
+		// 魔法の種類が爆発魔法かつ、爆発中であれば処理を行う
+		if (isExplosionMagic && magic->GetMagic().isExists_ && magic->GetState() == MagicBase::STATE::BLAST)
+		{
+			// 魔法の情報
+			Magic magicInfo = magic->GetMagic();
+
+			// 魔法の移動経路の線分を定義
+			VECTOR magicPos = magicInfo.pos_;
+
+			// 魔法の半径
+			float magicRad = magicInfo.collisionRadius_;
+
+			// 生成してある敵を取得
+			auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
+			for (auto* enemy : enemies_)
+			{
+				if (!enemy->IsCollisionState() || !enemy->GetEnemy().isAlive_)
+				{
+					// 生存していなければ処理を行わない
+					continue;
+				}
+
+				if (CollisionUtility::IsCollidingSphereAndPos(magicPos, magicRad, enemy->GetEnemy().pos_))
+				{
+					// 敵にダメージを与える
+					enemy->SubHp(magicInfo.bodyDamage_);
+				}
+			}
+
+			// 爆発範囲判定が終了したため存在を消す(描画は別フラグで行っている)
+			magic->SetIsExists(false);
+		}
+	}
+}
+
+void GameScene::EnemiesAttackCollision(void)
+{
+	// 生成してある敵を取得
+	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
+
+	for (auto* enemy : enemies_)
+	{
+		if (!enemy->IsCollisionState() || !enemy->GetEnemy().isAlive_)
+		{
+			// 生存していなければ処理を行わない
 			continue;
 		}
 
 		// 敵の情報
 		Unit eneInfo = enemy->GetEnemy();
 		EnemyCollision eneColInfo = enemy->GetColPos();
-
-		// 敵の座標
-		VECTOR enePos[COLLISION_POS::MAX];
-
-		for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
-		{
-			enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
-		}
-
-		// 敵の半径
-		float eneRadHead = eneInfo.collisionRadiusHead_;
-		float eneRadBody = eneInfo.collisionRadiusBody_;
-		float eneRadArm = eneInfo.collisionRadiusArm_;
-		float eneRadHand = eneInfo.collisionRadiusHand_;
-		float eneRadLeg = eneInfo.collisionRadiusLeg_;
-#pragma region プレイヤーの攻撃当たり判定
-
-		// 魔法クラスのポインター取得
-		auto Magics = player_->GetWeapon()->GetMagics();
-
-		// 魔法の数分回す
-		for (auto Magic : Magics)
-		{
-			// 魔法が生存していなかったら次の魔法に進む
-			if (!Magic->IsCollisionState())
-			{
-				continue;
-			}
-
-			// 魔法の情報
-			auto MagicInfo = Magic->GetMagic();
-
-			// 魔法の移動経路の線分を定義
-			VECTOR MagicLineStart = MagicInfo.pos_;
-			VECTOR MagicLineEnd = MagicInfo.prevPos_; // 前のフレームでの魔法の位置
-
-			// 魔法の半径
-			float MagicRad = MagicInfo.collisionRadius_;
-
-			// 頭の当たり判定
-			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, MagicLineStart, MagicLineEnd, MagicRad))
-			{
-				// 敵にダメージを与える
-				enemy->SubHp(MagicInfo.headDamage_);
-				// 魔法を爆発させる
-				Magic->ChangeState(MagicBase::STATE::BLAST);
-
-				// ダメージSEをながす
-				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
-			}
-			// 体、腕、手の当たり判定
-			else if (CollisionUtility::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_R], enePos[ARM_UNDER_R], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionUtility::IsCollidingCapsules(enePos[ARM_TOP_L], enePos[ARM_UNDER_L], eneRadArm, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad)
-				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, MagicLineStart, MagicLineEnd, MagicRad))
-			{
-				// 敵にダメージを与える
-				enemy->SubHp(MagicInfo.bodyDamage_);
-				// 魔法を爆発させる
-				Magic->ChangeState(MagicBase::STATE::BLAST);
-
-				// ダメージSEをながす
-				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
-			}
-		}
-
-#pragma endregion
 
 		switch (enemy->GetType())
 		{
@@ -446,11 +508,13 @@ void GameScene::DamageCollision(void)
 				continue;
 			}
 
-			ZombieAttackCollision(enemy, enePos[HAND_R], eneRadHand);
+			// ゾンビの攻撃中の右手と当たり判定を行う
+			ZombieAttackCollision(enemy, eneColInfo.colPos_[COLLISION_POS::HAND_R], eneInfo.collisionRadiusHand_);
 
 			break;
 		case ENEMY_TYPE::BAT:
 
+			// コウモリの魔法の当たり判定を行う
 			BatAttackCollision(enemy);
 
 			break;
@@ -459,8 +523,6 @@ void GameScene::DamageCollision(void)
 		default:
 			break;
 		}
-
-
 
 	}
 }
@@ -501,8 +563,8 @@ void GameScene::BatAttackCollision(EnemyBase* enemy)
 	// 魔法の数分回す
 	for (auto magic : magics)
 	{
-		// 魔法が生存していなかったら次の魔法に進む
-		if (!magic->IsCollisionState())
+		// 魔法がSHOT状態でなければ処理を飛ばす
+		if (magic->GetState() != MagicBase::STATE::SHOT)
 		{
 			continue;
 		}
@@ -539,10 +601,9 @@ void GameScene::BatAttackCollision(EnemyBase* enemy)
 	}
 }
 
-void GameScene::enemiesExtrusionCollision(void)
+void GameScene::EnemiesExtrusionCollision(void)
 {
-	auto& eneManaIns = EnemyManager::GetInstance();
-	auto& enemies = eneManaIns.GetEnemy();
+	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
@@ -587,25 +648,26 @@ void GameScene::SpawnerAndAttackCollision(void)
 	auto spawners = SpawnerManager::GetInstance().GetSpawners();
 
 	// 魔法クラスのポインター取得
-	auto Magics = player_->GetWeapon()->GetMagics();
+	auto magics = player_->GetWeapon()->GetMagics();
 
 	// 魔法の数分回す
-	for (auto Magic : Magics)
+	for (auto magic : magics)
 	{
-		// 魔法が生存していなかったら次の魔法に進む
-		if (!Magic->IsCollisionState())
+		// 魔法がSHOT状態でなければ処理を飛ばす
+		if (magic->GetState() != MagicBase::STATE::SHOT)
 		{
 			continue;
 		}
+
 		// 魔法の情報
-		auto MagicInfo = Magic->GetMagic();
+		auto magicInfo = magic->GetMagic();
 
 		// 魔法の移動経路の線分を定義
-		VECTOR MagicLineStart = MagicInfo.pos_;
-		VECTOR MagicLineEnd = MagicInfo.prevPos_; // 前のフレームでの魔法の位置
+		VECTOR magicLineStart = magicInfo.pos_;
+		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
 
 		// 魔法の半径
-		float MagicRad = MagicInfo.collisionRadius_;
+		float magicRad = magicInfo.collisionRadius_;
 		for (auto& spawner : spawners)
 		{
 			// 存在していなかったら次のスポナーを見る
@@ -621,13 +683,13 @@ void GameScene::SpawnerAndAttackCollision(void)
 			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;
 
 			// 当たり判定
-			if (CollisionUtility::IsCollidingSphereCapsule(spawnerPos, spawnerRad, MagicLineStart, MagicLineEnd, MagicRad))
+			if (CollisionUtility::IsCollidingSphereCapsule(spawnerPos, spawnerRad, magicLineStart, magicLineEnd, magicRad))
 			{
 				// 当たっていたら
 				// スポナー耐久値にダメージを与える
-				spawner->Damage(1);
+				spawner->Damage(magic->GetMagic().bodyDamage_);
 				// 魔法を爆発させる
-				Magic->ChangeState(MagicBase::STATE::BLAST);
+				magic->ChangeState(MagicBase::STATE::BLAST);
 
 			}
 		}
@@ -636,9 +698,7 @@ void GameScene::SpawnerAndAttackCollision(void)
 
 void GameScene::IsClear(void)
 {
-	auto& eneManaIns = EnemyManager::GetInstance();
-
-	auto& enemies_ = eneManaIns.GetEnemy();
+	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
 
 	bool isEnd_ = true;
 	if ((int)enemies_.size() <= 0)

@@ -40,8 +40,8 @@ public:
 	// 解放処理
 	void Release(void);
 
-	// SHOT中のみtrueを返す
-	bool IsCollisionState(void);
+	// 現在のステートを返す
+	STATE GetState(void)const { return state_; }
 
 	void ChangeState(STATE state);
 
@@ -49,6 +49,7 @@ public:
 	Magic GetMagic(void)const { return magic_; }
 	// セッター関数
 	void SetCollisionRad(float col) { magic_.collisionRadius_ = col; }
+	void SetIsExists(bool flg) { magic_.isExists_ = flg; }
 
 	// 魔法を大きくする
 	void ChargeMagic(void);

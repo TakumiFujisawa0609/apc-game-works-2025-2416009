@@ -18,8 +18,10 @@ public:
 	// 存在可能時間
 	static constexpr float CNT_ALIVE = 1.0f;
 
-	// 当たり判定用サイズ
+	// 着弾前の当たり判定サイズ
 	static constexpr float COLLISION_RAD = 3.0f;
+	// 着弾後の当たり判定サイズ
+	static constexpr float HIT_COLLISION_RAD = 300.0f;
 
 	// 当たり判定用ダメージ
 	// 頭
