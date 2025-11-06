@@ -86,7 +86,7 @@ protected:
 
 	// ステート変更時の設定事項
 	virtual void ChangeShot(void) = 0;
-	void ChangeBlast(void);
+	virtual void ChangeBlast(void);
 	void ChangeEnd(void);
 
 };
