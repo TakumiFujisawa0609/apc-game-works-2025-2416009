@@ -1,8 +1,8 @@
 #include "FireMagic.h"
 
-FireMagic::FireMagic(int baseModelId) 
+FireMagic::FireMagic(TYPE_MAGIC typeMagic,int baseModelId)
 	:
-	MagicBase(baseModelId)
+	MagicBase(typeMagic, baseModelId)
 {
 }
 

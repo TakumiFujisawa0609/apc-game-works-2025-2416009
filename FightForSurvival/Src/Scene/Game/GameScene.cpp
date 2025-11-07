@@ -357,12 +357,13 @@ void GameScene::MagicCollision(void)
 	// 魔法クラスのポインター取得
 	auto magics = player_->GetWeapon()->GetMagics();
 
-	// 魔法が爆発魔法か見る
-	bool isExplosionMagic = { SystemManager::GetInstance().GetTypeMagic() == TYPE_MAGIC::EXPLOSION_MAGIC };
 
 	// 魔法の数分回す
 	for (auto& magic : magics)
 	{
+		// 魔法が爆発魔法か見る(ture / 爆発魔法ではない、false / 爆発魔法である）
+		bool notExplosionMagic = { magic->GetMagic().typeMagic_ != TYPE_MAGIC::EXPLOSION_MAGIC };
+
 		// 魔法がSHOT状態でなければ処理を飛ばす
 		if (magic->GetState() != MagicBase::STATE::SHOT)
 		{
@@ -408,13 +409,18 @@ void GameScene::MagicCollision(void)
 			// 頭の当たり判定
 			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, magicLineStart, magicLineEnd, magicRad))
 			{
-				// 敵にダメージを与える
-				enemy->SubHp(magicInfo.headDamage_);
+				// 爆発魔法でなければダメージを与える
+				if (notExplosionMagic)
+				{
+					// 敵にダメージを与える
+					enemy->SubHp(magicInfo.headDamage_);
+					// ダメージSEをながす
+					SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
+				}
+
 				// 魔法を爆発させる
 				magic->ChangeState(MagicBase::STATE::BLAST);
 
-				// ダメージSEをながす
-				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
 			// 体、腕、手の当たり判定
 			else if (CollisionUtility::IsCollidingCapsules(enePos[BODY_TOP], enePos[BODY_UNDER], eneRadBody, magicLineStart, magicLineEnd, magicRad)
@@ -423,13 +429,17 @@ void GameScene::MagicCollision(void)
 				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_R], eneRadHand, magicLineStart, magicLineEnd, magicRad)
 				|| CollisionUtility::IsCollidingSphereCapsule(enePos[HAND_L], eneRadHand, magicLineStart, magicLineEnd, magicRad))
 			{
-				// 敵にダメージを与える
-				enemy->SubHp(magicInfo.bodyDamage_);
+				// 爆発魔法でなければダメージを与える
+				if (notExplosionMagic)
+				{
+					// 敵にダメージを与える
+					enemy->SubHp(magicInfo.bodyDamage_);
+					// ダメージSEをながす
+					SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
+				}
+
 				// 魔法を爆発させる
 				magic->ChangeState(MagicBase::STATE::BLAST);
-
-				// ダメージSEをながす
-				SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED_ENEMY);
 			}
 		}
 	}
@@ -440,14 +450,17 @@ void GameScene::ExplosionMagicCollision(void)
 	// 魔法クラスのポインター取得
 	auto magics = player_->GetWeapon()->GetMagics();
 
-	// 魔法が爆発魔法か見る
-	bool isExplosionMagic = { SystemManager::GetInstance().GetTypeMagic() == TYPE_MAGIC::EXPLOSION_MAGIC };
-
 	// 魔法の数分回す
 	for (auto& magic : magics)
 	{
+		// 魔法の種類が爆発魔法以外であれば処理を行わない
+		if (magic->GetMagic().typeMagic_ != TYPE_MAGIC::EXPLOSION_MAGIC)
+		{
+			continue;
+		}
+
 		// 魔法の種類が爆発魔法かつ、爆発中であれば処理を行う
-		if (isExplosionMagic && magic->GetMagic().isExists_ && magic->GetState() == MagicBase::STATE::BLAST)
+		if (magic->GetMagic().isExists_ && magic->GetState() == MagicBase::STATE::BLAST)
 		{
 			// 魔法の情報
 			Magic magicInfo = magic->GetMagic();

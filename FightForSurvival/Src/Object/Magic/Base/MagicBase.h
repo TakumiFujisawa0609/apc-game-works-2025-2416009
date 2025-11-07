@@ -26,7 +26,7 @@ public:
 	};
 
 	// コンストラクタ(杖種別、元となるモデルのハンドルID)
-	MagicBase(int baseModelId);
+	MagicBase(TYPE_MAGIC typeMagic, int baseModelId);
 	// デストラクタ
 	virtual ~MagicBase(void);
 
@@ -56,6 +56,9 @@ public:
 
 	// 座標を更新
 	void UpdatePos(VECTOR pos);
+
+	// 魔法の種類を返す
+	TYPE_MAGIC GetTypeMagic(void)const {return magic_.typeMagic_;}
 
 	// 爆発させる
 	//void Blast(EFFECT_TYPE type);

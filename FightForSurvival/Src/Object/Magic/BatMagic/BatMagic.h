@@ -25,7 +25,7 @@ public:
 	// 当たり判定用サイズ
 	static constexpr int DAMAGE = 1;
 
-	BatMagic(int baseModelId);
+	BatMagic(TYPE_MAGIC typeMagic, int baseModelId);
 	~BatMagic(void);
 
 protected:

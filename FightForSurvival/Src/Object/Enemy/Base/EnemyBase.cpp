@@ -566,7 +566,7 @@ MagicBase* EnemyBase::GetValidMagic(void)
 	MagicBase* Magic;
 
 	// 新しい魔法のインスタンスを生成する
-	Magic = new BatMagic(baseAttackEffectModelId_);
+	Magic = new BatMagic(TYPE_MAGIC::FIRE_MAGIC, baseAttackEffectModelId_);
 
 	// 可変長配列に追加
 	magics_.push_back(Magic);

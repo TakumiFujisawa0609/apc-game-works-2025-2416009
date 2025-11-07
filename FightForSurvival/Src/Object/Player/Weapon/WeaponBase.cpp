@@ -277,19 +277,19 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	case TYPE_MAGIC::FIRE_MAGIC:
 
 		// 炎魔法のインスタンスを生成する
-		Magic = new FireMagic(magicModelId_);
+		Magic = new FireMagic(typeMagic_, magicModelId_);
 
 		break;
 	case TYPE_MAGIC::WIND_MAGIC:
 
 		// 風魔法のインスタンスを生成する
-		Magic = new WindMagic(magicModelId_);
+		Magic = new WindMagic(typeMagic_, magicModelId_);
 
 		break;
 	case TYPE_MAGIC::EXPLOSION_MAGIC:
 
 		// 爆発魔法のインスタンスを生成する
-		Magic = new ExplosionMagic(magicModelId_);
+		Magic = new ExplosionMagic(typeMagic_, magicModelId_);
 
 		break;
 	default:

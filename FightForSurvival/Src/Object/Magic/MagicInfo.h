@@ -4,9 +4,9 @@
 
 enum class TYPE_MAGIC
 {
-	FIRE_MAGIC,
-	WIND_MAGIC,
-	EXPLOSION_MAGIC
+	FIRE_MAGIC, // まっすぐ飛ぶ炎魔法
+	WIND_MAGIC,	// 一番近くの敵を追尾する風魔法
+	EXPLOSION_MAGIC	// 着弾時に周囲を爆発で巻き込む爆発魔法
 };
 
 struct Magic
@@ -22,6 +22,8 @@ struct Magic
 	// 魔法の座標
 	VECTOR pos_;
 	VECTOR prevPos_;
+	// 魔法の種類
+	TYPE_MAGIC typeMagic_;
 	// 魔法の移動速度
 	float speed_;
 	// 魔法の存在判定

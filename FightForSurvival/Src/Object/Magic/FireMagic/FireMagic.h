@@ -27,7 +27,7 @@ public:
 	// ‘Ì
 	static constexpr int BODY_DAMAGE = 5;
 
-	FireMagic(int baseModelId);
+	FireMagic(TYPE_MAGIC typeMagic, int baseModelId);
 	~FireMagic(void)override;
 
 protected:

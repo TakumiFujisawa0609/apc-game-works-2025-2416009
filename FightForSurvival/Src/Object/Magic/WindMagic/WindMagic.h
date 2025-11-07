@@ -27,7 +27,7 @@ public:
 	// ‘Ì
 	static constexpr int BODY_DAMAGE = 5;
 
-	WindMagic(int baseModelId);
+	WindMagic(TYPE_MAGIC typeMagic, int baseModelId);
 	~WindMagic(void)override;
 
 protected:

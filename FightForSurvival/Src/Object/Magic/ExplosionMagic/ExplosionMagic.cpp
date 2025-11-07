@@ -1,8 +1,8 @@
 #include "ExplosionMagic.h"
 
-ExplosionMagic::ExplosionMagic(int baseModelId)
+ExplosionMagic::ExplosionMagic(TYPE_MAGIC typeMagic, int baseModelId)
 	:
-	MagicBase(baseModelId)
+	MagicBase(typeMagic, baseModelId)
 {
 }
 

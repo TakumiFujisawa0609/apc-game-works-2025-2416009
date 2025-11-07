@@ -4,9 +4,9 @@
 #include "../../Enemy/EnemyManager.h"
 #include "WindMagic.h"
 
-WindMagic::WindMagic(int baseModelId)
+WindMagic::WindMagic(TYPE_MAGIC typeMagic, int baseModelId)
 	:
-	MagicBase(baseModelId)
+	MagicBase(typeMagic, baseModelId)
 {
 }
 

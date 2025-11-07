@@ -2,8 +2,9 @@
 #include "../../../Scene/SceneManager.h"
 #include "MagicBase.h"
 
-MagicBase::MagicBase(int baseModelId)
+MagicBase::MagicBase(TYPE_MAGIC typeMagic, int baseModelId)
 {
+	magic_.typeMagic_ = typeMagic;
 	magic_.modelId_ = MV1DuplicateModel(baseModelId);
 }
 
@@ -147,11 +148,6 @@ void MagicBase::UpdateShot(void)
 
 	// 魔法を移動させる
 	magic_.pos_ = VAdd(magic_.pos_, VScale(magic_.dir_, magic_.speed_));
-
-	//// 加速度的に重力を加える
-	//gravityPow_ +=
-	//	SceneManager::GRAVITY * SceneManager::GetInstance().GetDeltaTime();
-	//pos_ = VAdd(pos_, VScale({ 0.0f, -1.0f, 0.0f }, gravityPow_));
 
 	// 位置の設定
 	MV1SetPosition(magic_.modelId_, magic_.pos_);

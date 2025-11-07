@@ -29,7 +29,7 @@ public:
 	// ‘Ì
 	static constexpr int BODY_DAMAGE = 5;
 
-	ExplosionMagic(int baseModelId);
+	ExplosionMagic(TYPE_MAGIC typeMagic, int baseModelId);
 	~ExplosionMagic(void)override;
 
 protected:

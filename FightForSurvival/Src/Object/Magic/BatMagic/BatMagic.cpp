@@ -1,6 +1,6 @@
 #include "BatMagic.h"
 
-BatMagic::BatMagic(int baseModelId) :MagicBase(baseModelId)
+BatMagic::BatMagic(TYPE_MAGIC typeMagic, int baseModelId) :MagicBase(typeMagic, baseModelId)
 {
 }
 
