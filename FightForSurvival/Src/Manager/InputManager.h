@@ -182,9 +182,13 @@ public:
 	// â∫
 	bool SelectDown(void);
 	// ç∂
-	bool SelectLeft(void);
+	bool SelectLeftIsTrgDown(void);
 	// âE
-	bool SelectRight(void);
+	bool SelectRightIsTrgDown(void);
+	// ç∂
+	bool SelectLeftIsNew(void);
+	// âE
+	bool SelectRightIsNew(void);
 
 private:
 

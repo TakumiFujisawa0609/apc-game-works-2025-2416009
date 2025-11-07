@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Base/EnemyBase.h"
-#include "../EnemyManager.h"
 
 class Bat : public EnemyBase
 {

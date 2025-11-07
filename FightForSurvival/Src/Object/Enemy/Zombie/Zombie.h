@@ -65,6 +65,7 @@ protected:
 	void SetParam(void)override;
 	// ƒtƒŒ[ƒ€“o˜^
 	void AddFrames(void)override;
+
 private:
 
 	// ‘Ò‹@ˆ—

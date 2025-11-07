@@ -3,6 +3,7 @@
 #include "../../Scene/SceneManager.h"
 #include "Zombie/Zombie.h"
 #include "Bat/Bat.h"
+#include "Dragon/Dragon.h"
 #include "EnemyManager.h"
 
 EnemyManager* EnemyManager::instance_ = nullptr;
@@ -23,12 +24,17 @@ void EnemyManager::Load(void)
 	// エネミーモデルのロード
 	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie.mv1").c_str()));
 	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Bat.mv1").c_str()));
+	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Dragon.mv1").c_str()));
+
+	// ボスのメモリ確保
+	Dragon* enemy = new Dragon(ENEMY_TYPE::DRAGON, enemyModelIds_[static_cast<int>(ENEMY_TYPE::DRAGON)], -1, zombieAnimModelIds_, player_);
+	AddEnemy(enemy);
 
 	// 空のVector型を渡すためにアニメーションのロードの前にコウモリのメモリ確保を行う
 	for (int i = 0; i < BAT_NUM; i++)
 	{
 		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
-		auto enemy = new Bat(ENEMY_TYPE::BAT, enemyModelIds_[static_cast<int>(ENEMY_TYPE::BAT)],-1,zombieAnimModelIds_, player_);
+		Bat* enemy = new Bat(ENEMY_TYPE::BAT, enemyModelIds_[static_cast<int>(ENEMY_TYPE::BAT)],-1,zombieAnimModelIds_, player_);
 		AddEnemy(enemy);
 	}
 
@@ -43,7 +49,7 @@ void EnemyManager::Load(void)
 	for (int i = 0; i < ZOMBIE_NUM; i++)
 	{
 		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
-		auto enemy = new Zombie(ENEMY_TYPE::ZOMBIE, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, zombieAnimModelIds_, player_);
+		Zombie* enemy = new Zombie(ENEMY_TYPE::ZOMBIE, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], -1, zombieAnimModelIds_, player_);
 		AddEnemy(enemy);
 	}
 

@@ -21,7 +21,7 @@ public:
 
 	//　「Done」の座標
 	static constexpr int DONE_POS_X = Application::SCREEN_SIZE_X / 2 + 150;
-	static constexpr int DONE_POS_Y = Application::SCREEN_SIZE_Y / 2 + 50;
+	static constexpr int DONE_POS_Y = Application::SCREEN_SIZE_Y / 2 + 90;
 
 	//　感度の最高設定
 	static constexpr float SENSITIVITY_MAX_MOUSE = 0.01f;
@@ -36,10 +36,10 @@ public:
 
 	// バーの始まりの位置
 	static constexpr int BAR_START_POS_X = Application::SCREEN_SIZE_X / 2 - 160;
-	static constexpr int BAR_START_POS_Y = Application::SCREEN_SIZE_Y / 2 - 5;
+	static constexpr int BAR_START_POS_Y = Application::SCREEN_SIZE_Y / 2 + 35;
 	// バーの終わりの位置
 	static constexpr int BAR_END_POS_X = Application::SCREEN_SIZE_X / 2 + 180;
-	static constexpr int BAR_END_POS_Y = Application::SCREEN_SIZE_Y / 2 + 5;
+	static constexpr int BAR_END_POS_Y = Application::SCREEN_SIZE_Y / 2 + 45;
 
 	// バーの円のY座標
 	static constexpr int CIRCLE_POS_Y = 350;
@@ -56,7 +56,7 @@ public:
 	void Release(void);
 
 	bool GetIsSetting(void) { return isSetting_; }
-	void SetIsSetting(bool flg) { isSetting_ = flg; }
+	void SetIsSetting(bool flg);
 
 private:
 

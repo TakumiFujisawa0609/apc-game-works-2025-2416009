@@ -114,7 +114,8 @@ void InputManager::Update(void)
 
 	for (int i = 0; i < static_cast<int>(JOYPAD_STICK::MAX); i++)
 	{
-		prevPadLStick_[i] = nowPadLStick_[i] = false;
+		prevPadLStick_[i] = nowPadLStick_[i];
+		nowPadLStick_[i] = IsPadLStickNew(JOYPAD_NO::PAD1, static_cast<JOYPAD_STICK>(i));
 	}
 
 }
@@ -439,12 +440,12 @@ bool InputManager::IsPadLStickNew(JOYPAD_NO no, JOYPAD_STICK stick)
 
 bool InputManager::IsPadLStickTrgDown(JOYPAD_NO no, JOYPAD_STICK stick)
 {
-	return !prevPadLStick_[static_cast<int>(stick)] && IsPadLStickNew(no,stick);
+	return !prevPadLStick_[static_cast<int>(stick)] && nowPadLStick_[static_cast<int>(stick)];
 }
 
 bool InputManager::IsPadLStickTrgUp(JOYPAD_NO no, JOYPAD_STICK stick)
 {
-	return prevPadLStick_[static_cast<int>(stick)] && !IsPadLStickNew(no, stick);
+	return prevPadLStick_[static_cast<int>(stick)] && !nowPadLStick_[static_cast<int>(stick)];
 }
 
 VECTOR InputManager::GetDirectionXZAKey(int aKeyX, int aKeyY)
@@ -551,14 +552,24 @@ bool InputManager::SelectDown(void)
 	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::DOWN) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::DOWN);
 }
 
-bool InputManager::SelectLeft(void)
+bool InputManager::SelectLeftIsTrgDown(void)
 {
 	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::LEFT);
 }
 
-bool InputManager::SelectRight(void)
+bool InputManager::SelectRightIsTrgDown(void)
 {
 	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
+}
+
+bool InputManager::SelectLeftIsNew(void)
+{
+	return IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::LEFT) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::LEFT);
+}
+
+bool InputManager::SelectRightIsNew(void)
+{
+	return IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
 }
 
 

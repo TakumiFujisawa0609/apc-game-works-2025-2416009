@@ -255,7 +255,7 @@ void Upgrade::PadSelect(void)
 			ChangePlace(PLACE::BOTTOM_LEFT);
 		}
 
-		if (ins.SelectRight())
+		if (ins.SelectRightIsTrgDown())
 		{
 			ChangePlace(PLACE::TOP_RIGHT);
 		}
@@ -268,7 +268,7 @@ void Upgrade::PadSelect(void)
 			ChangePlace(PLACE::BOTTOM_RIGHT);
 		}
 
-		if (ins.SelectLeft())
+		if (ins.SelectLeftIsTrgDown())
 		{
 			ChangePlace(PLACE::TOP_LEFT);
 		}
@@ -281,7 +281,7 @@ void Upgrade::PadSelect(void)
 			ChangePlace(PLACE::TOP_LEFT);
 		}
 
-		if (ins.SelectRight())
+		if (ins.SelectRightIsTrgDown())
 		{
 			ChangePlace(PLACE::BOTTOM_RIGHT);
 		}
@@ -294,7 +294,7 @@ void Upgrade::PadSelect(void)
 			ChangePlace(PLACE::TOP_RIGHT);
 		}
 
-		if (ins.SelectLeft())
+		if (ins.SelectLeftIsTrgDown())
 		{
 			ChangePlace(PLACE::BOTTOM_LEFT);
 		}

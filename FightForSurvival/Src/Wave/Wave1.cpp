@@ -14,6 +14,9 @@ Wave1::Wave1(void)
 	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 0.0f, 0.0f));
 	AddSpawnEvent(60 * 18, ENEMY_TYPE::BAT, VGet(0.0f, 0.0f, 0.0f));
 
+	// ドラゴン仮表示
+	AddSpawnEvent(60 * 1, ENEMY_TYPE::DRAGON, VGet(0.0f, -200.0f, 0.0f));
+
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
 	AddSpawner(60 * 2, 15, VGet(200.0f, 0.0f, 200.0f));
 }

@@ -119,7 +119,7 @@ void WindMagic::LookTargetEnemy(void)
 	magic_.dir_.z = vec.z / length;
 
 	// •ûŒü‚©‚çŠp“x‚ğo‚·
-	magic_.rotate_.y = atan2(magic_.dir_.x, magic_.dir_.z);
+	magic_.rotate_.y = atan2f(magic_.dir_.x, magic_.dir_.z);
 
 	// ‰ñ“]‚ÍY²‚Ì‚İ‚Æ‚·‚é
 	magic_.rotate_.x = magic_.rotate_.z = 0.0f;

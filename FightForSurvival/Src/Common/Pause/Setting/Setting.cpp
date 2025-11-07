@@ -122,6 +122,16 @@ void Setting::Release(void)
 {
 }
 
+void Setting::SetIsSetting(bool flg)
+{
+	isSetting_ = flg;
+
+	if (flg)
+	{
+		isDrag_ = false;
+	}
+}
+
 void Setting::Confirm(void)
 {
 	InputManager& ins = InputManager::GetInstance();
@@ -199,16 +209,14 @@ void Setting::BarUpdate(void)
 void Setting::MouseBarUpdate(void)
 {
 	auto& ins = InputManager::GetInstance();
-	if (!ins.IsClickMouseLeft())
-	{
-		// 左クリックが押されていなかったら処理を行わない
-		return;
-	}
 
 	// マウス感度の情報を取得
 	auto& sysIns = SystemManager::GetInstance();
 	mouseSensitivity_ = sysIns.GetMouseSensitivity();
 	float prevSensitivity = mouseSensitivity_;
+
+	// マウスの位置を取得
+	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
 	// つまみの範囲に入っており、左クリックを押したら
 	if (CollisionUtility::CircleAndMouse(circlePos_, CIRCLE_RAD) && ins.IsClickMouseLeft() && !isDrag_)
@@ -216,12 +224,14 @@ void Setting::MouseBarUpdate(void)
 		// つまみを掴んでいる状態にする
 		isDrag_ = true;
 	}
+	else if (BAR_START_POS_Y < mousePos_.y && mousePos_.y < BAR_END_POS_Y && ins.IsClickMouseLeft() && !isDrag_)
+	{
+		isDrag_ = true;
+	}
 
 	// つまみを掴んでいる状態であれば
 	if (isDrag_)
 	{
-		// マウスの位置を取得
-		GetMousePoint(&mousePos_.x, &mousePos_.y);
 		circlePos_.x = mousePos_.x;
 
 		// 最小値を超えないようにする
@@ -274,7 +284,7 @@ void Setting::PadBarUpdate(void)
 
 	auto& ins = InputManager::GetInstance();
 
-	if (ins.SelectRight())
+	if (ins.SelectRightIsTrgDown() || ins.SelectRightIsNew())
 	{
 		// 感度を高くする
 		padSensitivity_+= SENSITIVITY_PAD;
@@ -285,7 +295,7 @@ void Setting::PadBarUpdate(void)
 			padSensitivity_ = SENSITIVITY_MAX_PAD;
 		}
 	}
-	else if (ins.SelectLeft())
+	else if (ins.SelectLeftIsTrgDown() || ins.SelectLeftIsNew())
 	{
 		// 感度を低くする
 		padSensitivity_ -= SENSITIVITY_PAD;
