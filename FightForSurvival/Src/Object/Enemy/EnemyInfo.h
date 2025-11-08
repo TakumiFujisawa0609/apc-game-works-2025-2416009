@@ -1,9 +1,11 @@
 #pragma once
 
 class EnemyBase; // ‘O•ûéŒ¾
+class Dragon;
 
 // ó‘ÔŠÖ”Œ^
-typedef void (*enemiestateFunction)(EnemyBase&);
+typedef void (*enemieStateFunction)(EnemyBase&);
+typedef void (*enemieAttackStateFunction)(Dragon&);
 
 // “G‚Ìó‘Ôi‹¤’Êj
 enum ENEMY_STATE
@@ -88,7 +90,7 @@ struct EnemyCollision
 struct enemiestateCtrl
 {
 	ENEMY_STATE state_;
-	enemiestateFunction stateTable_[ENEMY_STATE_MAX];
+	enemieStateFunction stateTable_[ENEMY_STATE_MAX];
 };
 
 struct EnemyMove

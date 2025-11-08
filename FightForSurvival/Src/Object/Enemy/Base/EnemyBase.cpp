@@ -52,7 +52,7 @@ EnemyBase::~EnemyBase(void)
 void EnemyBase::CreateEnemy(VECTOR pos)
 {
 	// éwíËÇ≥ÇÍÇΩç¿ïWÇê›íË
-	enemy_.pos_ = attack_.rangePos_ = pos;
+	enemy_.prevPos_ = enemy_.pos_ = attack_.rangePos_ = pos;
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 	attack_.rangePos_.y += ATTACK_RANGE_POS_OFFSET;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Base/EnemyBase.h"
+#include "../EnemyInfo.h"
 
 class Dragon : public EnemyBase
 {
@@ -10,7 +11,7 @@ public:
 	static constexpr VECTOR ANGLE = { 0.0f,0.0f,0.0f };
 
 	// モデルの大きさ
-	static constexpr VECTOR SCALE = { 4.0f,4.0f,4.0f };
+	static constexpr VECTOR SCALE = { 3.0f,3.0f,3.0f };
 
 	// 体力
 	static constexpr int HP = 100;
@@ -55,8 +56,28 @@ public:
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
+	// ランダム用確率数値
+	static constexpr int RANDOM_NUM = 10000;
+	static constexpr int RANGE = 4000;
+	static constexpr int FORWARD = 7000;
+	static constexpr int RUSH = 10000;
+
+	// 敵の状態（ボスの攻撃）
+	enum DRAGON_ATTACK_STATE
+	{
+		SELECT,				// 攻撃選択
+		RANGE_ATTACK,		// 範囲攻撃
+		FORWARD_ATTACK,     // 前方攻撃
+		RUSH_ATTACK,		// 突進攻撃
+		ATTACK_END,         // 攻撃終了
+
+		DRAGON_ATTACK_STATE_MAX,    // 敵の全状態
+	};
+
 	Dragon(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
 	~Dragon(void)override;
+
+	void ChangeAttackState(DRAGON_ATTACK_STATE state);
 
 protected:
 
@@ -70,11 +91,30 @@ protected:
 
 private:
 
+	DRAGON_ATTACK_STATE attackState_;
+	enemieAttackStateFunction attackStateTable_[DRAGON_ATTACK_STATE_MAX];
+
 	// 待機処理
 	static void Idle(EnemyBase& enemy);
 
 	// 攻撃処理
 	static void Attack(EnemyBase& enemy);
 
+	// 攻撃選択
+	static void AttackSelect(Dragon& dragon);
+	// 範囲攻撃
+	static void RangeAttack(Dragon& dragon);
+	// 前方攻撃
+	static void ForwardAttack(Dragon& dragon);
+	// 突進攻撃
+	static void RushAttack(Dragon& dragon);
+	// 攻撃終了
+	static void AttackEnd(Dragon& dragon);
+
+	// 攻撃時のステート別アニメーション再生
+	void AttackPlayAnim(void);
+
+	// 規定の位置から動いていたら、戻る処理を行う
+	void ReturnPositon(void);
 };
 
