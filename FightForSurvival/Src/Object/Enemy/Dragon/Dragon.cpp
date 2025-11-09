@@ -1,9 +1,11 @@
 #include "../../Common/AnimationController.h"
 #include "../../Magic/Base/MagicBase.h"
+#include "../../../Utility/AsoUtility.h"
 #include "../../../Utility/MatrixUtility.h"
 #include "../../../Utility/Collision/CollisionUtility.h"
 #include "../../../Scene/SceneManager.h"
 #include "../../Enemy/EnemyManager.h"
+#include "../../Player/Player.h"
 #include "Dragon.h"
 
 Dragon::Dragon(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
@@ -30,38 +32,6 @@ Dragon::Dragon(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, 
 
 Dragon::~Dragon(void)
 {
-}
-
-void Dragon::Release(void)
-{
-	magicsRange_.clear();
-	EnemyBase::Release();
-}
-
-void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
-{
-	attackState_ = state;
-
-	// ステートに合った初期化
-	switch (attackState_)
-	{
-	case Dragon::SELECT:
-		break;
-	case Dragon::RANGE_ATTACK:
-		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK), AnimationController::BLEND_LATIO, false);
-		break;
-	case Dragon::FORWARD_ATTACK:
-		forwardAttackStartTime_ = STARTING_TIME;
-		break;
-	case Dragon::RUSH_ATTACK:
-		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO, false);
-		break;
-	case Dragon::ATTACK_END:
-		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO);
-		break;
-	default:
-		break;
-	}
 }
 
 void Dragon::SetParam(void)
@@ -112,7 +82,130 @@ void Dragon::SetParam(void)
 	// 突撃時の速度
 	rushSpeed_ = RUSH_SPEED;
 
+	// 魔法の相対座標
 	relativeMagicPos_ = RELATIVE_MAGIC_POS;
+
+	// 前方攻撃が確定したか
+	forwardAttackEnd_ = false;
+	// 攻撃確定タイミング用
+	animationNum_ = 0;
+}
+
+void Dragon::Draw(void)
+{
+	EnemyBase::Draw();
+
+	if (attackState_ == DRAGON_ATTACK_STATE::FORWARD_ATTACK)
+	{
+		// 前方攻撃だった場合扇状に危険区域を描画
+		VECTOR pos_0, pos_1, pos_2, pos_3;
+
+		MATRIX mat = MatrixUtility::GetMatrixRotateXYZ(enemy_.angle_);
+
+		// 前方方向
+		VECTOR forward = VTransform(AsoUtility::DIR_B, mat);
+
+		// 右側方向
+		MATRIX rightMat = MMult(mat, MGetRotY(AsoUtility::Deg2RadF(VIEW_ANGLE)));
+		VECTOR right = VTransform(AsoUtility::DIR_B, rightMat);
+
+		// 左側方向
+		MATRIX leftMat = MMult(mat, MGetRotY(AsoUtility::Deg2RadF(-VIEW_ANGLE)));
+		VECTOR left = VTransform(AsoUtility::DIR_B, leftMat);
+
+		// エネミー座標
+		pos_0 = enemy_.pos_;
+
+		// 正面の位置
+		pos_1 = VAdd(pos_0, VScale(forward, VIEW_RANGE));
+
+		// 正面から反時計回り
+		pos_2 = VAdd(pos_0, VScale(left, VIEW_RANGE));
+
+		// 正面から時計回り
+		pos_3 = VAdd(pos_0, VScale(right, VIEW_RANGE));
+
+		// 視野の描画
+		pos_0.y = pos_1.y = pos_2.y = pos_3.y = -100.0f;
+		DrawTriangle3D(pos_0, pos_2, pos_1, 0xdd77dd, true);
+		DrawTriangle3D(pos_0, pos_1, pos_3, 0xdd77dd, true);
+
+		DrawLine3D(pos_0, pos_1, 0x000000);
+		DrawLine3D(pos_0, pos_2, 0x000000);
+		DrawLine3D(pos_0, pos_3, 0x000000);
+	}
+}
+
+void Dragon::Release(void)
+{
+	magicsRange_.clear();
+	EnemyBase::Release();
+}
+
+bool Dragon::SearchAttackRange(void)
+{
+	// プレイヤーの座標
+	VECTOR plaPos = player_->GetPlayer().pos_;
+	float plaRad = player_->GetPlayer().collisionRadius_;
+
+	// エネミーの向いている方向(VNorm(正規化)を行い単位ベクトルにする)
+	VECTOR dirEnemy = VNorm(enemy_.dir_);
+
+	// エネミーから見たプレイヤーの方向(VNorm(正規化)を行い単位ベクトルにする)
+	VECTOR distance = VSub(plaPos, enemy_.pos_);
+	VECTOR dirPlayerfromEnemy = VNorm(distance);
+
+	// 内積を使ってベクトルの比較を行う
+	// +1.0～-1.0の値を取得
+	// +1.0の場合、2つのベクトルは同じ方向
+	// +0.8の場合、2つのベクトルは結構同じ方向
+	// 0.0の場合、2つのベクトルは直交
+	// -1.0の場合、2つのベクトルは逆方向
+	float dot = VDot(dirEnemy, dirPlayerfromEnemy);
+	float angle = acosf(dot);
+
+	// 視野角をラジアンに返還
+	const float viewRad = AsoUtility::Deg2RadF(VIEW_ANGLE);
+
+	// プレイヤーとエネミー間の距離を調べる
+	float dis = (distance.x * distance.x + distance.y * distance.y + distance.z * distance.z);
+
+	// 当たり判定用半径の合計を計算
+	float collisionRad = VIEW_RANGE + plaRad;
+
+	// 視野の範囲内に入っているかつ、攻撃時間になったらtrueを返す
+	return angle <= viewRad && (collisionRad * collisionRad) > dis && forwardAttackEnd_;
+}
+
+void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
+{
+	attackState_ = state;
+
+	// ステートに合った初期化
+	switch (attackState_)
+	{
+	case Dragon::SELECT:
+		break;
+	case Dragon::RANGE_ATTACK:
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK), AnimationController::BLEND_LATIO, false);
+		break;
+	case Dragon::FORWARD_ATTACK:
+		forwardAttackEnd_ = false;
+		attack_.isAttacking_ = true;
+		animationNum_ = 0;
+		forwardAttackStartTime_ = STARTING_TIME;
+		break;
+	case Dragon::RUSH_ATTACK:
+		attack_.isAttacking_ = true;
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO, false);
+		break;
+	case Dragon::ATTACK_END:
+		attack_.isAttacking_ = false;
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO);
+		break;
+	default:
+		break;
+	}
 }
 
 void Dragon::AddFrames(void)
@@ -196,7 +289,7 @@ void Dragon::Attack(EnemyBase& enemy)
 
 void Dragon::AttackSelect(Dragon& dragon)
 {
-	dragon.ChangeAttackState(RANGE_ATTACK);
+	dragon.ChangeAttackState(FORWARD_ATTACK);
 	//// ランダムで決めた攻撃内容を入れる
 	//int attackType = GetRand(RANDOM_NUM);
 
@@ -264,9 +357,21 @@ void Dragon::ForwardAttack(Dragon& dragon)
 		// ポインタが有効かチェックする
 		if (animController != nullptr)
 		{
-			if (animController->IsEnd())
+			if (animController->IsEnd() && dragon.forwardAttackEnd_)
 			{
+				dragon.forwardAttackEnd_ = false;
 				dragon.ChangeAttackState(ATTACK_END);
+			}
+			else
+			{
+				// アニメーションがどこまで進んでいるのかの目安
+				dragon.animationNum_++;
+			}
+
+			// 攻撃確定させたいタイミングになったらtrueにする
+			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME)
+			{
+				dragon.forwardAttackEnd_ = true;
 			}
 		}
 	}
@@ -339,44 +444,11 @@ void Dragon::CreateMagicWhole(void)
 
 void Dragon::ReturnPositon(void)
 {
-	// 既定の位置の範囲にいなかったら(少しでもずれていたら)帰る処理を行う
+	// 既定の位置の範囲にいなかったら帰る処理を行う
 	if (!CollisionUtility::IsCollidingSphereAndPos(enemy_.prevPos_,ATTACK_RANGE, enemy_.pos_))
 	{
-
-		// 相手へのベクトルを計算(引き算)
-		VECTOR vec;
-		vec.x = enemy_.prevPos_.x - enemy_.pos_.x;
-		vec.y = enemy_.prevPos_.y - enemy_.pos_.y;
-		vec.z = enemy_.prevPos_.z - enemy_.pos_.z;
-
-		// ベクトルの正規化で単位ベクトル(方向)を取得する
-		float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-
-		if (length == 0.0f)
-		{
-			vec.x = vec.z = vec.y = 0.0f;
-			return;
-		}
-
-		// 大きさで割って単位ベクトルにする
-		enemy_.dir_.x = vec.x / length;
-		enemy_.dir_.y = vec.y / length;
-		enemy_.dir_.z = vec.z / length;
-
-		// 方向から角度を出す
-		enemy_.angle_.y = atan2f(enemy_.dir_.x, enemy_.dir_.z);
-
-		// 回転はY軸のみとする
-		enemy_.angle_.x = enemy_.angle_.z = 0.0f;
-
-		// モデルに向きを設定
-		MV1SetRotationXYZ(enemy_.modelId_, enemy_.angle_);
-
-		// 方向単位ベクトルに速度をかけた数を座標に足しこむ
-		enemy_.pos_ = VAdd(enemy_.pos_, VScale(enemy_.dir_, enemy_.moveSpeed_));
-
-		// 計算した座標をモデルに適用する
-		MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+		// 目的地(最初にスポーンした場所)まで進む
+		MoveToDestination(enemy_.prevPos_, enemy_.moveSpeed_);
 	}
 
 	// 既定の位置まで戻ったら
@@ -407,4 +479,43 @@ void Dragon::SubStartTime(void)
 		// 攻撃可能時間の１秒前まで、プレイヤー側を向く処理を行う
 		LookPlayer();
 	}
+}
+
+void Dragon::MoveToDestination(VECTOR destination, float moveSpeed)
+{
+	// 相手へのベクトルを計算(引き算)
+	// Y軸移動は考慮しない
+	VECTOR vec;
+	vec.x = destination.x - enemy_.pos_.x;
+	vec.y = 0.0f;
+	vec.z = destination.z - enemy_.pos_.z;
+
+	// ベクトルの正規化で単位ベクトル(方向)を取得する
+	float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+
+	if (length == 0.0f)
+	{
+		vec.x = vec.z = vec.y = 0.0f;
+		return;
+	}
+
+	// 大きさで割って単位ベクトルにする
+	enemy_.dir_.x = vec.x / length;
+	enemy_.dir_.y = vec.y / length;
+	enemy_.dir_.z = vec.z / length;
+
+	// 方向から角度を出す
+	enemy_.angle_.y = atan2f(enemy_.dir_.x, enemy_.dir_.z);
+
+	// 回転はY軸のみとする
+	enemy_.angle_.x = enemy_.angle_.z = 0.0f;
+
+	// モデルに向きを設定
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angle_);
+
+	// 方向単位ベクトルに速度をかけた数を座標に足しこむ
+	enemy_.pos_ = VAdd(enemy_.pos_, VScale(enemy_.dir_, moveSpeed));
+
+	// 計算した座標をモデルに適用する
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 }

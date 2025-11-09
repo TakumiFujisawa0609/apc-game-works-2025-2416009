@@ -66,7 +66,7 @@ public:
 	ENEMY_STATE GetState() const { return state_.state_; }
 
 	// 攻撃範囲内か確認用処理
-	bool SearchAttackRange(void);
+	virtual bool SearchAttackRange(void);
 
 	// 攻撃待ち時間を確認
 	float GetAttackCooldown(void) const{ return attack_.cooldown_; }

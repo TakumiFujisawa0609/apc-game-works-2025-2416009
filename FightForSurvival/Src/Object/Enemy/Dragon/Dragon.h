@@ -72,7 +72,16 @@ public:
 	static constexpr float RUSH_SPEED = 10.0f;
 
 	// 魔法の位置の相対座標(ローカル)
-	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,280.0f,-80.0f };
+	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,280.0f,-150.0f };
+
+	// 視野の広さ
+	static constexpr float VIEW_RANGE = 4000.0f;
+
+	// 視野角
+	static constexpr float VIEW_ANGLE = 20.0f;
+
+	// 前方攻撃確定アニメーションフレーム数
+	static constexpr int FORWARD_CONFIRM_FRAME = 30;
 
 	// 敵の状態（ボスの攻撃）
 	enum DRAGON_ATTACK_STATE
@@ -89,7 +98,10 @@ public:
 	Dragon(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
 	~Dragon(void)override;
 
+	void Draw(void)override;
 	void Release(void)override;
+
+	bool SearchAttackRange(void)override;
 
 	void ChangeAttackState(DRAGON_ATTACK_STATE state);
 
@@ -116,6 +128,8 @@ private:
 
 	// 前方攻撃待ち時間
 	float forwardAttackStartTime_;
+	bool forwardAttackEnd_;
+	float animationNum_;
 
 	float rushSpeed_;
 
@@ -144,5 +158,9 @@ private:
 
 	// 前方攻撃時の待ち時間を0に近づける
 	void SubStartTime(void);
+
+	// 目的地まで進む処理
+	void MoveToDestination(VECTOR destination, float moveSpeed);
+
 };
 

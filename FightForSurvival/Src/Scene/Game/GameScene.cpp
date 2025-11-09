@@ -500,6 +500,7 @@ void GameScene::EnemiesAttackCollision(void)
 	// 生成してある敵を取得
 	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
 
+	// 固有の攻撃の場合の当たり判定処理
 	for (auto* enemy : enemies_)
 	{
 		if (!enemy->IsCollisionState() || !enemy->GetEnemy().isAlive_)
@@ -531,6 +532,7 @@ void GameScene::EnemiesAttackCollision(void)
 			break;
 		case ENEMY_TYPE::DRAGON:
 
+			// ドラゴンの固有攻撃処理の当たり判定
 			DragonAttackCollision(enemy);
 
 			break;
@@ -639,6 +641,24 @@ void GameScene::EnemyMagicCollision(void)
 
 void GameScene::DragonForwardAttackCollision(EnemyBase* enemy)
 {
+	// 前方の範囲内に入っていたいるかつ、まだ一度も攻撃が当たっていない
+	if (enemy->SearchAttackRange() && enemy->IsAttack())
+	{
+		// 攻撃が当たったことを伝える
+		enemy->SetIsAttack(false);
+
+		// プレイヤーにダメージを与える
+		player_->Damage(1);
+
+		// カメラを揺らす
+		camera_->SetHitStop();
+
+		// 画面を赤くするエフェクトを付ける
+		redEffect_->SetRedEffect();
+
+		// ダメージSEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+	}
 }
 
 void GameScene::EnemiesExtrusionCollision(void)
