@@ -95,7 +95,7 @@ public:
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
-	void SetPitch(float newPitch)  { player_.angles_.x = newPitch; }
+	void SetPitch(float newPitch)  { player_.angle_.x = newPitch; }
 
 	// 杖のポインター受け渡し
 	WeaponBase* GetWeapon(void)const { return weapon_; }

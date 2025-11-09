@@ -3,8 +3,8 @@
 #include "../../../Application.h"
 #include "Zombie.h"
 
-Zombie::Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
-	: EnemyBase(type, baseModelId, baseAttackEffectModelId,animModelIds, player)
+Zombie::Zombie(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
+	: EnemyBase(type, baseModelId,animModelIds, player)
 {
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
@@ -30,7 +30,7 @@ Zombie::~Zombie(void)
 
 void Zombie::SetParam(void)
 {
-	enemy_.angles_ = ANGLE;
+	enemy_.angle_ = ANGLE;
 	enemy_.scales_ = SCALE;
 	enemy_.hp_ = HP;
 	enemy_.moveSpeed_ = SPEED;

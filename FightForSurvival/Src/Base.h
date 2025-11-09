@@ -15,7 +15,7 @@ struct Unit
 	VECTOR prevPos_;
 
 	// ƒ‚ƒfƒ‹‚ÌŒü‚«
-	VECTOR angles_;
+	VECTOR angle_;
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³
 	VECTOR scales_;

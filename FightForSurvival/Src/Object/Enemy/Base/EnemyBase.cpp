@@ -6,26 +6,21 @@
 #include "../../Common/AnimationController.h"
 #include "../../../Manager/SystemManager.h"
 #include "../../../Scene/SceneManager.h"
-#include "../../Magic/BatMagic/BatMagic.h"
 #include "EnemyBase.h"
 
-EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
+EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
 	:
 	player_(nullptr),
 	updateCollPosCounter_(0),
 	score_(0)
 {
 	enemy_.modelId_ = -1;
-	baseAttackEffectModelId_ = -1;
 
 	// エネミー種別
 	type_ = type;
 
 	// モデルのロード
 	enemy_.modelId_ = MV1DuplicateModel(baseModelId);
-
-	// エフェクト用モデルハンドル
-	baseAttackEffectModelId_ = baseAttackEffectModelId;
 
 	// プレイヤーのポインタを格納
 	player_ = player;
@@ -66,7 +61,7 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 	MV1SetScale(enemy_.modelId_, enemy_.scales_);
 
 	// アングルを設定する
-	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angle_);
 
 	enemy_.dir_ = AsoUtility::VECTOR_ZERO;
 
@@ -131,8 +126,6 @@ void EnemyBase::Update(void)
 		updateCollPosCounter_ = 0;
 	}
 
-	// 魔法の更新
-	UpdateMagic();
 }
 
 void EnemyBase::Draw(void)
@@ -144,9 +137,6 @@ void EnemyBase::Draw(void)
 	}
 
 	MV1DrawModel(enemy_.modelId_);
-
-	// 魔法の描画
-	DrawMagic();
 
 #ifdef _DEBUG
 	// デバッグ用：衝突判定用球体
@@ -193,8 +183,7 @@ void EnemyBase::Release(void)
 
 	// 中にデータが入っていたら解放する
 	MV1DeleteModel(enemy_.modelId_);
-	// 中にデータが入っていたら解放する
-	MV1DeleteModel(baseAttackEffectModelId_);
+
 }
 
 bool EnemyBase::IsCollisionState(void)
@@ -339,35 +328,16 @@ void EnemyBase::LookPlayer(void)
 	enemy_.dir_.z = vec.z / length;
 
 	// 方向から角度を出す
-	enemy_.angles_.y = atan2(enemy_.dir_.x, enemy_.dir_.z);
+	enemy_.angle_.y = atan2(enemy_.dir_.x, enemy_.dir_.z);
 
 	// 今回のモデルのY軸向きが逆なので向きを反転させる
-	enemy_.angles_.y += 180.0f * (DX_PI_F / 180.0f);
+	enemy_.angle_.y += 180.0f * (DX_PI_F / 180.0f);
 
 	// 回転はY軸のみとする
-	enemy_.angles_.x = enemy_.angles_.z = 0.0f;
+	enemy_.angle_.x = enemy_.angle_.z = 0.0f;
 
 	// モデルに向きを設定
-	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angles_);
-}
-
-void EnemyBase::CraateMagic(void)
-{
-	// 有効な魔法を取得する
-	auto* magic = GetValidMagic();
-	// 初期化処理
-	magic->Init();
-
-	// モデルの回転行列取得
-	MATRIX matRot = MatrixUtility::GetMatrixRotateXYZ(enemy_.angles_);
-
-	// 方向と同じ要領で、相対座標を回転
-	VECTOR localPosRot = VTransform(RELATIVE_MAGIC_POS, matRot);
-
-	VECTOR pos = VAdd(enemy_.pos_, localPosRot);
-
-	// 座標を更新する
-	magic->CreateShot(pos, enemy_.dir_);
+	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angle_);
 }
 
 void EnemyBase::UpdateCollisionPositions(void)
@@ -525,51 +495,16 @@ void EnemyBase::PlayAnim(void)
 
 }
 
-void EnemyBase::UpdateMagic(void)
+void EnemyBase::CreateMagicForward(void)
 {
-	// 魔法の更新
-	for (auto& Magic : magics_)
-	{
-		if (Magic->GetMagic().isExists_)
-		{
-			Magic->Update();
-		}
-	}
-}
+	// モデルの回転行列取得
+	MATRIX matRot = MatrixUtility::GetMatrixRotateXYZ(enemy_.angle_);
 
-void EnemyBase::DrawMagic(void)
-{
-	// 魔法の更新
-	for (auto& Magic : magics_)
-	{
-		if (Magic->GetMagic().isExists_)
-		{
-			Magic->Draw();
-		}
-	}
-}
+	// 方向と同じ要領で、相対座標を回転
+	VECTOR localPosRot = VTransform(relativeMagicPos_, matRot);
 
-MagicBase* EnemyBase::GetValidMagic(void)
-{
-	size_t size = magics_.size();
+	VECTOR pos = VAdd(enemy_.pos_, localPosRot);
 
-	for (int i = 0; i < size; i++)
-	{
-		// 未使用(生存していない)で、かつ、魔法の種別が同じ
-		if (!magics_[i]->GetMagic().isExists_ && !magics_[i]->GetMagic().isDraw_)
-		{
-			return magics_[i];
-		}
-	}
-
-	// 未使用の魔法がなかった場合新しい魔法を生成
-	MagicBase* Magic;
-
-	// 新しい魔法のインスタンスを生成する
-	Magic = new BatMagic(TYPE_MAGIC::FIRE_MAGIC, baseAttackEffectModelId_);
-
-	// 可変長配列に追加
-	magics_.push_back(Magic);
-
-	return Magic;
+	// 魔法を発動(生成)
+	EnemyManager::GetInstance().CraateMagic(ENEMY_TYPE::BAT,pos,enemy_.dir_);
 }

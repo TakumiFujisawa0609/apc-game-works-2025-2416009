@@ -6,7 +6,10 @@ enum class TYPE_MAGIC
 {
 	FIRE_MAGIC, // まっすぐ飛ぶ炎魔法
 	WIND_MAGIC,	// 一番近くの敵を追尾する風魔法
-	EXPLOSION_MAGIC	// 着弾時に周囲を爆発で巻き込む爆発魔法
+	EXPLOSION_MAGIC,	// 着弾時に周囲を爆発で巻き込む爆発魔法
+
+	BAT_MAGIC, // コウモリの魔法
+	DRAGON_MAGIC // ドラゴンの魔法
 };
 
 struct Magic

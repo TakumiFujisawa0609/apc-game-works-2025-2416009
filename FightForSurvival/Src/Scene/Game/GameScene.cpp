@@ -6,6 +6,7 @@
 #include "../../Object/Common/Cursor.h"
 #include "../../Common/Score/Score.h"
 #include "../../Object/Enemy/Zombie/Zombie.h"
+#include "../../Object/Enemy/Dragon/Dragon.h"
 #include "../../Object/Player/Weapon/WeaponBase.h"
 #include "../../Object/Magic/Base/MagicBase.h"
 #include "../../Utility/Collision/CollisionUtility.h"
@@ -406,8 +407,8 @@ void GameScene::MagicCollision(void)
 			float eneRadHand = eneInfo.collisionRadiusHand_;
 			float eneRadLeg = eneInfo.collisionRadiusLeg_;
 
-			// 頭の当たり判定
-			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, magicLineStart, magicLineEnd, magicRad))
+			// 頭の当たり判定(ボスは頭の当たり判定を行わない)
+			if (CollisionUtility::IsCollidingSphereCapsule(enePos[HEAD], eneRadHead, magicLineStart, magicLineEnd, magicRad) && enemy->GetType() != ENEMY_TYPE::DRAGON)
 			{
 				// 爆発魔法でなければダメージを与える
 				if (notExplosionMagic)
@@ -481,7 +482,7 @@ void GameScene::ExplosionMagicCollision(void)
 					continue;
 				}
 
-				if (CollisionUtility::IsCollidingSphereAndPos(magicPos, magicRad, enemy->GetEnemy().pos_))
+				if (CollisionUtility::IsCollidingSphereCapsule(magicPos, magicRad, enemy->GetColPos().colPos_[COLLISION_POS::BODY_TOP], enemy->GetColPos().colPos_[COLLISION_POS::BODY_UNDER], enemy->GetEnemy().collisionRadiusBody_))
 				{
 					// 敵にダメージを与える
 					enemy->SubHp(magicInfo.bodyDamage_);
@@ -527,17 +528,21 @@ void GameScene::EnemiesAttackCollision(void)
 			break;
 		case ENEMY_TYPE::BAT:
 
-			// コウモリの魔法の当たり判定を行う
-			BatAttackCollision(enemy);
-
 			break;
 		case ENEMY_TYPE::DRAGON:
+
+			DragonAttackCollision(enemy);
+
 			break;
 		default:
 			break;
 		}
 
 	}
+
+	// 敵全体の魔法の当たり判定を行う
+	EnemyMagicCollision();
+
 }
 
 void GameScene::ZombieAttackCollision(EnemyBase* enemy, VECTOR handPos, float handRad)
@@ -564,10 +569,29 @@ void GameScene::ZombieAttackCollision(EnemyBase* enemy, VECTOR handPos, float ha
 	}
 }
 
-void GameScene::BatAttackCollision(EnemyBase* enemy)
+void GameScene::DragonAttackCollision(EnemyBase* enemy)
+{
+	// Dragon自身のメンバ変数を使用するためにダウンキャストを行い、参照ポインタを作成
+	Dragon* self = static_cast<Dragon*>(enemy);
+	// 攻撃のステートを確認
+	auto attackState = self->GetAttackState();
+
+	switch (attackState)
+	{
+	case Dragon::FORWARD_ATTACK:
+		DragonForwardAttackCollision(enemy);
+		break;
+	case Dragon::RUSH_ATTACK:
+		break;
+	default:
+		break;
+	}
+}
+
+void GameScene::EnemyMagicCollision(void)
 {
 	// 魔法クラスのポインター取得
-	auto magics = enemy->GetMagics();
+	auto magics = EnemyManager::GetInstance().GetMagics();
 
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
@@ -586,8 +610,8 @@ void GameScene::BatAttackCollision(EnemyBase* enemy)
 		auto magicInfo = magic->GetMagic();
 
 		// 魔法の移動経路の線分を定義
-		VECTOR magicLineStart = magicInfo.pos_;
-		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
+		VECTOR magicLineStart = magicInfo.prevPos_;
+		VECTOR magicLineEnd = magicInfo.pos_; // 前のフレームでの魔法の位置
 
 		// 魔法の半径
 		float MagicRad = magicInfo.collisionRadius_;
@@ -600,7 +624,6 @@ void GameScene::BatAttackCollision(EnemyBase* enemy)
 
 			// プレイヤーにダメージを与える
 			player_->Damage(magic->GetMagic().bodyDamage_);
-			enemy->SetIsAttack(false);
 
 			// カメラを揺らす
 			camera_->SetHitStop();
@@ -614,13 +637,17 @@ void GameScene::BatAttackCollision(EnemyBase* enemy)
 	}
 }
 
+void GameScene::DragonForwardAttackCollision(EnemyBase* enemy)
+{
+}
+
 void GameScene::EnemiesExtrusionCollision(void)
 {
 	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
-		if (!enemies[i]->GetEnemy().isAlive_)
+		if (!enemies[i]->GetEnemy().isAlive_ || enemies[i]->GetType() == ENEMY_TYPE::DRAGON)
 		{
 			continue;
 		}
@@ -628,7 +655,7 @@ void GameScene::EnemiesExtrusionCollision(void)
 		for (int j = i + 1; j < enemies.size(); j++)
 		{
 
-			if (!enemies[j]->GetEnemy().isAlive_)
+			if (!enemies[j]->GetEnemy().isAlive_ || enemies[i]->GetType() == ENEMY_TYPE::DRAGON)
 			{
 				continue;
 			}

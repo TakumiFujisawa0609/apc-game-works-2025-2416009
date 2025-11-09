@@ -1,8 +1,8 @@
 #include "../../Common/AnimationController.h"
 #include "Bat.h"
 
-Bat::Bat(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player)
-	:EnemyBase(type, baseModelId, baseAttackEffectModelId, animModelIds, player)
+Bat::Bat(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
+	:EnemyBase(type, baseModelId, animModelIds, player)
 {
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
@@ -22,7 +22,7 @@ Bat::~Bat(void)
 
 void Bat::SetParam(void)
 {
-	enemy_.angles_ = ANGLE;
+	enemy_.angle_ = ANGLE;
 	enemy_.scales_ = SCALE;
 	enemy_.hp_ = HP;
 	enemy_.moveSpeed_ = SPEED;
@@ -56,6 +56,8 @@ void Bat::SetParam(void)
 
 	// çUåÇâ¬î\îÕàÕ
 	attack_.range_ = ATTACK_RANGE;
+
+	relativeMagicPos_ = RELATIVE_MAGIC_POS;
 }
 
 void Bat::AddFrames(void)
@@ -118,8 +120,8 @@ void Bat::Idle(EnemyBase& enemy)
 
 		if (enemy.GetAttackCooldown() <= 0.0f)
 		{
-			// ñÇñ@Çî≠ìÆ(ê∂ê¨)
-			enemy.CraateMagic();
+			// çUåÇÇê∂ê¨
+			enemy.CreateMagicForward();
 
 			// çUåÇîÕàÕÇ…ì¸Ç¡ÇƒÇ¢ÇƒÅAçUåÇë“Çøéûä‘Ç™0ÇæÇ¡ÇΩÇÁçUåÇÇ÷à⁄çs
 			enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);

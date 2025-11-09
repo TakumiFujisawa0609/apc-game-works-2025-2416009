@@ -4,7 +4,9 @@
 #include <memory>
 
 class EnemyBase;
+class MagicBase;
 #include "../Player/Player.h"
+#include "../Magic/MagicInfo.h"
 
 // 敵のタイプ(エネミーのマネージャー等で作る！）
 enum class ENEMY_TYPE
@@ -44,6 +46,13 @@ public:
 
     void GetPlayerPoint(Player* player) { player_ = player; }
 
+    // 魔法の取得
+    std::vector<MagicBase*> GetMagics(void)const { return magics_; }
+
+    // 未使用の魔法を再利用する。未使用のものが無ければ生成を行う
+    MagicBase* GetValidMagic(TYPE_MAGIC type);
+    // 前方に魔法生成処理
+    void CraateMagic(ENEMY_TYPE type, VECTOR pos ,VECTOR dir);
 private:
 
     // 静的インスタンス
@@ -78,6 +87,17 @@ private:
     // ゾンビ用のアニメーションモデルハンドルID
     std::vector<int> zombieAnimModelIds_;
 
+    // エネミー全体の魔法を管理する
+    std::vector<MagicBase*> magics_;
+
+    // エフェクト用モデルハンドルID
+    int baseAttackEffectModelId_;
+
     // 未使用の敵を再利用する。未使用のものが無ければ生成を行う
     EnemyBase* GetValidEnemy(ENEMY_TYPE type);
+
+    // 魔法の更新
+    void UpdateMagic(void);
+    // 魔法の描画
+    void DrawMagic(void);
 };

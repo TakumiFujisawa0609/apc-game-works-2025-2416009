@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Object\Magic\DragonMagic\DragonMagic.cpp" />
     <ClCompile Include="Src\Object\Enemy\Dragon\Dragon.cpp" />
     <ClCompile Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.cpp" />
     <ClCompile Include="Src\Common\Pause\Setting\Bar\Bar.cpp" />
@@ -72,6 +73,7 @@
     <ClCompile Include="Src\Object\Magic\WindMagic\WindMagic.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Object\Magic\DragonMagic\DragonMagic.h" />
     <ClInclude Include="Src\Object\Enemy\Dragon\Dragon.h" />
     <ClInclude Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.h" />
     <ClInclude Include="Src\Common\Pause\Setting\Bar\Bar.h" />

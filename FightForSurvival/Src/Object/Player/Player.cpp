@@ -41,7 +41,7 @@ void Player::Init(void)
 	//MV1SetPosition(player_.modelId_, player_.pos_);
 
 	// 向きの設定
-	player_.angles_ = AsoUtility::VECTOR_ZERO;
+	player_.angle_ = AsoUtility::VECTOR_ZERO;
 	//MV1SetRotationXYZ(player_.modelId_, player_.angles_);
 
 	// 大きさの設定
@@ -256,16 +256,16 @@ void Player::ProcessMove(void)
 
 	// 水平方向の forward ベクトル（y成分を0にする）
 	VECTOR moveForward = VGet(
-		sin(player_.angles_.y),
+		sin(player_.angle_.y),
 		0.0f,
-		cos(player_.angles_.y)
+		cos(player_.angle_.y)
 	);
 
 	// 水平方向の right ベクトル（y成分を0にする）
 	VECTOR moveRight = VGet(
-		cos(player_.angles_.y),
+		cos(player_.angle_.y),
 		0.0f,
-		-sin(player_.angles_.y)
+		-sin(player_.angle_.y)
 	);
 
 	// 正規化
@@ -370,17 +370,17 @@ void Player::MouseAngle(void)
 	}
 
 	// マウスの移動量からカメラの回転量を更新する
-	player_.angles_.y += deltaX * mouseSensitivity_;
-	player_.angles_.x += deltaY * mouseSensitivity_;
+	player_.angle_.y += deltaX * mouseSensitivity_;
+	player_.angle_.x += deltaY * mouseSensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
-	if (player_.angles_.x > MAX_VIEW_ANGLE)
+	if (player_.angle_.x > MAX_VIEW_ANGLE)
 	{
-		player_.angles_.x = MAX_VIEW_ANGLE;
+		player_.angle_.x = MAX_VIEW_ANGLE;
 	}
-	if (player_.angles_.x < MIN_VIEW_ANGLE)
+	if (player_.angle_.x < MIN_VIEW_ANGLE)
 	{
-		player_.angles_.x = MIN_VIEW_ANGLE;
+		player_.angle_.x = MIN_VIEW_ANGLE;
 	}
 
 	// 杖の反動がある中視点移動があったら反動をなくす
@@ -403,17 +403,17 @@ void Player::PadAngle(void)
 	// アナログキーの入力値から方向を取得
 	VECTOR dir = ins.GetDirectionXZAKey(padState.AKeyRX, padState.AKeyRY);
 
-	player_.angles_.x -= dir.z * padSensitivity_;
-	player_.angles_.y += dir.x * padSensitivity_;
+	player_.angle_.x -= dir.z * padSensitivity_;
+	player_.angle_.y += dir.x * padSensitivity_;
 
 	// ピッチ角の角度制限（真上や真下を向きすぎないようにする）
-	if (player_.angles_.x > MAX_VIEW_ANGLE)
+	if (player_.angle_.x > MAX_VIEW_ANGLE)
 	{
-		player_.angles_.x = MAX_VIEW_ANGLE;
+		player_.angle_.x = MAX_VIEW_ANGLE;
 	}
-	if (player_.angles_.x < MIN_VIEW_ANGLE)
+	if (player_.angle_.x < MIN_VIEW_ANGLE)
 	{
-		player_.angles_.x = MIN_VIEW_ANGLE;
+		player_.angle_.x = MIN_VIEW_ANGLE;
 	}
 }
 

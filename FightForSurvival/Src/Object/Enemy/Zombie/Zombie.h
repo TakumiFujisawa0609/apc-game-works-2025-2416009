@@ -56,7 +56,7 @@ public:
 	// UŒ‚‘Ò‚¿ŠÔ
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
-	Zombie(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
+	Zombie(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
 	~Zombie(void)override;
 
 protected:

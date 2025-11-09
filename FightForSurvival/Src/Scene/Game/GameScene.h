@@ -10,6 +10,7 @@ class Pause;
 class RedDamageEffect;
 class SkyDome;
 class EnemyBase;
+class Dragon;
 
 class GameScene : public SceneBase
 {
@@ -80,8 +81,12 @@ private:
 	void EnemiesAttackCollision(void);
 	// ƒ]ƒ“ƒr‚ÌUŒ‚“–‚½‚è”»’è
 	void ZombieAttackCollision(EnemyBase* enemy,VECTOR handPos,float handRad);
-	// ƒRƒEƒ‚ƒŠ‚ÌUŒ‚“–‚½‚è”»’è
-	void BatAttackCollision(EnemyBase* enemy);
+	// ƒhƒ‰ƒSƒ“‚ÌUŒ‚“–‚½‚è”»’è
+	void DragonAttackCollision(EnemyBase* enemy);
+	// “G‚Ì–‚–@‚ÌUŒ‚“–‚½‚è”»’è
+	void EnemyMagicCollision(void);
+	// ƒhƒ‰ƒSƒ“‚Ì‘O•ûUŒ‚“–‚½‚è”»’è
+	void DragonForwardAttackCollision(EnemyBase* enemy);
 
 	// “G“¯m‚Ì‰Ÿ‚µo‚µ”»’è
 	void EnemiesExtrusionCollision(void);

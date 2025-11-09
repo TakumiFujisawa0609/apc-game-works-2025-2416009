@@ -7,7 +7,6 @@
 
 class AnimationController;
 class Player;
-class MagicBase;
 
 class EnemyBase
 {
@@ -22,11 +21,8 @@ public:
 	// 座標更新のタイミング(5フレームごとに1回)
 	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
 
-	// 魔法の位置の相対座標(ローカル)
-	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,70.0f,-80.0f };
-
 	// コンストラクタ
-	EnemyBase(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
+	EnemyBase(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
 
 	// デストラクタ
 	virtual ~EnemyBase(void);
@@ -41,7 +37,7 @@ public:
 	virtual void Draw(void);
 
 	// 解放処理
-	void Release(void);
+	virtual void Release(void);
 
 	// 敵の情報を渡す
 	const Unit GetEnemy(void)const { return enemy_; }
@@ -77,27 +73,21 @@ public:
 	// 攻撃待ち時間のセットする
 	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
-	// 魔法の取得
-	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
-
 	// 押し出し処理
 	void Extrusion(VECTOR overlap);
 
 	// プレイヤー側に向く処理
 	void LookPlayer(void);
+	// 前方方向に攻撃をする
+	void CreateMagicForward(void);
 
-	// 魔法生成処理
-	void CraateMagic(void);
 protected:
 	AnimationController* animationController_;
 	Player* player_;
-	std::vector<MagicBase*> magics_;
+
 
 	// プレイヤーの情報
 	Unit enemy_;
-
-	// エフェクト用モデルハンドルID
-	int baseAttackEffectModelId_;
 
 	// 撃破スコア(敵ごとにスコア数を変更するため)
 	int score_;
@@ -122,6 +112,9 @@ protected:
 
 	// アニメーション用のスピード(アニメーションと連動させる必要ある)
 	std::vector<float> speed_;
+
+	// 魔法の相対座標
+	VECTOR relativeMagicPos_;
 
 	// 状態別更新
 	// 移動処理
@@ -154,11 +147,5 @@ protected:
 	// ステート別アニメーション再生
 	virtual void PlayAnim(void);
 
-	// 魔法の更新
-	void UpdateMagic(void);
-	// 魔法の描画
-	void DrawMagic(void);
-
-	virtual MagicBase* GetValidMagic(void);
 };
 

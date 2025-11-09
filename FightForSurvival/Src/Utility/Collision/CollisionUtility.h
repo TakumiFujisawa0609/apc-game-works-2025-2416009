@@ -19,7 +19,7 @@ namespace CollisionUtility
 	// 球同士の当たり判定
 	bool IsCollidingSpheres(VECTOR sphere1Pos, float sphere1Rad, VECTOR sphere2Pos, float sphere2Rad);
 
-	// 球と座標の当たり判定
+	// 球と点の当たり判定
 	bool IsCollidingSphereAndPos(VECTOR sphere1Pos, float sphere1Rad, VECTOR pos);
 
 	// 押し出し判定(押し出し量を渡してくれる)

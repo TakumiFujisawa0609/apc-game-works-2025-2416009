@@ -55,7 +55,10 @@ public:
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 3.0f;
 
-	Bat(ENEMY_TYPE type, int baseModelId, int baseAttackEffectModelId, std::vector<int> animModelIds, Player* player);
+	// 魔法の位置の相対座標(ローカル)
+	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,70.0f,-80.0f };
+
+	Bat(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
 	~Bat(void)override;
 
 protected:
