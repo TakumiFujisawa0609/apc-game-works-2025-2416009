@@ -152,6 +152,10 @@ void Player::Draw(void)
 	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
 		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
 
+	// プレイヤー座標
+	DrawFormatString(0, 100,
+		0xffffff, "プレイヤー座標：%.f, %.f, %.f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
+
 	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
 	// プレイヤー頭の位置目安
 	//DrawSphere3D(cameraPos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);

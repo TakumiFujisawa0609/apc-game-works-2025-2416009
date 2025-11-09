@@ -80,13 +80,15 @@ private:
 	// “G‚ÌUŒ‚‚Ì“–‚½‚è”»’è
 	void EnemiesAttackCollision(void);
 	// ƒ]ƒ“ƒr‚ÌUŒ‚“–‚½‚è”»’è
-	void ZombieAttackCollision(EnemyBase* enemy,VECTOR handPos,float handRad);
+	void ZombieAttackCollision(EnemyBase* enemy);
 	// ƒhƒ‰ƒSƒ“‚ÌUŒ‚“–‚½‚è”»’è
 	void DragonAttackCollision(EnemyBase* enemy);
 	// “G‚Ì–‚–@‚ÌUŒ‚“–‚½‚è”»’è
 	void EnemyMagicCollision(void);
 	// ƒhƒ‰ƒSƒ“‚Ì‘O•ûUŒ‚“–‚½‚è”»’è
 	void DragonForwardAttackCollision(EnemyBase* enemy);
+	// ƒhƒ‰ƒSƒ“‚Ì“ËiUŒ‚“–‚½‚è”»’è
+	void DragonRushAttackCollision(EnemyBase* enemy);
 
 	// “G“¯m‚Ì‰Ÿ‚µo‚µ”»’è
 	void EnemiesExtrusionCollision(void);

@@ -196,7 +196,11 @@ void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
 		forwardAttackStartTime_ = STARTING_TIME;
 		break;
 	case Dragon::RUSH_ATTACK:
-		attack_.isAttacking_ = true;
+		attack_.isAttacking_ = false;
+		// スタート位置に行くステップにする
+		rushStep_ = RUSH_STEP::STATING_POSITION;
+		// 突進攻撃用の座標を取得する
+		SetRushPosition();
 		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO, false);
 		break;
 	case Dragon::ATTACK_END:
@@ -289,25 +293,24 @@ void Dragon::Attack(EnemyBase& enemy)
 
 void Dragon::AttackSelect(Dragon& dragon)
 {
-	dragon.ChangeAttackState(FORWARD_ATTACK);
 	//// ランダムで決めた攻撃内容を入れる
-	//int attackType = GetRand(RANDOM_NUM);
+	int attackRand = GetRand(RANDOM_NUM);
 
-	//if (attackType >= 0 && attackType <= RANGE)
-	//{
-	//	// 範囲攻撃
-	//	dragon.ChangeAttackState(RANGE_ATTACK);
-	//}
-	//else if (attackType > RANGE && attackType <= FORWARD)
-	//{
-	//	// 前方攻撃
-	//	dragon.ChangeAttackState(FORWARD_ATTACK);
-	//}
-	//else if (attackType > FORWARD && attackType <= RUSH)
-	//{
-	//	// 突進攻撃
-	//	dragon.ChangeAttackState(RUSH_ATTACK);
-	//}
+	if (attackRand >= 0 && attackRand <= RANGE)
+	{
+		// 範囲攻撃
+		dragon.ChangeAttackState(RANGE_ATTACK);
+	}
+	else if (attackRand > RANGE && attackRand <= FORWARD)
+	{
+		// 前方攻撃
+		dragon.ChangeAttackState(FORWARD_ATTACK);
+	}
+	else if (attackRand > FORWARD && attackRand <= RUSH)
+	{
+		// 突進攻撃
+		dragon.ChangeAttackState(RUSH_ATTACK);
+	}
 }
 
 void Dragon::RangeAttack(Dragon& dragon)
@@ -357,21 +360,21 @@ void Dragon::ForwardAttack(Dragon& dragon)
 		// ポインタが有効かチェックする
 		if (animController != nullptr)
 		{
+			// 攻撃確定させたいタイミングになったらtrueにする
+			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME)
+			{
+				dragon.forwardAttackEnd_ = true;
+			}
+
 			if (animController->IsEnd() && dragon.forwardAttackEnd_)
 			{
 				dragon.forwardAttackEnd_ = false;
 				dragon.ChangeAttackState(ATTACK_END);
 			}
-			else
+			else if(dragon.animationNum_ < FORWARD_CONFIRM_FRAME)
 			{
 				// アニメーションがどこまで進んでいるのかの目安
 				dragon.animationNum_++;
-			}
-
-			// 攻撃確定させたいタイミングになったらtrueにする
-			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME)
-			{
-				dragon.forwardAttackEnd_ = true;
 			}
 		}
 	}
@@ -379,13 +382,45 @@ void Dragon::ForwardAttack(Dragon& dragon)
 
 void Dragon::RushAttack(Dragon& dragon)
 {
-	dragon.ChangeAttackState(ATTACK_END);
+	// EnemyBaseのメンバ変数を使用するためにアップキャストを行い、参照ポインタを作成
+	EnemyBase& base = static_cast<EnemyBase&>(dragon);
+
+	switch (dragon.rushStep_)
+	{
+	case Dragon::RUSH_STEP::STATING_POSITION:
+
+		// 突進開始する位置まで移動
+		dragon.RushStartPosition();
+
+		break;
+	case Dragon::RUSH_STEP::END_POSITION:
+
+		// 突進終了する位置まで移動
+		dragon.RushEndPosition();
+
+		break;
+	case Dragon::RUSH_STEP::RETURN_POSITON:
+
+		// 元の位置まで移動
+		dragon.ReturnPositon();
+
+		break;
+	default:
+		break;
+	}
+
 }
 
 void Dragon::AttackEnd(Dragon& dragon)
 {
-	// 既定の位置にいなかったら(少しでもずれていたら)帰る処理を行う
-	dragon.ReturnPositon();
+	// EnemyBaseのメンバ変数を使用するためにアップキャストを行い、参照ポインタを作成
+	EnemyBase& base = static_cast<EnemyBase&>(dragon);
+	// プレイヤー側を向く
+	base.LookPlayer();
+	// 元の位置に戻れたらIDLEへ戻す
+	base.ChangeState(ENEMY_STATE::STATE_IDLE);
+	// 攻撃待ち時間をセット
+	base.SetAttackCooldown(ATTACK_COOLDOWN);
 }
 
 void Dragon::IsDrawMagicWhole(void)
@@ -442,24 +477,54 @@ void Dragon::CreateMagicWhole(void)
 	magicsRange_.clear();
 }
 
+void Dragon::RushStartPosition(void)
+{
+
+	// 突撃攻撃開始位置へ近づける
+	MoveToDestination(rushStartPos_,enemy_.moveSpeed_);
+
+	// 攻撃開始範囲に入っていたら
+	if (CollisionUtility::IsCollidingSphereAndPos(rushStartPos_, COLLISION_RADIUS,GetEnemy().pos_))
+	{
+		// ステートを変更する
+		rushStep_ = RUSH_STEP::END_POSITION;
+		// 当たり判定をONにする
+		SetIsAttack(true);
+
+		// LookPlayer()でエネミーの向きと方向ベクトル(enemy_.dir_)を確定させる
+		LookPlayer();
+
+		// 突進開始時のプレイヤーの位置を基準点とし、VIEW_RANGE分だけ進んだ先を目的地とする。
+		rushEndPos_ = VAdd(player_->GetPlayer().pos_, VScale(enemy_.dir_, RUSH_RANGE));
+		// Y軸移動は行わない
+		rushEndPos_.y = 0.0f;
+	}
+}
+
+void Dragon::RushEndPosition(void)
+{
+	// 突撃攻撃開始位置へ近づける
+	MoveToDestination(rushEndPos_, rushSpeed_);
+
+	// 攻撃終了範囲に入っていたら
+	if (CollisionUtility::IsCollidingSphereAndPos(rushEndPos_, COLLISION_RADIUS, GetEnemy().pos_))
+	{
+		// ステートを帰宅に変更する
+		rushStep_ = RUSH_STEP::RETURN_POSITON;
+		SetIsAttack(false);
+	}
+}
+
 void Dragon::ReturnPositon(void)
 {
-	// 既定の位置の範囲にいなかったら帰る処理を行う
-	if (!CollisionUtility::IsCollidingSphereAndPos(enemy_.prevPos_,ATTACK_RANGE, enemy_.pos_))
-	{
-		// 目的地(最初にスポーンした場所)まで進む
-		MoveToDestination(enemy_.prevPos_, enemy_.moveSpeed_);
-	}
+	// 目的地(最初にスポーンした場所)まで進む
+	MoveToDestination(enemy_.prevPos_, enemy_.moveSpeed_);
 
 	// 既定の位置まで戻ったら
 	if (CollisionUtility::IsCollidingSphereAndPos(enemy_.prevPos_, COLLISION_RADIUS, enemy_.pos_))
 	{
-		// プレイヤー側を向く
-		LookPlayer();
-		// 元の位置に戻れたらIDLEへ戻す
-		ChangeState(ENEMY_STATE::STATE_IDLE);
-		// 攻撃待ち時間をセット
-		SetAttackCooldown(ATTACK_COOLDOWN);
+		// 攻撃を終了させる
+		ChangeAttackState(ATTACK_END);
 	}
 }
 
@@ -506,6 +571,8 @@ void Dragon::MoveToDestination(VECTOR destination, float moveSpeed)
 
 	// 方向から角度を出す
 	enemy_.angle_.y = atan2f(enemy_.dir_.x, enemy_.dir_.z);
+	// モデルが反対を向いているため反対にする
+	enemy_.angle_.y += 180.0f * (DX_PI_F / 180.0f);
 
 	// 回転はY軸のみとする
 	enemy_.angle_.x = enemy_.angle_.z = 0.0f;
@@ -518,4 +585,27 @@ void Dragon::MoveToDestination(VECTOR destination, float moveSpeed)
 
 	// 計算した座標をモデルに適用する
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+}
+
+void Dragon::SetRushPosition(void)
+{
+	// ランダムで決める
+	int rush = GetRand(RANDOM_NUM);
+
+	if (rush >= 0 && rush <= POS_1_RANGE)
+	{
+		rushStartPos_ = POS_1;
+	}
+	else if (rush > POS_1_RANGE && rush <= POS_2_RANGE)
+	{
+		rushStartPos_ = POS_2;
+	}
+	else if (rush > POS_2_RANGE && rush <= POS_3_RANGE)
+	{
+		rushStartPos_ = POS_3;
+	}
+	else if (rush > POS_3_RANGE && rush <= POS_4_RANGE)
+	{
+		rushStartPos_ = POS_4;
+	}
 }

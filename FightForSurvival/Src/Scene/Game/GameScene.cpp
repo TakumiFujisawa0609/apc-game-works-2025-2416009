@@ -509,22 +509,19 @@ void GameScene::EnemiesAttackCollision(void)
 			continue;
 		}
 
-		// 敵の情報
-		Unit eneInfo = enemy->GetEnemy();
-		EnemyCollision eneColInfo = enemy->GetColPos();
+		if (!enemy->IsAttack())
+		{
+			// 敵が攻撃状態ではなかったら抜ける
+			continue;
+		}
 
 		switch (enemy->GetType())
 		{
 		case ENEMY_TYPE::ZOMBIE:
 
-			if (!enemy->IsAttack())
-			{
-				// 敵が攻撃状態ではなかったら抜ける
-				continue;
-			}
 
 			// ゾンビの攻撃中の右手と当たり判定を行う
-			ZombieAttackCollision(enemy, eneColInfo.colPos_[COLLISION_POS::HAND_R], eneInfo.collisionRadiusHand_);
+			ZombieAttackCollision(enemy);
 
 			break;
 		case ENEMY_TYPE::BAT:
@@ -547,14 +544,17 @@ void GameScene::EnemiesAttackCollision(void)
 
 }
 
-void GameScene::ZombieAttackCollision(EnemyBase* enemy, VECTOR handPos, float handRad)
+void GameScene::ZombieAttackCollision(EnemyBase* enemy)
 {
+	VECTOR enePos = enemy->GetColPos().colPos_[COLLISION_POS::HAND_R];
+	float eneHandRad = enemy->GetEnemy().collisionRadiusHand_;
+
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
 	float plaRad = player_->GetPlayer().collisionRadius_;
 
 	// プレイヤーと敵の攻撃の当たり判定
-	if (CollisionUtility::IsCollidingSphereCapsule(handPos, handRad, plaPosTop, plaPosUnder, plaRad))
+	if (CollisionUtility::IsCollidingSphereCapsule(enePos, eneHandRad, plaPosTop, plaPosUnder, plaRad))
 	{
 		// プレイヤーにダメージを与える
 		player_->Damage(1);
@@ -584,6 +584,7 @@ void GameScene::DragonAttackCollision(EnemyBase* enemy)
 		DragonForwardAttackCollision(enemy);
 		break;
 	case Dragon::RUSH_ATTACK:
+		DragonRushAttackCollision(enemy);
 		break;
 	default:
 		break;
@@ -649,6 +650,34 @@ void GameScene::DragonForwardAttackCollision(EnemyBase* enemy)
 
 		// プレイヤーにダメージを与える
 		player_->Damage(1);
+
+		// カメラを揺らす
+		camera_->SetHitStop();
+
+		// 画面を赤くするエフェクトを付ける
+		redEffect_->SetRedEffect();
+
+		// ダメージSEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+	}
+}
+
+void GameScene::DragonRushAttackCollision(EnemyBase* enemy)
+{
+	VECTOR enePosTop = enemy->GetColPos().colPos_[COLLISION_POS::BODY_TOP];
+	VECTOR enePosUnder = enemy->GetColPos().colPos_[COLLISION_POS::BODY_UNDER];
+	float eneBodyRad = enemy->GetEnemy().collisionRadiusBody_;
+
+	VECTOR plaPosTop = player_->GetCollisionPosTop();
+	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
+	float plaRad = player_->GetPlayer().collisionRadius_;
+
+	// プレイヤーと敵の攻撃の当たり判定
+	if (CollisionUtility::IsCollidingCapsules(enePosTop, enePosUnder, eneBodyRad, plaPosTop, plaPosUnder, plaRad))
+	{
+		// プレイヤーにダメージを与える
+		player_->Damage(1);
+		enemy->SetIsAttack(false);
 
 		// カメラを揺らす
 		camera_->SetHitStop();

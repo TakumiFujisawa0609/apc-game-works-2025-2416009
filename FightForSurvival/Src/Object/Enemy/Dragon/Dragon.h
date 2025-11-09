@@ -14,10 +14,10 @@ public:
 	static constexpr VECTOR SCALE = { 3.0f,3.0f,3.0f };
 
 	// 体力
-	static constexpr int HP = 1;
+	static constexpr int HP = 100;
 
 	// 速度
-	static constexpr float SPEED = 4.0f;
+	static constexpr float SPEED = 30.0f;
 
 	// 撃破スコア
 	static constexpr int SCORE = 10000;
@@ -56,32 +56,40 @@ public:
 	// 攻撃待ち時間
 	static constexpr float ATTACK_COOLDOWN = 5.0f;
 
-	// ランダム用確率数値
+	// ランダム用確率数値(攻撃選択)
 	static constexpr int RANDOM_NUM = 10000;
 	static constexpr int RANGE = 4000;
 	static constexpr int FORWARD = 7000;
 	static constexpr int RUSH = 10000;
 
+	// 魔法の位置の相対座標(ローカル)
+	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,280.0f,-150.0f };
 	// 範囲魔法時の魔法の数
 	static constexpr int MAGIC_NUM = 12;
 
 	// 前方攻撃時の速度
 	static constexpr float STARTING_TIME = 3.0f;
-
-	// 突撃攻撃時の速度
-	static constexpr float RUSH_SPEED = 10.0f;
-
-	// 魔法の位置の相対座標(ローカル)
-	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,280.0f,-150.0f };
-
 	// 視野の広さ
 	static constexpr float VIEW_RANGE = 4000.0f;
-
 	// 視野角
 	static constexpr float VIEW_ANGLE = 20.0f;
-
 	// 前方攻撃確定アニメーションフレーム数
 	static constexpr int FORWARD_CONFIRM_FRAME = 30;
+
+	// 突撃攻撃時の速度
+	static constexpr float RUSH_SPEED = 60.0f;
+	// 突進の広さ
+	static constexpr float RUSH_RANGE = 2500.0f;
+	// ランダム用確率数値(突撃攻撃座標)
+	static constexpr int POS_1_RANGE = 2500;
+	static constexpr int POS_2_RANGE = 5000;
+	static constexpr int POS_3_RANGE = 7500;
+	static constexpr int POS_4_RANGE = 10000;
+	// 攻撃開始位置
+	static constexpr VECTOR POS_1 = { -2200.0f,0.0f,2200.0f };
+	static constexpr VECTOR POS_2 = { -2200.0f,0.0f,-2200.0f };
+	static constexpr VECTOR POS_3 = { 2200.0f,0.0f,-2200.0f };
+	static constexpr VECTOR POS_4 = { 2200.0f,0.0f,2200.0f };
 
 	// 敵の状態（ボスの攻撃）
 	enum DRAGON_ATTACK_STATE
@@ -93,6 +101,13 @@ public:
 		ATTACK_END,         // 攻撃終了
 
 		DRAGON_ATTACK_STATE_MAX,    // 敵の全状態
+	};
+
+	enum class RUSH_STEP
+	{
+		STATING_POSITION,
+		END_POSITION,
+		RETURN_POSITON,
 	};
 
 	Dragon(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
@@ -131,7 +146,14 @@ private:
 	bool forwardAttackEnd_;
 	float animationNum_;
 
+	// 突進攻撃のステート
+	RUSH_STEP rushStep_;
+	// 突進攻撃用スピード
 	float rushSpeed_;
+	// 突進攻撃開始位置
+	VECTOR rushStartPos_;
+	// 突進攻撃終了位置
+	VECTOR rushEndPos_;
 
 	// 待機処理
 	static void Idle(EnemyBase& enemy);
@@ -153,7 +175,11 @@ private:
 	void IsDrawMagicWhole(void);
 	void CreateMagicWhole(void);
 
-	// 規定の位置から動いていたら、戻る処理を行う
+	// 突進攻撃開始位置まで移動
+	void RushStartPosition(void);
+	// 突進攻撃終了位置まで移動
+	void RushEndPosition(void);
+	// 規定の位置へ戻る処理を行う
 	void ReturnPositon(void);
 
 	// 前方攻撃時の待ち時間を0に近づける
@@ -162,5 +188,7 @@ private:
 	// 目的地まで進む処理
 	void MoveToDestination(VECTOR destination, float moveSpeed);
 
+	// 突進攻撃用の座標を設定
+	void SetRushPosition(void);
 };
 
