@@ -14,7 +14,7 @@ public:
 	static constexpr VECTOR SCALE = { 3.0f,3.0f,3.0f };
 
 	// 体力
-	static constexpr int HP = 100;
+	static constexpr int HP = 50;
 
 	// 速度
 	static constexpr float SPEED = 30.0f;
@@ -142,8 +142,8 @@ private:
 	std::vector<MagicBase*> magicsRange_;
 
 	// 前方攻撃待ち時間
+	bool forwardAttackStart_;
 	float forwardAttackStartTime_;
-	bool forwardAttackEnd_;
 	float animationNum_;
 
 	// 突進攻撃のステート
@@ -190,5 +190,10 @@ private:
 
 	// 突進攻撃用の座標を設定
 	void SetRushPosition(void);
+
+	// 攻撃変更時のアニメーション再生
+	void PlayAttackAnim(void);
+	// 攻撃変更時の初期化
+	void ChangeAttackStateInit(void);
 };
 

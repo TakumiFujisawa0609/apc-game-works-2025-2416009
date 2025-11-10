@@ -63,7 +63,7 @@ public:
 	AnimationController* GetAnimationController(void)const { return animationController_; }
 
 	// 状態を返却
-	ENEMY_STATE GetState() const { return state_.state_; }
+	enemieStateCtrl GetStateInfo(void) const { return state_; }
 
 	// 攻撃範囲内か確認用処理
 	virtual bool SearchAttackRange(void);
@@ -96,7 +96,7 @@ protected:
 	ENEMY_TYPE type_;
 
 	// 敵の状態情報
-	enemiestateCtrl state_;
+	enemieStateCtrl state_;
 
 	// 当たり判定用(頭、体)
 	EnemyCollision collision_;

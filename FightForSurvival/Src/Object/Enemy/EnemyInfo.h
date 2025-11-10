@@ -87,7 +87,7 @@ struct EnemyCollision
 	int handBoneL_;
 };
 
-struct enemiestateCtrl
+struct enemieStateCtrl
 {
 	ENEMY_STATE state_;
 	enemieStateFunction stateTable_[ENEMY_STATE_MAX];

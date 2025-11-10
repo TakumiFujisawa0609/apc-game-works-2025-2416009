@@ -68,9 +68,6 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 	// ‰Šúó‘Ô
 	ChangeState(ENEMY_STATE::STATE_IDLE);
 
-	// UŒ‚‘Ò‚¿ŽžŠÔ‚ð‰Šú‰»
-	attack_.cooldown_ = 0.0f;
-
 	// UŒ‚’†‚©
 	SetIsAttack(false);
 
@@ -281,7 +278,14 @@ void EnemyBase::Hit(EnemyBase& enemy)
 	{
 		if (enemy.animationController_->IsEnd())
 		{
-			enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+			if (enemy.type_ != ENEMY_TYPE::DRAGON)
+			{
+				enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
+			}
+			else
+			{
+				enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
+			}
 		}
 	}
 }

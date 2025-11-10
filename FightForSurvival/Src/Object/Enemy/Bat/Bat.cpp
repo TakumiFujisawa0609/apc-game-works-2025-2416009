@@ -55,6 +55,7 @@ void Bat::SetParam(void)
 	collision_.offsetHand_ = OFFSET_POS_HAND;
 
 	// UŒ‚‰Â”\”ÍˆÍ
+	attack_.cooldown_ = ATTACK_COOLDOWN;
 	attack_.range_ = ATTACK_RANGE;
 
 	relativeMagicPos_ = RELATIVE_MAGIC_POS;
