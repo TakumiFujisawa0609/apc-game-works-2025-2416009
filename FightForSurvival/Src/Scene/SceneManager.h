@@ -21,6 +21,7 @@ public:
 	{
 		NONE,
 		TITLE,
+		SELECT,
 		GAME,
 		CLEAR,
 		OVER,
