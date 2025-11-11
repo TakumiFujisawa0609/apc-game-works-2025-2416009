@@ -572,4 +572,14 @@ bool InputManager::SelectRightIsNew(void)
 	return IsPadBtnNew(JOYPAD_NO::PAD1, JOYPAD_BTN::RIGHT) || IsPadLStickNew(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
 }
 
+bool InputManager::AttackSelectLeft(void)
+{
+	return IsTrgDown(KEY_INPUT_Q) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::Y);
+}
+
+bool InputManager::AttackSelectRight(void)
+{
+	return IsTrgDown(KEY_INPUT_E) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::B);
+}
+
 

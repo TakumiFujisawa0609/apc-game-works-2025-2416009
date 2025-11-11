@@ -74,6 +74,12 @@ void WeaponBase::Init(void)
 
 void WeaponBase::Update(void)
 {
+	// 魔法の変更が行われていたら変更する
+	if (typeMagic_ != SystemManager::GetInstance().GetTypeMagic())
+	{
+		typeMagic_ = SystemManager::GetInstance().GetTypeMagic();
+	}
+
 	// 杖、魔法の座標計算
 	UpdatePos();
 
@@ -263,7 +269,7 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	for (int i = 0; i < size; i++)
 	{
 		// 未使用(生存していない)で、かつ、魔法の種別が同じ
-		if (!magics_[i]->GetMagic().isExists_)
+		if (!magics_[i]->GetMagic().isExists_ && magics_[i]->GetTypeMagic() == typeMagic_)
 		{
 			return magics_[i];
 		}

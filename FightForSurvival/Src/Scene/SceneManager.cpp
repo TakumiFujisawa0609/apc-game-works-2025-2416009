@@ -5,7 +5,6 @@
 #include "../Scene/Game/GameScene.h"
 #include "../Scene/Clear/ClearScene.h"
 #include "../Scene/Over/OverScene.h"
-#include "../Scene/Select/SelectScene.h"
 #include "../Manager/SystemManager.h"
 #include "SceneManager.h"
 
@@ -209,9 +208,6 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 	{
 	case SCENE_ID::TITLE:
 		scene_ = new TitleScene();
-		break;
-	case SCENE_ID::SELECT:
-		scene_ = new SelectScene();
 		break;
 	case SCENE_ID::GAME:
 		scene_ = new GameScene();

@@ -69,6 +69,9 @@ public:
 	// リロードする時間
 	static constexpr float RELOAD_TIME = 2.0f;
 
+	// リロードする時間
+	static constexpr float CHANGE_MAGIC_INTERVAL = 1.0f;
+
 	// コンストラクタ
 	Player(void);
 
@@ -152,6 +155,11 @@ private:
 	// MP回復中か
 	bool isHealMP_;
 
+	// 魔法の種類
+	int magicType_;
+	// 魔法変更可能間隔
+	float changeMagicInterval_;
+
 	// 移動処理
 	void ProcessMove(void);
 	// 視点処理
@@ -167,4 +175,7 @@ private:
 	bool StartHealMpTrg(void);
 
 	void Sensitivity(void);
+
+	// プレイヤーの攻撃の種類を切り替える
+	void ChangeAttackType(void);
 };

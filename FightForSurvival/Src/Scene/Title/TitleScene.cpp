@@ -156,7 +156,7 @@ void TitleScene::Confirm(void)
 
 			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
 			// スタートキーが押されたらゲームシーンへ移る
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::SELECT);
+			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 
 			break;
 		case STATE::EXIT:

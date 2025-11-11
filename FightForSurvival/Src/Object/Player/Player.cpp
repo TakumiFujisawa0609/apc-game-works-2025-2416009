@@ -88,6 +88,11 @@ void Player::Init(void)
 	// 杖の初期化
 	weapon_->Init();
 
+	// 魔法の種類を取得
+	magicType_ = static_cast<int>(SystemManager::GetInstance().GetTypeMagic());
+	// 魔法変更可能間隔
+	changeMagicInterval_ = CHANGE_MAGIC_INTERVAL;
+
 }
 
 void Player::Update(void)
@@ -113,6 +118,8 @@ void Player::Update(void)
 		weapon_->Update();
 	}
 
+	// プレイヤーの攻撃の種類を変更する
+	ChangeAttackType();
 }
 
 void Player::Draw(void)
@@ -145,6 +152,28 @@ void Player::Draw(void)
 
 	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
 		0xffffff, "攻撃可能回数：%.f　/　残りのMPポーション：%.f", magicNum_, MPPotionNum_);
+
+	// 魔法の種類
+	switch (magicType_)
+	{
+	case 0:
+		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：普通", 0xffffff);
+		break;
+	case 1:
+		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：追跡", 0xffffff);
+		break;
+	case 2:
+		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：爆発", 0xffffff);
+		break;
+	default:
+		break;
+	}
+	// 攻撃変更可能時間
+	DrawFormatString(Application::SCREEN_SIZE_X - 250, Application::SCREEN_SIZE_Y - 60,
+		0xffffff, "種類変更ができるまであと：%d秒", static_cast<int>(changeMagicInterval_));
+
+	DrawFormatString(0, Application::SCREEN_SIZE_Y - 60,
+		0xffffff, "%d秒", GetMouseWheelRotVol());
 
 #ifdef _DEBUG
 
@@ -545,4 +574,48 @@ void Player::Sensitivity(void)
 		// パッド感度に変更が加えてあったら適用する
 		padSensitivity_ = nowPadSensitivity;
 	}
+}
+
+void Player::ChangeAttackType(void)
+{
+	// 0より大きかったら(待ち時間がまだあったら)入る
+	if (changeMagicInterval_ > 0.0f)
+	{
+		// 攻撃変更待ち時間を減らす
+		changeMagicInterval_ -= SceneManager::GetInstance().GetDeltaTime();
+
+		if (changeMagicInterval_ < 0.0f)
+		{
+			changeMagicInterval_ = 0.0f;
+		}
+
+		return;
+	}
+
+
+	int prevMagicType = magicType_;
+
+	if (InputManager::GetInstance().AttackSelectLeft())
+	{
+		magicType_ -= 1;
+		if (magicType_ < 0)
+		{
+			magicType_ = 2;
+		}
+	}
+	else if (InputManager::GetInstance().AttackSelectRight())
+	{
+		magicType_ += 1;
+		if (magicType_ > 2)
+		{
+			magicType_ = 0;
+		}
+	}
+
+	if (prevMagicType != magicType_)
+	{
+		SystemManager::GetInstance().SetTypeMagic(static_cast<TYPE_MAGIC>(magicType_));
+		changeMagicInterval_ = CHANGE_MAGIC_INTERVAL;
+	}
+
 }

@@ -190,6 +190,10 @@ public:
 	// 右
 	bool SelectRightIsNew(void);
 
+	// 攻撃の種類変更
+	bool AttackSelectLeft(void);
+	bool AttackSelectRight(void);
+
 private:
 
 	// キー情報
