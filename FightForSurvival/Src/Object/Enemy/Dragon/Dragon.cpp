@@ -177,7 +177,7 @@ bool Dragon::SearchAttackRange(void)
 	float collisionRad = VIEW_RANGE + plaRad;
 
 	// 視野の範囲内に入っているかつ、攻撃時間になったらtrueを返す
-	return angle <= viewRad && (collisionRad * collisionRad) > dis && forwardAttackStart_;
+	return angle <= viewRad && (collisionRad * collisionRad) > dis && attackStart_;
 }
 
 void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
@@ -272,6 +272,9 @@ void Dragon::Attack(EnemyBase& enemy)
 
 void Dragon::AttackSelect(Dragon& dragon)
 {
+	// プレイヤー側を向く
+	dragon.LookPlayer();
+
 	// ランダムで決めた攻撃内容を入れる
 	int attackRand = GetRand(RANDOM_NUM);
 
@@ -297,18 +300,23 @@ void Dragon::RangeAttack(Dragon& dragon)
 	// ポインタが有効かチェックする
 	if (dragon.animationController_ != nullptr)
 	{
-		if (dragon.animationController_->IsEnd() && dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK))
+		if (dragon.animationController_->IsEnd() && dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK) && !dragon.attackStart_)
 		{
 			// アニメーションを再生
 			dragon.animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK_2), AnimationController::BLEND_LATIO, false);
 			dragon.IsDrawMagicWhole();
 		}
-		else if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK_2) && dragon.magicsRange_.size() != 0)
+		// 中身が入っていたら
+		else if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK_2) && !dragon.attackStart_ && dragon.magicsRange_.size() > 0)
 		{
 			// ドラゴンの周りに魔法を発動(生成)
 			dragon.CreateMagicWhole();
+			// アタックしたことを知らせる
+			dragon.attackStart_ = true;
 		}
-		else if (dragon.animationController_->IsEnd())
+		else if ((dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::FLYING) 
+			|| dragon.animationController_->IsEnd()) 
+			&& dragon.attackStart_)
 		{
 			// 攻撃発動したら戻す
 			dragon.ChangeAttackState(ATTACK_END);
@@ -332,7 +340,7 @@ void Dragon::ForwardAttack(Dragon& dragon)
 			// 攻撃確定させたいタイミングになったらtrueにする
 			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME)
 			{
-				dragon.forwardAttackStart_ = true;
+				dragon.attackStart_ = true;
 			}
 
 			// 攻撃が終了したかつ、攻撃中フラグが立っていた場合、攻撃中フラグを折る
@@ -346,10 +354,10 @@ void Dragon::ForwardAttack(Dragon& dragon)
 			// アニメーションが終わっている
 			if ((dragon.animationController_->IsEnd() 
 				|| dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::FLYING)) 
-				&& dragon.forwardAttackStart_ 
+				&& dragon.attackStart_ 
 				&& !dragon.IsAttack())
 			{
-				dragon.forwardAttackStart_ = false;
+				dragon.attackStart_ = false;
 				dragon.ChangeAttackState(ATTACK_END);
 			}
 			else if(dragon.animationNum_ < FORWARD_CONFIRM_FRAME)
@@ -595,12 +603,19 @@ void Dragon::PlayAttackAnim(void)
 		break;
 	case Dragon::RANGE_ATTACK:
 
-		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK), AnimationController::BLEND_LATIO, false);
+		if (attackStart_)
+		{
+			animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::FLYING), AnimationController::BLEND_LATIO);
+		}
+		else
+		{
+			animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK), AnimationController::BLEND_LATIO, false);
+		}
 
 		break;
 	case Dragon::FORWARD_ATTACK:
 
-		if (forwardAttackStart_ && IsAttack())
+		if (attackStart_ && IsAttack())
 		{
 			animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK_2), AnimationController::BLEND_LATIO);
 		}
@@ -633,10 +648,13 @@ void Dragon::ChangeAttackStateInit(void)
 	case Dragon::SELECT:
 		break;
 	case Dragon::RANGE_ATTACK:
+
+		attackStart_ = false;
+
 		break;
 	case Dragon::FORWARD_ATTACK:
 
-		forwardAttackStart_ = false;
+		attackStart_ = false;
 		attack_.isAttacking_ = true;
 		animationNum_ = 0;
 		forwardAttackStartTime_ = STARTING_TIME;

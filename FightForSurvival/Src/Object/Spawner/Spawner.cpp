@@ -79,7 +79,7 @@ void Spawner::Draw(void)
 	}
 
 	// どこが中心位置か分かるようにデバック表示
-	DrawSphere3D(spawner_.pos_[0], spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
+	DrawSphere3D(spawner_.basePos_, spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
 
 }
 

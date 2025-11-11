@@ -3,7 +3,7 @@
 #include "../Application.h"
 
 WaveFinal::WaveFinal(void)
-	: WaveBase(60 * 30, 60 * 20)
+	: WaveBase(60 * 30, 60 * 30)
 {
 }
 void WaveFinal::OnStart()

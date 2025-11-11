@@ -141,8 +141,9 @@ private:
 	// 魔法を保持する用(範囲攻撃用)
 	std::vector<MagicBase*> magicsRange_;
 
+	// 攻撃をスタートしたか
+	bool attackStart_;
 	// 前方攻撃待ち時間
-	bool forwardAttackStart_;
 	float forwardAttackStartTime_;
 	float animationNum_;
 

@@ -331,7 +331,7 @@ void GameScene::Release(void)
 	// マウスカーソルを表示させる
 	SetMouseDispFlag(true);
 
-	// BGMをかける
+	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::GAME);
 }
 

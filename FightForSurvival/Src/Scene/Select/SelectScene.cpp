@@ -24,6 +24,11 @@ void SelectScene::Init(void)
 	{
 		pos_[i] = { POS_X + i * SPACE_X, POS_Y };
 	}
+
+	ChangeState(STATE::STRAIGHT);
+
+	// BGM‚ð‚©‚¯‚é
+	SoundManager::GetInstance().Play(SoundManager::BGM::SELECT);
 }
 
 void SelectScene::Update(void)
@@ -118,6 +123,8 @@ void SelectScene::Draw(void)
 
 void SelectScene::Release(void)
 {
+	// BGM‚ðŽ~‚ß‚é
+	SoundManager::GetInstance().Stop(SoundManager::BGM::SELECT);
 }
 
 void SelectScene::ChangeState(STATE state)
@@ -230,7 +237,10 @@ void SelectScene::PadSelect(void)
 		break;
 	case SelectScene::STATE::MAX:
 
-		ChangeState(STATE::FOLLOW);
+		if (ins.SelectLeftIsTrgDown() || ins.SelectRightIsTrgDown())
+		{
+			ChangeState(STATE::FOLLOW);
+		}
 
 		break;
 	default:

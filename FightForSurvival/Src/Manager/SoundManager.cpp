@@ -106,6 +106,9 @@ void SoundManager::AddSound(void)
 	// タイトル
 	std::string pas = bgmPas + "AS_20267_オーケストラオープニングファンタジー.mp3";
 	AddBGM(pas.c_str(),50);
+	// 選択
+	pas = bgmPas + "AS_152442_緩めなオケによる出撃・待機・メニュー曲.mp3";
+	AddBGM(pas.c_str(),40);
 	// ゲーム
 	pas = bgmPas + "AS_1153557_爽快感のある激しい戦闘曲的オーケストラ.mp3";
 	AddBGM(pas.c_str(),40);

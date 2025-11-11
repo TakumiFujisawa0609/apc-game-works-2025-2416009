@@ -10,6 +10,7 @@ public:
 	enum class BGM
 	{
 		TITLE,
+		SELECT,
 		GAME,
 		CLEAR,
 		OVER,
