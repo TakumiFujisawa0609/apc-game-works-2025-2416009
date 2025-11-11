@@ -766,7 +766,7 @@ void GameScene::SpawnerAndAttackCollision(void)
 			}
 
 			// À•W‚ðŽæ“¾
-			VECTOR spawnerPos = spawner->GetSpawnerIns().pos_[0];
+			VECTOR spawnerPos = spawner->GetSpawnerIns().basePos_;
 
 			// ”¼Œa‚ðŽæ“¾
 			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;

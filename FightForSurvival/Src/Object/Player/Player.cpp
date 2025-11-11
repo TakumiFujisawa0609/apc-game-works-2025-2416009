@@ -172,9 +172,6 @@ void Player::Draw(void)
 	DrawFormatString(Application::SCREEN_SIZE_X - 250, Application::SCREEN_SIZE_Y - 60,
 		0xffffff, "種類変更ができるまであと：%d秒", static_cast<int>(changeMagicInterval_));
 
-	DrawFormatString(0, Application::SCREEN_SIZE_Y - 60,
-		0xffffff, "%d秒", GetMouseWheelRotVol());
-
 #ifdef _DEBUG
 
 	//// 体 デバッグ用：衝突判定用カプセル

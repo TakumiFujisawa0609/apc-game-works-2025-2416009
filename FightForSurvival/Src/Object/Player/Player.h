@@ -70,7 +70,7 @@ public:
 	static constexpr float RELOAD_TIME = 2.0f;
 
 	// リロードする時間
-	static constexpr float CHANGE_MAGIC_INTERVAL = 1.0f;
+	static constexpr float CHANGE_MAGIC_INTERVAL = 7.0f;
 
 	// コンストラクタ
 	Player(void);
