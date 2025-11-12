@@ -19,35 +19,41 @@ public:
 	// 静的インスタンスの取得
 	static SystemManager& GetInstance(void);
 
+	// 更新処理
+	void Update(void);
+
 	// 解放処理
-	void Destroy();
+	void Destroy(void);
 
 	//リセット
-	void ResetGame();
+	void ResetGame(void);
 
 	// マウス感度を格納
 	void SetMouseSensitivity(const float num) { MouseSensitivity_ = num; }
 
 	// マウス感度を返す
-	const float GetMouseSensitivity() const { return MouseSensitivity_; }
+	const float GetMouseSensitivity(void) const { return MouseSensitivity_; }
 
 	// パッド感度を格納
 	void SetPadSensitivity(const float num) { PadSensitivity_ = num; }
 
 	// パッド感度を返す
-	const float GetPadSensitivity() const { return PadSensitivity_; }
+	const float GetPadSensitivity(void) const { return PadSensitivity_; }
 
 	// スコアを格納
 	void SetScore(const int score) { score_ = score; }
 
 	// スコアを返す
-	const int GetScore() const { return score_; }
+	const int GetScore(void) const { return score_; }
 
 	// 魔法の種類を格納
 	void SetTypeMagic(const TYPE_MAGIC type) { typeMagic_ = type; }
 
 	// 魔法種類を返す
-	const TYPE_MAGIC GetTypeMagic() const { return typeMagic_; }
+	const TYPE_MAGIC GetTypeMagic(void) const { return typeMagic_; }
+
+	// 操作デバイス種類を返す
+	const bool GetIsDevice(void)const { return isDeviceMouse_; }
 
 private:
 
@@ -65,6 +71,9 @@ private:
 
 	// 魔法の種類
 	TYPE_MAGIC typeMagic_;
+
+	// 操作デバイス(true / マウス操作、false / ゲームパッド操作）
+	bool isDeviceMouse_;
 
 	// デフォルトコンストラクタをprivateにして、
 	// 外部から生成できない様にする

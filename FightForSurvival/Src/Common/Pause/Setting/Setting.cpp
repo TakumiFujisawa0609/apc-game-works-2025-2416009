@@ -41,7 +41,7 @@ void Setting::Update(void)
 	Confirm();
 
 	// 選択処理
-	if (GetJoypadNum() == 0)
+	if (SystemManager::GetInstance().GetIsDevice())
 	{
 		// マウス
 		MouseSelect();
@@ -79,7 +79,7 @@ void Setting::Draw(void)
 	// バーの表示
 	DrawBox(BAR_START_POS_X, BAR_START_POS_Y, BAR_END_POS_X, BAR_END_POS_Y, 0xffffff, true);
 
-	if (GetJoypadNum() == 0)
+	if (SystemManager::GetInstance().GetIsDevice())
 	{
 
 		if(isDrag_)
@@ -193,7 +193,7 @@ void Setting::BarUpdate(void)
 	if (!isDone_)
 	{
 		// 感度設定処理
-		if (GetJoypadNum() == 0)
+		if (SystemManager::GetInstance().GetIsDevice())
 		{
 			// マウス
 			MouseBarUpdate();

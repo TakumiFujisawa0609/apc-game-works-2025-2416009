@@ -6,6 +6,7 @@
 #include "../../../Utility/Collision/CollisionUtility.h"
 #include "../../../Manager/InputManager.h"
 #include "../../../Manager/SoundManager.h"
+#include "../../../Manager/SystemManager.h"
 #include "../../../Application.h"
 
 Upgrade::Upgrade(void)
@@ -191,10 +192,10 @@ void Upgrade::ConfirmUpgrade(void)
 {
 	InputManager& ins = InputManager::GetInstance();
 
-	if (GetJoypadNum() == 0)
+	if (SystemManager::GetInstance().GetIsDevice())
 	{
 		// ˆø”‚ÌÀ•W‚É‚æ‚Á‚Ä‘I‘ğ’†‚Ì‚à‚Ì‚ğ•Ï‰»‚³‚¹‚é
-		Collision();
+		MouseSelect();
 	}
 	else
 	{
@@ -215,7 +216,7 @@ void Upgrade::ConfirmUpgrade(void)
 	}
 }
 
-void Upgrade::Collision(void)
+void Upgrade::MouseSelect(void)
 {
 	auto prevPlace = place_;
 

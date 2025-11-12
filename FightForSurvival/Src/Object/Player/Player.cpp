@@ -371,7 +371,7 @@ void Player::ProcessMove(void)
 
 void Player::ProcessAngle(void)
 {
-	if (GetJoypadNum() == 0)
+	if (SystemManager::GetInstance().GetIsDevice())
 	{
 		MouseAngle();
 	}

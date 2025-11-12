@@ -194,6 +194,11 @@ public:
 	bool AttackSelectLeft(void);
 	bool AttackSelectRight(void);
 
+	// マウスに切り替え
+	bool ChangeDeviceMouse(void);
+	// パッドに切り替え
+	bool ChangeDevicePad(void);
+
 private:
 
 	// キー情報

@@ -582,4 +582,18 @@ bool InputManager::AttackSelectRight(void)
 	return IsTrgDown(KEY_INPUT_E) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::B);
 }
 
+bool InputManager::ChangeDeviceMouse(void)
+{
+	return  FindMouse(MOUSE_INPUT_LEFT).keyTrgDown || IsTrgDown(KEY_INPUT_E) || IsTrgDown(KEY_INPUT_Q)
+		|| IsTrgDown(KEY_INPUT_W) || IsTrgDown(KEY_INPUT_A) || IsTrgDown(KEY_INPUT_S) || IsTrgDown(KEY_INPUT_D);
+}
+
+bool InputManager::ChangeDevicePad(void)
+{
+	return IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::A) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::B)
+		|| IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::X) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::Y)
+		|| IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::UP)|| IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::DOWN)
+		|| IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::LEFT)|| IsPadLStickTrgDown(JOYPAD_NO::PAD1, JOYPAD_STICK::RIGHT);
+}
+
 

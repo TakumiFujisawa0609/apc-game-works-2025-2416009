@@ -1,3 +1,4 @@
+#include "InputManager.h"
 #include "SystemManager.h"
 
 SystemManager* SystemManager::instance_ = nullptr;
@@ -13,6 +14,26 @@ void SystemManager::CreateInstance(void)
 SystemManager& SystemManager::GetInstance(void)
 {
     return *instance_;
+}
+
+void SystemManager::Update(void)
+{
+	if (isDeviceMouse_)
+	{
+		if (InputManager::GetInstance().ChangeDevicePad())
+		{
+			// 特定のキーを押されたら(A,B,X,Y,Lスティックのどれか)パッドモードにする
+			isDeviceMouse_ = false;
+		}
+	}
+	else
+	{
+		if (InputManager::GetInstance().ChangeDeviceMouse())
+		{
+			// 特定のキーを押されたら(マウス左クリック，Q,E,W,A,S,Dのどれか)マウスモードにすす
+			isDeviceMouse_ = true;
+		}
+	}
 }
 
 void SystemManager::Destroy()
@@ -32,4 +53,12 @@ SystemManager::SystemManager(void)
 	PadSensitivity_ = PAD_SENSITIVITY;
 	score_ = 0;
 	typeMagic_ = TYPE_MAGIC::FIRE_MAGIC;
+	if (GetJoypadNum() == 0)
+	{
+		isDeviceMouse_ = true;
+	}
+	else
+	{
+		isDeviceMouse_ = false;
+	}
 }

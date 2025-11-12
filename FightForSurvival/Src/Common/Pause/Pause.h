@@ -85,7 +85,7 @@ protected:
 	virtual void Confirm(void);
 
 	// カーソルの選択処理
-	virtual void Collision(void);
+	virtual void MouseSelect(void);
 
 	// パッドの選択処理
 	virtual void PadSelect(void);

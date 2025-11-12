@@ -108,7 +108,7 @@ private:
 	void ConfirmUpgrade(void);
 
 	// マウスの選択処理
-	void Collision(void);
+	void MouseSelect(void);
 
 	// パッドの選択処理
 	void PadSelect(void);

@@ -103,6 +103,9 @@ void SceneManager::Update(void)
 	}
 	else
 	{
+		// デバイス切り替え処理
+		SystemManager::GetInstance().Update();
+
 		// 各シーンの更新処理
 		scene_->Update();
 	}

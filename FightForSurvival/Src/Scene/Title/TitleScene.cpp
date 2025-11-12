@@ -5,6 +5,7 @@
 #include "../../Manager/Camera.h"
 #include "../../Utility/Collision/CollisionUtility.h"
 #include "../../Manager/SoundManager.h"
+#include "../../Manager/SystemManager.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene(void)
@@ -53,10 +54,10 @@ void TitleScene::Update(void)
 
 	if (isPrevStart_ && isNowStart_)
 	{
-		if (GetJoypadNum() == 0)
+		if (SystemManager::GetInstance().GetIsDevice())
 		{
 			// ˆø”‚ÌÀ•W‚É‚æ‚Á‚Ä‘I‘ğ’†‚Ì‚à‚Ì‚ğ•Ï‰»‚³‚¹‚é
-			Collision();
+			MouseSelect();
 		}
 		else
 		{
@@ -173,7 +174,7 @@ void TitleScene::Confirm(void)
 	}
 }
 
-void TitleScene::Collision(void)
+void TitleScene::MouseSelect(void)
 {
 	auto prevState = state_;
 

@@ -2,6 +2,7 @@
 #include "../../Manager/InputManager.h"
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SoundManager.h"
+#include "../../Manager/SystemManager.h"
 #include "../../Utility/Collision/CollisionUtility.h"
 #include "Setting/Setting.h"
 #include "Pause.h"
@@ -64,10 +65,10 @@ void Pause::Update(void)
 			return;
 		}
 
-		if (GetJoypadNum() == 0)
+		if (SystemManager::GetInstance().GetIsDevice())
 		{
 			// ˆø”‚ÌÀ•W‚É‚æ‚Á‚Ä‘I‘ğ’†‚Ì‚à‚Ì‚ğ•Ï‰»‚³‚¹‚é
-			Collision();
+			MouseSelect();
 		}
 		else
 		{
@@ -230,7 +231,7 @@ void Pause::StartPause(void)
 	}
 }
 
-void Pause::Collision(void)
+void Pause::MouseSelect(void)
 {
 	auto prevPause = pause_;
 
