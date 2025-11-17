@@ -260,8 +260,8 @@ void Dragon::Idle(EnemyBase& enemy)
 
 void Dragon::Attack(EnemyBase& enemy)
 {
-	// Dragon自身のメンバ変数を使用するためにダウンキャストを行い、参照ポインタを作成
-	Dragon& self = static_cast<Dragon&>(enemy);
+	// Dragon自身のメンバ変数を使用するためにダウンキャストを行う
+	Dragon& self = dynamic_cast<Dragon&>(enemy);
 
 	// nullチェック
 	if (self.attackStateTable_[self.attackState_])
