@@ -110,7 +110,7 @@ public:
 		RETURN_POSITON,
 	};
 
-	Dragon(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
+	Dragon(ENEMY_TYPE type, int baseModelId, Player* player);
 	~Dragon(void)override;
 
 	void Draw(void)override;

@@ -58,36 +58,29 @@ void EnemyManager::Load(void)
 	std::string enePas = Application::PATH_MODEL + "Enemy/";
 
 	// エネミーモデルのロード
-	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie.mv1").c_str()));
+	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie_Chubby.mv1").c_str()));
 	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Bat.mv1").c_str()));
 	enemyModelIds_.emplace_back(MV1LoadModel((enePas + "Dragon.mv1").c_str()));
 
-	// ボスのメモリ確保
-	Dragon* enemy = new Dragon(ENEMY_TYPE::DRAGON, enemyModelIds_[static_cast<int>(ENEMY_TYPE::DRAGON)], zombieAnimModelIds_, player_);
-	AddEnemy(enemy);
-
-	// 空のVector型を渡すためにアニメーションのロードの前にコウモリのメモリ確保を行う
-	for (int i = 0; i < BAT_NUM; i++)
-	{
-		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
-		Bat* enemy = new Bat(ENEMY_TYPE::BAT, enemyModelIds_[static_cast<int>(ENEMY_TYPE::BAT)],zombieAnimModelIds_, player_);
-		AddEnemy(enemy);
-	}
-
-	// アニメーションのロード
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Idle.mv1").c_str()));
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Running.mv1").c_str()));
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Standing Melee Attack Downward.mv1").c_str()));
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Standing Walk Back.mv1").c_str()));
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie HitIdle.mv1").c_str()));
-	zombieAnimModelIds_.emplace_back(MV1LoadModel((enePas + "Zombie Dying.mv1").c_str()));
-
+	// ゾンビのメモリ確保
 	for (int i = 0; i < ZOMBIE_NUM; i++)
 	{
 		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
-		Zombie* enemy = new Zombie(ENEMY_TYPE::ZOMBIE, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], zombieAnimModelIds_, player_);
+		Zombie* enemy = new Zombie(ENEMY_TYPE::ZOMBIE, enemyModelIds_[static_cast<int>(ENEMY_TYPE::ZOMBIE)], player_);
 		AddEnemy(enemy);
 	}
+
+	// コウモリのメモリ確保
+	for (int i = 0; i < BAT_NUM; i++)
+	{
+		// 先にメモリ確保しておく(ゲーム途中にnewを行わないようにする)
+		Bat* enemy = new Bat(ENEMY_TYPE::BAT, enemyModelIds_[static_cast<int>(ENEMY_TYPE::BAT)], player_);
+		AddEnemy(enemy);
+	}
+
+	// ドラゴンのメモリ確保
+	Dragon* enemy = new Dragon(ENEMY_TYPE::DRAGON, enemyModelIds_[static_cast<int>(ENEMY_TYPE::DRAGON)], player_);
+	AddEnemy(enemy);
 
 	//// 攻撃エフェクト用のモデルのロード
 	//attackEffectModelIds_.emplace_back(
@@ -144,9 +137,7 @@ void EnemyManager::Delete(void)
 	{
 		MV1DeleteModel(modelId);
 	}
-
 	enemyModelIds_.clear();
-	zombieAnimModelIds_.clear();
 
 	// 中にデータが入っていたら解放する
 	MV1DeleteModel(baseAttackEffectModelId_);

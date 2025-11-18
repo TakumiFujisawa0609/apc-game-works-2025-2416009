@@ -22,7 +22,7 @@ public:
 	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
 
 	// コンストラクタ
-	EnemyBase(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
+	EnemyBase(ENEMY_TYPE type, int baseModelId, Player* player);
 
 	// デストラクタ
 	virtual ~EnemyBase(void);

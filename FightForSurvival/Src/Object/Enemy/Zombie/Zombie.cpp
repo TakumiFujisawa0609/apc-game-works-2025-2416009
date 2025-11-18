@@ -3,22 +3,16 @@
 #include "../../../Application.h"
 #include "Zombie.h"
 
-Zombie::Zombie(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
-	: EnemyBase(type, baseModelId,animModelIds, player)
+Zombie::Zombie(ENEMY_TYPE type, int baseModelId, Player* player)
+	: EnemyBase(type, baseModelId, player)
 {
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
 
-	// アニメーション用のスピード登録
-	speed_.emplace_back(60.0f);
-	speed_.emplace_back(60.0f);
-	speed_.emplace_back(60.0f);
-	speed_.emplace_back(60.0f);
-	speed_.emplace_back(150.0f);
-	speed_.emplace_back(75.0f);
-
-	// アニメーション登録
-	DuplicateAnimation(speed_, animModelIds);
+	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
+	{
+		animationController_->AddInFbx(i, 25.0f, i);
+	}
 
 	// フレーム登録
 	AddFrames();
@@ -70,21 +64,19 @@ void Zombie::SetParam(void)
 
 void Zombie::AddFrames(void)
 {
-	std::string name = "mixamorig5:";
-
 	// 頭のボーンフレーム取得
-	collision_.headBone_ = MV1SearchFrame(enemy_.modelId_, (name+ "Head").c_str());
+	collision_.headBone_ = MV1SearchFrame(enemy_.modelId_, "Head");
 	// 体のボーンフレーム取得
-	collision_.bodyBoneTop_ = MV1SearchFrame(enemy_.modelId_, (name + "Spine2").c_str());
-	collision_.bodyBoneUnder_ = MV1SearchFrame(enemy_.modelId_, (name + "Hips").c_str());
+	collision_.bodyBoneTop_ = MV1SearchFrame(enemy_.modelId_, "Head");
+	collision_.bodyBoneUnder_ = MV1SearchFrame(enemy_.modelId_, "Root");
 	// 右腕のボーンフレーム取得
-	collision_.armBoneTopR_ = MV1SearchFrame(enemy_.modelId_, (name + "RightArm").c_str());
+	collision_.armBoneTopR_ = MV1SearchFrame(enemy_.modelId_, "UpperArm.R");
 	// 右手のボーンフレーム取得
-	collision_.handBoneR_ = MV1SearchFrame(enemy_.modelId_, (name + "RightHand").c_str());
+	collision_.handBoneR_ = MV1SearchFrame(enemy_.modelId_, "Middle2.R");
 	// 左腕のボーンフレーム取得
-	collision_.armBoneTopL_ = MV1SearchFrame(enemy_.modelId_, (name + "LeftArm").c_str());
+	collision_.armBoneTopL_ = MV1SearchFrame(enemy_.modelId_, "UpperArm.L");
 	// 左手のボーンフレーム取得
-	collision_.handBoneL_ = MV1SearchFrame(enemy_.modelId_, (name + "LeftHand").c_str());
+	collision_.handBoneL_ = MV1SearchFrame(enemy_.modelId_, "Pinky1.L");
 }
 
 void Zombie::Idle(EnemyBase& enemy)

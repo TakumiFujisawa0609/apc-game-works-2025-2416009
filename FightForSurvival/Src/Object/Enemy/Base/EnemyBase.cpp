@@ -8,7 +8,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "EnemyBase.h"
 
-EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
+EnemyBase::EnemyBase(ENEMY_TYPE type, int baseModelId, Player* player)
 	:
 	player_(nullptr),
 	updateCollPosCounter_(0),
@@ -476,22 +476,22 @@ void EnemyBase::PlayAnim(void)
 	switch (state_.state_)
 	{
 	case ENEMY_STATE::STATE_IDLE:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_IDLE), AnimationController::BLEND_LATIO);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::IDLE_COUNT), AnimationController::BLEND_LATIO);
 		break;
 	case ENEMY_STATE::STATE_CHASE:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_CHASE), AnimationController::BLEND_LATIO);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::RUN_ARMS), AnimationController::BLEND_LATIO);
 		break;
 	case ENEMY_STATE::STATE_ATTACK:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_ATTACK), AnimationController::BLEND_LATIO, false);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::PUNCH_COUNT), AnimationController::BLEND_LATIO, false);
 		break;
 	case ENEMY_STATE::STATE_RETREAT:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_RETREAT), AnimationController::BLEND_LATIO, false);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::WALK_COUNT), AnimationController::BLEND_LATIO, false);
 		break;
 	case ENEMY_STATE::STATE_HIT:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_HIT), AnimationController::BLEND_LATIO, false);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::HITREACT), AnimationController::BLEND_LATIO, false);
 		break;
 	case ENEMY_STATE::STATE_DEAD:
-		animationController_->BlendAnimPlay(static_cast<int>(ENEMY_STATE::STATE_DEAD), AnimationController::BLEND_LATIO, false);
+		animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE::DEATH), AnimationController::BLEND_LATIO, false);
 		break;
 	default:
 		break;

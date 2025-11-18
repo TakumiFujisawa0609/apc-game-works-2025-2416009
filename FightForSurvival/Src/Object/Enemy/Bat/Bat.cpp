@@ -1,8 +1,8 @@
 #include "../../Common/AnimationController.h"
 #include "Bat.h"
 
-Bat::Bat(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player)
-	:EnemyBase(type, baseModelId, animModelIds, player)
+Bat::Bat(ENEMY_TYPE type, int baseModelId,Player* player)
+	:EnemyBase(type, baseModelId, player)
 {
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;

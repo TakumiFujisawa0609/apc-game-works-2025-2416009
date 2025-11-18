@@ -58,7 +58,7 @@ public:
 	// 魔法の位置の相対座標(ローカル)
 	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,70.0f,-80.0f };
 
-	Bat(ENEMY_TYPE type, int baseModelId, std::vector<int> animModelIds, Player* player);
+	Bat(ENEMY_TYPE type, int baseModelId, Player* player);
 	~Bat(void)override;
 
 protected:

@@ -84,9 +84,6 @@ private:
     // エネミー用のモデルハンドルID
     std::vector<int> enemyModelIds_;
 
-    // ゾンビ用のアニメーションモデルハンドルID
-    std::vector<int> zombieAnimModelIds_;
-
     // エネミー全体の魔法を管理する
     std::vector<MagicBase*> magics_;
 

@@ -22,6 +22,29 @@ enum ENEMY_STATE
 };
 
 // アニメーション種別
+enum class ANIM_TYPE
+{
+	CRAWL,
+	DEATH,
+	HITREACT,
+	IDLE_COUNT,
+	IDLE_ATTACK,
+	JUMP_COUNT,
+	JUMP_IDLE,
+	JUMP_LAND,
+	NO_COUNT,
+	PUNCH_COUNT,
+	RUN_COUNT,
+	RUN_ARMS,
+	RUN_ATTACK,
+	WALK_COUNT,
+	WAVE_COUNT,
+	YES_COUNT,
+
+	MAX,
+};
+
+// アニメーション種別
 enum class ANIM_TYPE_FLY
 {
 	ATTACK,
