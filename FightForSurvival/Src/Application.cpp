@@ -84,7 +84,6 @@ void Application::Init(void)
 
 	// I—¹ŠÇ—‰Šú‰»
 	EndManager::CreateInstance();
-
 }
 
 void Application::Run(void)

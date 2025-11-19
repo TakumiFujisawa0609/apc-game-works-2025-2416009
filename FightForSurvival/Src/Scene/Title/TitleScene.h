@@ -5,6 +5,8 @@
 #include "../../Application.h"
 
 class Camera;
+class UIManager;
+class TextureManager;
 
 class TitleScene : public SceneBase
 {
@@ -50,8 +52,10 @@ private:
 	// ƒJƒƒ‰
 	Camera* camera_;
 
-	// ‰æ‘œ
-	int imgTitle_;
+	// UI
+	UIManager* uiMgr;
+	TextureManager* texMgr;
+
 	// À•W
 	Vector2 pos_[STATE::NON];
 

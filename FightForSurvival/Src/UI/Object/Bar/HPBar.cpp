@@ -1,0 +1,17 @@
+#include "HPBar.h"
+
+HPBar::~HPBar()
+{
+}
+
+void HPBar::Update(void)
+{
+	// çXêV
+	Bar::Update();
+}
+
+void HPBar::Draw(void)
+{
+	// ï`âÊ
+	Bar::Draw();
+}

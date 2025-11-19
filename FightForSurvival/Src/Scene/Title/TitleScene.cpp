@@ -8,6 +8,10 @@
 #include "../../Manager/SystemManager.h"
 #include "TitleScene.h"
 
+#include "../../UI/UIManager.h"
+#include "../../UI/TextrueManager/TextureManager.h"
+#include "../../UI/Object/Bar/HPBar.h"
+
 TitleScene::TitleScene(void)
 {
 	camera_ = nullptr;
@@ -22,6 +26,22 @@ TitleScene::~TitleScene(void)
 
 void TitleScene::Load(void)
 {
+	// UI管理の生成処理
+	uiMgr = new UIManager();
+	texMgr = new TextureManager();
+
+	// UIを生成
+	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BG, texMgr);
+	UIBase* button = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BUTTON, texMgr);
+
+	//// ダウンキャストして Bar固有の関数を呼べるようにする
+	//UIBase* bar = UIFactory::GetInstance()->CreateUI(UI_KIND::HP_BAR, texMgr);
+	//HPBar* hp = dynamic_cast<HPBar*>(bar);
+	//uiMgr->AddUI(hp);
+
+	// 生成したUIを追加
+	uiMgr->AddUI(bg);
+	uiMgr->AddUI(button);
 }
 
 void TitleScene::Init(void)
@@ -69,6 +89,9 @@ void TitleScene::Update(void)
 		Confirm();
 	}
 
+	// UIの更新
+	uiMgr->Update();
+
 	// カメラの更新
 	camera_->Update();
 }
@@ -107,6 +130,9 @@ void TitleScene::Draw(void)
 		DrawString(Application::SCREEN_SIZE_X / 2 - 60, Application::SCREEN_SIZE_Y - 190, "Check to Start", 0xffffff);
 	}
 
+	// UIの描画
+	uiMgr->Draw();
+
 	// カメラの設定
 	camera_->SetBeforeDraw();
 
@@ -139,6 +165,12 @@ void TitleScene::Release(void)
 		camera_->Release();
 		delete camera_;
 	}
+
+	// UIの描画
+	uiMgr->Delete();
+
+	delete uiMgr;
+	delete texMgr;
 
 	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::TITLE);

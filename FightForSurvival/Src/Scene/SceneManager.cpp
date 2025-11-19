@@ -7,6 +7,8 @@
 #include "../Scene/Over/OverScene.h"
 #include "../Manager/SystemManager.h"
 #include "SceneManager.h"
+#include "../UI/Factory/UIFactory.h"
+#include "../UI/UIRegisterTable.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
 
@@ -49,9 +51,12 @@ void SceneManager::Init(void)
 	// 3D用の設定
 	Init3D();
 
+	// UIファクトリー初期化
+	UIFactory::CreateInstance();
+	RegisterUI();
+
 	// 初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
-
 }
 
 void SceneManager::Init3D(void)
@@ -135,6 +140,9 @@ void SceneManager::Destroy(void)
 
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();
+
+	// UI削除
+	UIFactory::DeleteInstance();
 
 	// シーンの解放
 	scene_->Release();
