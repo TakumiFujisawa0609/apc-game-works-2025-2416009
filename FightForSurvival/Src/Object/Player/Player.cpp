@@ -45,7 +45,7 @@ void Player::Init(void)
 	//MV1SetRotationXYZ(player_.modelId_, player_.angles_);
 
 	// ‘å‚«‚³‚Ìİ’è
-	player_.scales_ = SCALES;
+	player_.scales_ = SCALE;
 	//MV1SetScale(player_.modelId_, player_.scales_);
 
 	// HP‚Ì‰Šú‰»

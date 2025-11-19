@@ -24,6 +24,7 @@
 #include "../../Object/SkyDome/SkyDome.h"
 #include "../../Object/Spawner/SpawnerManager.h"
 #include "../../Object/Spawner/Spawner.h"
+#include "../../Object/Stage/Stage.h"
 #include "../../Utility/AsoUtility.h"
 #include "GameScene.h"
 
@@ -36,6 +37,7 @@ GameScene::GameScene(void)
 	pause_ = nullptr;
 	redEffect_ = nullptr;
 	skydome_ = nullptr;
+	stage_ = nullptr;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -79,6 +81,10 @@ void GameScene::Load(void)
 	skydome_ = new SkyDome();
 	skydome_->Load();
 
+	// ステージの生成・ロード
+	stage_ = new Stage();
+	stage_->Load();
+
 	// ウェーブの作成・各ウェーブの追加
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
@@ -120,6 +126,9 @@ void GameScene::Init(void)
 	// スカイドーム
 	skydome_->Init(camera_->GetPos());
 
+	// ステージ
+	stage_->Init();
+
 	// アップグレードの初期化
 	UpgradeManager::GetInstance().Init();
 
@@ -141,6 +150,9 @@ void GameScene::Update(void)
 		switch (state_)
 		{
 		case GameScene::STATE::PLAY:
+
+			// ステージの更新
+			stage_->Update();
 
 			// スカイドームの更新
 			skydome_->Update(camera_->GetPos());
@@ -222,6 +234,9 @@ void GameScene::Draw(void)
 	// スカイドームの描画
 	skydome_->Draw();
 
+	// ステージの更新
+	stage_->Draw();
+
 	// 敵の描画
 	EnemyManager::GetInstance().Draw();
 
@@ -269,7 +284,15 @@ void GameScene::Release(void)
 	// ウェーブの解放
 	WaveManager::GetInstance().DeleteInstance();
 
-	// ポーズモードの解放
+	// ステージの解放
+	if (stage_ != nullptr)
+	{
+		stage_->Release();
+		delete stage_;
+		stage_ = nullptr;
+	}
+
+	// スカイドームの解放
 	if (skydome_ != nullptr)
 	{
 		skydome_->Release();

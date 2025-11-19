@@ -20,7 +20,7 @@ class Player
 public:
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³
-	static constexpr VECTOR SCALES = { 0.5f, 0.5f, 0.5f };
+	static constexpr VECTOR SCALE = { 0.5f, 0.5f, 0.5f };
 
 	// ‰ŠúˆÊ’u
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };

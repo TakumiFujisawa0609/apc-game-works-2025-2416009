@@ -78,6 +78,7 @@
     <ClCompile Include="Src\Wave\Wave2.cpp" />
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
     <ClCompile Include="Src\Object\Magic\WindMagic\WindMagic.cpp" />
+    <ClCompile Include="Src\Object\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\Magic\DragonMagic\DragonMagic.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="Src\Wave\Wave2.h" />
     <ClInclude Include="Src\Object\Player\Upgrade\Upgrade.h" />
     <ClInclude Include="Src\Object\Magic\WindMagic\WindMagic.h" />
+    <ClInclude Include="Src\Object\Stage\Stage.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

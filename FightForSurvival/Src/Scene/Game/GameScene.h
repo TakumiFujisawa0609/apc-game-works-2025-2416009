@@ -11,6 +11,7 @@ class RedDamageEffect;
 class SkyDome;
 class EnemyBase;
 class Dragon;
+class Stage;
 
 class GameScene : public SceneBase
 {
@@ -61,6 +62,9 @@ private:
 
 	// スカイドーム
 	SkyDome* skydome_;
+
+	// ステージ
+	Stage* stage_;
 
 	// ポーズモード確認用
 	bool nowPause_;
