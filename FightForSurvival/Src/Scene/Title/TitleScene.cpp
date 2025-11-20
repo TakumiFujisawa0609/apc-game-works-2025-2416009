@@ -168,6 +168,7 @@ void TitleScene::Release(void)
 
 	// UI‚Ì•`‰æ
 	uiMgr->Delete();
+	texMgr->DeleteAll();
 
 	delete uiMgr;
 	delete texMgr;

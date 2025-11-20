@@ -295,7 +295,7 @@ void Player::CollisionStage(VECTOR pos)
 void Player::CollisionStage(float posY)
 {
 	// è’ìÀÇµÇΩÇÁéwíËç¿ïWÇ…âüÇµñﬂÇ∑
-	player_.pos_.y = posY;
+	player_.pos_.y = posY + (player_.collisionRadius_ - COLLISION_OFFSET_UNDER);
 
 	player_.gravity_ = 0.0f;
 	player_.isJump_ = false;

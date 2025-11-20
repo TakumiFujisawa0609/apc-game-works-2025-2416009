@@ -54,7 +54,7 @@ public:
 	static constexpr float MIN_VIEW_ANGLE = -1.5f;
 
 	// 当たり判定用カプセルのプレイヤー座標からのオフセット
-	static constexpr float COLLISION_OFFSET_TOP = 60.0f;
+	static constexpr float COLLISION_OFFSET_TOP = 50.0f;
 	static constexpr float COLLISION_OFFSET_UNDER = -50.0f;
 
 	// 視点のしきい値
