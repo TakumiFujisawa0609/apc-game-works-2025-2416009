@@ -468,7 +468,7 @@ void Dragon::RushStartPosition(void)
 	MoveToDestination(rushStartPos_,enemy_.moveSpeed_);
 
 	// 攻撃開始範囲に入っていたら
-	if (CollisionUtility::IsCollidingSphereAndPos(rushStartPos_, COLLISION_RADIUS,GetEnemy().pos_))
+	if (CollisionUtility::IsCollidingSphereAndPos(rushStartPos_, RUSH_POINT_RANGE,GetEnemy().pos_))
 	{
 		// ステートを変更する
 		rushStep_ = RUSH_STEP::END_POSITION;
@@ -491,7 +491,7 @@ void Dragon::RushEndPosition(void)
 	MoveToDestination(rushEndPos_, rushSpeed_);
 
 	// 攻撃終了範囲に入っていたら
-	if (CollisionUtility::IsCollidingSphereAndPos(rushEndPos_, COLLISION_RADIUS, GetEnemy().pos_))
+	if (CollisionUtility::IsCollidingSphereAndPos(rushEndPos_, RUSH_POINT_RANGE, GetEnemy().pos_))
 	{
 		// ステートを帰宅に変更する
 		rushStep_ = RUSH_STEP::RETURN_POSITON;

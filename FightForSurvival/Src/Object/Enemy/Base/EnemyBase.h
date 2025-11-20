@@ -73,6 +73,9 @@ public:
 	// 攻撃待ち時間のセットする
 	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
+	// 衝突判定
+	void CollisionStage(VECTOR pos);
+	void CollisionStage(float posY);
 	// 押し出し処理
 	void Extrusion(VECTOR overlap);
 

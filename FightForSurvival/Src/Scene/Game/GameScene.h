@@ -100,6 +100,9 @@ private:
 	// スポナーとプレイヤーの攻撃の当たり判定
 	void SpawnerAndAttackCollision(void);
 
+	// ステージとプレイヤーの当たり判定
+	void StageAndPlayerCollision(void);
+
 	// ゲームクリア・ゲームオーバー遷移条件
 	void IsClear(void);
 	void IsOver(void);

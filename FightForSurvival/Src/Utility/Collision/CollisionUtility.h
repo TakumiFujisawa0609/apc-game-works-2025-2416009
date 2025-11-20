@@ -25,6 +25,12 @@ namespace CollisionUtility
 	// 押し出し判定(押し出し量を渡してくれる)
 	VECTOR ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR pos2, float collRad2);
 
+	// ラインの当たり判定
+	bool CollisionLine(VECTOR startPos, VECTOR endPos, int modelId, VECTOR& movePos);
+
+	// カプセルの当たり判定
+	VECTOR CoolisionCapsule(VECTOR topPos, VECTOR downPos, float rad, int modelId);
+
 #pragma endregion
 
 #pragma region 2D

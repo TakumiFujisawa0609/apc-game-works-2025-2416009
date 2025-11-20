@@ -59,6 +59,12 @@ void Player::Init(void)
 
 	player_.isDamaged_ = false;
 
+	// ジャンプ判定の初期化
+	player_.isJump_ = false;
+
+	// ジャンプ力の初期化
+	player_.gravity_ = 0.0f;
+
 	// 衝突判定用半径
 	player_.collisionRadius_ = COLLISION_RADIUS;
 
@@ -120,6 +126,9 @@ void Player::Update(void)
 
 	// プレイヤーの攻撃の種類を変更する
 	ChangeAttackType();
+
+	// 重力処理
+	Gravity();
 }
 
 void Player::Draw(void)
@@ -277,6 +286,20 @@ void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 	upgradeType_ = PLAYER_UPGRADE::NON;
 }
 
+void Player::CollisionStage(VECTOR pos)
+{
+	// 衝突したら指定座標に押し戻す
+	player_.pos_ = VAdd(player_.pos_, pos);
+}
+
+void Player::CollisionStage(float posY)
+{
+	// 衝突したら指定座標に押し戻す
+	player_.pos_.y = posY;
+
+	player_.gravity_ = 0.0f;
+	player_.isJump_ = false;
+}
 
 void Player::ProcessMove(void)
 {
@@ -615,4 +638,22 @@ void Player::ChangeAttackType(void)
 		changeMagicInterval_ = CHANGE_MAGIC_INTERVAL;
 	}
 
+}
+
+void Player::Gravity(void)
+{
+	// 重力を増やす
+	player_.gravity_ += GRAVITATION;
+
+	// 重力が最大値を超えないようにする
+	if (player_.gravity_ <= MAX_GRAVITATION)
+	{
+		player_.gravity_ = MAX_GRAVITATION;
+	}
+
+	// Y軸移動量を計算
+	float movePowY = player_.gravity_ * player_.moveSpeed_;
+
+	// 重力をプレイヤー座標に反映する
+	player_.pos_.y += movePowY;
 }

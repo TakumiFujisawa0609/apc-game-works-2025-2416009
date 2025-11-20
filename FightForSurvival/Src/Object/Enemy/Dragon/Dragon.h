@@ -76,10 +76,12 @@ public:
 	// 前方攻撃確定アニメーションフレーム数
 	static constexpr int FORWARD_CONFIRM_FRAME = 30;
 
-	// 突撃攻撃時の速度
+	// 突進時の速度
 	static constexpr float RUSH_SPEED = 60.0f;
-	// 突進の広さ
-	static constexpr float RUSH_RANGE = 2500.0f;
+	// 突進開始・終了時の当たり判定の範囲
+	static constexpr float RUSH_POINT_RANGE = 300.0f;
+	// 突進開始位置の広さ
+	static constexpr float RUSH_RANGE = 3000.0f;
 	// ランダム用確率数値(突撃攻撃座標)
 	static constexpr int POS_1_RANGE = 2500;
 	static constexpr int POS_2_RANGE = 5000;

@@ -23,10 +23,10 @@ public:
 	static constexpr VECTOR SCALE = { 0.5f, 0.5f, 0.5f };
 
 	// 初期位置
-	static constexpr VECTOR DEFAULT_POS = { 0.0f, 80.0f, 0.0f };
+	static constexpr VECTOR DEFAULT_POS = { 0.0f, 100.0f, 0.0f };
 
-	// プレイヤーと杖の相対座標
-	static constexpr float RELATIVE_POS_CAMERA = 70.0f;
+	// プレイヤーとカメラの相対座標
+	static constexpr float RELATIVE_POS_CAMERA = 90.0f;
 
 	// 移動速度
 	static constexpr float DEFAULT_MOVE_SPEED = 7.0f;
@@ -54,7 +54,7 @@ public:
 	static constexpr float MIN_VIEW_ANGLE = -1.5f;
 
 	// 当たり判定用カプセルのプレイヤー座標からのオフセット
-	static constexpr float COLLISION_OFFSET_TOP = 50.0f;
+	static constexpr float COLLISION_OFFSET_TOP = 60.0f;
 	static constexpr float COLLISION_OFFSET_UNDER = -50.0f;
 
 	// 視点のしきい値
@@ -71,6 +71,11 @@ public:
 
 	// リロードする時間
 	static constexpr float CHANGE_MAGIC_INTERVAL = 7.0f;
+
+	// 重力
+	static constexpr float GRAVITATION = -0.3f;
+	// 最大重力
+	static constexpr float MAX_GRAVITATION = -9.8f;
 
 	// コンストラクタ
 	Player(void);
@@ -111,6 +116,10 @@ public:
 
 	// プレイヤーの能力を上げる
 	void Upgrade(PLAYER_UPGRADE type, float upNum);
+
+	// 衝突判定
+	void CollisionStage(VECTOR pos);
+	void CollisionStage(float posY);
 
 private:
 
@@ -174,8 +183,12 @@ private:
 	// MP回復条件
 	bool StartHealMpTrg(void);
 
+	// 感度取得処理
 	void Sensitivity(void);
 
 	// プレイヤーの攻撃の種類を切り替える
 	void ChangeAttackType(void);
+
+	// 重力処理
+	void Gravity(void);
 };

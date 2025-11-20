@@ -38,6 +38,12 @@ struct Unit
 	// ダメージを受けたか true = 受けた / false = 受けてない
 	bool isDamaged_;
 
+	// ジャンプ判定(true / ジャンプ中、false / ジャンプ中ではない)
+	bool isJump_;
+
+	// 実際にかかっている重力
+	float gravity_;
+
 	// 衝突判定用半径
 	float collisionRadius_;
 	float collisionRadiusHead_;

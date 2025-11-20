@@ -179,6 +179,69 @@ VECTOR CollisionUtility::ExtrusionCollision(VECTOR pos1, float collRad1, VECTOR 
 	return pushPow;
 }
 
+bool CollisionUtility::CollisionLine(VECTOR startPos, VECTOR endPos, int modelId, VECTOR& movePos)
+{
+	// 線分とモデルの衝突判定
+	MV1_COLL_RESULT_POLY res =
+		MV1CollCheck_Line(modelId, -1, startPos, endPos);
+
+	// モデルと衝突しているか？
+	if (res.HitFlag)
+	{
+		// 移動量に当たった座標入れる
+		movePos = res.HitPosition;
+
+		// 当たったことを返す
+		return true;
+	}
+
+	// 当たっていないことを返す
+	return false;
+}
+
+VECTOR CollisionUtility::CoolisionCapsule(VECTOR topPos, VECTOR downPos, float rad, int modelId)
+{
+	// 移動量
+	VECTOR movePos = VGet(0.0f, 0.0f, 0.0f);
+
+	// カプセルとの当たり判定
+	MV1_COLL_RESULT_POLY_DIM hits = MV1CollCheck_Capsule(modelId, -1, topPos, downPos, rad);
+
+	// 衝突したポリゴンの数分の検索
+	for (int i = 0; i < hits.HitNum; i++)
+	{
+		// ポリゴン1枚に分解
+		MV1_COLL_RESULT_POLY hit = hits.Dim[i];
+
+		// ポリゴン検索を制限(全てすると重いため)
+		for (int tryCnt = 0; tryCnt < 20; tryCnt++)
+		{
+			// 最初の衝突判定で検出した衝突ポリゴン1枚と衝突判定を取る
+			int pHit = HitCheck_Capsule_Triangle(topPos, downPos, rad, hit.Position[0], hit.Position[1], hit.Position[2]);
+
+			// カプセルとポリゴンが当たっていた
+			if (pHit)
+			{
+				// 当たっていたので座標をポリゴンの法線方向に移動させる
+				movePos = VAdd(movePos, VScale(hit.Normal, 1.0f));
+
+				// カプセルの座標も移動させる
+				topPos = VAdd(topPos, VScale(hit.Normal, 1.0f));
+				downPos = VAdd(downPos, VScale(hit.Normal, 1.0f));
+
+				// 複数当たっている可能性があるので再検索
+				continue;
+			}
+		}
+	}
+
+	// 検出した地面ポリゴン情報の後始末
+	MV1CollResultPolyDimTerminate(hits);
+
+	// 移動量を返す
+	return movePos;
+}
+
 bool CollisionUtility::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
 {
 	if (pos1.x + wid1 > pos2.x &&

@@ -6,7 +6,7 @@ class Stage
 public:
 
 	// ƒ‚ƒfƒ‹‚Ì‘å‚«‚³
-	static constexpr VECTOR SCALE = { 1.0f, 1.0f, 1.0f };
+	static constexpr VECTOR SCALE = { 0.8f, 0.8f, 0.8f };
 
 	// ƒ‚ƒfƒ‹‚ÌŒü‚«
 	static constexpr VECTOR ROTATE = { 0.0f, 0.0f, 0.0f };
@@ -22,6 +22,8 @@ public:
 	void Update(void);
 	void Draw(void);
 	void Release(void);
+
+	int GetModelId(void)const { return modelId_; }
 
 private:
 

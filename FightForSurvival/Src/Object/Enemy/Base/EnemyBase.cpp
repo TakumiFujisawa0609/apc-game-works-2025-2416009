@@ -420,6 +420,23 @@ bool EnemyBase::SearchAttackRange(void)
 	return CollisionUtility::IsCollidingSphereCapsule(attack_.rangePos_,attack_.range_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }
 
+void EnemyBase::CollisionStage(VECTOR pos)
+{
+	// 衝突したら指定座標に押し戻す
+	enemy_.pos_ = VAdd(enemy_.pos_, pos);
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+}
+
+void EnemyBase::CollisionStage(float posY)
+{
+	// 衝突したら指定座標に押し戻す
+	enemy_.pos_.y = posY;
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+
+	//enemy_.jumpPow_ = 0.0f;
+	//enemy_.isJump_ = false;
+}
+
 void EnemyBase::Extrusion(VECTOR overlap)
 {
 	// 押し出しを行う

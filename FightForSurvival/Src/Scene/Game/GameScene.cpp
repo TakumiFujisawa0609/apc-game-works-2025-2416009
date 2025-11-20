@@ -371,6 +371,8 @@ void GameScene::Collisions(void)
 	EnemiesExtrusionCollision();
 	// スポナーとプレイヤーの攻撃の当たり判定
 	SpawnerAndAttackCollision();
+	// ステージとプレイヤーの当たり判定
+	StageAndPlayerCollision();
 }
 
 void GameScene::MagicCollision(void)
@@ -806,6 +808,61 @@ void GameScene::SpawnerAndAttackCollision(void)
 			}
 		}
 	}
+}
+
+void GameScene::StageAndPlayerCollision(void)
+{
+	// カプセル上側の座標
+	VECTOR capsuleTopPos = player_->GetCollisionPosTop();
+
+	// カプセル下側の座標
+	VECTOR capsuleDownPos = player_->GetCollisionPosUnder();
+	capsuleDownPos.y += 20.0f;
+
+	// 当たり判定半径
+	float rad = player_->GetPlayer().collisionRadius_;
+
+#pragma region CapsuleCollision
+
+	// ステージとの当たり判定を行う(カプセル)
+	VECTOR movePos = CollisionUtility::CoolisionCapsule(
+		capsuleTopPos,
+		capsuleDownPos,
+		rad,
+		stage_->GetModelId());
+
+	// X,Z軸のみの押し出しを行う
+	movePos.y = 0.0f;
+	player_->CollisionStage(movePos);
+
+#pragma endregion
+
+#pragma region LineCollision
+
+	// 移動量を初期化
+	movePos = VGet(0.0f, 0.0f, 0.0f);
+
+	// 線分上側の座標
+	VECTOR lineTopPos = player_->GetCollisionPosTop();
+	lineTopPos.y -= 20.0f;
+
+	// 線分下側の座標
+	VECTOR lineDownPos = player_->GetCollisionPosUnder();
+	lineDownPos.y -= 100.0f;
+
+	// ステージとの当たり判定を行う(ライン)
+	if (CollisionUtility::CollisionLine(
+		lineTopPos,
+		lineDownPos,
+		stage_->GetModelId(), movePos))
+	{
+		// Y軸のみの押し出しを行う
+		player_->CollisionStage(movePos.y);
+	}
+
+
+#pragma endregion
+
 }
 
 void GameScene::IsClear(void)
