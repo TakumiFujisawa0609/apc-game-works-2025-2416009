@@ -201,6 +201,13 @@ void Dragon::CollisionStage(float posY)
 {
 	// 衝突したら指定座標に押し戻す
 	enemy_.pos_.y = posY;
+
+	if (rushStep_ == RUSH_STEP::END_POSITION)
+	{
+		// ラッシュ時には速度が早すぎて押し出し量が少ないため、無理やり上に押し出す
+		enemy_.pos_.y += 30.0f;
+	}
+
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 
 	enemy_.gravity_ = 0.0f;
@@ -293,12 +300,12 @@ void Dragon::AttackSelect(Dragon& dragon)
 	dragon.LookPlayer();
 
 	// ランダムで決めた攻撃内容を入れる
-	//int attackRand = GetRand(RANDOM_NUM);
+	/*int attackRand = GetRand(RANDOM_NUM);
 
-	//if (attackRand >= 0 && attackRand <= RANGE)
-	//{
-	//	// 範囲攻撃
-	//	dragon.ChangeAttackState(RANGE_ATTACK);
+	if (attackRand >= 0 && attackRand <= RANGE)
+	{*/
+		// 範囲攻撃
+		dragon.ChangeAttackState(RANGE_ATTACK);
 	//}
 	//else if (attackRand > RANGE && attackRand <= FORWARD)
 	//{
@@ -307,8 +314,8 @@ void Dragon::AttackSelect(Dragon& dragon)
 	//}
 	//else if (attackRand > FORWARD && attackRand <= RUSH)
 	//{
-		// 突進攻撃
-		dragon.ChangeAttackState(RUSH_ATTACK);
+	//	// 突進攻撃
+	//	dragon.ChangeAttackState(RUSH_ATTACK);
 	//}
 }
 

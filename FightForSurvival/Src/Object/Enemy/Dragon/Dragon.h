@@ -63,7 +63,7 @@ public:
 	static constexpr int RUSH = 10000;
 
 	// 魔法の位置の相対座標(ローカル)
-	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,280.0f,-150.0f };
+	static constexpr VECTOR RELATIVE_MAGIC_POS = { 0.0f,100.0f,-150.0f };
 	// 範囲魔法時の魔法の数
 	static constexpr int MAGIC_NUM = 12;
 
@@ -77,7 +77,7 @@ public:
 	static constexpr int FORWARD_CONFIRM_FRAME = 30;
 
 	// 突進時の速度
-	static constexpr float RUSH_SPEED = 6.0f;
+	static constexpr float RUSH_SPEED = 60.0f;
 	// 突進開始・終了時の当たり判定の範囲
 	static constexpr float RUSH_POINT_RANGE = 300.0f;
 	// 突進開始位置の広さ
