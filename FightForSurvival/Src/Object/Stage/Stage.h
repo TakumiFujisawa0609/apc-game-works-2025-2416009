@@ -24,10 +24,12 @@ public:
 	void Release(void);
 
 	int GetModelId(void)const { return modelId_; }
+	int GetWallModelId(void)const { return wallModelId_; }
 
 private:
 
 	int modelId_;
+	int wallModelId_;
 
 	VECTOR scale_;
 	VECTOR rotate_;

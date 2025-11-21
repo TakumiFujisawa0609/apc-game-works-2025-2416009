@@ -125,7 +125,7 @@ void Dragon::Draw(void)
 		pos_3 = VAdd(pos_0, VScale(right, VIEW_RANGE));
 
 		// 視野の描画
-		pos_0.y = pos_1.y = pos_2.y = pos_3.y = -100.0f;
+		pos_0.y = pos_1.y = pos_2.y = pos_3.y = -50.0f;
 
 		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 125);
 
@@ -188,6 +188,23 @@ void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
 	ChangeAttackStateInit();
 	// アニメーション設定
 	PlayAttackAnim();
+}
+
+void Dragon::CollisionStage(VECTOR pos)
+{
+	// 衝突したら指定座標に押し戻す
+	enemy_.pos_ = VAdd(enemy_.pos_, pos);
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+}
+
+void Dragon::CollisionStage(float posY)
+{
+	// 衝突したら指定座標に押し戻す
+	enemy_.pos_.y = posY;
+	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
+
+	enemy_.gravity_ = 0.0f;
+	enemy_.isJump_ = false;
 }
 
 void Dragon::AddFrames(void)
@@ -276,23 +293,23 @@ void Dragon::AttackSelect(Dragon& dragon)
 	dragon.LookPlayer();
 
 	// ランダムで決めた攻撃内容を入れる
-	int attackRand = GetRand(RANDOM_NUM);
+	//int attackRand = GetRand(RANDOM_NUM);
 
-	if (attackRand >= 0 && attackRand <= RANGE)
-	{
-		// 範囲攻撃
-		dragon.ChangeAttackState(RANGE_ATTACK);
-	}
-	else if (attackRand > RANGE && attackRand <= FORWARD)
-	{
-		// 前方攻撃
-		dragon.ChangeAttackState(FORWARD_ATTACK);
-	}
-	else if (attackRand > FORWARD && attackRand <= RUSH)
-	{
+	//if (attackRand >= 0 && attackRand <= RANGE)
+	//{
+	//	// 範囲攻撃
+	//	dragon.ChangeAttackState(RANGE_ATTACK);
+	//}
+	//else if (attackRand > RANGE && attackRand <= FORWARD)
+	//{
+	//	// 前方攻撃
+	//	dragon.ChangeAttackState(FORWARD_ATTACK);
+	//}
+	//else if (attackRand > FORWARD && attackRand <= RUSH)
+	//{
 		// 突進攻撃
 		dragon.ChangeAttackState(RUSH_ATTACK);
-	}
+	//}
 }
 
 void Dragon::RangeAttack(Dragon& dragon)
@@ -540,17 +557,16 @@ void Dragon::MoveToDestination(VECTOR destination, float moveSpeed)
 	vec.z = destination.z - enemy_.pos_.z;
 
 	// ベクトルの正規化で単位ベクトル(方向)を取得する
-	float length = sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	float length = sqrtf(vec.x * vec.x + vec.z * vec.z);
 
 	if (length == 0.0f)
 	{
-		vec.x = vec.z = vec.y = 0.0f;
+		vec.x = vec.z = 0.0f;
 		return;
 	}
 
 	// 大きさで割って単位ベクトルにする
 	enemy_.dir_.x = vec.x / length;
-	enemy_.dir_.y = vec.y / length;
 	enemy_.dir_.z = vec.z / length;
 
 	// 方向から角度を出す

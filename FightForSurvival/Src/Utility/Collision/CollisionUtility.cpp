@@ -137,7 +137,7 @@ bool CollisionUtility::IsCollidingSphereAndPos(VECTOR sphere1Pos, float sphere1R
 {
 	// 中心点間の距離の2乗を計算
 	VECTOR dis = VSub(pos, sphere1Pos);
-	float distance = dis.x * dis.x + dis.y * dis.y + dis.z * dis.z;
+	float distance = dis.x * dis.x + dis.z * dis.z;
 
 	// 距離の2乗が半径の合計の2乗より小さいか判定
 	return (distance < sphere1Rad * sphere1Rad);

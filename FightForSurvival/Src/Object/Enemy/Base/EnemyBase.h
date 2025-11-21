@@ -21,6 +21,11 @@ public:
 	// 座標更新のタイミング(5フレームごとに1回)
 	static constexpr int COLLISION_UPDATE_INTERVAL = 5;
 
+	// 重力
+	static constexpr float GRAVITATION = -0.3f;
+	// 最大重力
+	static constexpr float MAX_GRAVITATION = -9.8f;
+
 	// コンストラクタ
 	EnemyBase(ENEMY_TYPE type, int baseModelId, Player* player);
 
@@ -74,8 +79,8 @@ public:
 	void SetAttackCooldown(float cooldown) { attack_.cooldown_ = cooldown; }
 
 	// 衝突判定
-	void CollisionStage(VECTOR pos);
-	void CollisionStage(float posY);
+	virtual void CollisionStage(VECTOR pos);
+	virtual void CollisionStage(float posY);
 	// 押し出し処理
 	void Extrusion(VECTOR overlap);
 
@@ -150,5 +155,7 @@ protected:
 	// ステート別アニメーション再生
 	virtual void PlayAnim(void);
 
+	// 重力処理
+	void Gravity(void);
 };
 

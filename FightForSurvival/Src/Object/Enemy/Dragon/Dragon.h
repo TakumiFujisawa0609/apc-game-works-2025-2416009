@@ -77,11 +77,11 @@ public:
 	static constexpr int FORWARD_CONFIRM_FRAME = 30;
 
 	// 突進時の速度
-	static constexpr float RUSH_SPEED = 60.0f;
+	static constexpr float RUSH_SPEED = 6.0f;
 	// 突進開始・終了時の当たり判定の範囲
 	static constexpr float RUSH_POINT_RANGE = 300.0f;
 	// 突進開始位置の広さ
-	static constexpr float RUSH_RANGE = 3000.0f;
+	static constexpr float RUSH_RANGE = 2000.0f;
 	// ランダム用確率数値(突撃攻撃座標)
 	static constexpr int POS_1_RANGE = 2500;
 	static constexpr int POS_2_RANGE = 5000;
@@ -123,6 +123,10 @@ public:
 	void ChangeAttackState(DRAGON_ATTACK_STATE state);
 
 	DRAGON_ATTACK_STATE GetAttackState(void)const { return attackState_; }
+
+	// 衝突判定
+	void CollisionStage(VECTOR pos)override;
+	void CollisionStage(float posY)override;
 
 protected:
 

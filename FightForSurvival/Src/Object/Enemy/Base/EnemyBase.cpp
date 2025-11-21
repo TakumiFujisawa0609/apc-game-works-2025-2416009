@@ -79,6 +79,12 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 
 	// 座標更新のタイミング
 	updateCollPosCounter_ = 0;
+
+	// ジャンプ判定の初期化
+	enemy_.isJump_ = false;
+
+	// ジャンプ力の初期化
+	enemy_.gravity_ = 0.0f;
 }
 
 void EnemyBase::Update(void)
@@ -123,6 +129,8 @@ void EnemyBase::Update(void)
 		updateCollPosCounter_ = 0;
 	}
 
+	// 重力処理
+	Gravity();
 }
 
 void EnemyBase::Draw(void)
@@ -433,8 +441,8 @@ void EnemyBase::CollisionStage(float posY)
 	enemy_.pos_.y = posY;
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 
-	//enemy_.jumpPow_ = 0.0f;
-	//enemy_.isJump_ = false;
+	enemy_.gravity_ = 0.0f;
+	enemy_.isJump_ = false;
 }
 
 void EnemyBase::Extrusion(VECTOR overlap)
@@ -514,6 +522,21 @@ void EnemyBase::PlayAnim(void)
 		break;
 	}
 
+}
+
+void EnemyBase::Gravity(void)
+{
+	// 重力を増やす
+	enemy_.gravity_ += GRAVITATION;
+
+	// 重力が最大値を超えないようにする
+	if (enemy_.gravity_ <= MAX_GRAVITATION)
+	{
+		enemy_.gravity_ = MAX_GRAVITATION;
+	}
+
+	// 重力を敵座標に反映する
+	enemy_.pos_.y += enemy_.gravity_;
 }
 
 void EnemyBase::CreateMagicForward(void)

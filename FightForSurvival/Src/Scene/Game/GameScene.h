@@ -103,6 +103,9 @@ private:
 	// ステージとプレイヤーの当たり判定
 	void StageAndPlayerCollision(void);
 
+	// ステージと敵の当たり判定
+	void StageAndEnemiesCollision(void);
+
 	// ゲームクリア・ゲームオーバー遷移条件
 	void IsClear(void);
 	void IsOver(void);
