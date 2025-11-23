@@ -5,18 +5,19 @@
 
 // クラスの前方宣言
 class TextureManager;
+class Player;
 
 // ベースを継承
-class Bar : public UIBase
+class StaminaBar : public UIBase
 {
 public:
 
 	// コンストラクタ
-	Bar(const UIResourceInfo& info, TextureManager* texMgr);
-	~Bar();		// デストラクタ
+	StaminaBar(const UIResourceInfo& info, TextureManager* texMgr);
+	~StaminaBar();		// デストラクタ
 
 	// 情報のアドレスをセット
-	void SetValue(int* currentNum, int* maxNum);
+	void SetPlayer(Player* player);
 
 	void Update(void) override;		// 更新
 	void Draw(void) override;		// 描画
@@ -30,6 +31,5 @@ protected:
 	int barHandle_;			// 本体
 	int frameHandle_;		// フレーム
 
-	int* currentNum_;	// 現在の数値
-	int* maxNum_;		// 最大の数値
+	Player* player_;
 };

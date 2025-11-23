@@ -35,7 +35,7 @@
     <ClCompile Include="Src\Object\Player\Upgrade\UpgradeManager.cpp" />
     <ClCompile Include="Src\Object\SkyDome\SkyDome.cpp" />
     <ClCompile Include="Src\UI\Factory\UIFactory.cpp" />
-    <ClCompile Include="Src\UI\Object\Bar\Bar.cpp" />
+    <ClCompile Include="Src\UI\Object\Bar\StaminaBar.cpp" />
     <ClCompile Include="Src\UI\Object\Bar\HPBar.cpp" />
     <ClCompile Include="Src\UI\Object\Button\Button.cpp" />
     <ClCompile Include="Src\UI\Object\Sprite\Sprite.cpp" />
@@ -99,7 +99,7 @@
     <ClInclude Include="Src\Object\Player\Upgrade\UpgradeManager.h" />
     <ClInclude Include="Src\Object\SkyDome\SkyDome.h" />
     <ClInclude Include="Src\UI\Factory\UIFactory.h" />
-    <ClInclude Include="Src\UI\Object\Bar\Bar.h" />
+    <ClInclude Include="Src\UI\Object\Bar\StaminaBar.h" />
     <ClInclude Include="Src\UI\Object\Bar\HPBar.h" />
     <ClInclude Include="Src\UI\Object\Button\Button.h" />
     <ClInclude Include="Src\UI\Object\Sprite\Sprite.h" />

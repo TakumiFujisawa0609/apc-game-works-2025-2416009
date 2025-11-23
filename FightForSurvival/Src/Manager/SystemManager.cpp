@@ -45,6 +45,7 @@ void SystemManager::Destroy()
 void SystemManager::ResetGame()
 {
 	score_ = 0; // ƒXƒRƒA‚ğ0‚Å‰Šú‰»
+	typeMagic_ = TYPE_MAGIC::FIRE_MAGIC;
 }
 
 SystemManager::SystemManager(void)

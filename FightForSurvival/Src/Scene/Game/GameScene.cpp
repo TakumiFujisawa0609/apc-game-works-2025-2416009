@@ -31,6 +31,8 @@
 #include "../../UI/UIManager.h"
 #include "../../UI/TextrueManager/TextureManager.h"
 #include "../../UI/Object/MagicStatus/MagicStatus.h"
+#include "../../UI/Object/Bar/HPBar.h"
+#include "../../UI/Object/Bar/StaminaBar.h"
 
 GameScene::GameScene(void)
 {
@@ -112,9 +114,19 @@ void GameScene::Load(void)
 	// ダウンキャストして Bar固有の関数を呼べるようにする
 	MagicStatus* magic = dynamic_cast<MagicStatus*>(magicStatus);
 	magic->SetPlayer(player_);
-	//magic->SetMagicKind(player_->());
 	uiMgr->AddUI(magic);
 
+	// ダウンキャストして Bar固有の関数を呼べるようにする
+	UIBase* hBar = UIFactory::GetInstance()->CreateUI(UI_KIND::HP_BAR, texMgr);
+	HPBar* hp = dynamic_cast<HPBar*>(hBar);
+	hp->SetPlayer(player_);
+	uiMgr->AddUI(hp);
+
+	// ダウンキャストして Bar固有の関数を呼べるようにする
+	UIBase* sBar = UIFactory::GetInstance()->CreateUI(UI_KIND::STAMINA_BAR, texMgr);
+	StaminaBar* stamina = dynamic_cast<StaminaBar*>(sBar);
+	stamina->SetPlayer(player_);
+	uiMgr->AddUI(stamina);
 }
 
 void GameScene::Init(void)
@@ -605,7 +617,7 @@ void GameScene::ZombieAttackCollision(EnemyBase* enemy)
 
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
-	float plaRad = player_->GetPlayer().collisionRadius_;
+	float plaRad = player_->GetPlayerStatus().collisionRadius_;
 
 	// プレイヤーと敵の攻撃の当たり判定
 	if (CollisionUtility::IsCollidingSphereCapsule(enePos, eneHandRad, plaPosTop, plaPosUnder, plaRad))
@@ -652,7 +664,7 @@ void GameScene::EnemyMagicCollision(void)
 
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
-	float plaRad = player_->GetPlayer().collisionRadius_;
+	float plaRad = player_->GetPlayerStatus().collisionRadius_;
 
 	// 魔法の数分回す
 	for (auto magic : magics)
@@ -724,7 +736,7 @@ void GameScene::DragonRushAttackCollision(EnemyBase* enemy)
 
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
-	float plaRad = player_->GetPlayer().collisionRadius_;
+	float plaRad = player_->GetPlayerStatus().collisionRadius_;
 
 	// プレイヤーと敵の攻撃の当たり判定
 	if (CollisionUtility::IsCollidingCapsules(enePosTop, enePosUnder, eneBodyRad, plaPosTop, plaPosUnder, plaRad))
@@ -845,10 +857,10 @@ void GameScene::StageAndPlayerCollision(void)
 	VECTOR capsuleStartPos = player_->GetCollisionPosTop();
 
 	// カプセル下側の座標
-	VECTOR capsuleEndPos = player_->GetPlayer().pos_;
+	VECTOR capsuleEndPos = player_->GetPlayerStatus().pos_;
 
 	// 当たり判定半径
-	float rad = player_->GetPlayer().collisionRadius_;
+	float rad = player_->GetPlayerStatus().collisionRadius_;
 
 #pragma region CapsuleCollision
 
@@ -879,7 +891,7 @@ void GameScene::StageAndPlayerCollision(void)
 #pragma region LineCollision
 
 	// 線分上側の座標
-	VECTOR lineStartPos = player_->GetPlayer().pos_;
+	VECTOR lineStartPos = player_->GetPlayerStatus().pos_;
 
 	// 線分下側の座標
 	VECTOR lineEndPos = player_->GetCollisionPosUnder();
@@ -1004,7 +1016,7 @@ void GameScene::IsClear(void)
 void GameScene::IsOver(void)
 {
 	// プレイヤーが死亡したら
-	if (!player_->GetPlayer().isAlive_)
+	if (!player_->GetPlayerStatus().isAlive_)
 	{
 		// ゲームオーバーに遷移
 		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);

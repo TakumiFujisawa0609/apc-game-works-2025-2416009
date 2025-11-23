@@ -2,8 +2,8 @@
 
 #include "Factory/UIFactory.h"
 #include "Object/Sprite/Sprite.h"
-#include "Object/Bar/Bar.h"
 #include "Object/Bar/HPBar.h"
+#include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
 #include "Object/MagicStatus/MagicStatus.h"
 
@@ -20,7 +20,11 @@ inline void RegisterUI(void)
 
     UIFactory::GetInstance()->Register(UI_KIND::HP_BAR,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Bar* hpBar = new HPBar(info, texMgr); return hpBar; });
+        { HPBar* hpBar = new HPBar(info, texMgr); return hpBar; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::STAMINA_BAR,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { StaminaBar* staminaBar = new StaminaBar(info, texMgr); return staminaBar; });
 
     UIFactory::GetInstance()->Register(UI_KIND::MAGIC_STATUS,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*

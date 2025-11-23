@@ -99,7 +99,8 @@ public:
 	void Release(void);
 
 	// ゲッターセッター関数
-	const Unit GetPlayer(void)const { return player_; }
+	const Unit GetPlayerStatus(void)const { return player_; }
+	const Ability GetPlayerAblity(void)const { return ability_; }
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }

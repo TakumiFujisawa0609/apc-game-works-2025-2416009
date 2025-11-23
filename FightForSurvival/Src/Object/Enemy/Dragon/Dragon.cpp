@@ -148,8 +148,8 @@ void Dragon::Release(void)
 bool Dragon::SearchAttackRange(void)
 {
 	// プレイヤーの座標
-	VECTOR plaPos = player_->GetPlayer().pos_;
-	float plaRad = player_->GetPlayer().collisionRadius_;
+	VECTOR plaPos = player_->GetPlayerStatus().pos_;
+	float plaRad = player_->GetPlayerStatus().collisionRadius_;
 
 	// エネミーの向いている方向(VNorm(正規化)を行い単位ベクトルにする)
 	VECTOR dirEnemy = VNorm(enemy_.dir_);
@@ -503,7 +503,7 @@ void Dragon::RushStartPosition(void)
 		LookPlayer();
 
 		// 突進開始時のプレイヤーの位置を基準点とし、VIEW_RANGE分だけ進んだ先を目的地とする。
-		rushEndPos_ = VAdd(player_->GetPlayer().pos_, VScale(enemy_.dir_, RUSH_RANGE));
+		rushEndPos_ = VAdd(player_->GetPlayerStatus().pos_, VScale(enemy_.dir_, RUSH_RANGE));
 		// Y軸移動は行わない
 		rushEndPos_.y = 0.0f;
 	}

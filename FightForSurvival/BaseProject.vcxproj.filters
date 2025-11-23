@@ -201,7 +201,7 @@
     <ClCompile Include="Src\UI\Factory\UIFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\UI\Object\Bar\Bar.cpp">
+    <ClCompile Include="Src\UI\Object\Bar\StaminaBar.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\UI\Object\Bar\HPBar.cpp">
@@ -398,7 +398,7 @@
     <ClInclude Include="Src\UI\Factory\UIFactory.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\UI\Object\Bar\Bar.h">
+    <ClInclude Include="Src\UI\Object\Bar\StaminaBar.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\UI\Object\Bar\HPBar.h">

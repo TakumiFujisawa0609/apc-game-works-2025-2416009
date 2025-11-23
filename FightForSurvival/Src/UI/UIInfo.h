@@ -8,6 +8,7 @@ enum class UI_KIND
     TITLE_BG,
     TITLE_BUTTON,
     HP_BAR,
+    STAMINA_BAR,
     MAGIC_STATUS,
 
     MAX

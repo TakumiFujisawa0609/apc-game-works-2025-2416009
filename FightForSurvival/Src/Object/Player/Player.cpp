@@ -159,6 +159,12 @@ void Player::Draw(void)
 		DrawString(posX - 70, posY - 60, "ポーション使用中", 0xffffff);
 	}
 
+	// 攻撃変更可能時間
+	DrawFormatString(Application::SCREEN_SIZE_X - 250, Application::SCREEN_SIZE_Y - 60,
+		0xffffff, "種類変更ができるまであと：%d秒", static_cast<int>(changeMagicInterval_));
+
+#ifdef _DEBUG
+
 	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
 		0xffffff, "攻撃可能回数：%.d　/　残りのMPポーション：%.d", magicNum_, MPPotionNum_);
 
@@ -177,12 +183,6 @@ void Player::Draw(void)
 	default:
 		break;
 	}
-	// 攻撃変更可能時間
-	DrawFormatString(Application::SCREEN_SIZE_X - 250, Application::SCREEN_SIZE_Y - 60,
-		0xffffff, "種類変更ができるまであと：%d秒", static_cast<int>(changeMagicInterval_));
-
-#ifdef _DEBUG
-
 	//// 体 デバッグ用：衝突判定用カプセル
 	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
 		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);

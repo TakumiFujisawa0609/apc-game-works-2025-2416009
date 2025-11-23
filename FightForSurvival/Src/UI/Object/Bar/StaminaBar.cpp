@@ -1,4 +1,4 @@
-#include "HPBar.h"
+#include "StaminaBar.h"
 
 #include <DxLib.h>
 #include <algorithm>
@@ -6,7 +6,7 @@
 #include "../../TextrueManager/TextureManager.h"
 #include "../../../Object/Player/Player.h"
 
-HPBar::HPBar(const UIResourceInfo& info, TextureManager* texMgr)
+StaminaBar::StaminaBar(const UIResourceInfo& info, TextureManager* texMgr)
 	:
 	barRate_(1.0f),
 	baseHandle_(-1),
@@ -25,29 +25,26 @@ HPBar::HPBar(const UIResourceInfo& info, TextureManager* texMgr)
 	frameHandle_ = texMgr->LoadTexture(info.framePath);
 }
 
-HPBar::~HPBar()
+StaminaBar::~StaminaBar()
 {
 }
 
-void HPBar::SetPlayer(Player* player)
+void StaminaBar::SetPlayer(Player* player)
 {
 	// プレイヤーセット(ポインタ)
 	player_ = player;
 }
 
-void HPBar::Update(void)
+void StaminaBar::Update(void)
 {
-	// 更新
-	float hp = player_->GetPlayerStatus().hp_;
-	float maxHp = player_->GetPlayerAblity().hpMax_;
-	barRate_ = hp / maxHp;
+	float stamina = player_->GetPlayerAblity().stamina_;
+	float maxStamina = player_->GetPlayerAblity().staminaMax_;
+	barRate_ = stamina / maxStamina;
 
 }
 
-void HPBar::Draw(void)
+void StaminaBar::Draw(void)
 {
-	// 描画
-
 	int x = x_ + (w_ / 4);
 	int y = y_ + (h_ / 4);
 

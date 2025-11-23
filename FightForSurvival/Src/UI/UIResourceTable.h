@@ -15,8 +15,13 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
     },
 
     { UI_KIND::HP_BAR,{
-        "", "Data/UI/Button/ButtonHover.png", "",
-        100, 100, 300, 200 ,1.0f}
+        "Data/Image/UI/HpBar/HpBar_0.png", "Data/Image/UI/HpBar/HpBar_1.png", "Data/Image/UI/HpBar/HpBar_2.png",
+        15, 625, 860, 108 ,0.5f}
+    },
+
+    { UI_KIND::STAMINA_BAR,{
+        "Data/Image/UI/StaminaBar/StaminaBar_0.png", "Data/Image/UI/StaminaBar/StaminaBar_1.png", "Data/Image/UI/StaminaBar/StaminaBar_2.png",
+        15, 680, 860, 68 ,0.5f}
     },
 
     { UI_KIND::MAGIC_STATUS,{

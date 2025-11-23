@@ -317,7 +317,7 @@ void EnemyBase::End(EnemyBase& enemy)
 void EnemyBase::LookPlayer(void)
 {
 	// プレイヤーの座標
-	VECTOR playerPos = player_->GetPlayer().pos_;
+	VECTOR playerPos = player_->GetPlayerStatus().pos_;
 
 	// 相手へのベクトルを計算(引き算)
 	VECTOR vec;
