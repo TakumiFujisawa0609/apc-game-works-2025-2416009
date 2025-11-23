@@ -71,12 +71,3 @@ void Button::Draw(void)
 	// ボタンの描画が各状態によって変化
 	DrawGraph(x_, y_, handle_[static_cast<int>(buttonState_)], true);
 }
-
-void Button::Delete(void)
-{
-	// ボタンを全て削除
-	for (int i = 0; i < MAX; i++)
-	{
-		handle_[i];
-	}
-}

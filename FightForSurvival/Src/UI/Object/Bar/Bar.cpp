@@ -61,12 +61,3 @@ void Bar::Draw(void)
 	// ƒtƒŒ[ƒ€‚Ì•`‰æ
 	DrawGraph(x_, y_, frameHandle_, true);
 }
-
-void Bar::Delete(void)
-{
-	// íœ
-	DeleteGraph(baseHandle_);
-	DeleteGraph(barHandle_);
-	DeleteGraph(frameHandle_);
-}
-

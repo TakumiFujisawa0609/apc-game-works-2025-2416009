@@ -166,10 +166,7 @@ void TitleScene::Release(void)
 		delete camera_;
 	}
 
-	// UI‚Ì•`‰æ
-	uiMgr->Delete();
-	texMgr->DeleteAll();
-
+	// UI‚Ì‰ð•ú
 	delete uiMgr;
 	delete texMgr;
 

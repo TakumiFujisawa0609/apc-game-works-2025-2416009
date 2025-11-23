@@ -8,6 +8,8 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
+	// ‰ğ•ú
+	DeleteAll();
 }
 
 int TextureManager::LoadTexture(const std::string& path)

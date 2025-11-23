@@ -6,6 +6,7 @@ UIManager::UIManager()
 
 UIManager::~UIManager()
 {
+	Delete();
 }
 
 void UIManager::AddUI(UIBase* ui)

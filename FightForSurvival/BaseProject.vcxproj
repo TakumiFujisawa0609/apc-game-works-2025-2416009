@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\UI\Object\MagicStatus\MagicStatus.cpp" />
     <ClCompile Include="Src\Object\Magic\DragonMagic\DragonMagic.cpp" />
     <ClCompile Include="Src\Object\Enemy\Dragon\Dragon.cpp" />
     <ClCompile Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.cpp" />
@@ -81,6 +82,7 @@
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\UI\Object\MagicStatus\MagicStatus.h" />
     <ClInclude Include="Src\Object\Magic\DragonMagic\DragonMagic.h" />
     <ClInclude Include="Src\Object\Enemy\Dragon\Dragon.h" />
     <ClInclude Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.h" />

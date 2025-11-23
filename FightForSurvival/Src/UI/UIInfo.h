@@ -8,6 +8,7 @@ enum class UI_KIND
     TITLE_BG,
     TITLE_BUTTON,
     HP_BAR,
+    MAGIC_STATUS,
 
     MAX
 };
@@ -22,4 +23,5 @@ struct UIResourceInfo
     int y;                  // yç¿ïW
     int width;              // â°ïù
     int height;             // ècïù
+    float scale;            // ëÂÇ´Ç≥
 };

@@ -30,7 +30,6 @@ public:
 
 	void Update(void) override;		// 更新
 	void Draw(void) override;		// 描画
-	void Delete(void) override;		// 削除
 
 	// ボタンの状態を返す
 	BUTTON_STATE GetButtonState(void) const { return buttonState_; }

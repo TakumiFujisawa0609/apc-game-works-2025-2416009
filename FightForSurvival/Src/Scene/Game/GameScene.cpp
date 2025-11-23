@@ -28,6 +28,10 @@
 #include "../../Utility/AsoUtility.h"
 #include "GameScene.h"
 
+#include "../../UI/UIManager.h"
+#include "../../UI/TextrueManager/TextureManager.h"
+#include "../../UI/Object/MagicStatus/MagicStatus.h"
+
 GameScene::GameScene(void)
 {
 	player_ = nullptr;
@@ -49,6 +53,9 @@ GameScene::~GameScene(void)
 
 void GameScene::Load(void)
 {
+	// UI管理の生成処理
+	uiMgr = new UIManager();
+	texMgr = new TextureManager();
 
 	// プレイヤー生成・ロード
 	player_ = new Player();
@@ -98,6 +105,16 @@ void GameScene::Load(void)
 	// アップグレードの作成
 	UpgradeManager::CreateInstance();
 	UpgradeManager::GetInstance().Load(player_);
+
+	// UIを生成
+	UIBase* magicStatus = UIFactory::GetInstance()->CreateUI(UI_KIND::MAGIC_STATUS, texMgr);
+
+	// ダウンキャストして Bar固有の関数を呼べるようにする
+	MagicStatus* magic = dynamic_cast<MagicStatus*>(magicStatus);
+	magic->SetPlayer(player_);
+	//magic->SetMagicKind(player_->());
+	uiMgr->AddUI(magic);
+
 }
 
 void GameScene::Init(void)
@@ -182,6 +199,9 @@ void GameScene::Update(void)
 			// アップグレードモードスタート条件
 			StartUpgrade();
 
+			// UIの更新
+			uiMgr->Update();
+
 			break;
 		case GameScene::STATE::UPGRADE:
 
@@ -261,6 +281,9 @@ void GameScene::Draw(void)
 	// ウェーブの描画
 	WaveManager::GetInstance().Draw();
 
+	// UIの描画
+	uiMgr->Draw();
+
 	// ポーズモードの描画
 	pause_->Draw();
 
@@ -275,6 +298,10 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
+	// UIの解放
+	delete uiMgr;
+	delete texMgr;
+
 	// アップグレードの開放
 	UpgradeManager::GetInstance().Destroy();
 

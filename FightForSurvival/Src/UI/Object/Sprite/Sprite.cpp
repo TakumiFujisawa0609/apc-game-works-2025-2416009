@@ -27,8 +27,3 @@ void Sprite::Draw(void)
 {
 	DrawGraph(x_, y_, handle_, true);
 }
-
-void Sprite::Delete(void)
-{
-	DeleteGraph(handle_);
-}

@@ -61,10 +61,10 @@ public:
 	static constexpr float THRESHOLD = 1.1f;
 
 	// 最大魔法攻撃回数
-	static constexpr float MAGIC_CAPACITY = 10;
+	static constexpr int MAGIC_CAPACITY = 10;
 
 	// MPポーション数
-	static constexpr float MP_POTION_NUM = 5;
+	static constexpr int MP_POTION_NUM = 5;
 
 	// リロードする時間
 	static constexpr float RELOAD_TIME = 2.0f;
@@ -103,6 +103,8 @@ public:
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
+	int GetMagicNum(void) { return magicNum_; }
+	int GetMagicType(void) const { return magicType_; }
 	void SetPitch(float newPitch)  { player_.angle_.x = newPitch; }
 
 	// 杖のポインター受け渡し
@@ -153,11 +155,11 @@ private:
 	PLAYER_UPGRADE upgradeType_;
 
 	// MPポーション数
-	float MPPotionNum_;
+	int MPPotionNum_;
 	// 魔法攻撃可能回数
-	float magicNum_;
+	int magicNum_;
 	// 最大魔法攻撃回数
-	float magicCapacity_;
+	int magicCapacity_;
 
 	// MP回復時間
 	float healMPTime_;

@@ -12,6 +12,8 @@ class SkyDome;
 class EnemyBase;
 class Dragon;
 class Stage;
+class UIManager;
+class TextureManager;
 
 class GameScene : public SceneBase
 {
@@ -65,6 +67,10 @@ private:
 
 	// ステージ
 	Stage* stage_;
+
+	// UI
+	UIManager* uiMgr;
+	TextureManager* texMgr;
 
 	// ポーズモード確認用
 	bool nowPause_;

@@ -18,7 +18,6 @@ public:
 
 	void Update(void) override;		// XV
 	void Draw(void) override;		// •`‰æ
-	void Delete(void) override;		// íœ
 
 private:
 	int handle_;

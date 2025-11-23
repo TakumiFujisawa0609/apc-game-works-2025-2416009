@@ -160,7 +160,7 @@ void Player::Draw(void)
 	}
 
 	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
-		0xffffff, "攻撃可能回数：%.f　/　残りのMPポーション：%.f", magicNum_, MPPotionNum_);
+		0xffffff, "攻撃可能回数：%.d　/　残りのMPポーション：%.d", magicNum_, MPPotionNum_);
 
 	// 魔法の種類
 	switch (magicType_)
@@ -245,7 +245,7 @@ void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 	case PLAYER_UPGRADE::RESTOCK_POTION:
 
 		// ポーションの補充を行う
-		MPPotionNum_ += upNum;
+		MPPotionNum_ += static_cast<int>(upNum);
 
 		break;
 	case PLAYER_UPGRADE::SPEED_UP:
