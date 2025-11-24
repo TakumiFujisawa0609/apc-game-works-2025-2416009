@@ -6,11 +6,10 @@ class WeaponBase;
 
 enum class PLAYER_UPGRADE
 {
-	NON,
 	RESTOCK_POTION,
+	HP_UP,
 	SPEED_UP,
 	STAMINA_UP,
-	HP_UP,
 	HEAL_HP,
 	MAX,
 };
@@ -104,7 +103,7 @@ public:
 	const VECTOR GetCameraPos(void) const { return cameraPos_; }
 	const VECTOR GetCollisionPosTop(void) const { return collisionPosTop_; }
 	const VECTOR GetCollisionPosUnder(void) const { return collisionPosUnder_; }
-	int GetMagicNum(void) { return magicNum_; }
+	int GetMagicNum(void)const { return magicNum_; }
 	int GetMagicType(void) const { return magicType_; }
 	void SetPitch(float newPitch)  { player_.angle_.x = newPitch; }
 

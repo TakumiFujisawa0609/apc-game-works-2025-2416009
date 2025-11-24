@@ -6,6 +6,9 @@
 #include "../Player.h"
 #include "../../../Common/Vector2/Vector2.h"
 
+class UIManager;
+class TextureManager;
+
 class Upgrade
 {
 public:
@@ -56,6 +59,16 @@ public:
 		NON,
 	};
 
+	// ボタンの状態
+	enum BUTTON_STATE
+	{
+		DEFAULE,		// 通常
+		HOVER,			// 選択状態
+		TRIGGER_DOWN,	// ボタン押下
+
+		MAX,		// 最大数
+	};
+
 	Upgrade(void);
 	~Upgrade(void);
 
@@ -65,7 +78,7 @@ public:
 	void Draw(void);
 	void Release(void);
 
-	float GetUpNum(PLAYER_UPGRADE upgradeType);
+	float GetUpNum(PLAYER_UPGRADE upgradeType)const { return upNum_[static_cast<int>(upgradeType)]; }
 	PLAYER_UPGRADE GetFinalizeUpgrade(void)const { return finalizeUpgrade_; }
 	STATE GetState(void)const { return state_; }
 
@@ -74,21 +87,13 @@ public:
 
 private:
 
-	struct UpgradeData
-	{
-		// 強化数値
-		float upNum_;
-		// 表示用の名前
-		std::string name;
-		// 説明文
-		std::string desc;
+	// 下地
+	int baseHandle_[static_cast<int>(BUTTON_STATE::MAX)];
+	// テキスト
+	int textHandle_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
-		// 画像ハンドル
-		int image_;
-	};
-
-	// 種別
-	UpgradeData upgradeData_[static_cast<int>(PLAYER_UPGRADE::MAX)];
+	// 強化数値
+	float upNum_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
 	// 選択されたアップグレードの表示座標
 	Vector2 pos_[static_cast<int>(PLACE::MAX)];
@@ -102,6 +107,7 @@ private:
 
 	STATE state_;
 	PLACE place_;
+	BUTTON_STATE buttonState_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
 	// どの能力をアップグレードするか選択を行う
 	void SelectUpgrade(void);

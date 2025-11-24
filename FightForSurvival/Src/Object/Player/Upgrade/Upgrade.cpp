@@ -11,6 +11,16 @@
 
 Upgrade::Upgrade(void)
 {
+	// 選択決定内容をNONに初期化する
+	finalizeUpgrade_ = PLAYER_UPGRADE::MAX;
+
+	state_ = STATE::NON;
+	place_ = PLACE::MAX;
+
+	for (int i = 0; i < static_cast<int>(PLAYER_UPGRADE::MAX); i++)
+	{
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+	}
 }
 
 Upgrade::~Upgrade(void)
@@ -19,6 +29,17 @@ Upgrade::~Upgrade(void)
 
 void Upgrade::Load(void)
 {
+	// ベースロード
+	baseHandle_[static_cast<int>(BUTTON_STATE::DEFAULE)] = LoadGraph("Data/Image/UI/Upgrade/Base_0.png");
+	baseHandle_[static_cast<int>(BUTTON_STATE::HOVER)] = LoadGraph("Data/Image/UI/Upgrade/Base_1.png");
+	baseHandle_[static_cast<int>(BUTTON_STATE::TRIGGER_DOWN)] = LoadGraph("Data/Image/UI/Upgrade/Base_2.png");
+
+	// テキストロード
+	textHandle_[static_cast<int>(PLAYER_UPGRADE::HP_UP)] = LoadGraph("Data/Image/UI/Upgrade/HP_UP.png");
+	textHandle_[static_cast<int>(PLAYER_UPGRADE::HEAL_HP)] = LoadGraph("Data/Image/UI/Upgrade/HP_HEAL.png");
+	textHandle_[static_cast<int>(PLAYER_UPGRADE::SPEED_UP)] = LoadGraph("Data/Image/UI/Upgrade/SPEED_UP.png");
+	textHandle_[static_cast<int>(PLAYER_UPGRADE::STAMINA_UP)] = LoadGraph("Data/Image/UI/Upgrade/STAMINA_UP.png");
+	textHandle_[static_cast<int>(PLAYER_UPGRADE::RESTOCK_POTION)] = LoadGraph("Data/Image/UI/Upgrade/POTION_RESTOCK.png");
 }
 
 void Upgrade::Init(void)
@@ -28,34 +49,22 @@ void Upgrade::Init(void)
 		switch (i)
 		{
 		case 0:
-			upgradeData_[i].upNum_ = 0.0f;
-			upgradeData_[i].name = "NON";
-			upgradeData_[i].desc = "何も強化しない";
+			upNum_[i] = 0.0f;
 			break;
 		case 1:
-			upgradeData_[i].upNum_ = RESTOCK_POTION_NUM;
-			upgradeData_[i].name = "RESTOCK_POTION";
-			upgradeData_[i].desc = "ポーションを1つ補充する";
+			upNum_[i] = RESTOCK_POTION_NUM;
 			break;
 		case 2:
-			upgradeData_[i].upNum_ = SPPED_UP_NUM;
-			upgradeData_[i].name = "SPEED_UP";
-			upgradeData_[i].desc = "移動速度を5上げる";
+			upNum_[i] = SPPED_UP_NUM;
 			break;
 		case 3:
-			upgradeData_[i].upNum_ = STAMINA_UP_NUM;
-			upgradeData_[i].name = "STAMINA_UP";
-			upgradeData_[i].desc = "スタミナの最大値を5上げる";
+			upNum_[i] = STAMINA_UP_NUM;
 			break;
 		case 4:
-			upgradeData_[i].upNum_ = HP_UP_NUM;
-			upgradeData_[i].name = "HP_UP";
-			upgradeData_[i].desc = "HPの最大値を2上げる";
+			upNum_[i] = HP_UP_NUM;
 			break;
 		case 5:
-			upgradeData_[i].upNum_ = HEAL_HP_NUM;
-			upgradeData_[i].name = "HEAL_HP";
-			upgradeData_[i].desc = "HPを2回復する";
+			upNum_[i] = HEAL_HP_NUM;
 			break;
 		default:
 			break;
@@ -72,7 +81,7 @@ void Upgrade::Init(void)
 	selectUpgrades_.reserve(static_cast<int>(PLACE::MAX));
 
 	// 選択決定内容をNONに初期化する
-	finalizeUpgrade_ = PLAYER_UPGRADE::NON;
+	finalizeUpgrade_ = PLAYER_UPGRADE::MAX;
 
 	// 座標初期化
 	int i = static_cast<int>(PLACE::TOP_LEFT);
@@ -110,6 +119,7 @@ void Upgrade::Update(void)
 	default:
 		break;
 	}
+
 }
 
 void Upgrade::Draw(void)
@@ -119,34 +129,15 @@ void Upgrade::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xa9a9a9, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	auto boxColor = 0x696969;
-	auto charColor = 0xffffff;
-
 	for (int i = 0; i < selectUpgrades_.size(); ++i)
 	{
-		boxColor = 0x696969;
-		charColor = 0xffffff;
+		DrawGraph(pos_[i].x, pos_[i].y,
+			baseHandle_[static_cast<int>(buttonState_[i])], true);
 
-		if (place_ == static_cast<PLACE>(i))
-		{
-			// 選択中の物は色を変える
-			boxColor = 0xf5f5f5;
-			charColor = 0x00ff00;
-		}
-
-		DrawBox(pos_[i].x, pos_[i].y, pos_[i].x + COL_SIZE_X, pos_[i].y + COL_SIZE_Y, boxColor, true);
-
-		// 表示名
-		auto name = (upgradeData_[static_cast<int>(selectUpgrades_[i])].name).c_str();
-		DrawString(pos_[i].x + 40, pos_[i].y + 60, name, charColor);
-
-		// 説明文
-		auto desc = (upgradeData_[static_cast<int>(selectUpgrades_[i])].desc).c_str();
-		DrawString(pos_[i].x + 40, pos_[i].y + 100, desc, charColor);
-
-		// 画像描画
-		//DrawRotaGraph(pos_[i].x, pos_[i].y, 1.0f, 0.0f, upgrades_[i].image_, true, false);
+		DrawGraph(pos_[i].x, pos_[i].y,
+			textHandle_[static_cast<int>(selectUpgrades_[i])], true);
 	}
+
 }
 
 void Upgrade::Release(void)
@@ -154,11 +145,6 @@ void Upgrade::Release(void)
 	// 使い終わったらクリア
 	allUpgrades_.clear();
 	selectUpgrades_.clear();
-}
-
-float Upgrade::GetUpNum(PLAYER_UPGRADE upgradeType)
-{
-	return upgradeData_[static_cast<int>(upgradeType)].upNum_;
 }
 
 void Upgrade::SelectUpgrade(void)
@@ -203,17 +189,7 @@ void Upgrade::ConfirmUpgrade(void)
 		PadSelect();
 	}
 
-	// 何か選択していて、確定ボタンが押されたら処理を行う
-	if (ins.Confirm() && place_ != PLACE::MAX)
-	{
-		finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
 
-		ChangeState(STATE::APPLY);
-
-		// 決定SEをながす
-		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
-
-	}
 }
 
 void Upgrade::MouseSelect(void)
@@ -223,14 +199,38 @@ void Upgrade::MouseSelect(void)
 	// 当たり判定取る
 	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
 	{
-		if(CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
+		// 全て初期化する
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+
+		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePlace(static_cast<PLACE>(i));
+
+			// 何か選択していて、確定ボタンが押されたら処理を行う
+			if(InputManager::GetInstance().ConfirmUp())
+			{
+				// 確定に移行
+				ChangeState(STATE::APPLY);
+
+				// 決定SEをながす
+				SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+
+			}
+			else if (InputManager::GetInstance().IsClickMouseLeft())
+			{
+				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
+
+				return;
+			}
+
+			buttonState_[i] = BUTTON_STATE::HOVER;
+
 			break;
 		}
 		else
 		{
 			ChangePlace(PLACE::MAX);
+			buttonState_[i] = BUTTON_STATE::DEFAULE;
 		}
 	}
 
@@ -239,6 +239,7 @@ void Upgrade::MouseSelect(void)
 		// 何も選択されていない状態から選択されたらSEを流す
 		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
 	}
+
 }
 
 void Upgrade::PadSelect(void)
@@ -246,6 +247,12 @@ void Upgrade::PadSelect(void)
 	auto& ins = InputManager::GetInstance();
 
 	auto prevPlace = place_;
+
+	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
+	{
+		// 全て初期化する
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+	}
 
 	switch (place_)
 	{
@@ -309,10 +316,24 @@ void Upgrade::PadSelect(void)
 		break;
 	}
 
+	// 見た目を選択中にする
+	buttonState_[static_cast<int>(place_)] = BUTTON_STATE::HOVER;
+
 	if (place_ != prevPlace && place_ != PLACE::MAX)
 	{
 		// 何も選択されていない状態から選択されたらSEを流す
 		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
+
+	// 何か選択していて、確定ボタンが押されたら処理を行う
+	if (ins.Confirm() && place_ != PLACE::MAX)
+	{
+		// 確定
+		ChangeState(STATE::APPLY);
+
+		// 決定SEをながす
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+
 	}
 }
 
@@ -342,7 +363,7 @@ void Upgrade::ChangeState(STATE state)
 void Upgrade::SelectInit(void)
 {
 	// 選択決定内容をNONに初期化する
-	finalizeUpgrade_ = PLAYER_UPGRADE::NON;
+	finalizeUpgrade_ = PLAYER_UPGRADE::MAX;
 
 	// マウスを表示させる
 	SetMouseDispFlag(true);

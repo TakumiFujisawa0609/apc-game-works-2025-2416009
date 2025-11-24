@@ -18,6 +18,7 @@ Button::Button(const UIResourceInfo& info, TextureManager* texMgr)
 	handle_[HOVER] = texMgr->LoadTexture(info.mainPath);
 	handle_[TRIGGER_DOWN] = texMgr->LoadTexture(info.framePath);
 	handle_[TRIGGER_UP] = texMgr->LoadTexture(info.framePath);
+	textHandle_ = texMgr->LoadTexture(info.textPath);
 }
 
 Button::~Button()
@@ -63,6 +64,7 @@ void Button::Update(void)
 	{
 		// デフォルト状態
 		buttonState_ = DEFAULE;
+
 	}
 }
 
@@ -70,4 +72,5 @@ void Button::Draw(void)
 {
 	// ボタンの描画が各状態によって変化
 	DrawGraph(x_, y_, handle_[static_cast<int>(buttonState_)], true);
+	DrawGraph(x_, y_, textHandle_, true);
 }

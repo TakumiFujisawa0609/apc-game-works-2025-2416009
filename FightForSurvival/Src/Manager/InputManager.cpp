@@ -537,6 +537,11 @@ bool InputManager::Confirm(void)
 	return FindMouse(MOUSE_INPUT_LEFT).keyTrgDown || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::A);
 }
 
+bool InputManager::ConfirmUp(void)
+{
+	return FindMouse(MOUSE_INPUT_LEFT).keyTrgUp || IsPadBtnTrgUp(JOYPAD_NO::PAD1, JOYPAD_BTN::A);
+}
+
 bool InputManager::PauseKeys(void)
 {
 	return IsTrgDown(KEY_INPUT_ESCAPE) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::START);

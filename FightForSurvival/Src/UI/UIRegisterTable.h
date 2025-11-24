@@ -5,6 +5,7 @@
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
+#include "Object/Button/UpgradeButton/UpgradeButton.h"
 #include "Object/MagicStatus/MagicStatus.h"
 
 // UI‘S‚Ä‚ð‚ ‚ç‚©‚¶‚ß“o˜^‚·‚é
@@ -29,4 +30,24 @@ inline void RegisterUI(void)
     UIFactory::GetInstance()->Register(UI_KIND::MAGIC_STATUS,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { MagicStatus* magicStatus = new MagicStatus(info, texMgr); return magicStatus; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::HP_UP,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { UpgradeButton* hpUp = new UpgradeButton(info, texMgr); return hpUp; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::HP_HEAL,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { UpgradeButton* hpHeal = new UpgradeButton(info, texMgr); return hpHeal; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::SPEED_UP,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { UpgradeButton* speedUp = new UpgradeButton(info, texMgr); return speedUp; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::STAMINA_UP,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { UpgradeButton* staminaUp = new UpgradeButton(info, texMgr); return staminaUp; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::POTION_RESTOC,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { UpgradeButton* potionRestoc = new UpgradeButton(info, texMgr); return potionRestoc; });
 }

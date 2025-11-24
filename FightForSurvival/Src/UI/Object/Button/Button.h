@@ -28,16 +28,18 @@ public:
 	// デストラクタ
 	~Button();
 
-	void Update(void) override;		// 更新
-	void Draw(void) override;		// 描画
+	virtual void Update(void) override;		// 更新
+	virtual void Draw(void) override;		// 描画
 
 	// ボタンの状態を返す
 	BUTTON_STATE GetButtonState(void) const { return buttonState_; }
+
+	void SetUIKind(UI_KIND kind) { uiKind_ = kind; }
 
 private:
 	
 	BUTTON_STATE buttonState_;		// ボタンの状態
 
 	int handle_[MAX];	// 画像ハンドル
-
+	int textHandle_;	// テキスト
 };

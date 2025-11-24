@@ -69,8 +69,8 @@ private:
 	Stage* stage_;
 
 	// UI
-	UIManager* uiMgr;
-	TextureManager* texMgr;
+	UIManager* uiMgr_;
+	TextureManager* texMgr_;
 
 	// ポーズモード確認用
 	bool nowPause_;

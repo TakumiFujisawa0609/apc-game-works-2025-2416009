@@ -17,6 +17,8 @@ public:
 	void Draw(void);	// •`‰æ
 	void Delete(void);	// íœ
 
+	std::vector<UIBase*> GetUIList(void)const { return uiList_; }
+
 private:
 	// UI‚ÌƒŠƒXƒg
 	std::vector<UIBase*> uiList_;

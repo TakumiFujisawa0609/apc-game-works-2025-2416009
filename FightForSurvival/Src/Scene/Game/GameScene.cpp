@@ -44,6 +44,13 @@ GameScene::GameScene(void)
 	redEffect_ = nullptr;
 	skydome_ = nullptr;
 	stage_ = nullptr;
+	texMgr_ = nullptr;
+	uiMgr_ = nullptr;
+
+	prevPause_ = -1;
+	nowPause_ = -1;
+
+	state_ = STATE::PLAY;
 
 	// マウスカーソルを表示しない
 	SetMouseDispFlag(false);
@@ -55,9 +62,6 @@ GameScene::~GameScene(void)
 
 void GameScene::Load(void)
 {
-	// UI管理の生成処理
-	uiMgr = new UIManager();
-	texMgr = new TextureManager();
 
 	// プレイヤー生成・ロード
 	player_ = new Player();
@@ -108,25 +112,29 @@ void GameScene::Load(void)
 	UpgradeManager::CreateInstance();
 	UpgradeManager::GetInstance().Load(player_);
 
+	// UI管理の生成処理
+	uiMgr_ = new UIManager();
+	texMgr_ = new TextureManager();
+
 	// UIを生成
-	UIBase* magicStatus = UIFactory::GetInstance()->CreateUI(UI_KIND::MAGIC_STATUS, texMgr);
+	UIBase* magicStatus = UIFactory::GetInstance()->CreateUI(UI_KIND::MAGIC_STATUS, texMgr_);
 
 	// ダウンキャストして Bar固有の関数を呼べるようにする
 	MagicStatus* magic = dynamic_cast<MagicStatus*>(magicStatus);
 	magic->SetPlayer(player_);
-	uiMgr->AddUI(magic);
+	uiMgr_->AddUI(magic);
 
 	// ダウンキャストして Bar固有の関数を呼べるようにする
-	UIBase* hBar = UIFactory::GetInstance()->CreateUI(UI_KIND::HP_BAR, texMgr);
+	UIBase* hBar = UIFactory::GetInstance()->CreateUI(UI_KIND::HP_BAR, texMgr_);
 	HPBar* hp = dynamic_cast<HPBar*>(hBar);
 	hp->SetPlayer(player_);
-	uiMgr->AddUI(hp);
+	uiMgr_->AddUI(hp);
 
 	// ダウンキャストして Bar固有の関数を呼べるようにする
-	UIBase* sBar = UIFactory::GetInstance()->CreateUI(UI_KIND::STAMINA_BAR, texMgr);
+	UIBase* sBar = UIFactory::GetInstance()->CreateUI(UI_KIND::STAMINA_BAR, texMgr_);
 	StaminaBar* stamina = dynamic_cast<StaminaBar*>(sBar);
 	stamina->SetPlayer(player_);
-	uiMgr->AddUI(stamina);
+	uiMgr_->AddUI(stamina);
 }
 
 void GameScene::Init(void)
@@ -212,7 +220,7 @@ void GameScene::Update(void)
 			StartUpgrade();
 
 			// UIの更新
-			uiMgr->Update();
+			uiMgr_->Update();
 
 			break;
 		case GameScene::STATE::UPGRADE:
@@ -294,7 +302,7 @@ void GameScene::Draw(void)
 	WaveManager::GetInstance().Draw();
 
 	// UIの描画
-	uiMgr->Draw();
+	uiMgr_->Draw();
 
 	// ポーズモードの描画
 	pause_->Draw();
@@ -311,8 +319,8 @@ void GameScene::Draw(void)
 void GameScene::Release(void)
 {
 	// UIの解放
-	delete uiMgr;
-	delete texMgr;
+	delete uiMgr_;
+	delete texMgr_;
 
 	// アップグレードの開放
 	UpgradeManager::GetInstance().Destroy();

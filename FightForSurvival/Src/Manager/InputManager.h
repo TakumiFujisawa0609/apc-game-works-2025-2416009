@@ -172,6 +172,7 @@ public:
 
 	// 確定
 	bool Confirm(void);
+	bool ConfirmUp(void);
 
 	// ポーズモード
 	bool PauseKeys(void);

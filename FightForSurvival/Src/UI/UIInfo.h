@@ -10,6 +10,11 @@ enum class UI_KIND
     HP_BAR,
     STAMINA_BAR,
     MAGIC_STATUS,
+    HP_UP,
+    HP_HEAL,
+    SPEED_UP,
+    STAMINA_UP,
+    POTION_RESTOC,
 
     MAX
 };
@@ -20,6 +25,7 @@ struct UIResourceInfo
     std::string basePath;   // 下地
     std::string mainPath;   // メイン
     std::string framePath;  // フレーム
+    std::string textPath;   // テキスト
     int x;                  // x座標
     int y;                  // y座標
     int width;              // 横幅

@@ -80,7 +80,7 @@ void Player::Init(void)
 	staminaCounter_ = 0.0f;
 
 	// アップグレードのタイプの初期化
-	upgradeType_ = PLAYER_UPGRADE::NON;
+	upgradeType_ = PLAYER_UPGRADE::MAX;
 
 	// MPとポーションの初期化
 	magicNum_ = magicCapacity_ = MAGIC_CAPACITY;
@@ -240,8 +240,6 @@ void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 	// 種類によって変更する
 	switch (upgradeType_)
 	{
-	case PLAYER_UPGRADE::NON:
-		break;
 	case PLAYER_UPGRADE::RESTOCK_POTION:
 
 		// ポーションの補充を行う
@@ -283,7 +281,7 @@ void Player::Upgrade(PLAYER_UPGRADE type, float upNum)
 	}
 
 	// 強化し終わったらNONへ戻す
-	upgradeType_ = PLAYER_UPGRADE::NON;
+	upgradeType_ = PLAYER_UPGRADE::MAX;
 }
 
 void Player::CollisionStage(VECTOR pos)
