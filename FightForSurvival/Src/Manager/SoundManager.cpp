@@ -111,7 +111,7 @@ void SoundManager::AddSound(void)
 	AddBGM(pas.c_str(),40);
 	// ゲーム
 	pas = bgmPas + "AS_1153557_爽快感のある激しい戦闘曲的オーケストラ.mp3";
-	AddBGM(pas.c_str(),20);
+	AddBGM(pas.c_str(),40);
 	// クリア
 	pas = bgmPas + "AS_22319_43秒／表彰式、クリアに合うオーケストラ.mp3";
 	AddBGM(pas.c_str(),50);

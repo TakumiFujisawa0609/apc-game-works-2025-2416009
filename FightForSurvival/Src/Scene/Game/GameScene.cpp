@@ -295,14 +295,14 @@ void GameScene::Draw(void)
 	// スコアの描画
 	score_->Draw();
 
+	// UIの描画
+	uiMgr_->Draw();
+
 	// アップグレードの描画
 	UpgradeManager::GetInstance().Draw();
 
 	// ウェーブの描画
 	WaveManager::GetInstance().Draw();
-
-	// UIの描画
-	uiMgr_->Draw();
 
 	// ポーズモードの描画
 	pause_->Draw();

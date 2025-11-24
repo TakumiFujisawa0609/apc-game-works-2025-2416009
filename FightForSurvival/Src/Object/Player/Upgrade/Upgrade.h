@@ -28,12 +28,12 @@ public:
 	static constexpr int ALPHA = 128;
 
 	// 基準座標
-	static constexpr int POS_X = 200;
-	static constexpr int POS_Y = 100;
+	static constexpr int POS_X = 300;
+	static constexpr int POS_Y = 200;
 
 	// 当たり判定を行うサイズ
-	static constexpr int COL_SIZE_X = 300;
-	static constexpr int COL_SIZE_Y = 200;
+	static constexpr int COL_SIZE_X = 256;
+	static constexpr int COL_SIZE_Y = 128;
 
 	// 画像間(余白)の大きさ
 	static constexpr int SPACE_X = COL_SIZE_X + 150;
