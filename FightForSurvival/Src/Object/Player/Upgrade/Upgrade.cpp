@@ -49,21 +49,18 @@ void Upgrade::Init(void)
 		switch (i)
 		{
 		case 0:
-			upNum_[i] = 0.0f;
-			break;
-		case 1:
 			upNum_[i] = RESTOCK_POTION_NUM;
 			break;
-		case 2:
+		case 1:
 			upNum_[i] = SPPED_UP_NUM;
 			break;
-		case 3:
+		case 2:
 			upNum_[i] = STAMINA_UP_NUM;
 			break;
-		case 4:
+		case 3:
 			upNum_[i] = HP_UP_NUM;
 			break;
-		case 5:
+		case 4:
 			upNum_[i] = HEAL_HP_NUM;
 			break;
 		default:
@@ -209,6 +206,8 @@ void Upgrade::MouseSelect(void)
 			// 何か選択していて、確定ボタンが押されたら処理を行う
 			if(InputManager::GetInstance().ConfirmUp())
 			{
+				finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
+
 				// 確定に移行
 				ChangeState(STATE::APPLY);
 
@@ -328,6 +327,8 @@ void Upgrade::PadSelect(void)
 	// 何か選択していて、確定ボタンが押されたら処理を行う
 	if (ins.Confirm() && place_ != PLACE::MAX)
 	{
+		finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
+
 		// 確定
 		ChangeState(STATE::APPLY);
 
