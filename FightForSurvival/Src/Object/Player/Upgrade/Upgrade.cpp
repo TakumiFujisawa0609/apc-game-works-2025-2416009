@@ -20,6 +20,7 @@ Upgrade::Upgrade(void)
 	for (int i = 0; i < static_cast<int>(PLAYER_UPGRADE::MAX); i++)
 	{
 		buttonState_[i] = BUTTON_STATE::DEFAULE;
+		isTrgDown_[i] = false;
 	}
 }
 
@@ -204,7 +205,7 @@ void Upgrade::MouseSelect(void)
 			ChangePlace(static_cast<PLACE>(i));
 
 			// 何か選択していて、確定ボタンが押されたら処理を行う
-			if(InputManager::GetInstance().ConfirmUp())
+			if(InputManager::GetInstance().ConfirmUp() && isTrgDown_[i])
 			{
 				finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
 
@@ -215,21 +216,26 @@ void Upgrade::MouseSelect(void)
 				SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 
 			}
-			else if (InputManager::GetInstance().IsClickMouseLeft())
+			else if (InputManager::GetInstance().Confirm() && !isTrgDown_[i])
 			{
-				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
-
-				return;
+				isTrgDown_[i] = true;
 			}
 
-			buttonState_[i] = BUTTON_STATE::HOVER;
+			if (isTrgDown_[i])
+			{
+				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
+			}
+			else
+			{
+				buttonState_[i] = BUTTON_STATE::HOVER;
+			}
 
 			break;
 		}
 		else
 		{
 			ChangePlace(PLACE::MAX);
-			buttonState_[i] = BUTTON_STATE::DEFAULE;
+			isTrgDown_[i] = false;
 		}
 	}
 

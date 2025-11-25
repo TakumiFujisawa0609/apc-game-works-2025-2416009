@@ -108,6 +108,8 @@ private:
 	STATE state_;
 	PLACE place_;
 	BUTTON_STATE buttonState_[static_cast<int>(PLAYER_UPGRADE::MAX)];
+	// 今押されたか
+	bool isTrgDown_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
 	// どの能力をアップグレードするか選択を行う
 	void SelectUpgrade(void);
