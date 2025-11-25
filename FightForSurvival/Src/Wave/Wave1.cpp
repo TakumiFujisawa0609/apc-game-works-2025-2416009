@@ -4,7 +4,7 @@
 
 // 準備30秒 → 戦闘120秒
 Wave1::Wave1(void)
-	: WaveBase(60 * 1, 60 * 1)
+	: WaveBase(60 * 3, 60 * 20)
 {
 	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
 	// スポーンタイミング、敵種別、座標
@@ -13,9 +13,6 @@ Wave1::Wave1(void)
 	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(-500.0f, 5.0f, 0.0f));
 	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 5.0f, -1500.0f));
 	AddSpawnEvent(60 * 18, ENEMY_TYPE::BAT, VGet(100.0f, 5.0f, 300.0f));
-
-	// ドラゴン
-	AddSpawnEvent(60 * 3, ENEMY_TYPE::DRAGON, VGet(0.0f, -5.0f, 0.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
 	AddSpawner(60 * 1, 10, VGet(-500.0f, -5.0f, -2000.0f));
