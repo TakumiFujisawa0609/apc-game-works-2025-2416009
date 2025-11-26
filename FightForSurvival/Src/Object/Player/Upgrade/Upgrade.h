@@ -91,6 +91,10 @@ private:
 	int baseHandle_[static_cast<int>(BUTTON_STATE::MAX)];
 	// テキスト
 	int textHandle_[static_cast<int>(PLAYER_UPGRADE::MAX)];
+	// ボタンの状態
+	BUTTON_STATE buttonState_[static_cast<int>(PLAYER_UPGRADE::MAX)];
+	// 今押されたか
+	bool isTrgDown_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
 	// 強化数値
 	float upNum_[static_cast<int>(PLAYER_UPGRADE::MAX)];
@@ -107,9 +111,6 @@ private:
 
 	STATE state_;
 	PLACE place_;
-	BUTTON_STATE buttonState_[static_cast<int>(PLAYER_UPGRADE::MAX)];
-	// 今押されたか
-	bool isTrgDown_[static_cast<int>(PLAYER_UPGRADE::MAX)];
 
 	// どの能力をアップグレードするか選択を行う
 	void SelectUpgrade(void);

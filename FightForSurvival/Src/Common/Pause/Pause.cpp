@@ -12,6 +12,11 @@ Pause::Pause(void)
 	:
 	setting_(nullptr)
 {
+	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
+	{
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+		isTrgDown_[i] = false;
+	}
 }
 
 // デストラクタ
@@ -22,7 +27,15 @@ Pause::~Pause(void)
 // ロード関連
 void Pause::Load(void)
 {
-	//LoadDivGraph("Data/Image/Pause/pause.png", DRAW_NUM, DRAW_NUM, 1, IMAGE_SIZE_X, IMAGE_SIZE_Y, images_,true);
+	// ベースロード
+	baseHandle_[static_cast<int>(BUTTON_STATE::DEFAULE)] = LoadGraph("Data/Image/UI/Pause/Base_0.png");
+	baseHandle_[static_cast<int>(BUTTON_STATE::HOVER)] = LoadGraph("Data/Image/UI/Pause/Base_1.png");
+	baseHandle_[static_cast<int>(BUTTON_STATE::TRIGGER_DOWN)] = LoadGraph("Data/Image/UI/Pause/Base_2.png");
+
+	// テキストロード
+	textHandle_[static_cast<int>(PAUSE::CONTINUE)] = LoadGraph("Data/Image/UI/Pause/continue.png");
+	textHandle_[static_cast<int>(PAUSE::SETTING)] = LoadGraph("Data/Image/UI/Pause/setting.png");
+	textHandle_[static_cast<int>(PAUSE::TITLE)] = LoadGraph("Data/Image/UI/Pause/title.png");
 
 	// 設定のインスタンスを生成
 	setting_ = new Setting();
@@ -36,9 +49,12 @@ void Pause::Init(void)
 	ChangePause(PAUSE::NON);
 
 	// 座標初期化
-	pos_[static_cast<int>(PAUSE::CONTINUE)] = { CONTINUE_POS_X ,CONTINUE_POS_Y };
-	pos_[static_cast<int>(PAUSE::SETTING)] = { SETTING_POS_X ,SETTING_POS_Y };
-	pos_[static_cast<int>(PAUSE::TITLE)] = { TITLE_POS_X ,TITLE_POS_Y };
+	int i = static_cast<int>(PAUSE::CONTINUE);
+	for (int y = 0; y < DRAW_NUM; y++)
+	{
+		pos_[i] = { POS_X, POS_Y + y * SPACE_Y };
+		i++;
+	}
 
 	// ポーズモード中か確認
 	pauseMode_ = false;
@@ -75,9 +91,6 @@ void Pause::Update(void)
 			// 選択処理
 			PadSelect();
 		}
-
-		// 確定処理
-		Confirm();
 	}
 
 	// ポーズモードのON・OFF
@@ -98,68 +111,20 @@ void Pause::Draw(void)
 			return;
 		}
 
-		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
+		// 背景(透明)
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, ALPHA);
 		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-		switch (pause_)
+		// 画像描画
+		for (int i = 0; i < static_cast<int>(PAUSE::NON); ++i)
 		{
-		case Pause::PAUSE::CONTINUE:
-			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::CONTINUE)], true);
+			DrawGraph(pos_[i].x, pos_[i].y,
+				baseHandle_[static_cast<int>(buttonState_[i])], true);
 
-			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0x00ff00);
-			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
-			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
-
-			break;
-		case Pause::PAUSE::SETTING:
-
-			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::TITLE)], true);
-
-			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
-			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0x00ff00);
-			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
-
-			break;
-		case Pause::PAUSE::TITLE:
-
-			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::TITLE)], true);
-
-			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
-			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
-			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0x00ff00);
-
-			break;
-		case Pause::PAUSE::NON:
-
-			//DrawRotaGraph(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2, 1.0, 0.0, images_[static_cast<int>(PAUSE::NON)], true);
-
-			DrawString(CONTINUE_POS_X, CONTINUE_POS_Y, "Continue", 0xffffff);
-			DrawString(SETTING_POS_X, SETTING_POS_Y, "Setting", 0xffffff);
-			DrawString(TITLE_POS_X, TITLE_POS_Y, "Title", 0xffffff);
-
-			break;
+			DrawGraph(pos_[i].x, pos_[i].y,
+				textHandle_[i], true);
 		}
-
-#ifdef _DEBUG
-
-		DrawBox(pos_[static_cast<int>(PAUSE::CONTINUE)].x,
-			pos_[static_cast<int>(PAUSE::CONTINUE)].y,
-			pos_[static_cast<int>(PAUSE::CONTINUE)].x + COL_SIZE_X,
-			pos_[static_cast<int>(PAUSE::CONTINUE)].y + COL_SIZE_Y, 0xff0000, false);
-
-		DrawBox(pos_[static_cast<int>(PAUSE::SETTING)].x,
-			pos_[static_cast<int>(PAUSE::SETTING)].y,
-			pos_[static_cast<int>(PAUSE::SETTING)].x + COL_SIZE_X,
-			pos_[static_cast<int>(PAUSE::SETTING)].y + COL_SIZE_Y, 0xff0000, false);
-
-		DrawBox(pos_[static_cast<int>(PAUSE::TITLE)].x,
-			pos_[static_cast<int>(PAUSE::TITLE)].y,
-			pos_[static_cast<int>(PAUSE::TITLE)].x + COL_SIZE_X,
-			pos_[static_cast<int>(PAUSE::TITLE)].y + COL_SIZE_Y, 0xff0000, false);
-
-#endif // _DEBUG
-
 
 	}
 }
@@ -172,43 +137,6 @@ void Pause::Release(void)
 		setting_->Release();
 		delete setting_;
 		setting_ = nullptr;
-	}
-}
-
-void Pause::Confirm(void)
-{
-
-	InputManager& ins = InputManager::GetInstance();
-
-	if (ins.Confirm())
-	{
-		switch (pause_)
-		{
-		case Pause::PAUSE::CONTINUE:
-
-			pauseMode_ = false;
-
-			// マウスの位置を真ん中に初期化する
-			SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
-			SetMouseDispFlag(false);
-
-			break;
-		case Pause::PAUSE::SETTING:
-
-			// 設定モードに入る
-			setting_->SetIsSetting(true);
-
-			break;
-		case Pause::PAUSE::TITLE:
-
-			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
-
-			break;
-		}
-
-		// 決定SEをながす
-		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
-
 	}
 }
 
@@ -237,14 +165,38 @@ void Pause::MouseSelect(void)
 
 	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
 	{
+		// 全て初期化する
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+
 		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePause(static_cast<PAUSE>(i));
+
+			if (InputManager::GetInstance().ConfirmUp() && isTrgDown_[i])
+			{
+				// 確定時の遷移処理
+				Confirm();
+			}
+			if (InputManager::GetInstance().Confirm() && !isTrgDown_[i])
+			{
+				isTrgDown_[i] = true;
+			}
+
+			if (isTrgDown_[i])
+			{
+				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
+			}
+			else
+			{
+				buttonState_[i] = BUTTON_STATE::HOVER;
+			}
+
 			break;
 		}
 		else
 		{
 			ChangePause(PAUSE::NON);
+			isTrgDown_[i] = false;
 		}
 	}
 
@@ -260,6 +212,12 @@ void Pause::PadSelect(void)
 {
 	auto& ins = InputManager::GetInstance();
 	auto prevPause = pause_;
+
+	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
+	{
+		// 全て初期化する
+		buttonState_[i] = BUTTON_STATE::DEFAULE;
+	}
 
 	switch (pause_)
 	{
@@ -301,9 +259,48 @@ void Pause::PadSelect(void)
 		break;
 	}
 
+	// 見た目を選択中にする
+	buttonState_[static_cast<int>(pause_)] = BUTTON_STATE::HOVER;
+
 	if (pause_ != prevPause && pause_ != PAUSE::NON)
 	{
 		// 何も選択されていない状態から選択されたらSEを流す
 		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
 	}
+
+	if (ins.Confirm())
+	{
+		// 確定時の遷移処理
+		Confirm();
+	}
+}
+
+void Pause::Confirm(void)
+{
+	switch (pause_)
+	{
+	case Pause::PAUSE::CONTINUE:
+
+		pauseMode_ = false;
+
+		// マウスの位置を真ん中に初期化する
+		SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+		SetMouseDispFlag(false);
+
+		break;
+	case Pause::PAUSE::SETTING:
+
+		// 設定モードに入る
+		setting_->SetIsSetting(true);
+
+		break;
+	case Pause::PAUSE::TITLE:
+
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::TITLE);
+
+		break;
+	}
+
+	// 決定SEをながす
+	SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 }
