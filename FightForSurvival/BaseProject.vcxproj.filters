@@ -96,7 +96,7 @@
     <ClCompile Include="Src\Object\Magic\Base\MagicBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Magic\FireMagic\FireMagic.cpp">
+    <ClCompile Include="Src\Object\Magic\StraightMagic\StraightMagic.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Common\Cursor.cpp">
@@ -186,7 +186,7 @@
     <ClCompile Include="Src\Common\Pause\Setting\Setting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Magic\WindMagic\WindMagic.cpp">
+    <ClCompile Include="Src\Object\Magic\ChaseMagic\ChaseMagic.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.cpp">
@@ -287,7 +287,7 @@
     <ClInclude Include="Src\Object\Magic\Base\MagicBase.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Magic\FireMagic\FireMagic.h">
+    <ClInclude Include="Src\Object\Magic\StraightMagic\StraightMagic.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Common\Cursor.h">
@@ -383,7 +383,7 @@
     <ClInclude Include="Src\Object\Magic\MagicInfo.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Magic\WindMagic\WindMagic.h">
+    <ClInclude Include="Src\Object\Magic\ChaseMagic\ChaseMagic.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\Magic\ExplosionMagic\ExplosionMagic.h">

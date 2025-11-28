@@ -3,7 +3,7 @@
 #include <DxLib.h>
 #include "../Base/MagicBase.h"
 
-class FireMagic : public MagicBase
+class StraightMagic : public MagicBase
 {
 public:
 	// ‘å‚«‚³
@@ -27,8 +27,8 @@ public:
 	// ‘Ì
 	static constexpr int BODY_DAMAGE = 5;
 
-	FireMagic(TYPE_MAGIC typeMagic, int baseModelId);
-	~FireMagic(void)override;
+	StraightMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	~StraightMagic(void)override;
 
 protected:
 

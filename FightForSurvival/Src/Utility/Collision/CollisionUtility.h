@@ -31,6 +31,9 @@ namespace CollisionUtility
 	// カプセルの当たり判定
 	VECTOR CoolisionCapsule(VECTOR topPos, VECTOR downPos, float rad, int modelId);
 
+	// 扇形当たり判定
+	bool CollisionSecter(VECTOR pos1, VECTOR dir,VECTOR pos2, float radius,float viewRange,float viewAngle);
+
 #pragma endregion
 
 #pragma region 2D

@@ -3,7 +3,7 @@
 #include <DxLib.h>
 #include "../Base/MagicBase.h"
 
-class WindMagic : public MagicBase
+class ChaseMagic : public MagicBase
 {
 public:
 	// ‘å‚«‚³
@@ -27,8 +27,13 @@ public:
 	// ‘Ì
 	static constexpr int BODY_DAMAGE = 5;
 
-	WindMagic(TYPE_MAGIC typeMagic, int baseModelId);
-	~WindMagic(void)override;
+	// ‹–ì‚ÌL‚³
+	static constexpr float VIEW_RANGE = 3000.0f;
+	// ‹–ìŠp
+	static constexpr float VIEW_ANGLE = 20.0f;
+
+	ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	~ChaseMagic(void)override;
 
 protected:
 

@@ -2,19 +2,20 @@
 #include "../../Enemy/EnemyInfo.h"
 #include "../../Enemy/Base/EnemyBase.h"
 #include "../../Enemy/EnemyManager.h"
-#include "WindMagic.h"
+#include "../../../Utility/Collision/CollisionUtility.h"
+#include "ChaseMagic.h"
 
-WindMagic::WindMagic(TYPE_MAGIC typeMagic, int baseModelId)
+ChaseMagic::ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId)
 	:
 	MagicBase(typeMagic, baseModelId)
 {
 }
 
-WindMagic::~WindMagic(void)
+ChaseMagic::~ChaseMagic(void)
 {
 }
 
-void WindMagic::SetParam(void)
+void ChaseMagic::SetParam(void)
 {
 	magic_.scale_ = SCALE;
 	magic_.rotate_ = ROTATE;
@@ -26,7 +27,7 @@ void WindMagic::SetParam(void)
 	magic_.bodyDamage_ = BODY_DAMAGE;
 }
 
-void WindMagic::UpdateShot(void)
+void ChaseMagic::UpdateShot(void)
 {
 	// ターゲットが分かっていたら向きを計算し更新
 	if (targetFound_)
@@ -38,7 +39,7 @@ void WindMagic::UpdateShot(void)
 	MagicBase::UpdateShot();
 }
 
-void WindMagic::ChangeShot(void)
+void ChaseMagic::ChangeShot(void)
 {
 	if (magic_.collisionRadius_ >= CHARGE_MAX)
 	{
@@ -73,6 +74,13 @@ void WindMagic::ChangeShot(void)
 		}
 
 		VECTOR newEnemyPos = enemy->GetColPos().colPos_[COLLISION_POS::BODY_UNDER];
+		newEnemyPos.y += 40.0f;
+
+		if (!CollisionUtility::CollisionSecter(magic_.pos_, magic_.dir_, newEnemyPos, enemy->GetEnemy().collisionRadiusBody_, VIEW_RANGE, VIEW_ANGLE))
+		{
+			// 視野角範囲内に入っていなかったら追跡対象にしない
+			continue;
+		}
 
 		// 相手へのベクトルを計算(引き算)
 		// 魔法と新しいエネミーの距離を計算
@@ -96,7 +104,7 @@ void WindMagic::ChangeShot(void)
 	}
 }
 
-void WindMagic::LookTargetEnemy(void)
+void ChaseMagic::LookTargetEnemy(void)
 {
 	// 相手へのベクトルを計算(引き算)
 	VECTOR vec;

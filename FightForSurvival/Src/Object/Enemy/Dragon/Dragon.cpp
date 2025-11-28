@@ -151,33 +151,8 @@ bool Dragon::SearchAttackRange(void)
 	VECTOR plaPos = player_->GetPlayerStatus().pos_;
 	float plaRad = player_->GetPlayerStatus().collisionRadius_;
 
-	// エネミーの向いている方向(VNorm(正規化)を行い単位ベクトルにする)
-	VECTOR dirEnemy = VNorm(enemy_.dir_);
-
-	// エネミーから見たプレイヤーの方向(VNorm(正規化)を行い単位ベクトルにする)
-	VECTOR distance = VSub(plaPos, enemy_.pos_);
-	VECTOR dirPlayerfromEnemy = VNorm(distance);
-
-	// 内積を使ってベクトルの比較を行う
-	// +1.0～-1.0の値を取得
-	// +1.0の場合、2つのベクトルは同じ方向
-	// +0.8の場合、2つのベクトルは結構同じ方向
-	// 0.0の場合、2つのベクトルは直交
-	// -1.0の場合、2つのベクトルは逆方向
-	float dot = VDot(dirEnemy, dirPlayerfromEnemy);
-	float angle = acosf(dot);
-
-	// 視野角をラジアンに返還
-	const float viewRad = AsoUtility::Deg2RadF(VIEW_ANGLE);
-
-	// プレイヤーとエネミー間の距離を調べる
-	float dis = (distance.x * distance.x + distance.y * distance.y + distance.z * distance.z);
-
-	// 当たり判定用半径の合計を計算
-	float collisionRad = VIEW_RANGE + plaRad;
-
 	// 視野の範囲内に入っているかつ、攻撃時間になったらtrueを返す
-	return angle <= viewRad && (collisionRad * collisionRad) > dis && attackStart_;
+	return CollisionUtility::CollisionSecter(enemy_.pos_, enemy_.dir_, plaPos, plaRad, VIEW_RANGE, VIEW_ANGLE) && attackStart_;
 }
 
 void Dragon::ChangeAttackState(DRAGON_ATTACK_STATE state)
@@ -300,23 +275,23 @@ void Dragon::AttackSelect(Dragon& dragon)
 	dragon.LookPlayer();
 
 	// ランダムで決めた攻撃内容を入れる
-	/*int attackRand = GetRand(RANDOM_NUM);
+	int attackRand = GetRand(RANDOM_NUM);
 
 	if (attackRand >= 0 && attackRand <= RANGE)
-	{*/
+	{
 		// 範囲攻撃
 		dragon.ChangeAttackState(RANGE_ATTACK);
-	//}
-	//else if (attackRand > RANGE && attackRand <= FORWARD)
-	//{
-	//	// 前方攻撃
-	//	dragon.ChangeAttackState(FORWARD_ATTACK);
-	//}
-	//else if (attackRand > FORWARD && attackRand <= RUSH)
-	//{
-	//	// 突進攻撃
-	//	dragon.ChangeAttackState(RUSH_ATTACK);
-	//}
+	}
+	else if (attackRand > RANGE && attackRand <= FORWARD)
+	{
+		// 前方攻撃
+		dragon.ChangeAttackState(FORWARD_ATTACK);
+	}
+	else if (attackRand > FORWARD && attackRand <= RUSH)
+	{
+		// 突進攻撃
+		dragon.ChangeAttackState(RUSH_ATTACK);
+	}
 }
 
 void Dragon::RangeAttack(Dragon& dragon)

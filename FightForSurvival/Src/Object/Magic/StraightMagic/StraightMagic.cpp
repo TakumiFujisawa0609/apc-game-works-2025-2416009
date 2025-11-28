@@ -1,16 +1,16 @@
-#include "FireMagic.h"
+#include "StraightMagic.h"
 
-FireMagic::FireMagic(TYPE_MAGIC typeMagic,int baseModelId)
+StraightMagic::StraightMagic(TYPE_MAGIC typeMagic,int baseModelId)
 	:
 	MagicBase(typeMagic, baseModelId)
 {
 }
 
-FireMagic::~FireMagic(void)
+StraightMagic::~StraightMagic(void)
 {
 }
 
-void FireMagic::SetParam(void)
+void StraightMagic::SetParam(void)
 {
 	magic_.scale_ = SCALE;
 	magic_.rotate_ = ROTATE;
@@ -22,7 +22,7 @@ void FireMagic::SetParam(void)
 	magic_.bodyDamage_ = BODY_DAMAGE;
 }
 
-void FireMagic::ChangeShot(void)
+void StraightMagic::ChangeShot(void)
 {
 	if (magic_.collisionRadius_ >= CHARGE_MAX)
 	{

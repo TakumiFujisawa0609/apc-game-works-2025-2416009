@@ -242,6 +242,34 @@ VECTOR CollisionUtility::CoolisionCapsule(VECTOR topPos, VECTOR downPos, float r
 	return movePos;
 }
 
+bool CollisionUtility::CollisionSecter(VECTOR pos1, VECTOR dir, VECTOR pos2, float radius, float viewRange, float viewAngle)
+{
+	// pos1から見たpos2の方向(VNorm(正規化)を行い単位ベクトルにする)
+	VECTOR distance = VSub(pos2,pos1);
+	VECTOR dirNorm = VNorm(distance);
+
+	// 内積を使ってベクトルの比較を行う
+	// +1.0～-1.0の値を取得
+	// +1.0の場合、2つのベクトルは同じ方向
+	// +0.8の場合、2つのベクトルは結構同じ方向
+	// 0.0の場合、2つのベクトルは直交
+	// -1.0の場合、2つのベクトルは逆方向
+	float dot = VDot(dir, dirNorm);
+	float angle = acosf(dot);
+
+	// 視野角をラジアンに返還
+	const float viewRad = AsoUtility::Deg2RadF(viewAngle);
+
+	// pos1とpos2間の距離を調べる
+	float dis = (distance.x * distance.x + distance.y * distance.y + distance.z * distance.z);
+
+	// 当たり判定用半径の合計を計算
+	float collisionRad = viewRange + radius;
+
+	// 視野の範囲内に入っているかつ、攻撃時間になったらtrueを返す
+	return angle <= viewRad && (collisionRad * collisionRad) > dis;
+}
+
 bool CollisionUtility::RectangleAndPoint(Vector2 pos1, int wid1, int hig1, Vector2 pos2)
 {
 	if (pos1.x + wid1 > pos2.x &&

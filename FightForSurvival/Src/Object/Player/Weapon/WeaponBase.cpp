@@ -3,8 +3,8 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../../Application.h"
 #include "../Player.h"
-#include "../../Magic/FireMagic/FireMagic.h"
-#include "../../Magic/WindMagic/WindMagic.h"
+#include "../../Magic/StraightMagic/StraightMagic.h"
+#include "../../Magic/ChaseMagic/ChaseMagic.h"
 #include "../../Magic/ExplosionMagic/ExplosionMagic.h"
 #include "../../../Utility/AsoUtility.h"
 #include "../../../Utility/MatrixUtility.h"
@@ -31,11 +31,11 @@ void WeaponBase::Init(void)
 	// 魔法のモデルを読み込む
 	switch (typeMagic_)
 	{
-	case TYPE_MAGIC::FIRE_MAGIC:
+	case TYPE_MAGIC::STRAIGHT_MAGIC:
 	//magicModelId_ = MV1LoadModel(
 	//	(Application::PATH_MODEL + "Effect/Fire.mv1").c_str());
 		break;
-	case TYPE_MAGIC::WIND_MAGIC:
+	case TYPE_MAGIC::CHASE_MAGIC:
 		break;
 	case TYPE_MAGIC::EXPLOSION_MAGIC:
 		break;
@@ -280,16 +280,16 @@ MagicBase* WeaponBase::GetValidMagic(void)
 
 	switch (typeMagic_)
 	{
-	case TYPE_MAGIC::FIRE_MAGIC:
+	case TYPE_MAGIC::STRAIGHT_MAGIC:
 
 		// 炎魔法のインスタンスを生成する
-		Magic = new FireMagic(typeMagic_, magicModelId_);
+		Magic = new StraightMagic(typeMagic_, magicModelId_);
 
 		break;
-	case TYPE_MAGIC::WIND_MAGIC:
+	case TYPE_MAGIC::CHASE_MAGIC:
 
 		// 風魔法のインスタンスを生成する
-		Magic = new WindMagic(typeMagic_, magicModelId_);
+		Magic = new ChaseMagic(typeMagic_, magicModelId_);
 
 		break;
 	case TYPE_MAGIC::EXPLOSION_MAGIC:

@@ -45,7 +45,7 @@ void SystemManager::Destroy()
 void SystemManager::ResetGame()
 {
 	score_ = 0; // ÉXÉRÉAÇ0Ç≈èâä˙âª
-	typeMagic_ = TYPE_MAGIC::FIRE_MAGIC;
+	typeMagic_ = TYPE_MAGIC::STRAIGHT_MAGIC;
 }
 
 SystemManager::SystemManager(void)
@@ -53,7 +53,7 @@ SystemManager::SystemManager(void)
 	MouseSensitivity_ = MOUSE_SENSITIVITY;
 	PadSensitivity_ = PAD_SENSITIVITY;
 	score_ = 0;
-	typeMagic_ = TYPE_MAGIC::FIRE_MAGIC;
+	typeMagic_ = TYPE_MAGIC::STRAIGHT_MAGIC;
 	if (GetJoypadNum() == 0)
 	{
 		isDeviceMouse_ = true;
