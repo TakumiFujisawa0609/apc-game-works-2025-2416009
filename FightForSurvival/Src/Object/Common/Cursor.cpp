@@ -13,7 +13,7 @@ Cursor::~Cursor(void)
 
 void Cursor::Load(void)
 {
-	img_ = LoadGraph((Application::PATH_IMAGE + "cursor.png").c_str());
+	img_ = LoadGraph((Application::PATH_IMAGE + "UI/cursor.png").c_str());
 }
 
 void Cursor::Init(void)

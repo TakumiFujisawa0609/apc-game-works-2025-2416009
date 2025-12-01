@@ -289,14 +289,15 @@ void GameScene::Draw(void)
 	// エフェクトの描画
 	redEffect_->Draw();
 
-	// カーソルの描画
-	cursor_->Draw();
 
 	// スコアの描画
 	score_->Draw();
 
 	// UIの描画
 	uiMgr_->Draw();
+
+	// カーソルの描画
+	cursor_->Draw();
 
 	// アップグレードの描画
 	UpgradeManager::GetInstance().Draw();
