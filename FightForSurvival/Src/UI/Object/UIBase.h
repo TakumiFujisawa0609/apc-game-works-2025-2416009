@@ -14,7 +14,12 @@ public:
 	// UIの種類を返す
 	UI_KIND GetUIKind(void)const { return uiKind_; }
 
+	// UIの種類を返す
+	void SetIsDraw (bool flg) { isDraw_ = flg; }
+
 protected:
+
+	bool isDraw_;	// 描画フラグ
 	int x_;	// x座標
 	int y_;	// y座標
 	int w_;	// 横幅

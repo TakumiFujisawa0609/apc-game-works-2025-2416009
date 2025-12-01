@@ -13,19 +13,20 @@ class TitleScene : public SceneBase
 public:
 
 	// 衝突用サイズ
-	static constexpr int COL_SIZE_X = 90;
-	static constexpr int COL_SIZE_Y = 30;
+	static constexpr int COL_SIZE_X = 610;
+	static constexpr int COL_SIZE_Y = 60;
 
 	// コンテニューの座標
-	static constexpr int GAMESTART_POS_X = Application::SCREEN_SIZE_X / 2 - 50;
-	static constexpr int GAMESTART_POS_Y = Application::SCREEN_SIZE_Y - 210;
+	static constexpr int GAMESTART_POS_X = 335;
+	static constexpr int GAMESTART_POS_Y = 470;
 
 	// タイトルの座標
-	static constexpr int EXIT_POS_X = Application::SCREEN_SIZE_X / 2 - 50;
-	static constexpr int EXIT_POS_Y = Application::SCREEN_SIZE_Y - 180;
+	static constexpr int EXIT_POS_X = 335;
+	static constexpr int EXIT_POS_Y = 560;
 
 	enum STATE
 	{
+		CLICK,
 		GAMESTART,
 		EXIT,
 		NON,
@@ -58,10 +59,6 @@ private:
 
 	// 座標
 	Vector2 pos_[STATE::NON];
-
-	// ゲームスタートフラグ
-	bool isPrevStart_;
-	bool isNowStart_;
 
 	// 確定させる
 	void Confirm(void);

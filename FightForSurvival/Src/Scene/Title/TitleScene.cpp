@@ -32,16 +32,19 @@ void TitleScene::Load(void)
 
 	// UIを生成
 	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BG, texMgr);
-	UIBase* button = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BUTTON, texMgr);
-
-	//// ダウンキャストして Bar固有の関数を呼べるようにする
-	//UIBase* bar = UIFactory::GetInstance()->CreateUI(UI_KIND::HP_BAR, texMgr);
-	//HPBar* hp = dynamic_cast<HPBar*>(bar);
-	//uiMgr->AddUI(hp);
+	UIBase* text = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_TEXT, texMgr);
+	UIBase* cloud = UIFactory::GetInstance()->CreateUI(UI_KIND::CLOUD, texMgr);
+	UIBase* start = UIFactory::GetInstance()->CreateUI(UI_KIND::CLICK_TO_START, texMgr);
+	UIBase* gameStart = UIFactory::GetInstance()->CreateUI(UI_KIND::GAME_START, texMgr);
+	UIBase* end = UIFactory::GetInstance()->CreateUI(UI_KIND::END, texMgr);
 
 	// 生成したUIを追加
 	uiMgr->AddUI(bg);
-	uiMgr->AddUI(button);
+	uiMgr->AddUI(cloud);
+	uiMgr->AddUI(text);
+	uiMgr->AddUI(start);
+	uiMgr->AddUI(gameStart);
+	uiMgr->AddUI(end);
 }
 
 void TitleScene::Init(void)
@@ -51,13 +54,12 @@ void TitleScene::Init(void)
 	camera_->Init();
 
 	// ポーズモードの種類
-	ChangeState(STATE::NON);
+	ChangeState(STATE::CLICK);
 
 	// 座標初期化
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
 	pos_[STATE::EXIT] = { EXIT_POS_X ,EXIT_POS_Y };
 
-	isPrevStart_ = isNowStart_ =  false;
 
 	// BGMをかける
 	SoundManager::GetInstance().Play(SoundManager::BGM::TITLE);
@@ -65,14 +67,7 @@ void TitleScene::Init(void)
 
 void TitleScene::Update(void)
 {
-	isPrevStart_ = isNowStart_;
-	if (InputManager::GetInstance().PushStartKey() && !isNowStart_)
-	{
-		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
-		isNowStart_ = true;
-	}
-
-	if (isPrevStart_ && isNowStart_)
+	if (state_ != CLICK)
 	{
 		if (SystemManager::GetInstance().GetIsDevice())
 		{
@@ -89,6 +84,30 @@ void TitleScene::Update(void)
 		Confirm();
 	}
 
+	if (InputManager::GetInstance().PushStartKey())
+	{
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+		ChangeState(STATE::NON);
+		for (auto ui : uiMgr->GetUIList())
+		{
+			if (ui->GetUIKind() == UI_KIND::CLICK_TO_START)
+			{
+				// 描画を消す
+				ui->SetIsDraw(false);
+			}
+			else if (ui->GetUIKind() == UI_KIND::GAME_START)
+			{
+				// 描画をさせる
+				ui->SetIsDraw(true);
+			}
+			else if (ui->GetUIKind() == UI_KIND::END)
+			{
+				// 描画をさせる
+				ui->SetIsDraw(true);
+			}
+		}
+	}
+
 	// UIの更新
 	uiMgr->Update();
 
@@ -98,38 +117,6 @@ void TitleScene::Update(void)
 
 void TitleScene::Draw(void)
 {
-	// タイトル名
-	DrawString(Application::SCREEN_SIZE_X / 2 - 80, 200, "Fight For Survival", 0xffffff);
-
-	if (isPrevStart_ && isNowStart_)
-	{
-		switch (state_)
-		{
-		case STATE::GAMESTART:
-
-			DrawString(GAMESTART_POS_X, GAMESTART_POS_Y, "GameStart", 0x00ff00);
-			DrawString(EXIT_POS_X, EXIT_POS_Y, "Exit", 0xffffff);
-
-			break;
-		case STATE::EXIT:
-
-			DrawString(GAMESTART_POS_X, GAMESTART_POS_Y, "GameStart", 0xffffff);
-			DrawString(EXIT_POS_X, EXIT_POS_Y, "Exit", 0x00ff00);
-
-			break;
-		case STATE::NON:
-
-			DrawString(GAMESTART_POS_X, GAMESTART_POS_Y, "GameStart", 0xffffff);
-			DrawString(EXIT_POS_X, EXIT_POS_Y, "Exit", 0xffffff);
-
-			break;
-		}
-	}
-	else
-	{
-		DrawString(Application::SCREEN_SIZE_X / 2 - 60, Application::SCREEN_SIZE_Y - 190, "Check to Start", 0xffffff);
-	}
-
 	// UIの描画
 	uiMgr->Draw();
 
@@ -141,18 +128,15 @@ void TitleScene::Draw(void)
 	// カメラのデバック描画
 	camera_->DrawDebug();
 
-	if (isPrevStart_ && isNowStart_)
-	{
-		DrawBox(pos_[STATE::GAMESTART].x,
-			pos_[STATE::GAMESTART].y,
-			pos_[STATE::GAMESTART].x + COL_SIZE_X,
-			pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
+	DrawBox(pos_[STATE::GAMESTART].x,
+		pos_[STATE::GAMESTART].y,
+		pos_[STATE::GAMESTART].x + COL_SIZE_X,
+		pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
 
-		DrawBox(pos_[STATE::EXIT].x,
-			pos_[STATE::EXIT].y,
-			pos_[STATE::EXIT].x + COL_SIZE_X,
-			pos_[STATE::EXIT].y + COL_SIZE_Y, 0xff0000, false);
-	}
+	DrawBox(pos_[STATE::EXIT].x,
+		pos_[STATE::EXIT].y,
+		pos_[STATE::EXIT].x + COL_SIZE_X,
+		pos_[STATE::EXIT].y + COL_SIZE_Y, 0xff0000, false);
 #endif // _DEBUG
 
 }

@@ -7,6 +7,8 @@
 
 MagicStatus::MagicStatus(const UIResourceInfo& info, TextureManager* texMgr)
 {
+	uiKind_ = info.uiKind;
+	isDraw_ = info.isDraw;
 	x_ = info.x;
 	y_ = info.y;
 	w_ = info.width;
@@ -45,6 +47,11 @@ void MagicStatus::Update(void)
 
 void MagicStatus::Draw(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
+
 	DrawRotaGraph(x_, y_, scale_, 0.0, statusHandle_[player_->GetMagicNum()], true);
 	DrawRotaGraph(x_, y_, scale_, 0.0, bulletKindHandle_[player_->GetMagicType()], true);
 }

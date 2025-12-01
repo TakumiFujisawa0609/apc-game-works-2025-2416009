@@ -5,16 +5,16 @@
 // UIの種別
 enum class UI_KIND
 {
-    TITLE_BG,
-    TITLE_BUTTON,
     HP_BAR,
     STAMINA_BAR,
     MAGIC_STATUS,
-    HP_UP,
-    HP_HEAL,
-    SPEED_UP,
-    STAMINA_UP,
-    POTION_RESTOC,
+    TITLE_BG,
+    TITLE_TEXT,
+    CLICK_TO_START,
+    GAME_START,
+    END,
+    CLOUD,
+    GRASS,
 
     MAX
 };
@@ -22,6 +22,8 @@ enum class UI_KIND
 // UIリソースの情報
 struct UIResourceInfo
 {
+    UI_KIND uiKind;         // UIの種類
+    bool isDraw;            // 描画フラグ
     std::string basePath;   // 下地
     std::string mainPath;   // メイン
     std::string framePath;  // フレーム

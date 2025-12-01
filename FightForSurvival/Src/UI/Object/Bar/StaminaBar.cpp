@@ -13,6 +13,8 @@ StaminaBar::StaminaBar(const UIResourceInfo& info, TextureManager* texMgr)
 	barHandle_(-1),
 	frameHandle_(-1)
 {
+	uiKind_ = info.uiKind;
+	isDraw_ = info.isDraw;
 	x_ = info.x;
 	y_ = info.y;
 	w_ = info.width;
@@ -45,6 +47,11 @@ void StaminaBar::Update(void)
 
 void StaminaBar::Draw(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
+
 	int x = x_ + (w_ / 4);
 	int y = y_ + (h_ / 4);
 

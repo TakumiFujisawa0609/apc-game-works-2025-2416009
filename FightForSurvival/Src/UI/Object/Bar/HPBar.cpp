@@ -13,6 +13,8 @@ HPBar::HPBar(const UIResourceInfo& info, TextureManager* texMgr)
 	barHandle_(-1),
 	frameHandle_(-1)
 {
+	uiKind_ = info.uiKind;
+	isDraw_ = info.isDraw;
 	x_ = info.x;
 	y_ = info.y;
 	w_ = info.width;
@@ -46,6 +48,11 @@ void HPBar::Update(void)
 
 void HPBar::Draw(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
+
 	// •`‰æ
 
 	int x = x_ + (w_ / 4);

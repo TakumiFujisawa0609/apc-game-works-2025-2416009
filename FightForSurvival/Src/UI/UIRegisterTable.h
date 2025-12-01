@@ -5,20 +5,11 @@
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
-#include "Object/Button/UpgradeButton/UpgradeButton.h"
 #include "Object/MagicStatus/MagicStatus.h"
 
 // UI‘S‚Ä‚ð‚ ‚ç‚©‚¶‚ß“o˜^‚·‚é
 inline void RegisterUI(void)
 {
-    UIFactory::GetInstance()->Register(UI_KIND::TITLE_BG,
-        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* titleBG = new Sprite(info, texMgr); return titleBG; });
-
-    UIFactory::GetInstance()->Register(UI_KIND::TITLE_BUTTON,
-        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Button* button = new Button(info, texMgr); return button; });
-
     UIFactory::GetInstance()->Register(UI_KIND::HP_BAR,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { HPBar* hpBar = new HPBar(info, texMgr); return hpBar; });
@@ -31,23 +22,31 @@ inline void RegisterUI(void)
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { MagicStatus* magicStatus = new MagicStatus(info, texMgr); return magicStatus; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::HP_UP,
+    UIFactory::GetInstance()->Register(UI_KIND::TITLE_BG,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { UpgradeButton* hpUp = new UpgradeButton(info, texMgr); return hpUp; });
+        { Sprite* titleBG = new Sprite(info, texMgr); return titleBG; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::HP_HEAL,
+    UIFactory::GetInstance()->Register(UI_KIND::TITLE_TEXT,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { UpgradeButton* hpHeal = new UpgradeButton(info, texMgr); return hpHeal; });
+        { Sprite* titleText = new Sprite(info, texMgr); return titleText; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::SPEED_UP,
+    UIFactory::GetInstance()->Register(UI_KIND::CLICK_TO_START,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { UpgradeButton* speedUp = new UpgradeButton(info, texMgr); return speedUp; });
+        { Sprite* clickToStart = new Sprite(info, texMgr); return clickToStart; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::STAMINA_UP,
+    UIFactory::GetInstance()->Register(UI_KIND::GAME_START,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { UpgradeButton* staminaUp = new UpgradeButton(info, texMgr); return staminaUp; });
+        { Button* gameStart = new Button(info, texMgr); return gameStart; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::POTION_RESTOC,
+    UIFactory::GetInstance()->Register(UI_KIND::END,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { UpgradeButton* potionRestoc = new UpgradeButton(info, texMgr); return potionRestoc; });
+        { Button* end = new Button(info, texMgr); return end; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::CLOUD,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* cloud = new Sprite(info, texMgr); return cloud; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::GRASS,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* grass = new Sprite(info, texMgr); return grass; });
 }

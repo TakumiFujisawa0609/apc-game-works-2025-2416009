@@ -8,6 +8,8 @@ Button::Button(const UIResourceInfo& info, TextureManager* texMgr)
 	:
 	buttonState_(DEFAULE)
 {
+	uiKind_ = info.uiKind;
+	isDraw_ = info.isDraw;
 	x_ = info.x;
 	y_ = info.y;
 	w_ = info.width;
@@ -70,6 +72,11 @@ void Button::Update(void)
 
 void Button::Draw(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
+
 	// ƒ{ƒ^ƒ“‚Ì•`‰æ‚ªŠeó‘Ô‚É‚æ‚Á‚Ä•Ï‰»
 	DrawGraph(x_, y_, handle_[static_cast<int>(buttonState_)], true);
 	DrawGraph(x_, y_, textHandle_, true);
