@@ -68,4 +68,25 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         0, 0, 1280, 720, 1.0f}
     },
 
+    { UI_KIND::PAUSE_CONTINUE,{
+        UI_KIND::PAUSE_CONTINUE,
+        true,
+        "Data/Image/UI/Title/Cloud.png", "", "","",
+        0, 0, 1280, 720, 1.0f}
+    },
+
+    { UI_KIND::PAUSE_SETTING,{
+        UI_KIND::PAUSE_SETTING,
+        true,
+        "Data/Image/UI/Title/Cloud.png", "", "","",
+        0, 0, 1280, 720, 1.0f}
+    },
+
+    { UI_KIND::PAUSE_TITLE,{
+        UI_KIND::PAUSE_TITLE,
+        true,
+        "Data/Image/UI/Title/Cloud.png", "", "","",
+        0, 0, 1280, 720, 1.0f}
+    },
+
 };

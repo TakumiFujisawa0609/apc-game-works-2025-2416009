@@ -5,6 +5,9 @@
 #include "../../Manager/SystemManager.h"
 #include "../../Utility/Collision/CollisionUtility.h"
 #include "Setting/Setting.h"
+#include "../../UI/UIManager.h"
+#include "../../UI/TextrueManager/TextureManager.h"
+#include "../../UI/Object/Button/PauseButton/PauseButton.h"
 #include "Pause.h"
 
 // コンストラクタ
@@ -12,11 +15,6 @@ Pause::Pause(void)
 	:
 	setting_(nullptr)
 {
-	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
-	{
-		buttonState_[i] = BUTTON_STATE::DEFAULE;
-		isTrgDown_[i] = false;
-	}
 }
 
 // デストラクタ
@@ -27,19 +25,42 @@ Pause::~Pause(void)
 // ロード関連
 void Pause::Load(void)
 {
-	// ベースロード
-	baseHandle_[static_cast<int>(BUTTON_STATE::DEFAULE)] = LoadGraph("Data/Image/UI/Pause/Base_0.png");
-	baseHandle_[static_cast<int>(BUTTON_STATE::HOVER)] = LoadGraph("Data/Image/UI/Pause/Base_1.png");
-	baseHandle_[static_cast<int>(BUTTON_STATE::TRIGGER_DOWN)] = LoadGraph("Data/Image/UI/Pause/Base_2.png");
+	//// ベースロード
+	//baseHandle_[static_cast<int>(BUTTON_STATE::DEFAULE)] = LoadGraph("Data/Image/UI/Pause/Base_0.png");
+	//baseHandle_[static_cast<int>(BUTTON_STATE::HOVER)] = LoadGraph("Data/Image/UI/Pause/Base_1.png");
+	//baseHandle_[static_cast<int>(BUTTON_STATE::TRIGGER_DOWN)] = LoadGraph("Data/Image/UI/Pause/Base_2.png");
 
-	// テキストロード
-	textHandle_[static_cast<int>(PAUSE::CONTINUE)] = LoadGraph("Data/Image/UI/Pause/continue.png");
-	textHandle_[static_cast<int>(PAUSE::SETTING)] = LoadGraph("Data/Image/UI/Pause/setting.png");
-	textHandle_[static_cast<int>(PAUSE::TITLE)] = LoadGraph("Data/Image/UI/Pause/title.png");
+	//// テキストロード
+	//textHandle_[static_cast<int>(PAUSE::CONTINUE)] = LoadGraph("Data/Image/UI/Pause/continue.png");
+	//textHandle_[static_cast<int>(PAUSE::SETTING)] = LoadGraph("Data/Image/UI/Pause/setting.png");
+	//textHandle_[static_cast<int>(PAUSE::TITLE)] = LoadGraph("Data/Image/UI/Pause/title.png");
 
 	// 設定のインスタンスを生成
 	setting_ = new Setting();
 	setting_->Load();
+
+	// UI管理の生成処理
+	uiMgr = new UIManager();
+	texMgr = new TextureManager();
+
+	// UIを生成
+	UIBase* pauseContinue = UIFactory::GetInstance()->CreateUI(UI_KIND::PAUSE_CONTINUE, texMgr);
+	UIBase* pauseSetting = UIFactory::GetInstance()->CreateUI(UI_KIND::PAUSE_SETTING, texMgr);
+	UIBase* pauseTitle = UIFactory::GetInstance()->CreateUI(UI_KIND::PAUSE_TITLE, texMgr);
+
+	// ポインタを渡す
+	PauseButton* continueButton = dynamic_cast<PauseButton*>(pauseContinue);
+	continueButton->SetNowPause(&pause_);
+	PauseButton* settingButton = dynamic_cast<PauseButton*>(pauseSetting);
+	settingButton->SetNowPause(&pause_);
+	PauseButton* titleButton = dynamic_cast<PauseButton*>(pauseTitle);
+	titleButton->SetNowPause(&pause_);
+
+
+	// 生成したUIを追加
+	uiMgr->AddUI(pauseContinue);
+	uiMgr->AddUI(pauseSetting);
+	uiMgr->AddUI(pauseTitle);
 }
 
 // 初期化
@@ -91,6 +112,9 @@ void Pause::Update(void)
 			// 選択処理
 			PadSelect();
 		}
+
+		// UIの更新
+		uiMgr->Update();
 	}
 
 	// ポーズモードのON・OFF
@@ -116,15 +140,8 @@ void Pause::Draw(void)
 		DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-		// 画像描画
-		for (int i = 0; i < static_cast<int>(PAUSE::NON); ++i)
-		{
-			DrawGraph(pos_[i].x, pos_[i].y,
-				baseHandle_[static_cast<int>(buttonState_[i])], true);
-
-			DrawGraph(pos_[i].x, pos_[i].y,
-				textHandle_[i], true);
-		}
+		// UIの描画
+		uiMgr->Draw();
 
 	}
 }
@@ -132,6 +149,10 @@ void Pause::Draw(void)
 // 解放
 void Pause::Release(void)
 {
+	// UIの解放
+	delete uiMgr;
+	delete texMgr;
+
 	if (setting_ != nullptr)
 	{
 		setting_->Release();
@@ -165,38 +186,16 @@ void Pause::MouseSelect(void)
 
 	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
 	{
-		// 全て初期化する
-		buttonState_[i] = BUTTON_STATE::DEFAULE;
 
 		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePause(static_cast<PAUSE>(i));
-
-			if (InputManager::GetInstance().ConfirmUp() && isTrgDown_[i])
-			{
-				// 確定時の遷移処理
-				Confirm();
-			}
-			if (InputManager::GetInstance().Confirm() && !isTrgDown_[i])
-			{
-				isTrgDown_[i] = true;
-			}
-
-			if (isTrgDown_[i])
-			{
-				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
-			}
-			else
-			{
-				buttonState_[i] = BUTTON_STATE::HOVER;
-			}
 
 			break;
 		}
 		else
 		{
 			ChangePause(PAUSE::NON);
-			isTrgDown_[i] = false;
 		}
 	}
 
@@ -212,12 +211,6 @@ void Pause::PadSelect(void)
 {
 	auto& ins = InputManager::GetInstance();
 	auto prevPause = pause_;
-
-	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
-	{
-		// 全て初期化する
-		buttonState_[i] = BUTTON_STATE::DEFAULE;
-	}
 
 	switch (pause_)
 	{
@@ -258,9 +251,6 @@ void Pause::PadSelect(void)
 	default:
 		break;
 	}
-
-	// 見た目を選択中にする
-	buttonState_[static_cast<int>(pause_)] = BUTTON_STATE::HOVER;
 
 	if (pause_ != prevPause && pause_ != PAUSE::NON)
 	{

@@ -28,7 +28,7 @@ public:
 	{
 		CLICK,
 		GAMESTART,
-		EXIT,
+		END,
 		NON,
 
 	};

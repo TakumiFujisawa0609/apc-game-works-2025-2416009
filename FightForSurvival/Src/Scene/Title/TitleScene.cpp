@@ -11,10 +11,13 @@
 #include "../../UI/UIManager.h"
 #include "../../UI/TextrueManager/TextureManager.h"
 #include "../../UI/Object/Bar/HPBar.h"
+#include "../../UI/Object/Button/TitleButton/TitleButton.h"
 
 TitleScene::TitleScene(void)
 {
 	camera_ = nullptr;
+
+	state_ = CLICK;
 
 	// マウスカーソルを表示
 	SetMouseDispFlag(true);
@@ -38,6 +41,13 @@ void TitleScene::Load(void)
 	UIBase* gameStart = UIFactory::GetInstance()->CreateUI(UI_KIND::GAME_START, texMgr);
 	UIBase* end = UIFactory::GetInstance()->CreateUI(UI_KIND::END, texMgr);
 
+	// ポインタを渡す
+	TitleButton* startButton = dynamic_cast<TitleButton*>(gameStart);
+	startButton->SetNowState(&state_);
+	TitleButton* endButton = dynamic_cast<TitleButton*>(end);
+	endButton->SetNowState(&state_);
+
+
 	// 生成したUIを追加
 	uiMgr->AddUI(bg);
 	uiMgr->AddUI(cloud);
@@ -53,12 +63,9 @@ void TitleScene::Init(void)
 	camera_ = new Camera();
 	camera_->Init();
 
-	// ポーズモードの種類
-	ChangeState(STATE::CLICK);
-
 	// 座標初期化
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
-	pos_[STATE::EXIT] = { EXIT_POS_X ,EXIT_POS_Y };
+	pos_[STATE::END] = { EXIT_POS_X ,EXIT_POS_Y };
 
 
 	// BGMをかける
@@ -128,15 +135,20 @@ void TitleScene::Draw(void)
 	// カメラのデバック描画
 	camera_->DrawDebug();
 
-	DrawBox(pos_[STATE::GAMESTART].x,
-		pos_[STATE::GAMESTART].y,
-		pos_[STATE::GAMESTART].x + COL_SIZE_X,
-		pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
+	if (state_ != CLICK)
+	{
 
-	DrawBox(pos_[STATE::EXIT].x,
-		pos_[STATE::EXIT].y,
-		pos_[STATE::EXIT].x + COL_SIZE_X,
-		pos_[STATE::EXIT].y + COL_SIZE_Y, 0xff0000, false);
+		DrawBox(pos_[STATE::GAMESTART].x,
+			pos_[STATE::GAMESTART].y,
+			pos_[STATE::GAMESTART].x + COL_SIZE_X,
+			pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
+
+		DrawBox(pos_[STATE::END].x,
+			pos_[STATE::END].y,
+			pos_[STATE::END].x + COL_SIZE_X,
+			pos_[STATE::END].y + COL_SIZE_Y, 0xff0000, false);
+
+	}
 #endif // _DEBUG
 
 }
@@ -174,7 +186,7 @@ void TitleScene::Confirm(void)
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 
 			break;
-		case STATE::EXIT:
+		case STATE::END:
 
 			// ゲームを終了させる
 			EndManager::GetInstance().SetIsEnd(true);
@@ -226,11 +238,11 @@ void TitleScene::PadSelect(void)
 
 		if (ins.SelectDown())
 		{
-			ChangeState(STATE::EXIT);
+			ChangeState(STATE::END);
 		}
 
 		break;
-	case TitleScene::EXIT:
+	case TitleScene::END:
 
 		if (ins.SelectUp())
 		{

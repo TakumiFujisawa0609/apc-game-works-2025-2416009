@@ -26,7 +26,7 @@ public:
 	Button(const UIResourceInfo& info, TextureManager* texMgr);
 
 	// デストラクタ
-	~Button();
+	virtual ~Button()override;
 
 	virtual void Update(void) override;		// 更新
 	virtual void Draw(void) override;		// 描画
@@ -36,7 +36,7 @@ public:
 
 	void SetUIKind(UI_KIND kind) { uiKind_ = kind; }
 
-private:
+protected:
 	
 	BUTTON_STATE buttonState_;		// ボタンの状態
 

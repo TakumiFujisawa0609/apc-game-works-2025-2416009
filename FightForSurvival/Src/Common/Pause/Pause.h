@@ -4,6 +4,8 @@
 #include "../../Application.h"
 
 class Setting;
+class UIManager;
+class TextureManager;
 
 class Pause
 {
@@ -74,18 +76,12 @@ protected:
 	// 設定のインスタンスポインタ
 	Setting* setting_;
 
+	// UI
+	UIManager* uiMgr;
+	TextureManager* texMgr;
+
 	// ポーズモードの種類
 	PAUSE pause_;
-
-	// 画像
-	// 下地
-	int baseHandle_[static_cast<int>(BUTTON_STATE::MAX)];
-	// テキスト
-	int textHandle_[static_cast<int>(PAUSE::NON)];
-	// ボタンの状態
-	BUTTON_STATE buttonState_[static_cast<int>(PAUSE::NON)];
-	// 今押されたか
-	bool isTrgDown_[static_cast<int>(PAUSE::NON)];
 
 	bool pauseMode_;
 

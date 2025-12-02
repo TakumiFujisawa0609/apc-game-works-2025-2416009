@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\UI\Object\Button\PauseButton\PauseButton.cpp" />
     <ClCompile Include="Src\UI\Object\Sprite\FlashingSprite\FlashingSprite.cpp" />
     <ClCompile Include="Src\UI\Object\MagicStatus\MagicStatus.cpp" />
     <ClCompile Include="Src\Object\Magic\DragonMagic\DragonMagic.cpp" />
@@ -81,8 +82,10 @@
     <ClCompile Include="Src\Object\Player\Upgrade\Upgrade.cpp" />
     <ClCompile Include="Src\Object\Magic\ChaseMagic\ChaseMagic.cpp" />
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
+    <ClCompile Include="Src\UI\Object\Button\TitleButton\TitleButton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\UI\Object\Button\PauseButton\PauseButton.h" />
     <ClInclude Include="Src\UI\Object\Sprite\FlashingSprite\FlashingSprite.h" />
     <ClInclude Include="Src\UI\Object\MagicStatus\MagicStatus.h" />
     <ClInclude Include="Src\Object\Magic\DragonMagic\DragonMagic.h" />
@@ -151,6 +154,7 @@
     <ClInclude Include="Src\Object\Player\Upgrade\Upgrade.h" />
     <ClInclude Include="Src\Object\Magic\ChaseMagic\ChaseMagic.h" />
     <ClInclude Include="Src\Object\Stage\Stage.h" />
+    <ClInclude Include="Src\UI\Object\Button\TitleButton\TitleButton.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

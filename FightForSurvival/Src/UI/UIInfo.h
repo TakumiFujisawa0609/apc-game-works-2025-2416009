@@ -14,6 +14,9 @@ enum class UI_KIND
     GAME_START,
     END,
     CLOUD,
+    PAUSE_CONTINUE,
+    PAUSE_SETTING,
+    PAUSE_TITLE,
 
     MAX
 };

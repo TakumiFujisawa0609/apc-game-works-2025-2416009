@@ -6,6 +6,8 @@
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
+#include "Object/Button/TitleButton/TitleButton.h"
+#include "Object/Button/PauseButton/PauseButton.h"
 #include "Object/MagicStatus/MagicStatus.h"
 
 // UI‘S‚Ä‚ð‚ ‚ç‚©‚¶‚ß“o˜^‚·‚é
@@ -37,14 +39,26 @@ inline void RegisterUI(void)
 
     UIFactory::GetInstance()->Register(UI_KIND::GAME_START,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Button* gameStart = new Button(info, texMgr); return gameStart; });
+        { TitleButton* gameStart = new TitleButton(info, texMgr); return gameStart; });
 
     UIFactory::GetInstance()->Register(UI_KIND::END,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Button* end = new Button(info, texMgr); return end; });
+        { TitleButton* end = new TitleButton(info, texMgr); return end; });
 
     UIFactory::GetInstance()->Register(UI_KIND::CLOUD,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* cloud = new Sprite(info, texMgr); return cloud; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::PAUSE_CONTINUE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { PauseButton* pauseContinue = new PauseButton(info, texMgr); return pauseContinue; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::PAUSE_SETTING,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { PauseButton* pauseSetting = new PauseButton(info, texMgr); return pauseSetting; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::PAUSE_TITLE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { PauseButton* pauseTitle = new PauseButton(info, texMgr); return pauseTitle; });
 
 }

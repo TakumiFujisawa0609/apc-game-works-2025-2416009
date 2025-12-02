@@ -68,6 +68,7 @@ void Button::Update(void)
 		buttonState_ = DEFAULE;
 
 	}
+
 }
 
 void Button::Draw(void)
