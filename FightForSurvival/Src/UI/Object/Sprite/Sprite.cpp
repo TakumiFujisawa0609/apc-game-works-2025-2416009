@@ -24,6 +24,10 @@ Sprite::~Sprite()
 
 void Sprite::Update(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
 }
 
 void Sprite::Draw(void)

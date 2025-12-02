@@ -68,10 +68,4 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         0, 0, 1280, 720, 1.0f}
     },
 
-    { UI_KIND::GRASS,{
-        UI_KIND::GRASS,
-        true,
-        "Data/Image/UI/Title/Grass.png", "", "","",
-        0, 0, 1280, 720, 1.0f}
-    },
 };

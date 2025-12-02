@@ -14,11 +14,11 @@ public:
 	Sprite(const UIResourceInfo& info, TextureManager* texMgr);
 
 	// デストラクタ
-	~Sprite();
+	virtual ~Sprite()override;
 
-	void Update(void) override;		// 更新
-	void Draw(void) override;		// 描画
+	virtual void Update(void) override;		// 更新
+	virtual void Draw(void) override;		// 描画
 
-private:
+protected:
 	int handle_;
 };

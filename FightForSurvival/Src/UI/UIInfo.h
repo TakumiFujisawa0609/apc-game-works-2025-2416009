@@ -14,7 +14,6 @@ enum class UI_KIND
     GAME_START,
     END,
     CLOUD,
-    GRASS,
 
     MAX
 };

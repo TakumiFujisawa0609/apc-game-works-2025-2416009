@@ -2,6 +2,7 @@
 
 #include "Factory/UIFactory.h"
 #include "Object/Sprite/Sprite.h"
+#include "Object/Sprite/FlashingSprite/FlashingSprite.h"
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
@@ -32,7 +33,7 @@ inline void RegisterUI(void)
 
     UIFactory::GetInstance()->Register(UI_KIND::CLICK_TO_START,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* clickToStart = new Sprite(info, texMgr); return clickToStart; });
+        { FlashingSprite* clickToStart = new FlashingSprite(info, texMgr); return clickToStart; });
 
     UIFactory::GetInstance()->Register(UI_KIND::GAME_START,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
@@ -46,7 +47,4 @@ inline void RegisterUI(void)
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* cloud = new Sprite(info, texMgr); return cloud; });
 
-    UIFactory::GetInstance()->Register(UI_KIND::GRASS,
-        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* grass = new Sprite(info, texMgr); return grass; });
 }
