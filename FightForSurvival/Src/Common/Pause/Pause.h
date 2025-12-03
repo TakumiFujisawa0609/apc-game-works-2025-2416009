@@ -16,11 +16,11 @@ public:
 	static constexpr int COL_SIZE_Y = 64;
 
 	// Šî€À•W
-	static constexpr int POS_X = Application::SCREEN_SIZE_X / 2 - COL_SIZE_X / 2;
-	static constexpr int POS_Y = Application::SCREEN_SIZE_Y / 2 - 130;
+	static constexpr int POS_X = 512;
+	static constexpr int POS_Y = 200;
 
 	// ‰æ‘œŠÔ(—]”’)‚Ì‘å‚«‚³
-	static constexpr int SPACE_Y = COL_SIZE_Y + 50;
+	static constexpr int SPACE_Y = 160;
 
 	// •`‰æ–‡”
 	static constexpr int DRAW_NUM = 3;

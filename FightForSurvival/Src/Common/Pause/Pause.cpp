@@ -143,7 +143,29 @@ void Pause::Draw(void)
 		// UIの描画
 		uiMgr->Draw();
 
+
+#ifdef _DEBUG
+
+		// カメラのデバック描画
+
+		DrawBox(pos_[static_cast<int>(PAUSE::CONTINUE)].x,
+			pos_[static_cast<int>(PAUSE::CONTINUE)].y,
+			pos_[static_cast<int>(PAUSE::CONTINUE)].x + COL_SIZE_X,
+			pos_[static_cast<int>(PAUSE::CONTINUE)].y + COL_SIZE_Y, 0xff0000, false);
+
+		DrawBox(pos_[static_cast<int>(PAUSE::SETTING)].x,
+			pos_[static_cast<int>(PAUSE::SETTING)].y,
+			pos_[static_cast<int>(PAUSE::SETTING)].x + COL_SIZE_X,
+			pos_[static_cast<int>(PAUSE::SETTING)].y + COL_SIZE_Y, 0xff0000, false);
+
+		DrawBox(pos_[static_cast<int>(PAUSE::TITLE)].x,
+			pos_[static_cast<int>(PAUSE::TITLE)].y,
+			pos_[static_cast<int>(PAUSE::TITLE)].x + COL_SIZE_X,
+			pos_[static_cast<int>(PAUSE::TITLE)].y + COL_SIZE_Y, 0xff0000, false);
+
+#endif // _DEBUG
 	}
+
 }
 
 // 解放
@@ -190,6 +212,12 @@ void Pause::MouseSelect(void)
 		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
 			ChangePause(static_cast<PAUSE>(i));
+
+			if (InputManager::GetInstance().ConfirmUp())
+			{
+				// 確定時の遷移処理
+				Confirm();
+			}
 
 			break;
 		}
