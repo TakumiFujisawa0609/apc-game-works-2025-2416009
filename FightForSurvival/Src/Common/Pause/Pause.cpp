@@ -15,6 +15,10 @@ Pause::Pause(void)
 	:
 	setting_(nullptr)
 {
+	for (int i = 0; i < static_cast<int>(PAUSE::NON); i++)
+	{
+		isTrgDown_[i] = false;
+	}
 }
 
 // デストラクタ
@@ -25,16 +29,6 @@ Pause::~Pause(void)
 // ロード関連
 void Pause::Load(void)
 {
-	//// ベースロード
-	//baseHandle_[static_cast<int>(BUTTON_STATE::DEFAULE)] = LoadGraph("Data/Image/UI/Pause/Base_0.png");
-	//baseHandle_[static_cast<int>(BUTTON_STATE::HOVER)] = LoadGraph("Data/Image/UI/Pause/Base_1.png");
-	//baseHandle_[static_cast<int>(BUTTON_STATE::TRIGGER_DOWN)] = LoadGraph("Data/Image/UI/Pause/Base_2.png");
-
-	//// テキストロード
-	//textHandle_[static_cast<int>(PAUSE::CONTINUE)] = LoadGraph("Data/Image/UI/Pause/continue.png");
-	//textHandle_[static_cast<int>(PAUSE::SETTING)] = LoadGraph("Data/Image/UI/Pause/setting.png");
-	//textHandle_[static_cast<int>(PAUSE::TITLE)] = LoadGraph("Data/Image/UI/Pause/title.png");
-
 	// 設定のインスタンスを生成
 	setting_ = new Setting();
 	setting_->Load();
@@ -213,10 +207,14 @@ void Pause::MouseSelect(void)
 		{
 			ChangePause(static_cast<PAUSE>(i));
 
-			if (InputManager::GetInstance().ConfirmUp())
+			if (InputManager::GetInstance().ConfirmUp() && isTrgDown_[i])
 			{
 				// 確定時の遷移処理
 				Confirm();
+			}
+			if (InputManager::GetInstance().Confirm() && !isTrgDown_[i])
+			{
+				isTrgDown_[i] = true;
 			}
 
 			break;
@@ -224,6 +222,7 @@ void Pause::MouseSelect(void)
 		else
 		{
 			ChangePause(PAUSE::NON);
+			isTrgDown_[i] = false;
 		}
 	}
 

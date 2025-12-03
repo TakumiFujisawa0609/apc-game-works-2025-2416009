@@ -8,6 +8,7 @@
 #include "Object/Button/Button.h"
 #include "Object/Button/TitleButton/TitleButton.h"
 #include "Object/Button/PauseButton/PauseButton.h"
+#include "Object/Button/SettingButton/SettingButtonDone.h"
 #include "Object/MagicStatus/MagicStatus.h"
 
 // UI‘S‚Ä‚ð‚ ‚ç‚©‚¶‚ß“o˜^‚·‚é
@@ -60,5 +61,21 @@ inline void RegisterUI(void)
     UIFactory::GetInstance()->Register(UI_KIND::PAUSE_TITLE,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { PauseButton* pauseTitle = new PauseButton(info, texMgr); return pauseTitle; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::SETTING_TEXT,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* settingText = new Sprite(info, texMgr); return settingText; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::SETTING_DONE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { SettingButtonDone* settingButtonDone = new SettingButtonDone(info, texMgr); return settingButtonDone; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::SETTING_BAR,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* settingBar = new Sprite(info, texMgr); return settingBar; });
+
+    //UIFactory::GetInstance()->Register(UI_KIND::SETTING_CIRCLE,
+    //    [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+    //    { Button* settingCircle = new Sprite(info, texMgr); return settingCircle; });
 
 }

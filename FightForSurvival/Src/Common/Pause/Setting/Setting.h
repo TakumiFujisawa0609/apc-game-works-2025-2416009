@@ -3,25 +3,20 @@
 #include "../../../Application.h"
 #include "../../Vector2/Vector2.h"
 
+class UIManager;
+class TextureManager;
+
 class Setting
 {
 public:
 
 	// 衝突用サイズ
-	static constexpr int COL_SIZE_X = 90;
-	static constexpr int COL_SIZE_Y = 30;
-
-	//　「High」の座標
-	static constexpr int HIGH_POS_X = Application::SCREEN_SIZE_X / 2 + 200;
-	static constexpr int HIGH_POS_Y = Application::SCREEN_SIZE_Y / 2;
-
-	//　「Low」の座標
-	static constexpr int LOW_POS_X = Application::SCREEN_SIZE_X / 2 - 200;
-	static constexpr int LOW_POS_Y = Application::SCREEN_SIZE_Y / 2;
+	static constexpr int COL_SIZE_X = 200;
+	static constexpr int COL_SIZE_Y = 64;
 
 	//　「Done」の座標
-	static constexpr int DONE_POS_X = Application::SCREEN_SIZE_X / 2 + 150;
-	static constexpr int DONE_POS_Y = Application::SCREEN_SIZE_Y / 2 + 90;
+	static constexpr int DONE_POS_X = 840;
+	static constexpr int DONE_POS_Y = 520;
 
 	//　感度の最高設定
 	static constexpr float SENSITIVITY_MAX_MOUSE = 0.01f;
@@ -35,16 +30,16 @@ public:
 	static constexpr float SENSITIVITY_PAD = 0.001f;
 
 	// バーの始まりの位置
-	static constexpr int BAR_START_POS_X = Application::SCREEN_SIZE_X / 2 - 160;
-	static constexpr int BAR_START_POS_Y = Application::SCREEN_SIZE_Y / 2 + 35;
+	static constexpr int BAR_START_POS_X = 384;
+	static constexpr int BAR_START_POS_Y = 350;
 	// バーの終わりの位置
-	static constexpr int BAR_END_POS_X = Application::SCREEN_SIZE_X / 2 + 180;
-	static constexpr int BAR_END_POS_Y = Application::SCREEN_SIZE_Y / 2 + 45;
+	static constexpr int BAR_END_POS_X = 897;
+	static constexpr int BAR_END_POS_Y = 366;
 
 	// バーの円のY座標
-	static constexpr int CIRCLE_POS_Y = 350;
+	static constexpr int CIRCLE_POS_Y = 354;
 	// バーの円の半径
-	static constexpr int CIRCLE_RAD = 15;
+	static constexpr int CIRCLE_RAD = 18;
 
 	Setting(void);
 	~Setting(void);
@@ -59,6 +54,10 @@ public:
 	void SetIsSetting(bool flg);
 
 private:
+
+	// UI
+	UIManager* uiMgr;
+	TextureManager* texMgr;
 
 	// 「Done」の座標
 	Vector2 pos_;

@@ -5,6 +5,10 @@
 #include "../../../Manager/SystemManager.h"
 #include "Setting.h"
 
+#include "../../../UI/UIManager.h"
+#include "../../../UI/TextrueManager/TextureManager.h"
+#include "../../../UI/Object/Button/SettingButton/SettingButtonDone.h"
+
 Setting::Setting(void)
 {
 }
@@ -15,6 +19,22 @@ Setting::~Setting(void)
 
 void Setting::Load(void)
 {
+	// UI管理の生成処理
+	uiMgr = new UIManager();
+	texMgr = new TextureManager();
+
+	// UIを生成
+	UIBase* text = UIFactory::GetInstance()->CreateUI(UI_KIND::SETTING_TEXT, texMgr);
+	UIBase* done = UIFactory::GetInstance()->CreateUI(UI_KIND::SETTING_DONE, texMgr);
+	UIBase* bar = UIFactory::GetInstance()->CreateUI(UI_KIND::SETTING_BAR, texMgr);
+
+	SettingButtonDone* settingButton = dynamic_cast<SettingButtonDone*>(done);
+	settingButton->SetIsDone(&isDone_);
+
+	// 生成したUIを追加
+	uiMgr->AddUI(text);
+	uiMgr->AddUI(done);
+	uiMgr->AddUI(bar);
 }
 
 void Setting::Init(void)
@@ -54,6 +74,9 @@ void Setting::Update(void)
 
 	// 感度設定バーの処理
 	BarUpdate();
+
+	// UIの更新
+	uiMgr->Update();
 }
 
 void Setting::Draw(void)
@@ -63,28 +86,15 @@ void Setting::Draw(void)
 	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0x000000, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	// 感度の範囲を分かりやすく
-	DrawString(HIGH_POS_X, HIGH_POS_Y, "High", 0xffffff);
-	DrawString(LOW_POS_X, LOW_POS_Y, "Low", 0xffffff);
-
-	if (isDone_)
-	{
-		DrawString(DONE_POS_X, DONE_POS_Y, "Done", 0x00ff00);
-	}
-	else
-	{
-		DrawString(DONE_POS_X, DONE_POS_Y, "Done", 0xffffff);
-	}
-
-	// バーの表示
-	DrawBox(BAR_START_POS_X, BAR_START_POS_Y, BAR_END_POS_X, BAR_END_POS_Y, 0xffffff, true);
+	// UIの描画
+	uiMgr->Draw();
 
 	if (SystemManager::GetInstance().GetIsDevice())
 	{
 
 		if(isDrag_)
 		{
-			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0xffff00, true);
+			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x696969, true);
 		}
 		else
 		{
@@ -102,24 +112,18 @@ void Setting::Draw(void)
 		else
 		{
 			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
-				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0xffff00, true);
+				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x696969, true);
 		}
 	}
 
-
-#ifdef _DEBUG
-
-	DrawBox(DONE_POS_X,
-		DONE_POS_Y,
-		DONE_POS_X + COL_SIZE_X,
-		DONE_POS_Y + COL_SIZE_Y, 0xff0000, false);
-
-#endif // _DEBUG
 
 }
 
 void Setting::Release(void)
 {
+	// UIの解放
+	delete uiMgr;
+	delete texMgr;
 }
 
 void Setting::SetIsSetting(bool flg)

@@ -89,4 +89,32 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         512, 520, 256, 64, 1.0f}
     },
 
+    { UI_KIND::SETTING_TEXT,{
+        UI_KIND::SETTING_TEXT,
+        true,
+        "Data/Image/UI/Pause/Setting/SettingText.png", "", "","",
+        0, 0, 1280, 720, 1.0f}
+    },
+
+    { UI_KIND::SETTING_DONE,{
+        UI_KIND::SETTING_DONE,
+        true,
+        "Data/Image/UI/Pause/Setting/Done_0.png", "Data/Image/UI/Pause/Setting/Done_1.png", "Data/Image/UI/Pause/Setting/Done_2.png","",
+        840, 520, 200, 64, 1.0f}
+    },
+
+    { UI_KIND::SETTING_BAR,{
+        UI_KIND::SETTING_BAR,
+        true,
+        "Data/Image/UI/Pause/Setting/SettingBar.png", "", "","",
+        384, 350, 513, 16, 1.0f}
+    },
+
+    { UI_KIND::SETTING_CIRCLE,{
+        UI_KIND::SETTING_CIRCLE,
+        true,
+        "Data/Image/UI/Pause/Setting/SettingCircle_0.png", "Data/Image/UI/Pause/Setting/SettingCircle_1.png", "Data/Image/UI/Pause/Setting/SettingCircle_0.png","",
+        384, 350, 513, 16, 1.0f}
+    },
+
 };

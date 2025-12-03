@@ -3,6 +3,7 @@
 #include <DxLib.h>
 
 #include "../../TextrueManager/TextureManager.h"
+#include "../../../Manager/InputManager.h"
 
 Button::Button(const UIResourceInfo& info, TextureManager* texMgr)
 	:
@@ -14,6 +15,8 @@ Button::Button(const UIResourceInfo& info, TextureManager* texMgr)
 	y_ = info.y;
 	w_ = info.width;
 	h_ = info.height;
+
+	isTrgDown_ = false;
 
 	// ロード
 	handle_[DEFAULE] = texMgr->LoadTexture(info.basePath);
@@ -38,35 +41,31 @@ void Button::Update(void)
 
 	// ボタンの上にマウスポインタがあるか？
 	if (x_< mousePosX &&
-		x_+ w_ > mousePosX &&
+		x_ + w_ > mousePosX &&
 		y_< mousePosY &&
-		y_+ h_ > mousePosY)
+		y_ + h_ > mousePosY)
 	{
-		// ボタンの上にマウスポインタがある
-		buttonState_ = HOVER;
 
 		// クリックされているか？
-		if ((GetMouseInput() & MOUSE_INPUT_LEFT) != 0)
+		if (InputManager::GetInstance().Confirm() && !isTrgDown_)
 		{
-			// クリックされている
+			isTrgDown_ = true;
+		}
+
+		if (isTrgDown_)
+		{
 			buttonState_ = TRIGGER_DOWN;
 		}
 		else
 		{
-			// 前フレームでボタン内でクリックした
-			if (buttonState_ == TRIGGER_DOWN)
-			{
-				// ボタン内で離した
-				buttonState_ = TRIGGER_UP;
-			}
+			buttonState_ = HOVER;
 		}
+		
 	}
-	// ボタンの外にマウスポインタがある
 	else
 	{
-		// デフォルト状態
 		buttonState_ = DEFAULE;
-
+		isTrgDown_ = false;
 	}
 
 }

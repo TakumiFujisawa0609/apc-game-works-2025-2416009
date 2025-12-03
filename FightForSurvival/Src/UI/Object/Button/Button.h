@@ -42,4 +42,6 @@ protected:
 
 	int handle_[MAX];	// 画像ハンドル
 	int textHandle_;	// テキスト
+
+	bool isTrgDown_;	// ダウントリガー判定用
 };

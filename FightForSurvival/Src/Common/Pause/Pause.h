@@ -87,6 +87,9 @@ protected:
 
 	bool isSetting_;
 
+	// ダウントリガー判定用
+	bool isTrgDown_[static_cast<int>(PAUSE::NON)];
+
 	void StartPause(void);
 
 	// カーソルの選択処理
