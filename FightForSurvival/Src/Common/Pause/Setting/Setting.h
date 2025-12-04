@@ -37,7 +37,7 @@ public:
 	static constexpr int BAR_END_POS_Y = 366;
 
 	// バーの円のY座標
-	static constexpr int CIRCLE_POS_Y = 354;
+	static constexpr int CIRCLE_POS_Y = 356;
 	// バーの円の半径
 	static constexpr int CIRCLE_RAD = 18;
 

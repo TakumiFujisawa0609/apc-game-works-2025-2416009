@@ -94,11 +94,11 @@ void Setting::Draw(void)
 
 		if(isDrag_)
 		{
-			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x696969, true);
+			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x3b3b3b, true);
 		}
 		else
 		{
-			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0xffffff, true);
+			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x7c7c7c, true);
 
 		}
 	}
@@ -107,12 +107,12 @@ void Setting::Draw(void)
 		if (isDone_)
 		{
 			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
-				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0xffffff, true);
+				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x7c7c7c, true);
 		}
 		else
 		{
 			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
-				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x696969, true);
+				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x3b3b3b, true);
 		}
 	}
 
