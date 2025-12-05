@@ -26,6 +26,12 @@ void Player::Load(void)
 	// 杖を生成・ロード
 	weapon_ = new Stick(this);
 	weapon_->Load();
+
+	font_[static_cast<int>(FONT_KIND::MAGIC_NUM)] = CreateFontToHandle("x12y12pxMaruMinya", 24, 1, DX_FONTTYPE_ANTIALIASING);;
+	font_[static_cast<int>(FONT_KIND::CHANGE_MAGIC_INTERVAL)] = CreateFontToHandle("x12y12pxMaruMinya", 36, 1, DX_FONTTYPE_ANTIALIASING);;
+	font_[static_cast<int>(FONT_KIND::MP_POTION_NUM)] = CreateFontToHandle("x12y12pxMaruMinya", 36, 1, DX_FONTTYPE_ANTIALIASING);;
+	font_[static_cast<int>(FONT_KIND::USE_POTION)]= CreateFontToHandle("x12y12pxMaruMinya", 16, 1, DX_FONTTYPE_ANTIALIASING);;
+
 }
 
 void Player::Init(void)
@@ -139,11 +145,43 @@ void Player::Draw(void)
 		weapon_->Draw();
 	}
 
+	
+#ifdef _DEBUG
+
+
+	//// 体 デバッグ用：衝突判定用カプセル
+	//DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
+	//	player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
+
+	//// プレイヤー座標
+	//DrawFormatString(0, 100,
+	//	0xffffff, "プレイヤー座標：%.f, %.f, %.f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
+
+	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
+	// プレイヤー頭の位置目安
+	//DrawSphere3D(cameraPos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
+	//DrawSphere3D(player_.pos_, player_.collisionRadius_, 10, 0x00ff00, 0x0000ff, false);
+#endif // _DEBUG
+
+}
+
+void Player::Draw2D(void)
+{
 	int posY = Application::SCREEN_SIZE_Y;
 
-	DrawFormatString(5, posY - 40, 0x7fff00, "HP：%.f", player_.hp_);
-	DrawFormatString(5, posY - 20, 0xffd700, "スタミナ：%.f / %.f", ability_.stamina_, ability_.staminaMax_);
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 208, Application::SCREEN_SIZE_Y - 200,
+		0xffffff, font_[static_cast<int>(FONT_KIND::MAGIC_NUM)], "%d/%d", magicNum_, MAGIC_CAPACITY);
 
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 60, Application::SCREEN_SIZE_Y - 40,
+		0xffffff, font_[static_cast<int>(FONT_KIND::MP_POTION_NUM)], "x %d", MPPotionNum_);
+
+	// 攻撃変更可能時間
+	if (changeMagicInterval_ > 0.0f)
+	{
+		DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 210, Application::SCREEN_SIZE_Y - 150,
+			0xffffff, font_[static_cast<int>(FONT_KIND::CHANGE_MAGIC_INTERVAL)], "%d秒", static_cast<int>(changeMagicInterval_));
+	}
+	
 	// リロード中の表示
 	if (isHealMP_)
 	{
@@ -156,51 +194,18 @@ void Player::Draw(void)
 		// プログレスバー本体
 		DrawBox(posX - 50, posY - 30,
 			posX - 50 + static_cast<int>((50 * healMPTime_)), posY - 40, 0xff7f50, true);
-		DrawString(posX - 70, posY - 60, "ポーション使用中", 0xffffff);
+		DrawStringToHandle(posX - 60, posY - 60, "ポーション使用中", 0xffffff, font_[static_cast<int>(FONT_KIND::USE_POTION)]);
 	}
-
-	// 攻撃変更可能時間
-	DrawFormatString(Application::SCREEN_SIZE_X - 250, Application::SCREEN_SIZE_Y - 60,
-		0xffffff, "種類変更ができるまであと：%d秒", static_cast<int>(changeMagicInterval_));
-
-#ifdef _DEBUG
-
-	DrawFormatString(Application::SCREEN_SIZE_X - 380, Application::SCREEN_SIZE_Y - 25,
-		0xffffff, "攻撃可能回数：%.d　/　残りのMPポーション：%.d", magicNum_, MPPotionNum_);
-
-	// 魔法の種類
-	switch (magicType_)
-	{
-	case 0:
-		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：普通", 0xffffff);
-		break;
-	case 1:
-		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：追跡", 0xffffff);
-		break;
-	case 2:
-		DrawString(Application::SCREEN_SIZE_X - 420, Application::SCREEN_SIZE_Y - 60, "魔法の種類：爆発", 0xffffff);
-		break;
-	default:
-		break;
-	}
-	//// 体 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collisionPosTop_, collisionPosUnder_,
-		player_.collisionRadius_, 10, 0x00ff00, 0x00ff00, false);
-
-	// プレイヤー座標
-	DrawFormatString(0, 100,
-		0xffffff, "プレイヤー座標：%.f, %.f, %.f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
-
-	//DrawFormatString(0, 20, 0xffffff, "プレイヤー座標：%.2f,%.2f,%.2f", player_.pos_.x, player_.pos_.y, player_.pos_.z);
-	// プレイヤー頭の位置目安
-	//DrawSphere3D(cameraPos_, 30.0f, 10, 0x00ff00, 0x0000ff, false);
-	//DrawSphere3D(player_.pos_, player_.collisionRadius_, 10, 0x00ff00, 0x0000ff, false);
-#endif // _DEBUG
-
 }
 
 void Player::Release(void)
 {
+	// フォントハンドルの解放
+	for (int i = 0; i < static_cast<int>(FONT_KIND::MAX); i++)
+	{
+		DeleteFontToHandle(font_[i]);
+	}
+
 	MV1DeleteModel(player_.modelId_);
 
 	if (weapon_ != nullptr)

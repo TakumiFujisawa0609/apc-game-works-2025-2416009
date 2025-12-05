@@ -12,6 +12,7 @@ Score::~Score(void)
 
 void Score::Load(void)
 {
+	font_= CreateFontToHandle("x12y12pxMaruMinya", 24, 1, DX_FONTTYPE_ANTIALIASING);;
 }
 
 void Score::Init(void)
@@ -22,10 +23,10 @@ void Score::Init(void)
 
 void Score::Draw(void)
 {
-	DrawFormatString(pos_.x, pos_.y, 0xffffff, "Score : %d", SystemManager::GetInstance().GetScore());
+	DrawFormatStringToHandle(pos_.x, pos_.y, 0xffffff, font_, "Score : %d", SystemManager::GetInstance().GetScore());
 }
 
 void Score::Release(void)
 {
-
+	DeleteFontToHandle(font_);
 }

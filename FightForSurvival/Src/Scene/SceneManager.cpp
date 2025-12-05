@@ -37,6 +37,8 @@ void SceneManager::Load(void)
 
 void SceneManager::Init(void)
 {
+	// フォントデータの追加
+	AddFontResourceExA("Data/Font/x12y12pxMaruMinya.ttf", FR_PRIVATE, NULL);
 
 	sceneId_ = SCENE_ID::TITLE;
 	waitSceneId_ = SCENE_ID::NONE;
@@ -137,6 +139,9 @@ void SceneManager::Draw(void)
 
 void SceneManager::Destroy(void)
 {
+
+	// ウィンドウズに一時的に保持していたフォントデータを削除
+	RemoveFontResourceExA("", FR_PRIVATE, NULL);
 
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();

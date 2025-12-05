@@ -74,8 +74,4 @@ inline void RegisterUI(void)
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* settingBar = new Sprite(info, texMgr); return settingBar; });
 
-    //UIFactory::GetInstance()->Register(UI_KIND::SETTING_CIRCLE,
-    //    [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-    //    { Button* settingCircle = new Sprite(info, texMgr); return settingCircle; });
-
 }

@@ -110,11 +110,4 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         384, 350, 513, 16, 1.0f}
     },
 
-    { UI_KIND::SETTING_CIRCLE,{
-        UI_KIND::SETTING_CIRCLE,
-        true,
-        "Data/Image/UI/Pause/Setting/SettingCircle_0.png", "Data/Image/UI/Pause/Setting/SettingCircle_1.png", "Data/Image/UI/Pause/Setting/SettingCircle_0.png","",
-        384, 350, 513, 16, 1.0f}
-    },
-
 };

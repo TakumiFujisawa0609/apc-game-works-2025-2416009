@@ -76,6 +76,16 @@ public:
 	// 最大重力
 	static constexpr float MAX_GRAVITATION = -9.8f;
 
+	enum class FONT_KIND
+	{
+		MAGIC_NUM,
+		CHANGE_MAGIC_INTERVAL,
+		MP_POTION_NUM,
+		USE_POTION,
+
+		MAX,
+	};
+
 	// コンストラクタ
 	Player(void);
 
@@ -93,6 +103,7 @@ public:
 
 	// 描画処理
 	void Draw(void);
+	void Draw2D(void);
 
 	// 解放処理
 	void Release(void);
@@ -170,6 +181,9 @@ private:
 	int magicType_;
 	// 魔法変更可能間隔
 	float changeMagicInterval_;
+
+	// フォント情報
+	int font_[static_cast<int>(FONT_KIND::MAX)];
 
 	// 移動処理
 	void ProcessMove(void);

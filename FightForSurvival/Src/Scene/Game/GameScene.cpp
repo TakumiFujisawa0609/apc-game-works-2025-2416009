@@ -81,6 +81,7 @@ void GameScene::Load(void)
 
 	// スコアの生成
 	score_ = new Score();
+	score_->Load();
 
 	// ポーズモードの生成・ロード
 	pause_ = new Pause();
@@ -289,12 +290,14 @@ void GameScene::Draw(void)
 	// エフェクトの描画
 	redEffect_->Draw();
 
-
 	// スコアの描画
 	score_->Draw();
 
 	// UIの描画
 	uiMgr_->Draw();
+
+	// プレイヤー情報(2D)の描画
+	player_->Draw2D();
 
 	// カーソルの描画
 	cursor_->Draw();

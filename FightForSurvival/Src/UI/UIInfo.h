@@ -19,7 +19,6 @@ enum class UI_KIND
     PAUSE_TITLE,
     SETTING_TEXT,
     SETTING_DONE,
-    SETTING_CIRCLE,
     SETTING_BAR,
 
     MAX
