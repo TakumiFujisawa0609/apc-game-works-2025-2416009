@@ -16,13 +16,6 @@ public:
 	// 最大チャージに加算する攻撃力
 	static constexpr float ADD_DAMEGE = 5.0f;
 
-	// エフェクトの種類
-	enum class EFFECT_TYPE
-	{
-		GROUND,
-		HIT
-	};
-
 	// 魔法の状態
 	enum class STATE
 	{
@@ -61,14 +54,11 @@ public:
 	// 魔法を大きくする
 	void ChargeMagic(void);
 
-	// 座標を更新
-	void UpdatePos(VECTOR pos);
+	// 座標と向きを更新
+	void UpdatePosDir(VECTOR pos, VECTOR dir);
 
 	// 魔法の種類を返す
 	TYPE_MAGIC GetTypeMagic(void)const {return magic_.typeMagic_;}
-
-	// 爆発させる
-	void Blast(EFFECT_TYPE type);
 
 protected:
 	Player* player_;
@@ -78,10 +68,10 @@ protected:
 
 	Magic magic_;
 
-	// 爆発エフェクトのプレイハンドル
-	int effectBlastPlayId_;
-	// エフェクトの種類
-	EFFECT_TYPE effectType_;
+	// 攻撃エフェクトのプレイハンドル
+	int effectPlayId_;
+	// エフェクトのサイズ
+	float effectScale_;
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;

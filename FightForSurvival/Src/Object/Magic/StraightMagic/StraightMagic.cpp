@@ -20,6 +20,8 @@ void StraightMagic::SetParam(void)
 	magic_.collisionRadius_ = COLLISION_RAD;
 	magic_.headDamage_ = HEAD_DAMAGE;
 	magic_.bodyDamage_ = BODY_DAMAGE;
+
+	effectScale_ = 10.0f;
 }
 
 void StraightMagic::ChangeShot(void)

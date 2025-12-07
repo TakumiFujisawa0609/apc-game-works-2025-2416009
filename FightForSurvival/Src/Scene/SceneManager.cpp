@@ -9,6 +9,7 @@
 #include "../Manager/SystemManager.h"
 #include "SceneManager.h"
 #include "../UI/Factory/UIFactory.h"
+#include "../Manager/EffectResManager/EffectResManager.h"
 #include "../UI/UIRegisterTable.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -60,6 +61,10 @@ void SceneManager::Init(void)
 
 	// 初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
+
+	// エフェクト管理初期化
+	EffectResManager::CreateInstance();
+	EffectResManager::GetInstance().Load();
 }
 
 void SceneManager::Init3D(void)
@@ -146,6 +151,9 @@ void SceneManager::Draw(void)
 
 void SceneManager::Destroy(void)
 {
+
+	// エフェクト管理解放
+	EffectResManager::GetInstance().Destroy();
 
 	// ウィンドウズに一時的に保持していたフォントデータを削除
 	RemoveFontResourceExA("", FR_PRIVATE, NULL);

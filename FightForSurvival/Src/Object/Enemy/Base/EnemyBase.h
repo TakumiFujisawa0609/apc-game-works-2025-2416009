@@ -93,7 +93,6 @@ protected:
 	AnimationController* animationController_;
 	Player* player_;
 
-
 	// ƒvƒŒƒCƒ„[‚Ìî•ñ
 	Unit enemy_;
 

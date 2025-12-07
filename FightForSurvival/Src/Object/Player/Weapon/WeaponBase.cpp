@@ -169,15 +169,28 @@ void WeaponBase::GenerateMagicUpdate(void)
 	// 初期化処理
 	magic_->Init();
 	// 座標を更新する
-	magic_->UpdatePos(magicPos_);
+	magic_->UpdatePosDir(magicPos_,magic_->GetMagic().dir_);
 
 	ChangeState(STATE::CHARGE_MAGIC);
 }
 
 void WeaponBase::ChargeMagicUpdate(void)
 {
+
+#pragma region 方向
+
+	VECTOR dir;
+
+	// 狙う場所から魔法の発射位置へのベクトルを計算
+	VECTOR vec = VSub(targetPos_, magicPos_);
+
+	// ベクトルを正規化し、魔法の方向とする
+	dir = VNorm(vec);
+
+#pragma endregion
+
 	magic_->ChargeMagic();
-	magic_->UpdatePos(magicPos_);
+	magic_->UpdatePosDir(magicPos_, dir);
 }
 
 void WeaponBase::AttackUpdate(void)

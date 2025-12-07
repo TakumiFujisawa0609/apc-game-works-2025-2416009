@@ -425,7 +425,7 @@ void Dragon::IsDrawMagicWhole(void)
 
 		VECTOR pos = VAdd(enemy_.pos_, localPosRot);
 
-		magic->UpdatePos(pos);
+		magic->UpdatePosDir(pos, rot);
 
 		magicsRange_.emplace_back(magic);
 	}

@@ -8,8 +8,12 @@ public:
 	// エフェクトの種類
 	enum class TYPE
 	{
-		BLAST_GROUND,
-		BLAST_HIT
+		PLAYER_MAGIC_CHARGE,
+		PLAYER_MAGIC_SHOT,
+		BLAST,
+
+		BAT_MAGIC,
+		DRAGON_MAGIC
 	};
 
 	// インスタンスの生成
@@ -17,12 +21,14 @@ public:
 	// インスタンスの取得
 	static EffectResManager& GetInstance(void);
 
-	// 初期化
-	void Init(void);
+	// リソースのロード
+	void Load(void);
 	// リソースの破棄
 	void Destroy(void);
 	// エフェクシアのリソースハンドルを取得
 	int GetResourceId(TYPE type);
+
+	int PlayEffect(float scale, VECTOR dir, VECTOR pos, EffectResManager::TYPE effectType);
 
 private:
 
@@ -36,9 +42,6 @@ private:
 	EffectResManager(const EffectResManager& instance) = default;
 	// デストラクタも同様
 	~EffectResManager(void) = default;
-
-	// リソースのロード
-	void Load(void);
 
 	// エフェクシアのリソースハンドル
 	std::map<TYPE, int> resourceIds_;

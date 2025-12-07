@@ -70,5 +70,5 @@ private:
 	// デストラクタも同様
 	~Application(void) = default;
 
-	void InitEffekseer(void);
+	int InitEffekseer(void);
 };

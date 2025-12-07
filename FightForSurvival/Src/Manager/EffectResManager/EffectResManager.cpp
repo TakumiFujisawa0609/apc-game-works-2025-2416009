@@ -12,18 +12,11 @@ void EffectResManager::CreateInstance(void)
 		// 中身がnullptrで何も入っていなかったら行う
 		instance_ = new EffectResManager();
 	}
-	instance_->Init();
 }
 
 EffectResManager& EffectResManager::GetInstance(void)
 {
 	return *instance_;
-}
-
-void EffectResManager::Init(void)
-{
-	// リソースのロード
-	Load();
 }
 
 void EffectResManager::Destroy(void)
@@ -51,20 +44,57 @@ int EffectResManager::GetResourceId(TYPE type)
 	return resourceIds_[type];
 }
 
+int EffectResManager::PlayEffect(float scale, VECTOR dir, VECTOR pos, EffectResManager::TYPE effectType)
+{
+	// エフェクトの再生
+	int resId = EffectResManager::GetInstance().GetResourceId(effectType);
+	int effectPlayId = PlayEffekseer3DEffect(resId);
+
+	// エフェクトの大きさ
+	SetScalePlayingEffekseer3DEffect(
+		effectPlayId, scale, scale, scale);
+
+	// エフェクトの回転
+	dir.y += 90.0f * 180 / DX_PI_F;
+	SetRotationPlayingEffekseer3DEffect(
+		effectPlayId, dir.x, dir.y, dir.z);
+
+	// エフェクトの位置
+	SetPosPlayingEffekseer3DEffect(
+		effectPlayId, pos.x, pos.y, pos.z);
+
+	return effectPlayId;
+}
+
 EffectResManager::EffectResManager(void)
 {
 }
 
 void EffectResManager::Load(void)
 {
+	
+	// プレイヤー攻撃チャージ時のエフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHARGE,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
+	
+	// プレイヤー攻撃エフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
 
-	// 爆発地面エフェクトのロード
-	resourceIds_.emplace(TYPE::BLAST_GROUND,
+	// プレイヤー攻撃の爆発エフェクトのロード
+	resourceIds_.emplace(TYPE::BLAST,
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "Blast/Blast.efkefc").c_str()));
-	
-	// 爆発ヒットエフェクトのロード
-	resourceIds_.emplace(TYPE::BLAST_HIT,
+
+	// コウモリ攻撃エフェクトのロード
+	resourceIds_.emplace(TYPE::BAT_MAGIC,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "BlastHit/BlastHit.efkefc").c_str()));
+
+	// ドラゴン攻撃エフェクトのロード
+	resourceIds_.emplace(TYPE::DRAGON_MAGIC,
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "BlastHit/BlastHit.efkefc").c_str()));
 

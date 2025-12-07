@@ -28,6 +28,11 @@ void MagicBase::Init(void)
 	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
 	// 位置の設定
 	MV1SetPosition(magic_.modelId_, magic_.pos_);
+
+	// エフェクトの設定
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
+
 }
 
 void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
@@ -40,6 +45,10 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	magic_.isExists_ = true;
 	// 撃った状態に変更
 	ChangeState(STATE::SHOT);
+
+	// エフェクトの設定
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
 }
 
 void MagicBase::Update(void)
@@ -119,22 +128,25 @@ void MagicBase::ChargeMagic(void)
 		magic_.collisionRadius_ = CHARGE_MAX;
 	}
 
-	// 大きさの設定
-	//MV1SetScale(magic_.modelId_, magic_.scale_);
 }
 
-void MagicBase::UpdatePos(VECTOR pos)
+void MagicBase::UpdatePosDir(VECTOR pos, VECTOR dir)
 {
 	// 座標を更新する
 	magic_.pos_ = pos;
-
 	MV1SetPosition(magic_.modelId_, magic_.pos_);
-}
 
-void MagicBase::Blast(EFFECT_TYPE type)
-{
-	effectType_ = type;
-	ChangeState(STATE::BLAST);
+	// エフェクトの位置の更新
+	SetPosPlayingEffekseer3DEffect(
+		effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
+
+	// 向きを更新する
+	magic_.dir_ = dir;
+
+	// エフェクトの回転
+	dir.y += 90.0f * 180 / DX_PI_F;
+	SetRotationPlayingEffekseer3DEffect(
+		effectPlayId_, magic_.dir_.x, magic_.dir_.y, magic_.dir_.z);
 }
 
 void MagicBase::ReduceCntAlive(void)
@@ -156,17 +168,17 @@ void MagicBase::UpdateShot(void)
 
 	// 魔法を移動させる
 	magic_.pos_ = VAdd(magic_.pos_, VScale(magic_.dir_, magic_.speed_));
-
 	// 位置の設定
 	MV1SetPosition(magic_.modelId_, magic_.pos_);
 
 	// 生存カウンタの減少
 	ReduceCntAlive();
+
 }
 
 void MagicBase::UpdateBlast(void)
 {
-	if (IsEffekseer3DEffectPlaying(effectBlastPlayId_) == -1)
+	if (IsEffekseer3DEffectPlaying(effectPlayId_) == -1)
 	{
 		ChangeState(STATE::END);
 	}
@@ -184,41 +196,17 @@ void MagicBase::ChangeShot(void)
 
 void MagicBase::ChangeBlast(void)
 {
-	EffectResManager::TYPE type;
-	switch (effectType_)
-	{
-	case EFFECT_TYPE::GROUND:
-		type = EffectResManager::TYPE::BLAST_GROUND;
-		break;
-	case EFFECT_TYPE::HIT:
-		type = EffectResManager::TYPE::BLAST_HIT;
-		break;
-	default:
-		break;
-	}
-
-	// エフェクトの再生
-	int resId = EffectResManager::GetInstance().GetResourceId(type);
-	effectBlastPlayId_ = PlayEffekseer3DEffect(resId);
-
-	// エフェクトの大きさ
 	float SCALE = 10.0f;
-	SetScalePlayingEffekseer3DEffect(
-		effectBlastPlayId_, SCALE, SCALE, SCALE);
+	VECTOR angle = { 0.0f, 0.0f, 0.0f };
 
-	// エフェクトの回転
-	VECTOR angles = { 0.0f, 0.0f, 0.0f };
-	SetRotationPlayingEffekseer3DEffect(
-		effectBlastPlayId_, angles.x, angles.y, angles.z);
-
-	// エフェクトの位置
-	SetPosPlayingEffekseer3DEffect(
-		effectBlastPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
+	// エフェクトの設定
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::BLAST);
 }
 
 void MagicBase::ChangeEnd(void)
 {
 	// エフェクト停止
-	StopEffekseer3DEffect(effectBlastPlayId_);
+	StopEffekseer3DEffect(effectPlayId_);
 }
 

@@ -26,7 +26,7 @@ public:
 	enum class STATE
 	{
 		IDLE,
-		GENERATE_MAGIC,
+		CREATE_MAGIC,
 		CHARGE_MAGIC,
 		ATTACK,
 		WAIT,

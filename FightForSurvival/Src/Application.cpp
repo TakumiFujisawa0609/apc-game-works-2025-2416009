@@ -5,7 +5,6 @@
 #include "Manager/SoundManager.h"
 #include "Manager/EndManager.h"
 #include "Common/Fps/FpsControl.h"
-#include "Manager/EffectResManager/EffectResManager.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -60,7 +59,11 @@ void Application::Init(void)
 	}
 
 	// Effekseerの初期化
-	InitEffekseer();
+	if (InitEffekseer() == -1)
+	{
+		isInitFail_ = true;
+		return;
+	}
 
 	// 乱数のシード値を設定する
 	DATEDATA date;
@@ -83,9 +86,6 @@ void Application::Init(void)
 	// サウンド管理初期化
 	SoundManager::CreateInstance();
 	SoundManager::GetInstance().Load();
-
-	// エフェクト管理初期化
-	EffectResManager::CreateInstance();
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();
@@ -133,9 +133,6 @@ void Application::Destroy(void)
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();
 
-	// エフェクト管理解放
-	EffectResManager::GetInstance().Destroy();
-
 	// 入力制御解放
 	InputManager::GetInstance().Destroy();
 
@@ -169,12 +166,16 @@ Application::Application(void)
 	isReleaseFail_ = false;
 }
 
-void Application::InitEffekseer(void)
+int Application::InitEffekseer(void)
 {
 	if (Effekseer_Init(8000) == -1)
 	{
 		DxLib_End();
+
+		return -1;
 	}
+
 	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+	return 1;
 }
