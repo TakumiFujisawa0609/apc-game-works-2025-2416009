@@ -199,6 +199,23 @@ bool CollisionUtility::CollisionLine(VECTOR startPos, VECTOR endPos, int modelId
 	return false;
 }
 
+bool CollisionUtility::CollisionLine(VECTOR startPos, VECTOR endPos, int modelId)
+{
+	// ü•ª‚Æƒ‚ƒfƒ‹‚ÌÕ“Ë”»’è
+	MV1_COLL_RESULT_POLY res =
+		MV1CollCheck_Line(modelId, -1, startPos, endPos);
+
+	// ƒ‚ƒfƒ‹‚ÆÕ“Ë‚µ‚Ä‚¢‚é‚©H
+	if (res.HitFlag)
+	{
+		// “–‚½‚Á‚½‚±‚Æ‚ğ•Ô‚·
+		return true;
+	}
+
+	// “–‚½‚Á‚Ä‚¢‚È‚¢‚±‚Æ‚ğ•Ô‚·
+	return false;
+}
+
 VECTOR CollisionUtility::CoolisionCapsule(VECTOR topPos, VECTOR downPos, float rad, int modelId)
 {
 	// ˆÚ“®—Ê

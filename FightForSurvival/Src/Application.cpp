@@ -1,9 +1,11 @@
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
 #include "Manager/InputManager.h"
 #include "Scene/SceneManager.h"
 #include "Manager/SoundManager.h"
 #include "Manager/EndManager.h"
 #include "Common/Fps/FpsControl.h"
+#include "Manager/EffectResManager/EffectResManager.h"
 #include "Application.h"
 
 Application* Application::instance_ = nullptr;
@@ -57,6 +59,9 @@ void Application::Init(void)
 		return;
 	}
 
+	// Effekseerの初期化
+	InitEffekseer();
+
 	// 乱数のシード値を設定する
 	DATEDATA date;
 
@@ -78,6 +83,9 @@ void Application::Init(void)
 	// サウンド管理初期化
 	SoundManager::CreateInstance();
 	SoundManager::GetInstance().Load();
+
+	// エフェクト管理初期化
+	EffectResManager::CreateInstance();
 
 	// シーン管理初期化
 	SceneManager::CreateInstance();
@@ -116,11 +124,8 @@ void Application::Run(void)
 void Application::Destroy(void)
 {
 
-	// DxLib終了
-	if (DxLib_End() == -1)
-	{
-		isReleaseFail_ = true;
-	}
+	// Effekseerを終了する
+	Effkseer_End();
 
 	// 終了管理解放
 	EndManager::GetInstance().Destroy();
@@ -128,14 +133,24 @@ void Application::Destroy(void)
 	// シーン管理解放
 	SceneManager::GetInstance().Destroy();
 
+	// エフェクト管理解放
+	EffectResManager::GetInstance().Destroy();
+
 	// 入力制御解放
 	InputManager::GetInstance().Destroy();
 
 	//フレームレート解放
 	delete fps_;
 
+	// DxLib終了
+	if (DxLib_End() == -1)
+	{
+		isReleaseFail_ = true;
+	}
+
 	// インスタンスのメモリ解放
 	delete instance_;
+
 }
 
 bool Application::IsInitFail(void) const
@@ -152,4 +167,14 @@ Application::Application(void)
 {
 	isInitFail_ = false;
 	isReleaseFail_ = false;
+}
+
+void Application::InitEffekseer(void)
+{
+	if (Effekseer_Init(8000) == -1)
+	{
+		DxLib_End();
+	}
+	SetChangeScreenModeGraphicsSystemResetFlag(FALSE);
+	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
 }

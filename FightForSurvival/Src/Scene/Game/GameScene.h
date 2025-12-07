@@ -108,6 +108,8 @@ private:
 
 	// ステージとプレイヤーの当たり判定
 	void StageAndPlayerCollision(void);
+	// ステージとプレイヤーの攻撃の当たり判定
+	void StageAndAttackCollision(void);
 
 	// ステージと敵の当たり判定
 	void StageAndEnemiesCollision(void);

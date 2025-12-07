@@ -424,6 +424,8 @@ void GameScene::Collisions(void)
 	SpawnerAndAttackCollision();
 	// ステージとプレイヤーの当たり判定
 	StageAndPlayerCollision();
+	// ステージとプレイヤーの攻撃の当たり判定
+	StageAndAttackCollision();
 	// ステージと敵の当たり判定
 	StageAndEnemiesCollision();
 }
@@ -919,9 +921,41 @@ void GameScene::StageAndPlayerCollision(void)
 		player_->CollisionStage(movePos.y);
 	}
 
-
 #pragma endregion
 
+}
+
+void GameScene::StageAndAttackCollision(void)
+{
+	// 魔法クラスのポインター取得
+	auto magics = player_->GetWeapon()->GetMagics();
+
+	// 魔法の数分回す
+	for (auto magic : magics)
+	{
+		// 魔法がSHOT状態でなければ処理を飛ばす
+		if (magic->GetState() != MagicBase::STATE::SHOT)
+		{
+			continue;
+		}
+
+		// 魔法の情報
+		auto magicInfo = magic->GetMagic();
+
+		// 魔法の移動経路の線分を定義
+		VECTOR magicLineStart = magicInfo.pos_;
+		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
+
+		// ステージとの当たり判定を行う(ライン)
+		if (CollisionUtility::CollisionLine(
+			magicLineStart,
+			magicLineEnd,
+			stage_->GetModelId()))
+		{
+			// Y軸のみの押し出しを行う
+			magic->ChangeState(MagicBase::STATE::BLAST);
+		}
+	}
 }
 
 void GameScene::StageAndEnemiesCollision(void)

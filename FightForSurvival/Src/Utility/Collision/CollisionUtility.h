@@ -28,6 +28,9 @@ namespace CollisionUtility
 	// ラインの当たり判定
 	bool CollisionLine(VECTOR startPos, VECTOR endPos, int modelId, VECTOR& movePos);
 
+	// ラインの当たり判定
+	bool CollisionLine(VECTOR startPos, VECTOR endPos, int modelId);
+
 	// カプセルの当たり判定
 	VECTOR CoolisionCapsule(VECTOR topPos, VECTOR downPos, float rad, int modelId);
 

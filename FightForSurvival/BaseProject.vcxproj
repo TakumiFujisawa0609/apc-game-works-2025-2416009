@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Manager\EffectResManager\EffectResManager.cpp" />
     <ClCompile Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.cpp" />
     <ClCompile Include="Src\UI\Object\Button\PauseButton\PauseButton.cpp" />
     <ClCompile Include="Src\UI\Object\Sprite\FlashingSprite\FlashingSprite.cpp" />
@@ -86,6 +87,7 @@
     <ClCompile Include="Src\UI\Object\Button\TitleButton\TitleButton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Manager\EffectResManager\EffectResManager.h" />
     <ClInclude Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.h" />
     <ClInclude Include="Src\UI\Object\Button\PauseButton\PauseButton.h" />
     <ClInclude Include="Src\UI\Object\Sprite\FlashingSprite\FlashingSprite.h" />
