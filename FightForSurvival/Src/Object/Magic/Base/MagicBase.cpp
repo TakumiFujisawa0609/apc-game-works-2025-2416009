@@ -17,38 +17,31 @@ MagicBase::~MagicBase(void)
 void MagicBase::Init(void)
 {
 	magic_.isExists_ = false;
-	magic_.isDraw_ = true;
-	state_ = STATE::NONE;
+	magic_.isDraw_ = false;
+	state_ = STATE::CHARGE;
 
 	// パラメータ設定
 	SetParam();
+
 	// 大きさの設定
 	MV1SetScale(magic_.modelId_, magic_.scale_);
 	// 回転の設定
 	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
 	// 位置の設定
 	MV1SetPosition(magic_.modelId_, magic_.pos_);
-
-	// エフェクトの設定
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
-
 }
 
 void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 {
 	// 魔法の発射位置を設定
 	magic_.prevPos_ = magic_.pos_ = pos;
+
 	// 魔法の発射方向の設定
 	magic_.dir_ = dir;
-	// 魔法の生存判定
-	magic_.isExists_ = true;
-	// 撃った状態に変更
-	ChangeState(STATE::SHOT);
+	magic_.isDraw_ = true;
 
-	// エフェクトの設定
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
+	// チャージ状態
+	ChangeState(STATE::CHARGE);
 }
 
 void MagicBase::Update(void)
@@ -61,7 +54,8 @@ void MagicBase::Update(void)
 
 	switch (state_)
 	{
-	case MagicBase::STATE::NONE:
+	case MagicBase::STATE::CHARGE:
+		UpdateCharge();
 		break;
 	case MagicBase::STATE::SHOT:
 		UpdateShot();
@@ -70,7 +64,6 @@ void MagicBase::Update(void)
 		UpdateBlast();
 		break;
 	case MagicBase::STATE::END:
-		UpdateEnd();
 		break;
 	default:
 		break;
@@ -102,7 +95,8 @@ void MagicBase::ChangeState(STATE state)
 
 	switch (state_)
 	{
-	case MagicBase::STATE::NONE:
+	case MagicBase::STATE::CHARGE:
+		ChangeCharge();
 		break;
 	case MagicBase::STATE::SHOT:
 		ChangeShot();
@@ -118,19 +112,7 @@ void MagicBase::ChangeState(STATE state)
 	}
 }
 
-void MagicBase::ChargeMagic(void)
-{
-	// 魔法を徐々に大きくする(チャージする)
-	magic_.collisionRadius_ += CHARGE_POW;
-
-	if (magic_.collisionRadius_ > CHARGE_MAX)
-	{
-		magic_.collisionRadius_ = CHARGE_MAX;
-	}
-
-}
-
-void MagicBase::UpdatePosDir(VECTOR pos, VECTOR dir)
+void MagicBase::UpdatePos(VECTOR pos)
 {
 	// 座標を更新する
 	magic_.pos_ = pos;
@@ -139,7 +121,10 @@ void MagicBase::UpdatePosDir(VECTOR pos, VECTOR dir)
 	// エフェクトの位置の更新
 	SetPosPlayingEffekseer3DEffect(
 		effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
+}
 
+void MagicBase::UpdateDir(VECTOR dir)
+{
 	// 向きを更新する
 	magic_.dir_ = dir;
 
@@ -149,16 +134,15 @@ void MagicBase::UpdatePosDir(VECTOR pos, VECTOR dir)
 		effectPlayId_, magic_.dir_.x, magic_.dir_.y, magic_.dir_.z);
 }
 
-void MagicBase::ReduceCntAlive(void)
+void MagicBase::UpdateCharge(void)
 {
+	// 魔法を徐々に大きくする(チャージする)
+	magic_.collisionRadius_ += chargePow_;
 
-	magic_.cntAlive_-= SceneManager::GetInstance().GetDeltaTime();
-	if (magic_.cntAlive_ < 0)
+	if (magic_.collisionRadius_ > chargeMax_)
 	{
-		// 魔法の存在可能時間が過ぎたら消す
-		ChangeState(STATE::BLAST);
+		magic_.collisionRadius_ = chargeMax_;
 	}
-
 }
 
 void MagicBase::UpdateShot(void)
@@ -168,12 +152,12 @@ void MagicBase::UpdateShot(void)
 
 	// 魔法を移動させる
 	magic_.pos_ = VAdd(magic_.pos_, VScale(magic_.dir_, magic_.speed_));
+	
 	// 位置の設定
 	MV1SetPosition(magic_.modelId_, magic_.pos_);
 
 	// 生存カウンタの減少
 	ReduceCntAlive();
-
 }
 
 void MagicBase::UpdateBlast(void)
@@ -184,29 +168,24 @@ void MagicBase::UpdateBlast(void)
 	}
 }
 
-void MagicBase::UpdateEnd(void)
-{
-	magic_.isExists_ = false;
-	magic_.isDraw_ = false;
-}
-
-void MagicBase::ChangeShot(void)
-{
-}
-
-void MagicBase::ChangeBlast(void)
-{
-	float SCALE = 10.0f;
-	VECTOR angle = { 0.0f, 0.0f, 0.0f };
-
-	// エフェクトの設定
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::BLAST);
-}
-
 void MagicBase::ChangeEnd(void)
 {
 	// エフェクト停止
 	StopEffekseer3DEffect(effectPlayId_);
+
+	magic_.isExists_ = false;
+	magic_.isDraw_ = false;
 }
 
+void MagicBase::ReduceCntAlive(void)
+{
+	// 魔法の生存時間を減らす
+	magic_.cntAlive_ -=
+		SceneManager::GetInstance().GetDeltaTime();
+
+	// 魔法の存在可能時間が過ぎたら消す
+	if (magic_.cntAlive_ < 0)
+	{
+		ChangeState(STATE::BLAST);
+	}
+}

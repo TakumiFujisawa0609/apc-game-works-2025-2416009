@@ -19,7 +19,7 @@ public:
 	// 魔法の状態
 	enum class STATE
 	{
-		NONE,
+		CHARGE,
 		SHOT,
 		BLAST,
 		END
@@ -30,32 +30,32 @@ public:
 	// デストラクタ
 	virtual ~MagicBase(void);
 
-	// 魔法の生成(表示開始座標、魔法の進行方向)
+	// 魔法の初期化
 	void Init(void);
+	// 魔法の生成
 	virtual void CreateShot(VECTOR pos, VECTOR dir);
-	// 更新ステップ
+	// 更新
 	virtual void Update(void);
 	// 描画
 	void Draw(void);
 	// 解放処理
 	void Release(void);
 
-	// 現在のステートを返す
-	STATE GetState(void)const { return state_; }
-
+	// ステートの変更
 	void ChangeState(STATE state);
 
 	// ゲッター関数
+	STATE GetState(void)const { return state_; }
 	Magic GetMagic(void)const { return magic_; }
+
 	// セッター関数
 	void SetCollisionRad(float col) { magic_.collisionRadius_ = col; }
 	void SetIsExists(bool flg) { magic_.isExists_ = flg; }
 
-	// 魔法を大きくする
-	void ChargeMagic(void);
-
-	// 座標と向きを更新
-	void UpdatePosDir(VECTOR pos, VECTOR dir);
+	// 座標を更新
+	void UpdatePos(VECTOR pos);
+	// 向きを更新
+	void UpdateDir(VECTOR dir);
 
 	// 魔法の種類を返す
 	TYPE_MAGIC GetTypeMagic(void)const {return magic_.typeMagic_;}
@@ -68,6 +68,11 @@ protected:
 
 	Magic magic_;
 
+	// 魔法をチャージする量
+	float chargePow_ = 0.1f;
+	// 魔法の最大チャージ量
+	float chargeMax_ = 20.0f;
+
 	// 攻撃エフェクトのプレイハンドル
 	int effectPlayId_;
 	// エフェクトのサイズ
@@ -75,20 +80,22 @@ protected:
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
-	// 魔法の生存期間の減少
-	void ReduceCntAlive(void);
+	// ステート
+	virtual void ChangeCharge(void) = 0;
+	virtual void UpdateCharge(void);
 
 	// 魔法の更新(移動)処理
-	virtual void UpdateShot(void);
-	// 魔法の爆発処理
-	void UpdateBlast(void);
-	// 爆発後の魔法の処理
-	void UpdateEnd(void);
-
-	// ステート変更時の設定事項
 	virtual void ChangeShot(void) = 0;
-	virtual void ChangeBlast(void);
+	virtual void UpdateShot(void);
+	
+	// 魔法の爆発処理
+	virtual void ChangeBlast(void) = 0;
+	void UpdateBlast(void);
+	
+	// 爆発後の魔法の処理
 	void ChangeEnd(void);
 
+	// 魔法の生存期間の減少
+	void ReduceCntAlive(void);
 };
 
