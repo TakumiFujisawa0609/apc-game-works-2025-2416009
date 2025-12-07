@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
 #include "../../Application.h"
 #include "../../Manager/Camera.h"
 #include "../../Manager/InputManager.h"
@@ -26,6 +27,7 @@
 #include "../../Object/Spawner/Spawner.h"
 #include "../../Object/Stage/Stage.h"
 #include "../../Utility/AsoUtility.h"
+#include "../../Manager/EffectResManager/EffectResManager.h"
 #include "GameScene.h"
 
 #include "../../UI/UIManager.h"
@@ -136,6 +138,10 @@ void GameScene::Load(void)
 	StaminaBar* stamina = dynamic_cast<StaminaBar*>(sBar);
 	stamina->SetPlayer(player_);
 	uiMgr_->AddUI(stamina);
+
+	// エフェクト管理初期化
+	EffectResManager::CreateInstance();
+	EffectResManager::GetInstance().Load();
 }
 
 void GameScene::Init(void)
@@ -223,6 +229,9 @@ void GameScene::Update(void)
 			// UIの更新
 			uiMgr_->Update();
 
+			// Effekseerにより再生中のエフェクトを更新する
+			UpdateEffekseer3D();
+
 			break;
 		case GameScene::STATE::UPGRADE:
 
@@ -293,6 +302,9 @@ void GameScene::Draw(void)
 	// スコアの描画
 	score_->Draw();
 
+	// Effekseerにより再生中のエフェクトを描画する
+	DrawEffekseer3D();
+
 	// UIの描画
 	uiMgr_->Draw();
 
@@ -322,6 +334,10 @@ void GameScene::Draw(void)
 
 void GameScene::Release(void)
 {
+
+	// エフェクト管理解放
+	EffectResManager::GetInstance().Destroy();
+
 	// UIの解放
 	delete uiMgr_;
 	delete texMgr_;
@@ -446,7 +462,7 @@ void GameScene::MagicCollision(void)
 		bool notExplosionMagic = { magic->GetMagic().typeMagic_ != TYPE_MAGIC::EXPLOSION_MAGIC };
 
 		// 魔法がSHOT状態でなければ処理を飛ばす
-		if (magic->GetState() != MagicBase::STATE::SHOT)
+		if (magic->GetState() != MAGIC_STATE::SHOT)
 		{
 			continue;
 		}
@@ -500,7 +516,7 @@ void GameScene::MagicCollision(void)
 				}
 
 				// 魔法を爆発させる
-				magic->ChangeState(MagicBase::STATE::BLAST);
+				magic->ChangeState(MAGIC_STATE::BLAST);
 
 			}
 			// 体、腕、手の当たり判定
@@ -520,7 +536,7 @@ void GameScene::MagicCollision(void)
 				}
 
 				// 魔法を爆発させる
-				magic->ChangeState(MagicBase::STATE::BLAST);
+				magic->ChangeState(MAGIC_STATE::BLAST);
 			}
 		}
 	}
@@ -541,7 +557,7 @@ void GameScene::ExplosionMagicCollision(void)
 		}
 
 		// 魔法の種類が爆発魔法かつ、爆発中であれば処理を行う
-		if (magic->GetMagic().isExists_ && magic->GetState() == MagicBase::STATE::BLAST)
+		if (magic->GetMagic().isExists_ && magic->GetState() == MAGIC_STATE::BLAST)
 		{
 			// 魔法の情報
 			Magic magicInfo = magic->GetMagic();
@@ -684,7 +700,7 @@ void GameScene::EnemyMagicCollision(void)
 	for (auto magic : magics)
 	{
 		// 魔法がSHOT状態でなければ処理を飛ばす
-		if (magic->GetState() != MagicBase::STATE::SHOT)
+		if (magic->GetState() != MAGIC_STATE::SHOT)
 		{
 			continue;
 		}
@@ -703,7 +719,7 @@ void GameScene::EnemyMagicCollision(void)
 		if (CollisionUtility::IsCollidingCapsules(plaPosTop, plaPosUnder, plaRad, magicLineStart, magicLineEnd, MagicRad))
 		{
 			// 魔法を爆発させる
-			magic->ChangeState(MagicBase::STATE::BLAST);
+			magic->ChangeState(MAGIC_STATE::BLAST);
 
 			// プレイヤーにダメージを与える
 			player_->Damage(magic->GetMagic().bodyDamage_);
@@ -823,7 +839,7 @@ void GameScene::SpawnerAndAttackCollision(void)
 	for (auto magic : magics)
 	{
 		// 魔法がSHOT状態でなければ処理を飛ばす
-		if (magic->GetState() != MagicBase::STATE::SHOT)
+		if (magic->GetState() != MAGIC_STATE::SHOT)
 		{
 			continue;
 		}
@@ -858,7 +874,7 @@ void GameScene::SpawnerAndAttackCollision(void)
 				// スポナー耐久値にダメージを与える
 				spawner->Damage(magic->GetMagic().bodyDamage_);
 				// 魔法を爆発させる
-				magic->ChangeState(MagicBase::STATE::BLAST);
+				magic->ChangeState(MAGIC_STATE::BLAST);
 
 			}
 		}
@@ -934,7 +950,7 @@ void GameScene::StageAndAttackCollision(void)
 	for (auto magic : magics)
 	{
 		// 魔法がSHOT状態でなければ処理を飛ばす
-		if (magic->GetState() != MagicBase::STATE::SHOT)
+		if (magic->GetState() != MAGIC_STATE::SHOT)
 		{
 			continue;
 		}
@@ -953,7 +969,7 @@ void GameScene::StageAndAttackCollision(void)
 			stage_->GetModelId()))
 		{
 			// Y軸のみの押し出しを行う
-			magic->ChangeState(MagicBase::STATE::BLAST);
+			magic->ChangeState(MAGIC_STATE::BLAST);
 		}
 	}
 }

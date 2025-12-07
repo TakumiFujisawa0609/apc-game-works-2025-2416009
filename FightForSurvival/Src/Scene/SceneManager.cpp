@@ -1,6 +1,5 @@
 #include <chrono>
 #include <DxLib.h>
-#include <EffekseerForDXLib.h>
 #include "../Common/Fader/Fader.h"
 #include "../Scene/Title/TitleScene.h"
 #include "../Scene/Game/GameScene.h"
@@ -9,7 +8,6 @@
 #include "../Manager/SystemManager.h"
 #include "SceneManager.h"
 #include "../UI/Factory/UIFactory.h"
-#include "../Manager/EffectResManager/EffectResManager.h"
 #include "../UI/UIRegisterTable.h"
 
 SceneManager* SceneManager::instance_ = nullptr;
@@ -62,9 +60,6 @@ void SceneManager::Init(void)
 	// 初期シーンの設定
 	DoChangeScene(SCENE_ID::TITLE);
 
-	// エフェクト管理初期化
-	EffectResManager::CreateInstance();
-	EffectResManager::GetInstance().Load();
 }
 
 void SceneManager::Init3D(void)
@@ -135,14 +130,8 @@ void SceneManager::Draw(void)
 	// 画面を初期化
 	ClearDrawScreen();
 
-	// Effekseerにより再生中のエフェクトを更新する
-	UpdateEffekseer3D();
-
 	// 各シーンの描画処理
 	scene_->Draw();
-
-	// Effekseerにより再生中のエフェクトを描画する
-	DrawEffekseer3D();
 
 	// 暗転・明転
 	fader_->Draw();
@@ -151,9 +140,6 @@ void SceneManager::Draw(void)
 
 void SceneManager::Destroy(void)
 {
-
-	// エフェクト管理解放
-	EffectResManager::GetInstance().Destroy();
 
 	// ウィンドウズに一時的に保持していたフォントデータを削除
 	RemoveFontResourceExA("", FR_PRIVATE, NULL);

@@ -1,8 +1,9 @@
+#include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "StraightMagic.h"
 
-StraightMagic::StraightMagic(TYPE_MAGIC typeMagic,int baseModelId)
+StraightMagic::StraightMagic(TYPE_MAGIC typeMagic,int baseModelId, VECTOR* weponPos)
 	:
-	MagicBase(typeMagic, baseModelId)
+	MagicBase(typeMagic, baseModelId,weponPos)
 {
 }
 
@@ -24,18 +25,43 @@ void StraightMagic::SetParam(void)
 	effectScale_ = 10.0f;
 }
 
+void StraightMagic::ChangeCharge(void)
+{
+	// チャージ状態のエフェクト再生
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
+}
+
 void StraightMagic::ChangeShot(void)
 {
-	if (magic_.collisionRadius_ >= CHARGE_MAX)
+
+	if (magic_.collisionRadius_ >= chargeMax_)
 	{
 		// チャージが最大だったら、攻撃力を5上げる
-		magic_.headDamage_ += ADD_DAMEGE;
-		magic_.bodyDamage_ += ADD_DAMEGE;
+		magic_.headDamage_ += addDamage_;
+		magic_.bodyDamage_ += addDamage_;
+		
+		// ショット状態のエフェクト再生
+		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT_MAX);
+
 	}
 	else
 	{
 		// チャージが最大でなければ、通常時の攻撃力とする
 		magic_.headDamage_ = HEAD_DAMAGE;
 		magic_.bodyDamage_ = BODY_DAMAGE;
+
+		// ショット状態のエフェクト再生
+		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
+
 	}
+}
+
+void StraightMagic::ChangeBlast(void)
+{
+	// 爆発状態のエフェクト再生
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::BLAST);
 }

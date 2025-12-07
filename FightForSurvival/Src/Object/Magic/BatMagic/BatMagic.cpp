@@ -1,6 +1,6 @@
 #include "BatMagic.h"
 
-BatMagic::BatMagic(TYPE_MAGIC typeMagic, int baseModelId) :MagicBase(typeMagic, baseModelId)
+BatMagic::BatMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* pos) :MagicBase(typeMagic, baseModelId,pos)
 {
 }
 
@@ -19,6 +19,14 @@ void BatMagic::SetParam(void)
 	magic_.bodyDamage_ = DAMAGE;
 }
 
+void BatMagic::ChangeCharge(void)
+{
+}
+
 void BatMagic::ChangeShot(void)
+{
+}
+
+void BatMagic::ChangeBlast(void)
 {
 }

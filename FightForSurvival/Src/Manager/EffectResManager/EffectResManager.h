@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include <DxLib.h>
 
 class EffectResManager
 {
@@ -10,6 +11,7 @@ public:
 	{
 		PLAYER_MAGIC_CHARGE,
 		PLAYER_MAGIC_SHOT,
+		PLAYER_MAGIC_SHOT_MAX,
 		BLAST,
 
 		BAT_MAGIC,

@@ -27,7 +27,7 @@ public:
 	// 体
 	static constexpr int BODY_DAMAGE = 5;
 
-	StraightMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	StraightMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
 	~StraightMagic(void)override;
 
 protected:
@@ -36,6 +36,8 @@ protected:
 	void SetParam(void) override;
 
 	// ステート変更時の設定事項
+	void ChangeCharge(void)override;
 	void ChangeShot(void)override;
+	void ChangeBlast(void)override;
 };
 

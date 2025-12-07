@@ -8,31 +8,15 @@ class MagicBase
 {
 public:
 
-	// 魔法をチャージする量
-	static constexpr float CHARGE_POW = 0.1f;
-	// 魔法の最大チャージ量
-	static constexpr float CHARGE_MAX = 20.0f;
-
-	// 最大チャージに加算する攻撃力
-	static constexpr float ADD_DAMEGE = 5.0f;
-
-	// 魔法の状態
-	enum class STATE
-	{
-		CHARGE,
-		SHOT,
-		BLAST,
-		END
-	};
-
 	// コンストラクタ(杖種別、元となるモデルのハンドルID)
-	MagicBase(TYPE_MAGIC typeMagic, int baseModelId);
+	MagicBase(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
 	// デストラクタ
 	virtual ~MagicBase(void);
 
 	// 魔法の初期化
 	void Init(void);
 	// 魔法の生成
+	virtual void ChargeShot(VECTOR pos, VECTOR dir);
 	virtual void CreateShot(VECTOR pos, VECTOR dir);
 	// 更新
 	virtual void Update(void);
@@ -42,10 +26,10 @@ public:
 	void Release(void);
 
 	// ステートの変更
-	void ChangeState(STATE state);
+	void ChangeState(MAGIC_STATE state);
 
 	// ゲッター関数
-	STATE GetState(void)const { return state_; }
+	MAGIC_STATE GetState(void)const { return state_; }
 	Magic GetMagic(void)const { return magic_; }
 
 	// セッター関数
@@ -53,9 +37,10 @@ public:
 	void SetIsExists(bool flg) { magic_.isExists_ = flg; }
 
 	// 座標を更新
-	void UpdatePos(VECTOR pos);
+	void UpdateEffectPos(void);
+	void UpdateEffectPos(VECTOR pos);
 	// 向きを更新
-	void UpdateDir(VECTOR dir);
+	void UpdateEffectDir(VECTOR dir);
 
 	// 魔法の種類を返す
 	TYPE_MAGIC GetTypeMagic(void)const {return magic_.typeMagic_;}
@@ -64,7 +49,7 @@ protected:
 	Player* player_;
 
 	// 魔法の状態
-	STATE state_;
+	MAGIC_STATE state_;
 
 	Magic magic_;
 
@@ -72,11 +57,16 @@ protected:
 	float chargePow_ = 0.1f;
 	// 魔法の最大チャージ量
 	float chargeMax_ = 20.0f;
+	// 魔法の威力
+	float addDamage_ = 5.0f;
 
 	// 攻撃エフェクトのプレイハンドル
 	int effectPlayId_;
 	// エフェクトのサイズ
 	float effectScale_;
+
+	// 武器の座標ポインタ
+	VECTOR* weponPos_;
 
 	// パラメータ設定
 	virtual void SetParam(void) = 0;

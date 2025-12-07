@@ -12,6 +12,15 @@ enum class TYPE_MAGIC
 	DRAGON_MAGIC // ドラゴンの魔法
 };
 
+// 魔法の状態
+enum class MAGIC_STATE
+{
+	CHARGE,
+	SHOT,
+	BLAST,
+	END
+};
+
 struct Magic
 {
 	// 魔法のモデルID

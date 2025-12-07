@@ -29,7 +29,7 @@ public:
 	// 体
 	static constexpr int BODY_DAMAGE = 5;
 
-	ExplosionMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	ExplosionMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
 	~ExplosionMagic(void)override;
 
 protected:
@@ -38,7 +38,9 @@ protected:
 	void SetParam(void) override;
 
 	// ステート変更時の設定事項
+	void ChangeCharge(void)override;
 	void ChangeShot(void)override;
 	void ChangeBlast(void)override;
+
 };
 

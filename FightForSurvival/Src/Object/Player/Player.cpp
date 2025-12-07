@@ -495,7 +495,7 @@ void Player::ProcessAttack(void)
 		if (ins.IsTrgDownAttack())
 		{
 			// –‚–@‚ð¶¬‚µ•`‰æ‚·‚é
-			weapon_->ChangeState(WeaponBase::STATE::GENERATE_MAGIC);
+			weapon_->ChangeState(WeaponBase::STATE::CREATE_MAGIC);
 		}
 	}
 

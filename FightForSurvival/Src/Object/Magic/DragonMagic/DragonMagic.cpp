@@ -1,6 +1,6 @@
 #include "DragonMagic.h"
 
-DragonMagic::DragonMagic(TYPE_MAGIC typeMagic, int baseModelId) :MagicBase(typeMagic, baseModelId)
+DragonMagic::DragonMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* pos) :MagicBase(typeMagic, baseModelId, pos)
 {
 }
 
@@ -19,6 +19,14 @@ void DragonMagic::SetParam(void)
 	magic_.bodyDamage_ = DAMAGE;
 }
 
+void DragonMagic::ChangeCharge(void)
+{
+}
+
 void DragonMagic::ChangeShot(void)
+{
+}
+
+void DragonMagic::ChangeBlast(void)
 {
 }

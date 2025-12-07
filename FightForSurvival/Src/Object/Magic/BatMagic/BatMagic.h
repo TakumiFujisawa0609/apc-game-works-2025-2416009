@@ -25,14 +25,17 @@ public:
 	// 当たり判定用サイズ
 	static constexpr int DAMAGE = 1;
 
-	BatMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	BatMagic(TYPE_MAGIC typeMagic, int baseModelId,VECTOR* pos);
 	~BatMagic(void);
 
 protected:
 
 	// パラメータ設定
 	void SetParam(void) override;
+
 	// ステート変更時の設定事項
+	void ChangeCharge(void)override;
 	void ChangeShot(void)override;
+	void ChangeBlast(void)override;
 };
 

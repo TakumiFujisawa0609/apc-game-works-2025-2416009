@@ -94,7 +94,7 @@ void WeaponBase::Update(void)
 	case WeaponBase::STATE::ATTACK:
 		AttackUpdate();
 		break;
-	case WeaponBase::STATE::GENERATE_MAGIC:
+	case WeaponBase::STATE::CREATE_MAGIC:
 		GenerateMagicUpdate();
 		break;
 	case WeaponBase::STATE::CHARGE_MAGIC:
@@ -169,28 +169,13 @@ void WeaponBase::GenerateMagicUpdate(void)
 	// 初期化処理
 	magic_->Init();
 	// 座標を更新する
-	magic_->UpdatePosDir(magicPos_,magic_->GetMagic().dir_);
+	magic_->ChargeShot(magicPos_,magic_->GetMagic().dir_);
 
 	ChangeState(STATE::CHARGE_MAGIC);
 }
 
 void WeaponBase::ChargeMagicUpdate(void)
 {
-
-#pragma region 方向
-
-	VECTOR dir;
-
-	// 狙う場所から魔法の発射位置へのベクトルを計算
-	VECTOR vec = VSub(targetPos_, magicPos_);
-
-	// ベクトルを正規化し、魔法の方向とする
-	dir = VNorm(vec);
-
-#pragma endregion
-
-	magic_->ChargeMagic();
-	magic_->UpdatePosDir(magicPos_, dir);
 }
 
 void WeaponBase::AttackUpdate(void)
@@ -296,19 +281,19 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	case TYPE_MAGIC::STRAIGHT_MAGIC:
 
 		// 炎魔法のインスタンスを生成する
-		Magic = new StraightMagic(typeMagic_, magicModelId_);
+		Magic = new StraightMagic(typeMagic_, magicModelId_, &magicPos_);
 
 		break;
 	case TYPE_MAGIC::CHASE_MAGIC:
 
 		// 風魔法のインスタンスを生成する
-		Magic = new ChaseMagic(typeMagic_, magicModelId_);
+		Magic = new ChaseMagic(typeMagic_, magicModelId_, &magicPos_);
 
 		break;
 	case TYPE_MAGIC::EXPLOSION_MAGIC:
 
 		// 爆発魔法のインスタンスを生成する
-		Magic = new ExplosionMagic(typeMagic_, magicModelId_);
+		Magic = new ExplosionMagic(typeMagic_, magicModelId_, &magicPos_);
 
 		break;
 	default:

@@ -46,6 +46,7 @@ int EffectResManager::GetResourceId(TYPE type)
 
 int EffectResManager::PlayEffect(float scale, VECTOR dir, VECTOR pos, EffectResManager::TYPE effectType)
 {
+
 	// エフェクトの再生
 	int resId = EffectResManager::GetInstance().GetResourceId(effectType);
 	int effectPlayId = PlayEffekseer3DEffect(resId);
@@ -55,9 +56,21 @@ int EffectResManager::PlayEffect(float scale, VECTOR dir, VECTOR pos, EffectResM
 		effectPlayId, scale, scale, scale);
 
 	// エフェクトの回転
-	dir.y += 90.0f * 180 / DX_PI_F;
+	// 方向から角度を出す
+	VECTOR angle;
+	angle.y = atan2(dir.x, dir.z);
+
+	// XZのベクトルの長さを計算する
+	float XZLength = sqrtf(dir.x * dir.x + dir.z * dir.z);
+
+	// X軸の角度を計算する
+	angle.x = atan2(dir.y, XZLength);
+
+	// 回転はXY軸のみとする
+	angle.z = 0.0f;
+
 	SetRotationPlayingEffekseer3DEffect(
-		effectPlayId, dir.x, dir.y, dir.z);
+		effectPlayId, -angle.x, angle.y, angle.z);
 
 	// エフェクトの位置
 	SetPosPlayingEffekseer3DEffect(
@@ -76,22 +89,27 @@ void EffectResManager::Load(void)
 	// プレイヤー攻撃チャージ時のエフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHARGE,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
+			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
 	
 	// プレイヤー攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
+			(Application::PATH_EFFECT + "NomalAttackBlue.efkefc").c_str()));
+	
+	// プレイヤー攻撃最大サイズエフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT_MAX,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "NomalAttackMaxBlue.efkefc").c_str()));
 
 	// プレイヤー攻撃の爆発エフェクトのロード
 	resourceIds_.emplace(TYPE::BLAST,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "Blast/Blast.efkefc").c_str()));
+			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
 
 	// コウモリ攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::BAT_MAGIC,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "BlastHit/BlastHit.efkefc").c_str()));
+			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
 
 	// ドラゴン攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_MAGIC,

@@ -32,7 +32,7 @@ public:
 	// 視野角
 	static constexpr float VIEW_ANGLE = 20.0f;
 
-	ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId);
+	ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
 	~ChaseMagic(void)override;
 
 protected:
@@ -44,7 +44,9 @@ protected:
 	void UpdateShot(void)override;
 
 	// ステート変更時の設定事項
+	void ChangeCharge(void)override;
 	void ChangeShot(void)override;
+	void ChangeBlast(void)override;
 
 private:
 

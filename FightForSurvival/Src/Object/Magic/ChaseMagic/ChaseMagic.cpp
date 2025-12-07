@@ -3,11 +3,12 @@
 #include "../../Enemy/Base/EnemyBase.h"
 #include "../../Enemy/EnemyManager.h"
 #include "../../../Utility/Collision/CollisionUtility.h"
+#include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "ChaseMagic.h"
 
-ChaseMagic::ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId)
+ChaseMagic::ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos)
 	:
-	MagicBase(typeMagic, baseModelId)
+	MagicBase(typeMagic, baseModelId, weponPos)
 {
 }
 
@@ -25,6 +26,9 @@ void ChaseMagic::SetParam(void)
 	magic_.collisionRadius_ = COLLISION_RAD;
 	magic_.headDamage_ = HEAD_DAMAGE;
 	magic_.bodyDamage_ = BODY_DAMAGE;
+
+	effectScale_ = 10.0f;
+
 }
 
 void ChaseMagic::UpdateShot(void)
@@ -39,19 +43,34 @@ void ChaseMagic::UpdateShot(void)
 	MagicBase::UpdateShot();
 }
 
+void ChaseMagic::ChangeCharge(void)
+{
+	// チャージ状態のエフェクト再生
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
+}
+
 void ChaseMagic::ChangeShot(void)
 {
-	if (magic_.collisionRadius_ >= CHARGE_MAX)
+
+	if (magic_.collisionRadius_ >= chargeMax_)
 	{
 		// チャージが最大だったら、攻撃力を5上げる
-		magic_.headDamage_ += ADD_DAMEGE;
-		magic_.bodyDamage_ += ADD_DAMEGE;
+		magic_.headDamage_ += addDamage_;
+		magic_.bodyDamage_ += addDamage_;
+
+		// ショット状態のエフェクト再生
+		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT_MAX);
 	}
 	else
 	{
 		// チャージが最大でなければ、通常時の攻撃力とする
 		magic_.headDamage_ = HEAD_DAMAGE;
 		magic_.bodyDamage_ = BODY_DAMAGE;
+		// ショット状態のエフェクト再生
+		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
 	}
 
 	// 初期化
@@ -102,6 +121,13 @@ void ChaseMagic::ChangeShot(void)
 			targetFound_ = true;
 		}
 	}
+}
+
+void ChaseMagic::ChangeBlast(void)
+{
+	// 爆発状態のエフェクト再生
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::BLAST);
 }
 
 void ChaseMagic::LookTargetEnemy(void)
