@@ -63,5 +63,5 @@ void StraightMagic::ChangeBlast(void)
 {
 	// 爆発状態のエフェクト再生
 	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::BLAST);
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_BLAST);
 }

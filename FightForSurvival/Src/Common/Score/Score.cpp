@@ -12,7 +12,7 @@ Score::~Score(void)
 
 void Score::Load(void)
 {
-	font_= CreateFontToHandle("x12y12pxMaruMinya", 24, 1, DX_FONTTYPE_ANTIALIASING);;
+	font_= CreateFontToHandle("x12y12pxMaruMinya", 32, 1, DX_FONTTYPE_ANTIALIASING);;
 }
 
 void Score::Init(void)

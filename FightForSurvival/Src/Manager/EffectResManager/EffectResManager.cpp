@@ -89,7 +89,7 @@ void EffectResManager::Load(void)
 	// プレイヤー攻撃チャージ時のエフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHARGE,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+			(Application::PATH_EFFECT + "Charge.efkefc").c_str()));
 	
 	// プレイヤー攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT,
@@ -101,8 +101,13 @@ void EffectResManager::Load(void)
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "NomalAttackMaxBlue.efkefc").c_str()));
 
+	// プレイヤー攻撃の追跡時エフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHASE,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "TrackingAttack.efkefc").c_str()));
+
 	// プレイヤー攻撃の爆発エフェクトのロード
-	resourceIds_.emplace(TYPE::BLAST,
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_BLAST,
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
 
