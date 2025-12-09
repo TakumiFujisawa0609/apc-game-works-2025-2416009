@@ -10,15 +10,15 @@ public:
 
 	// 出現させる敵の数
 	static constexpr int SPAWN_ENEMY_NUM = 4;
-	static constexpr float COLLISION_RADIUS = 100.0f;
+	static constexpr float COLLISION_RADIUS = 400.0f;
 	static constexpr float DURABILITY = 15.0f;
 
 	// 軸座標から移動させる量(ローカル)
-	static constexpr VECTOR LEFT_UP = {-300.0f,0.0f,300.0f };
-	static constexpr VECTOR LEFT_DOWN = { -300.0f,0.0f,-300.0f };
-	static constexpr VECTOR RIGHT_UP = { 300.0f,0.0f,300.0f };
-	static constexpr VECTOR RIGHT_DOWN = { 300.0f,0.0f,-300.0f };
-	
+	static constexpr VECTOR LEFT_UP = {-200.0f,0.0f,200.0f };
+	static constexpr VECTOR LEFT_DOWN = { -200.0f,0.0f,-200.0f };
+	static constexpr VECTOR RIGHT_UP = { 200.0f,0.0f,200.0f };
+	static constexpr VECTOR RIGHT_DOWN = { 200.0f,0.0f,-200.0f };
+
 	// 生成する敵の種類のパターン
 	enum class PATTERN
 	{
@@ -58,6 +58,12 @@ public:
 
 		// 耐久力
 		float durability_;
+
+		// 再生中のエフェクトハンドルID
+		int playEffectId_;
+
+		// エフェクトのサイズ
+		float effectScale_;
 
 	};
 

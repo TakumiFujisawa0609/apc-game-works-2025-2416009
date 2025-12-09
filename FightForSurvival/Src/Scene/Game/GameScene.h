@@ -103,12 +103,9 @@ private:
 	// 敵同士の押し出し判定
 	void EnemiesExtrusionCollision(void);
 
-	// スポナーとプレイヤーの攻撃の当たり判定
-	void SpawnerAndAttackCollision(void);
-
 	// ステージとプレイヤーの当たり判定
 	void StageAndPlayerCollision(void);
-	// ステージとプレイヤーの攻撃の当たり判定
+	// ステージとプレイヤーの攻撃の当たり判定(スポナーも)
 	void StageAndAttackCollision(void);
 
 	// ステージと敵の当たり判定

@@ -436,11 +436,9 @@ void GameScene::Collisions(void)
 	EnemiesAttackCollision();
 	// 敵同士の押し出し判定
 	EnemiesExtrusionCollision();
-	// スポナーとプレイヤーの攻撃の当たり判定
-	SpawnerAndAttackCollision();
 	// ステージとプレイヤーの当たり判定
 	StageAndPlayerCollision();
-	// ステージとプレイヤーの攻撃の当たり判定
+	// ステージとプレイヤーの攻撃の当たり判定(スポナーも)
 	StageAndAttackCollision();
 	// ステージと敵の当たり判定
 	StageAndEnemiesCollision();
@@ -827,60 +825,6 @@ void GameScene::EnemiesExtrusionCollision(void)
 	}
 }
 
-void GameScene::SpawnerAndAttackCollision(void)
-{
-	// スポナーの情報
-	auto spawners = SpawnerManager::GetInstance().GetSpawners();
-
-	// 魔法クラスのポインター取得
-	auto magics = player_->GetWeapon()->GetMagics();
-
-	// 魔法の数分回す
-	for (auto magic : magics)
-	{
-		// 魔法がSHOT状態でなければ処理を飛ばす
-		if (magic->GetState() != MAGIC_STATE::SHOT)
-		{
-			continue;
-		}
-
-		// 魔法の情報
-		auto magicInfo = magic->GetMagic();
-
-		// 魔法の移動経路の線分を定義
-		VECTOR magicLineStart = magicInfo.pos_;
-		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
-
-		// 魔法の半径
-		float magicRad = magicInfo.collisionRadius_;
-		for (auto& spawner : spawners)
-		{
-			// 存在していなかったら次のスポナーを見る
-			if (!spawner->GetSpawnerIns().isExists_)
-			{
-				continue;
-			}
-
-			// 座標を取得
-			VECTOR spawnerPos = spawner->GetSpawnerIns().basePos_;
-
-			// 半径を取得
-			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;
-
-			// 当たり判定
-			if (CollisionUtility::IsCollidingSphereCapsule(spawnerPos, spawnerRad, magicLineStart, magicLineEnd, magicRad))
-			{
-				// 当たっていたら
-				// スポナー耐久値にダメージを与える
-				spawner->Damage(magic->GetMagic().bodyDamage_);
-				// 魔法を爆発させる
-				magic->ChangeState(MAGIC_STATE::BLAST);
-
-			}
-		}
-	}
-}
-
 void GameScene::StageAndPlayerCollision(void)
 {
 	// カプセル上側の座標
@@ -946,6 +890,9 @@ void GameScene::StageAndAttackCollision(void)
 	// 魔法クラスのポインター取得
 	auto magics = player_->GetWeapon()->GetMagics();
 
+	// スポナーの情報
+	auto spawners = SpawnerManager::GetInstance().GetSpawners();
+
 	// 魔法の数分回す
 	for (auto magic : magics)
 	{
@@ -958,19 +905,49 @@ void GameScene::StageAndAttackCollision(void)
 		// 魔法の情報
 		auto magicInfo = magic->GetMagic();
 
+		// 魔法の半径
+		float magicRad = magicInfo.collisionRadius_;
+
 		// 魔法の移動経路の線分を定義
 		VECTOR magicLineStart = magicInfo.pos_;
 		VECTOR magicLineEnd = magicInfo.prevPos_; // 前のフレームでの魔法の位置
 
 		// ステージとの当たり判定を行う(ライン)
-		if (CollisionUtility::CollisionLine(
+		if (!CollisionUtility::CollisionLine(
 			magicLineStart,
 			magicLineEnd,
 			stage_->GetModelId()))
 		{
-			// Y軸のみの押し出しを行う
-			magic->ChangeState(MAGIC_STATE::BLAST);
+			continue;
 		}
+
+		for (auto& spawner : spawners)
+		{
+			// 存在していなかったら次のスポナーを見る
+			if (!spawner->GetSpawnerIns().isExists_)
+			{
+				continue;
+			}
+
+			// 座標を取得
+			VECTOR spawnerPos = spawner->GetSpawnerIns().basePos_;
+
+			// 半径を取得
+			float spawnerRad = spawner->GetSpawnerIns().collisionRadius_;
+
+			// 当たり判定
+			if (CollisionUtility::IsCollidingSphereCapsule(spawnerPos, spawnerRad, magicLineStart, magicLineEnd, magicRad))
+			{
+				// 当たっていたら
+				// スポナー耐久値にダメージを与える
+				spawner->Damage(magic->GetMagic().bodyDamage_);
+
+			}
+		}
+
+		// 魔法を爆発させる
+		magic->ChangeState(MAGIC_STATE::BLAST);
+
 	}
 }
 

@@ -121,4 +121,9 @@ void EffectResManager::Load(void)
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "BlastHit/BlastHit.efkefc").c_str()));
 
+	// スポナーエフェクトのロード
+	resourceIds_.emplace(TYPE::SPAWNER,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "Spawner.efkefc").c_str()));
+
 }

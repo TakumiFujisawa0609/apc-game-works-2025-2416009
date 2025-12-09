@@ -15,7 +15,7 @@ Wave1::Wave1(void)
 	AddSpawnEvent(60 * 18, ENEMY_TYPE::BAT, VGet(100.0f, 5.0f, 300.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
-	AddSpawner(60 * 1, 10, VGet(-500.0f, -5.0f, -2000.0f));
+	AddSpawner(60 * 1, 10, VGet(-500.0f, -70.0f, -2000.0f));
 }
 
 void Wave1::OnStart()

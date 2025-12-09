@@ -16,7 +16,9 @@ public:
 		PLAYER_MAGIC_BLAST,
 
 		BAT_MAGIC,
-		DRAGON_MAGIC
+		DRAGON_MAGIC,
+
+		SPAWNER,
 	};
 
 	// インスタンスの生成

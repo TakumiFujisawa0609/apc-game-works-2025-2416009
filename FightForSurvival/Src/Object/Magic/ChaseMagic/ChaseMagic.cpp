@@ -1,4 +1,5 @@
 #include <DxLib.h>
+#include <EffekseerForDXLib.h>
 #include "../../Enemy/EnemyInfo.h"
 #include "../../Enemy/Base/EnemyBase.h"
 #include "../../Enemy/EnemyManager.h"
@@ -37,6 +38,23 @@ void ChaseMagic::UpdateShot(void)
 	if (targetFound_)
 	{
 		LookTargetEnemy();
+
+		// エフェクトの回転
+	// 方向から角度を出す
+		VECTOR angle;
+		angle.y = atan2(magic_.dir_.x, magic_.dir_.z);
+
+		// XZのベクトルの長さを計算する
+		float XZLength = sqrtf(magic_.dir_.x * magic_.dir_.x + magic_.dir_.z * magic_.dir_.z);
+
+		// X軸の角度を計算する
+		angle.x = atan2(magic_.dir_.y, XZLength);
+
+		// 回転はXY軸のみとする
+		angle.z = 0.0f;
+
+		SetRotationPlayingEffekseer3DEffect(
+			effectPlayId_, -angle.x, angle.y, angle.z);
 	}
 
 	// 移動処理
@@ -61,7 +79,7 @@ void ChaseMagic::ChangeShot(void)
 
 		// ショット状態のエフェクト再生
 		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT_MAX);
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
 	}
 	else
 	{
@@ -70,7 +88,7 @@ void ChaseMagic::ChangeShot(void)
 		magic_.bodyDamage_ = BODY_DAMAGE;
 		// ショット状態のエフェクト再生
 		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
+			1000.0f, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
 	}
 
 	// 初期化

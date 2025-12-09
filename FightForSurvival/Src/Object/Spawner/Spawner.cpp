@@ -1,7 +1,9 @@
 #include "Spawner.h"
+#include <EffekseerForDXLib.h>
 
 #include "../../Scene/SceneManager.h"
 #include "../Enemy/EnemyManager.h"
+#include "../../Manager/EffectResManager/EffectResManager.h"
 
 Spawner::Spawner(int modelId)
 {
@@ -10,6 +12,8 @@ Spawner::Spawner(int modelId)
 		// 中身が-1じゃなかったら(中身が入っていたら)モデルのロードを行う
 		spawner_.modelId_ = MV1DuplicateModel(modelId);
 	}
+
+	spawner_.effectScale_ = 400.0f;
 }
 
 Spawner::~Spawner(void)
@@ -40,6 +44,10 @@ void Spawner::Create(VECTOR pos, float interval)
 
 	// 最初の出現パターンを決める
 	SelectPattern();
+
+	// チャージ状態のエフェクト再生
+	spawner_.playEffectId_ = EffectResManager::GetInstance().PlayEffect(
+		spawner_.effectScale_, VGet(0.0f,0.0f,0.0f), spawner_.basePos_, EffectResManager::TYPE::SPAWNER);
 }
 
 void Spawner::Update(void)
@@ -48,6 +56,13 @@ void Spawner::Update(void)
 	if (!spawner_.isExists_)
 	{
 		return;
+	}
+
+	if (IsEffekseer3DEffectPlaying(spawner_.playEffectId_) == -1)
+	{
+		// チャージ状態のエフェクト再生
+		spawner_.playEffectId_ = EffectResManager::GetInstance().PlayEffect(
+			spawner_.effectScale_, VGet(0.0f, 0.0f, 0.0f), spawner_.basePos_, EffectResManager::TYPE::SPAWNER);
 	}
 
 	// 時間を進める
@@ -78,8 +93,12 @@ void Spawner::Draw(void)
 		return;
 	}
 
+#ifdef _DEBUG
+
 	// どこが中心位置か分かるようにデバック表示
-	DrawSphere3D(spawner_.basePos_, spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
+	//DrawSphere3D(spawner_.basePos_, spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
+
+#endif // _DEBUG
 
 }
 
@@ -98,6 +117,8 @@ void Spawner::Damage(float durability)
 		spawner_.durability_ = 0.0f;
 		// 攻撃を受けて耐久力が無くなったら、存在をなくす
 		spawner_.isExists_ = false;
+
+		StopEffekseer3DEffect(spawner_.playEffectId_);
 	}
 }
 
@@ -145,11 +166,11 @@ void Spawner::PatternInsInit(PATTERN pattern)
 
 void Spawner::PositionInit(void)
 {
-	// 基軸のpos_[1]から他の座標も設定する
-	SetPosition(1, LEFT_UP);
-	SetPosition(2, LEFT_DOWN);
-	SetPosition(3, RIGHT_UP);
-	SetPosition(4, RIGHT_DOWN);
+	// 基軸のbasePos_から他の座標も設定する
+	SetPosition(0, LEFT_UP);
+	SetPosition(1, LEFT_DOWN);
+	SetPosition(2, RIGHT_UP);
+	SetPosition(3, RIGHT_DOWN);
 }
 
 void Spawner::SetPosition(int i, VECTOR offset)
