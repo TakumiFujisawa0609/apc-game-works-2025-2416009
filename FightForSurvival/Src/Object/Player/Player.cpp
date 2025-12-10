@@ -29,7 +29,7 @@ void Player::Load(void)
 
 	font_[static_cast<int>(FONT_KIND::MAGIC_NUM)] = CreateFontToHandle("x12y12pxMaruMinya", 24, 1, DX_FONTTYPE_ANTIALIASING);;
 	font_[static_cast<int>(FONT_KIND::CHANGE_MAGIC_INTERVAL)] = CreateFontToHandle("x12y12pxMaruMinya", 36, 1, DX_FONTTYPE_ANTIALIASING);;
-	font_[static_cast<int>(FONT_KIND::MP_POTION_NUM)] = CreateFontToHandle("x12y12pxMaruMinya", 36, 1, DX_FONTTYPE_ANTIALIASING);;
+	font_[static_cast<int>(FONT_KIND::MP_POTION_NUM)] = CreateFontToHandle("x12y12pxMaruMinya", 36, 16, DX_FONTTYPE_ANTIALIASING);;
 	font_[static_cast<int>(FONT_KIND::USE_POTION)]= CreateFontToHandle("x12y12pxMaruMinya", 16, 1, DX_FONTTYPE_ANTIALIASING);;
 
 }

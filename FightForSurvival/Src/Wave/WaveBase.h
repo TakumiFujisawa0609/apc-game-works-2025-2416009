@@ -35,7 +35,7 @@ public:
 
     // コンストラクタで設定
     WaveBase(int prep, int wave);
-    virtual ~WaveBase() = default;
+    virtual ~WaveBase();
 
     void Update(void);  // 更新
     virtual void Draw(void);    // 描画
@@ -67,6 +67,8 @@ protected:
     int prepareTime_; // 準備時間
     int waveTime_;    // 戦闘時間
     int elapsed_;     // 経過時間
+
+    int font_;        // フォントハンドル
 
     std::vector<SpawnEvent> spawnEvents_;    // スポーンイベントを管理
     std::vector<SpawnerInstallation> spawnerIns_;    // スポナー設置イベントを管理

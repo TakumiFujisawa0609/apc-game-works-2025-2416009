@@ -8,6 +8,7 @@ class Wave2 : public WaveBase
 {
 public:
     Wave2(void);
+    ~Wave2(void)override;
 
     void OnStart(void) override;
     void OnWave(void) override;

@@ -7,8 +7,15 @@
 WaveBase::WaveBase(int prep, int wave)
     :state_(WaveState::PREPARE), prepareTime_(prep), waveTime_(wave), elapsed_(0)
 {
+    font_ = CreateFontToHandle("x12y12pxMaruMinya", 32, 20, DX_FONTTYPE_ANTIALIASING);
 }
 
+WaveBase::~WaveBase()
+{
+    spawnEvents_.clear();
+    spawnerIns_.clear();
+    DeleteFontToHandle(font_);
+}
 
 void WaveBase::Update(void)
 {
@@ -92,17 +99,12 @@ void WaveBase::Draw(void)
     {
     case WaveBase::WaveState::PREPARE:
         DrawFormatString(posX - 15, 5, 0xff0000, "èÄîı");
-        DrawFormatString(posX - 5, 40, 0xffffff, "%d", time);
-        //DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, prepareTime);
-        //DrawFormatString(0, 200, 0xff0000, "åªç›ÇÃèÛë‘ÅFPrepare");
+        DrawFormatStringToHandle(posX - 15, 40, 0xffffff, font_, "%d", time);
         break;
     case WaveBase::WaveState::INWAVE:
-        DrawFormatString(posX - 5, 40, 0xffffff, "%d", waveTime);
-        //DrawFormatString(0, 180, 0xff0000, "%d / %d", elapsed, waveTime);
-        //DrawFormatString(0, 200, 0xff0000, "åªç›ÇÃèÛë‘ÅFInWave");
+        DrawFormatStringToHandle(posX - 15, 40, 0xffffff, font_, "%d", waveTime);
         break;
     case WaveBase::WaveState::CLEARED:
-        //DrawFormatString(0, 200, 0xff0000, "åªç›ÇÃèÛë‘ÅFCleared");
         break;
     default:
         break;

@@ -23,12 +23,15 @@ void EffectResManager::Destroy(void)
 {
 	for (const auto& pair : resourceIds_)
 	{
-		// 爆発エフェクトのメモリ解放
+		// エフェクトのメモリ解放
 		DeleteEffekseerEffect(pair.second);
 	}
 
+	resourceIds_.clear();
+
 	// インスタンスのメモリ解放
 	delete instance_;
+	instance_ = nullptr;
 
 }
 

@@ -88,7 +88,7 @@ void ChaseMagic::ChangeShot(void)
 		magic_.bodyDamage_ = BODY_DAMAGE;
 		// ショット状態のエフェクト再生
 		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			1000.0f, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
 	}
 
 	// 初期化

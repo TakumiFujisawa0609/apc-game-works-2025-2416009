@@ -20,6 +20,10 @@ Wave2::Wave2(void)
 	AddSpawner(60 * 18, 10, VGet(2500.0f, -170.0f, 230.0f));
 }
 
+Wave2::~Wave2(void)
+{
+}
+
 void Wave2::OnStart(void)
 {
 }

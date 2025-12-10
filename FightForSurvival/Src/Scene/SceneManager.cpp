@@ -142,7 +142,7 @@ void SceneManager::Destroy(void)
 {
 
 	// ウィンドウズに一時的に保持していたフォントデータを削除
-	RemoveFontResourceExA("", FR_PRIVATE, NULL);
+	RemoveFontResourceExA("Data/Font/x12y12pxMaruMinya.ttf", FR_PRIVATE, NULL);
 
 	// システム管理解放
 	SystemManager::GetInstance().Destroy();
