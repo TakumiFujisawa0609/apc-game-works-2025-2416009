@@ -30,6 +30,7 @@ private:
 
 	int modelId_;
 	int wallModelId_;
+	int flowerModelId_;
 
 	VECTOR scale_;
 	VECTOR rotate_;
