@@ -79,7 +79,7 @@ void ChaseMagic::ChangeShot(void)
 
 		// ショット状態のエフェクト再生
 		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
+			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE_MAX);
 	}
 	else
 	{

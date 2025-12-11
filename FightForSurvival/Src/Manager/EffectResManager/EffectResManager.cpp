@@ -109,6 +109,11 @@ void EffectResManager::Load(void)
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "TrackingAttack.efkefc").c_str()));
 
+	// プレイヤー攻撃の追跡時最大サイズエフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHASE_MAX,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "TrackingAttackMax.efkefc").c_str()));
+
 	// プレイヤー攻撃の爆発エフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_BLAST,
 		LoadEffekseerEffect(
