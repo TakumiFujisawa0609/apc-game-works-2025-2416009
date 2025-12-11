@@ -68,6 +68,9 @@ protected:
 	// 武器の座標ポインタ
 	VECTOR* weponPos_;
 
+	// 魔法を貯めが最大か
+	bool isMaxCharge_;
+
 	// パラメータ設定
 	virtual void SetParam(void) = 0;
 	// ステート

@@ -94,6 +94,11 @@ void EffectResManager::Load(void)
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "Charge.efkefc").c_str()));
 	
+	// プレイヤー攻撃最大チャージ時のエフェクトのロード
+	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHARGE_MAX,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+	
 	// プレイヤー攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT,
 		LoadEffekseerEffect(

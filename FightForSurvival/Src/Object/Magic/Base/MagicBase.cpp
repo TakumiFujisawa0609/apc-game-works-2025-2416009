@@ -40,7 +40,11 @@ void MagicBase::ChargeShot(VECTOR pos, VECTOR dir)
 	// 魔法の発射方向の設定
 	magic_.dir_ = dir;
 
+	// 描画フラグのみ立てる
 	magic_.isDraw_ = true;
+
+	// 最大チャージフラグを初期化
+	isMaxCharge_ = false;
 
 	// チャージ状態
 	ChangeState(MAGIC_STATE::CHARGE);
@@ -185,11 +189,30 @@ void MagicBase::UpdateEffectDir(VECTOR dir)
 void MagicBase::UpdateCharge(void)
 {
 	// 魔法を徐々に大きくする(チャージする)
-	magic_.collisionRadius_ += chargePow_;
-
-	if (magic_.collisionRadius_ > chargeMax_)
+	if (isMaxCharge_)
 	{
-		magic_.collisionRadius_ = chargeMax_;
+		// 指定のエフェクトが表示されていなかったら再生
+		if (IsEffekseer3DEffectPlaying(effectPlayId_) == -1)
+		{
+			// チャージ状態のエフェクト再生
+			// 最大チャージ状態のエフェクト再生
+			effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+				effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
+		}
+	}
+	else
+	{
+		magic_.collisionRadius_ += chargePow_;
+
+		if (magic_.collisionRadius_ > chargeMax_)
+		{
+			magic_.collisionRadius_ = chargeMax_;
+			// 最大になったことをフラグで知らせる
+			isMaxCharge_ = true;
+			// 最大チャージ状態のエフェクト再生
+			effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+				effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
+		}
 	}
 }
 

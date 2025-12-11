@@ -58,9 +58,10 @@ void Spawner::Update(void)
 		return;
 	}
 
+	// 指定のエフェクト(スポナー)が再生されていなかったら入る
 	if (IsEffekseer3DEffectPlaying(spawner_.playEffectId_) == -1)
 	{
-		// チャージ状態のエフェクト再生
+		// スポナーのエフェクト再生
 		spawner_.playEffectId_ = EffectResManager::GetInstance().PlayEffect(
 			spawner_.effectScale_, VGet(0.0f, 0.0f, 0.0f), spawner_.basePos_, EffectResManager::TYPE::SPAWNER);
 	}
