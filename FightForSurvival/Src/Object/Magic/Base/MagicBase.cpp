@@ -58,6 +58,7 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	// 魔法の発射方向の設定
 	magic_.dir_ = dir;
 
+	magic_.isDraw_ = true;
 	magic_.isExists_ = true;
 
 	// チャージ状態
@@ -78,7 +79,6 @@ void MagicBase::Update(void)
 
 		UpdateCharge();
 
-		// 座標
 		UpdateEffectPos();
 
 		break;
@@ -108,7 +108,7 @@ void MagicBase::Draw(void)
 #ifdef _DEBUG
 
 	// デバッグ用：衝突判定用球体
-	//DrawSphere3D(magic_.pos_, magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
+	DrawSphere3D(magic_.pos_, magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);
 
 #endif // _DEBUG
 

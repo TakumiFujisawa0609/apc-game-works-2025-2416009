@@ -26,7 +26,7 @@ public:
 	static constexpr int DAMAGE = 1;
 
 	BatMagic(TYPE_MAGIC typeMagic, int baseModelId,VECTOR* pos);
-	~BatMagic(void);
+	~BatMagic(void)override;
 
 protected:
 

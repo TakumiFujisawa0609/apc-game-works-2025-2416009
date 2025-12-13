@@ -40,7 +40,7 @@ void ChaseMagic::UpdateShot(void)
 		LookTargetEnemy();
 
 		// エフェクトの回転
-	// 方向から角度を出す
+		// 方向から角度を出す
 		VECTOR angle;
 		angle.y = atan2(magic_.dir_.x, magic_.dir_.z);
 

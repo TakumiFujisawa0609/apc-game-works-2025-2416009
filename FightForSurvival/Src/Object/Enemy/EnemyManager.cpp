@@ -20,7 +20,7 @@ void EnemyManager::AddEnemy(EnemyBase* enemy)
 	enemies_.emplace_back(std::move(enemy));
 }
 
-void EnemyManager::CraateMagic(ENEMY_TYPE type, VECTOR pos, VECTOR dir)
+void EnemyManager::CreateMagic(ENEMY_TYPE type, VECTOR pos, VECTOR dir)
 {
 	MagicBase* magic = nullptr;
 
@@ -31,6 +31,7 @@ void EnemyManager::CraateMagic(ENEMY_TYPE type, VECTOR pos, VECTOR dir)
 		magic = GetValidMagic(TYPE_MAGIC::BAT_MAGIC);
 		break;
 	case ENEMY_TYPE::DRAGON:
+		magic = GetValidMagic(TYPE_MAGIC::DRAGON_MAGIC);
 		break;
 	default:
 		break;
@@ -45,11 +46,8 @@ void EnemyManager::CraateMagic(ENEMY_TYPE type, VECTOR pos, VECTOR dir)
 	// 初期化処理
 	magic->Init();
 
-	if (ENEMY_TYPE::BAT == type)
-	{
-		// 座標を更新する
-		magic->CreateShot(pos, dir);
-	}
+	// 座標を更新する
+	magic->CreateShot(pos, dir);
 }
 
 void EnemyManager::Load(void)

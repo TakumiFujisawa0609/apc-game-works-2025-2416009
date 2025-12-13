@@ -52,7 +52,7 @@ public:
     // 未使用の魔法を再利用する。未使用のものが無ければ生成を行う
     MagicBase* GetValidMagic(TYPE_MAGIC type);
     // 前方に魔法生成処理
-    void CraateMagic(ENEMY_TYPE type, VECTOR pos ,VECTOR dir);
+    void CreateMagic(ENEMY_TYPE type, VECTOR pos ,VECTOR dir);
 private:
 
     // 静的インスタンス

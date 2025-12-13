@@ -550,5 +550,5 @@ void EnemyBase::CreateMagicForward(void)
 	VECTOR pos = VAdd(enemy_.pos_, localPosRot);
 
 	// ñÇñ@Çî≠ìÆ(ê∂ê¨)
-	EnemyManager::GetInstance().CraateMagic(ENEMY_TYPE::BAT,pos,enemy_.dir_);
+	EnemyManager::GetInstance().CreateMagic(ENEMY_TYPE::BAT,pos,enemy_.dir_);
 }

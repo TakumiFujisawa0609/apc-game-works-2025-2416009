@@ -26,7 +26,7 @@ public:
 	static constexpr int DAMAGE = 1;
 
 	DragonMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* pos);
-	~DragonMagic(void);
+	~DragonMagic(void)override;
 
 protected:
 
