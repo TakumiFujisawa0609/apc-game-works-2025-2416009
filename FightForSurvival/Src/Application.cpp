@@ -113,7 +113,7 @@ void Application::Run(void)
 		sceneManager.Draw();
 
 		fps_->CalcFrameRate();
-		fps_->DrawFrameRate();
+		//fps_->DrawFrameRate();
 
 		ScreenFlip();
 
