@@ -110,4 +110,11 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         384, 350, 513, 16, 1.0f}
     },
 
+    { UI_KIND::WAVE_BASE,{
+        UI_KIND::WAVE_BASE,
+        true,
+        "Data/Image/UI/WaveUI.png", "", "","",
+        0, 0, 1280, 720, 1.0f}
+    },
+
 };

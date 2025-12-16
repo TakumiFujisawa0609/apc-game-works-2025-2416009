@@ -45,7 +45,7 @@ void Wave2::Draw(void)
 
 	if (state_ != WaveBase::WaveState::PREPARE)
 	{
-		DrawString(posX - 20, 5, "Wave2", 0xffffff);
+		DrawStringToHandle(posX - 25, 5, "Wave2", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
 	}
-	DrawString(5, 40, "ìGÇì|ÇπÅI", 0xff0000);
+	DrawStringToHandle(8, 40, "ìGÇì|ÇπÅI", 0xff0000, font_[static_cast<int>(Font::SMALL)]);
 }

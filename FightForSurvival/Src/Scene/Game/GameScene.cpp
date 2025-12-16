@@ -139,6 +139,9 @@ void GameScene::Load(void)
 	stamina->SetPlayer(player_);
 	uiMgr_->AddUI(stamina);
 
+	UIBase* waveBase = UIFactory::GetInstance()->CreateUI(UI_KIND::WAVE_BASE, texMgr_);
+	uiMgr_->AddUI(waveBase);
+
 	// エフェクト管理初期化
 	EffectResManager::CreateInstance();
 	EffectResManager::GetInstance().Load();

@@ -20,6 +20,7 @@ enum class UI_KIND
     SETTING_TEXT,
     SETTING_DONE,
     SETTING_BAR,
+    WAVE_BASE,
 
     MAX
 };

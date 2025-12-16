@@ -27,7 +27,7 @@ void WaveFinal::Draw()
 
 	if (state_ != WaveBase::WaveState::PREPARE)
 	{
-		DrawString(posX - 20, 5, "WaveFinal", 0xffffff);
+		DrawStringToHandle(posX - 47, 5, "WaveFinal", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
 	}
-	DrawString(5, 40, "敵を全て倒すか、時間いっぱいまで逃げろ！", 0xff0000);
+	DrawStringToHandle(8, 40, "敵を全て倒すか、時間いっぱいまで逃げろ！", 0xff0000, font_[static_cast<int>(Font::SMALL)]);
 }

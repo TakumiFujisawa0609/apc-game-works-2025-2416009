@@ -7,14 +7,16 @@
 WaveBase::WaveBase(int prep, int wave)
     :state_(WaveState::PREPARE), prepareTime_(prep), waveTime_(wave), elapsed_(0)
 {
-    font_ = CreateFontToHandle("x12y12pxMaruMinya", 32, 20, DX_FONTTYPE_ANTIALIASING);
+    font_[static_cast<int>(Font::BIG)] = CreateFontToHandle("x12y12pxMaruMinya", 32, 20, DX_FONTTYPE_ANTIALIASING);
+    font_[static_cast<int>(Font::SMALL)] = CreateFontToHandle("x12y12pxMaruMinya", 20, 20, DX_FONTTYPE_ANTIALIASING);
 }
 
 WaveBase::~WaveBase()
 {
     spawnEvents_.clear();
     spawnerIns_.clear();
-    DeleteFontToHandle(font_);
+    DeleteFontToHandle(font_[static_cast<int>(Font::BIG)]);
+    DeleteFontToHandle(font_[static_cast<int>(Font::SMALL)]);
 }
 
 void WaveBase::Update(void)
@@ -89,20 +91,32 @@ void WaveBase::Update(void)
 
 void WaveBase::Draw(void)
 {
-    int posX = Application::SCREEN_SIZE_X / 2;
-
-
     int time = (prepareTime_ - elapsed_) / 60;
     int waveTime = (waveTime_ - elapsed_) / 60;
+    int posX = Application::SCREEN_SIZE_X / 2;
 
     switch (state_)
     {
     case WaveBase::WaveState::PREPARE:
-        DrawFormatString(posX - 15, 5, 0xff0000, "èÄîı");
-        DrawFormatStringToHandle(posX - 15, 40, 0xffffff, font_, "%d", time);
+
+        DrawStringToHandle(posX - 20, 5, "èÄîı",0xff0000, font_[static_cast<int>(Font::SMALL)]);
+
+        if (time >= 10)
+        {
+            posX -= 8;
+        }
+
+        DrawFormatStringToHandle(posX - 9, 40, 0xffffff, font_[static_cast<int>(Font::BIG)], "%d", time);
+
         break;
     case WaveBase::WaveState::INWAVE:
-        DrawFormatStringToHandle(posX - 15, 40, 0xffffff, font_, "%d", waveTime);
+
+        if (waveTime >= 10)
+        {
+            posX -= 8;
+        }
+
+        DrawFormatStringToHandle(posX - 9, 40, 0xffffff, font_[static_cast<int>(Font::BIG)], "%d", waveTime);
         break;
     case WaveBase::WaveState::CLEARED:
         break;

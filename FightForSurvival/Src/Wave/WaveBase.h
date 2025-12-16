@@ -15,6 +15,14 @@ public:
         CLEARED    // クリア済み
     };
 
+    enum class Font
+    {
+        BIG,
+        SMALL,
+
+        MAX
+    };
+
     // 敵のスポーンイベント
     struct SpawnEvent
     {
@@ -68,7 +76,7 @@ protected:
     int waveTime_;    // 戦闘時間
     int elapsed_;     // 経過時間
 
-    int font_;        // フォントハンドル
+    int font_[static_cast<int>(Font::MAX)];        // フォントハンドル
 
     std::vector<SpawnEvent> spawnEvents_;    // スポーンイベントを管理
     std::vector<SpawnerInstallation> spawnerIns_;    // スポナー設置イベントを管理
