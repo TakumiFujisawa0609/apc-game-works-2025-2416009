@@ -53,3 +53,23 @@ void Stage::Release(void)
 	MV1DeleteModel(wallModelId_);
 	MV1DeleteModel(flowerModelId_);
 }
+
+float Stage::GetModelScaleX(void) const
+{
+	VECTOR MMax = MV1GetMeshMaxPosition(modelId_, 0);
+	VECTOR MMin = MV1GetMeshMinPosition(modelId_, 0);
+
+	//  // ステージのX軸のサイズを計算
+	float StageScaleX = (MMax.x - MMin.x) * scale_.x;
+	return StageScaleX;
+}
+
+float Stage::GetModelScaleZ(void) const
+{
+	VECTOR MMax = MV1GetMeshMaxPosition(modelId_, 0);
+	VECTOR MMin = MV1GetMeshMinPosition(modelId_, 0);
+
+	//  // ステージのZ軸のサイズを計算
+	float StageScaleZ = (MMax.z - MMin.z) * scale_.z;
+	return StageScaleZ;
+}

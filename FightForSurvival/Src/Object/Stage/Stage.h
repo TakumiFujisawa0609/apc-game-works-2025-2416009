@@ -26,6 +26,9 @@ public:
 	int GetModelId(void)const { return modelId_; }
 	int GetWallModelId(void)const { return wallModelId_; }
 
+	float GetModelScaleX(void)const;
+	float GetModelScaleZ(void)const;
+
 private:
 
 	int modelId_;
