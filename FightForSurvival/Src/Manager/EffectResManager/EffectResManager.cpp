@@ -97,7 +97,7 @@ void EffectResManager::Load(void)
 	// プレイヤー攻撃最大チャージ時のエフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_CHARGE_MAX,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+			(Application::PATH_EFFECT + "ChargeSaving.efkefc").c_str()));
 	
 	// プレイヤー攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::PLAYER_MAGIC_SHOT,
@@ -127,7 +127,7 @@ void EffectResManager::Load(void)
 	// コウモリ攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::BAT_MAGIC,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "SonicBoom.efkefc").c_str()));
+			(Application::PATH_EFFECT + "Pulse.efkefc").c_str()));
 
 	// ドラゴン攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_MAGIC,
