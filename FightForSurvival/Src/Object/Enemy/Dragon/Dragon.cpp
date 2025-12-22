@@ -6,6 +6,7 @@
 #include "../../../Scene/SceneManager.h"
 #include "../../Enemy/EnemyManager.h"
 #include "../../Player/Player.h"
+#include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "Dragon.h"
 
 Dragon::Dragon(ENEMY_TYPE type, int baseModelId, Player* player)
@@ -274,24 +275,25 @@ void Dragon::AttackSelect(Dragon& dragon)
 	// プレイヤー側を向く
 	dragon.LookPlayer();
 
-	// ランダムで決めた攻撃内容を入れる
-	int attackRand = GetRand(RANDOM_NUM);
+	dragon.ChangeAttackState(FORWARD_ATTACK);
+	//// ランダムで決めた攻撃内容を入れる
+	//int attackRand = GetRand(RANDOM_NUM);
 
-	if (attackRand >= 0 && attackRand <= RANGE)
-	{
-		// 範囲攻撃
-		dragon.ChangeAttackState(RANGE_ATTACK);
-	}
-	else if (attackRand > RANGE && attackRand <= FORWARD)
-	{
-		// 前方攻撃
-		dragon.ChangeAttackState(FORWARD_ATTACK);
-	}
-	else if (attackRand > FORWARD && attackRand <= RUSH)
-	{
-		// 突進攻撃
-		dragon.ChangeAttackState(RUSH_ATTACK);
-	}
+	//if (attackRand >= 0 && attackRand <= RANGE)
+	//{
+	//	// 範囲攻撃
+	//	dragon.ChangeAttackState(RANGE_ATTACK);
+	//}
+	//else if (attackRand > RANGE && attackRand <= FORWARD)
+	//{
+	//	// 前方攻撃
+	//	dragon.ChangeAttackState(FORWARD_ATTACK);
+	//}
+	//else if (attackRand > FORWARD && attackRand <= RUSH)
+	//{
+	//	// 突進攻撃
+	//	dragon.ChangeAttackState(RUSH_ATTACK);
+	//}
 }
 
 void Dragon::RangeAttack(Dragon& dragon)
@@ -337,9 +339,13 @@ void Dragon::ForwardAttack(Dragon& dragon)
 		if (dragon.animationController_ != nullptr)
 		{
 			// 攻撃確定させたいタイミングになったらtrueにする
-			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME)
+			if (dragon.animationNum_ == FORWARD_CONFIRM_FRAME && !dragon.attackStart_)
 			{
 				dragon.attackStart_ = true;
+
+				// チャージ状態のエフェクト再生
+				EffectResManager::GetInstance().PlayEffect(
+					100.0f, dragon.enemy_.dir_, dragon.enemy_.pos_, EffectResManager::TYPE::DRAGON_BREATH);
 			}
 
 			// 攻撃が終了したかつ、攻撃中フラグが立っていた場合、攻撃中フラグを折る
@@ -425,6 +431,7 @@ void Dragon::IsDrawMagicWhole(void)
 
 		VECTOR pos = VAdd(enemy_.pos_, localPosRot);
 
+		magic->ChargeShot(enemy_.pos_, localPosRot);
 		magic->UpdateEffectPos(pos);
 
 		magicsRange_.emplace_back(magic);

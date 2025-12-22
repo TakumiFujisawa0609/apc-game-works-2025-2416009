@@ -132,7 +132,12 @@ void EffectResManager::Load(void)
 	// ドラゴン攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_MAGIC,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "BlastHit/BlastHit.efkefc").c_str()));
+			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+
+	// ドラゴン攻撃エフェクトのロード
+	resourceIds_.emplace(TYPE::DRAGON_BREATH,
+		LoadEffekseerEffect(
+			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
 
 	// スポナーエフェクトのロード
 	resourceIds_.emplace(TYPE::SPAWNER,

@@ -19,6 +19,7 @@ public:
 
 		BAT_MAGIC,
 		DRAGON_MAGIC,
+		DRAGON_BREATH,
 
 		SPAWNER,
 	};
