@@ -51,7 +51,7 @@ public:
 	static constexpr float OFFSET_POS_HAND = 5.0f;
 
 	// UŒ‚‰Â”\”ÍˆÍ
-	static constexpr float ATTACK_RANGE = 100.0f;
+	static constexpr float ATTACK_RANGE = 95.0f;
 
 	// UŒ‚‘Ò‚¿ŠÔ
 	static constexpr float ATTACK_COOLDOWN = 3.0f;

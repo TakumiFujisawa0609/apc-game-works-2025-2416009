@@ -2,7 +2,7 @@
 #include "../../Player/Player.h"
 #include "MiniMap.h"
 
-MiniMap::MiniMap(int stageSizeX, int stageSizeZ, VECTOR& plaPos)
+MiniMap::MiniMap(VECTOR& plaPos)
 	:
 	miniMapImgHandle_(-1),
 	playerPos_(plaPos)
@@ -15,35 +15,30 @@ MiniMap::~MiniMap(void)
 
 void MiniMap::Load(void)
 {
-	// ミニマップの画像ハンドル
+	// ミニマップの画像(背景)ハンドル
 	miniMapImgHandle_ = LoadGraph("Data/Image/UI/MiniMap/miniMap.png");
 }
 
 void MiniMap::Init(void)
 {
 	// 描画位置初期化
-	miniMapPos = {};
+	miniMapPos = {0,0};
 
 	// 描画物の初期化
 	objectRadis_ = OBJECT_RADIUS;
+
+	stageModelSizeX_ = stageModelSizeZ_ = 15680;
 }
 
 void MiniMap::Update(void)
 {
-	// 0番目のメッシュの最大・最小座標を直接取得
-	//VECTOR MMax = MV1GetMeshMaxPosition(StageModelHandle, 0);
-	//VECTOR MMin = MV1GetMeshMinPosition(StageModelHandle, 0);
 
-	//// ステージのサイズを計算
-	//float StageWidth = MMax.x - MMin.x;
-	//float StageDepth = MMax.z - MMin.z;
+	int referencePoint = miniMapPos.x + MINI_MAP_SIZE_XY / 2;
+	float miniMapScale = 
+	miniMapPlayerPos_.x = referencePoint+ playerPos_.x/ stageModelSizeX_;
 
-	//int referencePoint = miniMapPos.x + MINI_MAP_SIZE_XY / 2;
-	//float miniMapScale = 
-	//miniMapPlayerPos_.x = referencePoint+ playerPos_.x/stageWid;
-
-	//referencePoint = miniMapPos.y + MINI_MAP_SIZE_XY / 2;
-	//miniMapPlayerPos_.y = referencePoint + playerPos_.y / stageHig;
+	referencePoint = miniMapPos.y + MINI_MAP_SIZE_XY / 2;
+	miniMapPlayerPos_.y = referencePoint + playerPos_.y / stageModelSizeZ_;
 
 }
 
@@ -65,6 +60,9 @@ void MiniMap::Draw(void)
 
 void MiniMap::Release(void)
 {
+	// 背景を削除
+	DeleteGraph(miniMapImgHandle_);
+
 	// 中身の解放
 	enemiesPos_.clear();
 	miniMapEnemiesPos_.clear();

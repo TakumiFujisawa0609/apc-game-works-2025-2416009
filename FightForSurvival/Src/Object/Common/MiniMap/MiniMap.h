@@ -8,7 +8,7 @@ class MiniMap
 {
 public:
 
-	MiniMap(int stageSizeX, int stageSizeZ, VECTOR& plaPos);
+	MiniMap(VECTOR& plaPos);
 	~MiniMap(void);
 
 	void Load(void);
@@ -30,8 +30,8 @@ private:
 	static constexpr int OBJECT_RADIUS = 2;
 
 	// ステージ自体の大きさ
-	int stageSizeX_;
-	int stageSizeZ_;
+	int stageModelSizeX_;
+	int stageModelSizeZ_;
 
 	// ミニマップの画像ハンドル
 	int miniMapImgHandle_;
