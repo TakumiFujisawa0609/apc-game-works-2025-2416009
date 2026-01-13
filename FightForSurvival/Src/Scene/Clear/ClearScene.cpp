@@ -25,9 +25,25 @@ void ClearScene::Load(void)
 
 	// UIを生成
 	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::CLEAR_BG, texMgr_);
+	UIBase* scoreBoard = UIFactory::GetInstance()->CreateUI(UI_KIND::SCORE_BOARD, texMgr_);
+	UIBase* rankS = UIFactory::GetInstance()->CreateUI(UI_KIND::RANK_S, texMgr_);
+	UIBase* rankA = UIFactory::GetInstance()->CreateUI(UI_KIND::RANK_A, texMgr_);
+	UIBase* rankB = UIFactory::GetInstance()->CreateUI(UI_KIND::RANK_B, texMgr_);
+	UIBase* rankC = UIFactory::GetInstance()->CreateUI(UI_KIND::RANK_C, texMgr_);
+	UIBase* zonbie = UIFactory::GetInstance()->CreateUI(UI_KIND::CLEAR_ZOMBIE, texMgr_);
+	UIBase* bat = UIFactory::GetInstance()->CreateUI(UI_KIND::CLEAR_BAT, texMgr_);
+	UIBase* dragon = UIFactory::GetInstance()->CreateUI(UI_KIND::CLEAR_DRAGON, texMgr_);
 
 	// 生成したUIを追加
 	uiMgr_->AddUI(bg);
+	uiMgr_->AddUI(scoreBoard);
+	uiMgr_->AddUI(rankS);
+	uiMgr_->AddUI(rankA);
+	uiMgr_->AddUI(rankB);
+	uiMgr_->AddUI(rankC);
+	uiMgr_->AddUI(zonbie);
+	uiMgr_->AddUI(bat);
+	uiMgr_->AddUI(dragon);
 
 	// 設定付きフォントデータロード
 	font_[static_cast<int>(Font::BIG)] = CreateFontToHandle("x12y12pxMaruMinya", 32, 20, DX_FONTTYPE_ANTIALIASING);

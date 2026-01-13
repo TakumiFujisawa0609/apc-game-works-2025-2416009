@@ -123,4 +123,61 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         "Data/Image/UI/GameClear/GameClearBG.png", "", "","",
         0, 0, 1280, 720 ,1.0f}
     },
+
+    { UI_KIND::SCORE_BOARD,{
+        UI_KIND::SCORE_BOARD,
+        true,
+        "Data/Image/UI/GameClear/ScoreBoard.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::RANK_S,{
+        UI_KIND::RANK_S,
+        true,
+        "Data/Image/UI/GameClear/Rank_S.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::RANK_A,{
+        UI_KIND::RANK_A,
+        false,
+        "Data/Image/UI/GameClear/Rank_A.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::RANK_B,{
+        UI_KIND::RANK_B,
+        false,
+        "Data/Image/UI/GameClear/Rank_B.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::RANK_C,{
+        UI_KIND::RANK_C,
+        false,
+        "Data/Image/UI/GameClear/Rank_C.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::CLEAR_ZOMBIE,{
+        UI_KIND::CLEAR_ZOMBIE,
+        true,
+        "Data/Image/UI/GameClear/ClearZombie.png", "", "","",
+        320, 180, 301, 281 ,1.0f}
+    },
+
+    { UI_KIND::CLEAR_BAT,{
+        UI_KIND::CLEAR_BAT,
+        true,
+        "Data/Image/UI/GameClear/ClearBat.png", "", "","",
+        960, 180, 388, 374 ,1.0f}
+    },
+
+    { UI_KIND::CLEAR_DRAGON,{
+        UI_KIND::CLEAR_DRAGON,
+        true,
+        "Data/Image/UI/GameClear/ClearDragon.png", "", "","",
+        320, 540, 538, 543 ,1.0f}
+    },
+
 };

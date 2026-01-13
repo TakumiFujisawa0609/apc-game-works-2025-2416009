@@ -81,4 +81,37 @@ inline void RegisterUI(void)
     UIFactory::GetInstance()->Register(UI_KIND::CLEAR_BG,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* clearBG = new Sprite(info, texMgr); return clearBG; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::SCORE_BOARD,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* scoreBoard = new Sprite(info, texMgr); return scoreBoard; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::RANK_S,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* rankS = new Sprite(info, texMgr); return rankS; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::RANK_A,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* rankA = new Sprite(info, texMgr); return rankA; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::RANK_B,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* rankB = new Sprite(info, texMgr); return rankB; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::RANK_C,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* rankC = new Sprite(info, texMgr); return rankC; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::CLEAR_ZOMBIE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* clearZombie = new Sprite(info, texMgr); return clearZombie; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::CLEAR_BAT,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* clearBat = new Sprite(info, texMgr); return clearBat; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::CLEAR_DRAGON,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* clearDragon = new Sprite(info, texMgr); return clearDragon; });
+
 }

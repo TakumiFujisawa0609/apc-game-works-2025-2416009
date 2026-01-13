@@ -22,6 +22,14 @@ enum class UI_KIND
     SETTING_BAR,
     WAVE_BASE,
     CLEAR_BG,
+    SCORE_BOARD,
+    RANK_S,
+    RANK_A,
+    RANK_B,
+    RANK_C,
+    CLEAR_ZOMBIE,
+    CLEAR_BAT,
+    CLEAR_DRAGON,
 
     MAX
 };
