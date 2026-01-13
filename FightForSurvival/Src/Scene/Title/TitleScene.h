@@ -54,8 +54,8 @@ private:
 	Camera* camera_;
 
 	// UI
-	UIManager* uiMgr;
-	TextureManager* texMgr;
+	UIManager* uiMgr_;
+	TextureManager* texMgr_;
 
 	// ç¿ïW
 	Vector2 pos_[STATE::NON];

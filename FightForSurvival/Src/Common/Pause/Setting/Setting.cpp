@@ -51,8 +51,17 @@ void Setting::Init(void)
 	padSensitivity_ = ins.GetPadSensitivity();
 
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
-
-	circlePos_ = { static_cast<int>(BAR_START_POS_X + (BAR_END_POS_X - BAR_START_POS_X) * mouseSensitivity_),CIRCLE_POS_Y };
+	// ëIëèàóù
+	if (SystemManager::GetInstance().GetIsDevice())
+	{
+		circlePos_ = { static_cast<int>(((mouseSensitivity_ - SENSITIVITY_MIN_MOUSE) / (SENSITIVITY_MAX_MOUSE - SENSITIVITY_MIN_MOUSE)) + BAR_START_POS_X)
+			,CIRCLE_POS_Y };
+	}
+	else
+	{
+		circlePos_ = {(BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9)))
+			, CIRCLE_POS_Y };
+	}
 }
 
 void Setting::Update(void)

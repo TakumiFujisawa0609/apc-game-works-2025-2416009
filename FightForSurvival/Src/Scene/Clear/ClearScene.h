@@ -2,9 +2,20 @@
 
 #include "../Base/SceneBase.h"
 
+class UIManager;
+class TextureManager;
+
 class ClearScene : public SceneBase
 {
 public:
+
+	enum class Font
+	{
+		BIG,
+		SMALL,
+
+		MAX
+	};
 
 	// コンストラクタ
 	ClearScene(void);
@@ -20,7 +31,14 @@ public:
 
 private:
 
-	// スコア
+	// UI
+	UIManager* uiMgr_;
+	TextureManager* texMgr_;
+
+	// フォントハンドル
+	int font_[static_cast<int>(Font::MAX)];       
+
+	// スコアを格納するための変数
 	int score_;
 
 };

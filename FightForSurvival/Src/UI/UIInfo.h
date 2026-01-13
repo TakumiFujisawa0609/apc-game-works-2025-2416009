@@ -21,6 +21,7 @@ enum class UI_KIND
     SETTING_DONE,
     SETTING_BAR,
     WAVE_BASE,
+    CLEAR_BG,
 
     MAX
 };

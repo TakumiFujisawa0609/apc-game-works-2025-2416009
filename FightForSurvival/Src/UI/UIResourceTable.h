@@ -117,4 +117,10 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         0, 0, 1280, 720, 1.0f}
     },
 
+    { UI_KIND::CLEAR_BG,{
+        UI_KIND::CLEAR_BG,
+        true,
+        "Data/Image/UI/GameClear/GameClearBG.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
 };

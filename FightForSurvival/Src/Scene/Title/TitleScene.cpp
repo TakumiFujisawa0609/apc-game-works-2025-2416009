@@ -30,16 +30,16 @@ TitleScene::~TitleScene(void)
 void TitleScene::Load(void)
 {
 	// UI管理の生成処理
-	uiMgr = new UIManager();
-	texMgr = new TextureManager();
+	uiMgr_ = new UIManager();
+	texMgr_ = new TextureManager();
 
 	// UIを生成
-	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BG, texMgr);
-	UIBase* text = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_TEXT, texMgr);
-	UIBase* cloud = UIFactory::GetInstance()->CreateUI(UI_KIND::CLOUD, texMgr);
-	UIBase* start = UIFactory::GetInstance()->CreateUI(UI_KIND::CLICK_TO_START, texMgr);
-	UIBase* gameStart = UIFactory::GetInstance()->CreateUI(UI_KIND::GAME_START, texMgr);
-	UIBase* end = UIFactory::GetInstance()->CreateUI(UI_KIND::END, texMgr);
+	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_BG, texMgr_);
+	UIBase* text = UIFactory::GetInstance()->CreateUI(UI_KIND::TITLE_TEXT, texMgr_);
+	UIBase* cloud = UIFactory::GetInstance()->CreateUI(UI_KIND::CLOUD, texMgr_);
+	UIBase* start = UIFactory::GetInstance()->CreateUI(UI_KIND::CLICK_TO_START, texMgr_);
+	UIBase* gameStart = UIFactory::GetInstance()->CreateUI(UI_KIND::GAME_START, texMgr_);
+	UIBase* end = UIFactory::GetInstance()->CreateUI(UI_KIND::END, texMgr_);
 
 	// ポインタを渡す
 	TitleButton* startButton = dynamic_cast<TitleButton*>(gameStart);
@@ -49,12 +49,12 @@ void TitleScene::Load(void)
 
 
 	// 生成したUIを追加
-	uiMgr->AddUI(bg);
-	uiMgr->AddUI(cloud);
-	uiMgr->AddUI(text);
-	uiMgr->AddUI(start);
-	uiMgr->AddUI(gameStart);
-	uiMgr->AddUI(end);
+	uiMgr_->AddUI(bg);
+	uiMgr_->AddUI(cloud);
+	uiMgr_->AddUI(text);
+	uiMgr_->AddUI(start);
+	uiMgr_->AddUI(gameStart);
+	uiMgr_->AddUI(end);
 }
 
 void TitleScene::Init(void)
@@ -95,7 +95,7 @@ void TitleScene::Update(void)
 	{
 		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 		ChangeState(STATE::NON);
-		for (auto ui : uiMgr->GetUIList())
+		for (auto ui : uiMgr_->GetUIList())
 		{
 			if (ui->GetUIKind() == UI_KIND::CLICK_TO_START)
 			{
@@ -116,7 +116,7 @@ void TitleScene::Update(void)
 	}
 
 	// UIの更新
-	uiMgr->Update();
+	uiMgr_->Update();
 
 	// カメラの更新
 	camera_->Update();
@@ -125,7 +125,7 @@ void TitleScene::Update(void)
 void TitleScene::Draw(void)
 {
 	// UIの描画
-	uiMgr->Draw();
+	uiMgr_->Draw();
 
 	// カメラの設定
 	camera_->SetBeforeDraw();
@@ -163,8 +163,8 @@ void TitleScene::Release(void)
 	}
 
 	// UIの解放
-	delete uiMgr;
-	delete texMgr;
+	delete uiMgr_;
+	delete texMgr_;
 
 	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::TITLE);
