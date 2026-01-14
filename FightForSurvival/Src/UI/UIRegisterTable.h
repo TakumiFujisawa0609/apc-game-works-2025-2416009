@@ -79,6 +79,10 @@ inline void RegisterUI(void)
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* waveBase = new Sprite(info, texMgr); return waveBase; });
 
+    UIFactory::GetInstance()->Register(UI_KIND::CLEAR_SPRITE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* clearSprite = new Sprite(info, texMgr); return clearSprite; });
+
     UIFactory::GetInstance()->Register(UI_KIND::CLEAR_BG,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* clearBG = new Sprite(info, texMgr); return clearBG; });

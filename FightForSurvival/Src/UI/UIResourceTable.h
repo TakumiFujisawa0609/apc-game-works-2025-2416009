@@ -117,6 +117,13 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         0, 0, 1280, 720, 1.0f}
     },
 
+    { UI_KIND::CLEAR_SPRITE,{
+        UI_KIND::CLEAR_SPRITE,
+        true,
+        "Data/Image/UI/GameClear/GameClear.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
     { UI_KIND::CLEAR_BG,{
         UI_KIND::CLEAR_BG,
         true,
@@ -133,7 +140,7 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
 
     { UI_KIND::RANK_S,{
         UI_KIND::RANK_S,
-        true,
+        false,
         "Data/Image/UI/GameClear/Rank_S.png", "", "","",
         0, 0, 1280, 720 ,1.0f}
     },
@@ -170,7 +177,7 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         UI_KIND::CLEAR_BAT,
         true,
         "Data/Image/UI/GameClear/ClearBat.png", "", "","",
-       280, 500, 388, 374 ,1.0f}
+       200, 500, 388, 374 ,1.0f}
     },
 
     { UI_KIND::CLEAR_DRAGON,{
