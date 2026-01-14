@@ -31,6 +31,8 @@ enum class UI_KIND
     CLEAR_ZOMBIE,
     CLEAR_BAT,
     CLEAR_DRAGON,
+    OVER_SPRITE,
+    OVER_BG,
 
     MAX
 };

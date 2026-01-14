@@ -187,4 +187,18 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         1150, 190, 538, 543 ,1.0f}
     },
 
+    { UI_KIND::OVER_SPRITE,{
+        UI_KIND::OVER_SPRITE,
+        true,
+        "Data/Image/UI/GameOver/GameOver.png", "", "","",
+       0, 0, 1280, 720 ,1.0f}
+    },
+
+    { UI_KIND::OVER_BG,{
+        UI_KIND::OVER_BG,
+        true,
+        "Data/Image/UI/GameOver/GameOverBG.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
+
 };

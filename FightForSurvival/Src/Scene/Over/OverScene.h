@@ -2,9 +2,20 @@
 
 #include "../Base/SceneBase.h"
 
+class UIManager;
+class TextureManager;
+
 class OverScene : public SceneBase
 {
 public:
+
+	enum class Font
+	{
+		BIG,
+		SMALL,
+
+		MAX
+	};
 
 	// コンストラクタ
 	OverScene(void);
@@ -19,6 +30,13 @@ public:
 	void Release(void) override;
 
 private:
+
+	// UI
+	UIManager* uiMgr_;
+	TextureManager* texMgr_;
+
+	// フォントハンドル
+	int font_[static_cast<int>(Font::MAX)];
 
 	// スコア
 	int score_;

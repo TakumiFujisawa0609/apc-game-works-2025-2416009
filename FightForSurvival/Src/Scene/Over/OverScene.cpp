@@ -5,6 +5,9 @@
 #include "../../Application.h"
 #include "OverScene.h"
 
+#include "../../UI/UIManager.h"
+#include "../../UI/TextrueManager/TextureManager.h"
+
 OverScene::OverScene(void)
 {
 }
@@ -15,6 +18,20 @@ OverScene::~OverScene(void)
 
 void OverScene::Load(void)
 {
+	// UI管理の生成処理
+	uiMgr_ = new UIManager();
+	texMgr_ = new TextureManager();
+
+	UIBase* gameOver = UIFactory::GetInstance()->CreateUI(UI_KIND::OVER_SPRITE, texMgr_);
+	UIBase* bg = UIFactory::GetInstance()->CreateUI(UI_KIND::OVER_BG, texMgr_);
+
+	// 生成したUIを追加
+	uiMgr_->AddUI(bg);
+	uiMgr_->AddUI(gameOver);
+
+	// 設定付きフォントデータロード
+	font_[static_cast<int>(Font::BIG)] = CreateFontToHandle("x12y12pxMaruMinya", 50, 20, DX_FONTTYPE_ANTIALIASING);
+	font_[static_cast<int>(Font::SMALL)] = CreateFontToHandle("x12y12pxMaruMinya", 40, 20, DX_FONTTYPE_ANTIALIASING);
 }
 
 void OverScene::Init(void)
@@ -34,20 +51,40 @@ void OverScene::Update(void)
 		// 決定SE流す
 		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 	}
+
+	// UIの更新
+	uiMgr_->Update();
 }
 
 void OverScene::Draw(void)
 {
+	// UIの描画
+	uiMgr_->Draw();
+
 	int POS_X = Application::SCREEN_SIZE_X / 2;
 	int POS_Y = Application::SCREEN_SIZE_Y / 2;
-	DrawString(POS_X - 50, POS_Y - 50, "最終スコア", 0xffffff);
-	DrawFormatString(POS_X, POS_Y, 0xffffff, "%d", score_);
 
-	DrawString(POS_X - 50, POS_Y - 80, "GameOver...", 0xffffff);
+	int score = score_;
+	int count = 0;
+	while (score / 10 != 0)
+	{
+		score /= 10;
+		count++;
+	}
+
+	DrawStringToHandle(POS_X - 150, POS_Y, "最終スコア", 0xffffff, font_[static_cast<int>(Font::BIG)]);
+	DrawFormatStringToHandle(POS_X + 60 - (count * 20), POS_Y + 90, 0xffffff, font_[static_cast<int>(Font::SMALL)], "%d", score_);
 }
 
 void OverScene::Release(void)
 {
+	// UIの解放
+	delete uiMgr_;
+	delete texMgr_;
+
 	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::OVER);
+
+	DeleteFontToHandle(font_[static_cast<int>(Font::BIG)]);
+	DeleteFontToHandle(font_[static_cast<int>(Font::SMALL)]);
 }

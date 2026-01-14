@@ -119,4 +119,11 @@ inline void RegisterUI(void)
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { PendulumSprite* clearDragon = new PendulumSprite(info, texMgr); return clearDragon; });
 
+    UIFactory::GetInstance()->Register(UI_KIND::OVER_SPRITE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* overSprite = new Sprite(info, texMgr); return overSprite; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::OVER_BG,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* overBG = new Sprite(info, texMgr); return overBG; });
 }

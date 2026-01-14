@@ -7,7 +7,7 @@ class FlashingSprite:public Sprite
 {
 public:
 	// アルファ値をかえるスピード
-	static constexpr float ALPHA_SPEED = 5.0f;
+	static constexpr float ALPHA_SPEED = 4.0f;
 	static constexpr float ALPHA_MAX = 255.0f;
 
 	// コンストラクタ

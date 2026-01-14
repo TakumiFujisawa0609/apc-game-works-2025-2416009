@@ -36,9 +36,9 @@ void FlashingSprite::Update(void)
 		// アルファ値を変える
 		alpha_ -= ALPHA_SPEED;
 
-		if (alpha_ < 0.0f)
+		if (alpha_ < 32.0f)
 		{
-			alpha_ = 0.0f;
+			alpha_ = 32.0f;
 			isAlpha_ = true;
 		}
 
