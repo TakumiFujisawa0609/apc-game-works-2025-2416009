@@ -3,6 +3,7 @@
 #include "Factory/UIFactory.h"
 #include "Object/Sprite/Sprite.h"
 #include "Object/Sprite/FlashingSprite/FlashingSprite.h"
+#include "Object/Sprite/PendulumSprite/PendulumSprite.h"
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
@@ -104,14 +105,14 @@ inline void RegisterUI(void)
 
     UIFactory::GetInstance()->Register(UI_KIND::CLEAR_ZOMBIE,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* clearZombie = new Sprite(info, texMgr); return clearZombie; });
+        { PendulumSprite* clearZombie = new PendulumSprite(info, texMgr); return clearZombie; });
 
     UIFactory::GetInstance()->Register(UI_KIND::CLEAR_BAT,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* clearBat = new Sprite(info, texMgr); return clearBat; });
+        { PendulumSprite* clearBat = new PendulumSprite(info, texMgr); return clearBat; });
 
     UIFactory::GetInstance()->Register(UI_KIND::CLEAR_DRAGON,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
-        { Sprite* clearDragon = new Sprite(info, texMgr); return clearDragon; });
+        { PendulumSprite* clearDragon = new PendulumSprite(info, texMgr); return clearDragon; });
 
 }

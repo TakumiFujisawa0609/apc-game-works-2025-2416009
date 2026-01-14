@@ -80,9 +80,9 @@ void ClearScene::Draw(void)
 
 	int POS_X = Application::SCREEN_SIZE_X / 2;
 	int POS_Y = Application::SCREEN_SIZE_Y / 2;
-	DrawStringToHandle(POS_X - 50, POS_Y - 80, "GameClear!", 0x000000, font_[static_cast<int>(Font::BIG)]);
-	DrawStringToHandle(POS_X - 50, POS_Y - 50, "最終スコア", 0x000000, font_[static_cast<int>(Font::SMALL)]);
-	DrawFormatStringToHandle(POS_X, POS_Y, 0x000000, font_[static_cast<int>(Font::SMALL)], "%d", score_);
+	DrawStringToHandle(POS_X - 50, POS_Y - 80, "GameClear!", 0xffffff, font_[static_cast<int>(Font::BIG)]);
+	DrawStringToHandle(POS_X - 50, POS_Y - 50, "最終スコア", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
+	DrawFormatStringToHandle(POS_X, POS_Y, 0xffffff, font_[static_cast<int>(Font::SMALL)], "%d", score_);
 }
 
 void ClearScene::Release(void)

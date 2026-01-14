@@ -163,21 +163,21 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         UI_KIND::CLEAR_ZOMBIE,
         true,
         "Data/Image/UI/GameClear/ClearZombie.png", "", "","",
-        320, 180, 301, 281 ,1.0f}
+        220, 160, 301, 281 ,1.0f}
     },
 
     { UI_KIND::CLEAR_BAT,{
         UI_KIND::CLEAR_BAT,
         true,
         "Data/Image/UI/GameClear/ClearBat.png", "", "","",
-        960, 180, 388, 374 ,1.0f}
+       280, 500, 388, 374 ,1.0f}
     },
 
     { UI_KIND::CLEAR_DRAGON,{
         UI_KIND::CLEAR_DRAGON,
         true,
         "Data/Image/UI/GameClear/ClearDragon.png", "", "","",
-        320, 540, 538, 543 ,1.0f}
+        1150, 190, 538, 543 ,1.0f}
     },
 
 };

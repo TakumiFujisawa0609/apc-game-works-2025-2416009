@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.cpp" />
     <ClCompile Include="Src\Object\Common\MiniMap\MiniMap.cpp" />
     <ClCompile Include="Src\Manager\EffectResManager\EffectResManager.cpp" />
     <ClCompile Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.cpp" />
@@ -88,6 +89,7 @@
     <ClCompile Include="Src\UI\Object\Button\TitleButton\TitleButton.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.h" />
     <ClInclude Include="Src\Object\Common\MiniMap\MiniMap.h" />
     <ClInclude Include="Src\Manager\EffectResManager\EffectResManager.h" />
     <ClInclude Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.h" />
