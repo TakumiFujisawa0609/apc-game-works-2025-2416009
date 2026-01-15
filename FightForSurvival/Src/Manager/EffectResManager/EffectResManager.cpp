@@ -137,7 +137,7 @@ void EffectResManager::Load(void)
 	// ドラゴン前方攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_BREATH,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "FireBreath.efkefc").c_str()));
+			(Application::PATH_EFFECT + ".efkefc").c_str()));
 
 	// スポナーエフェクトのロード
 	resourceIds_.emplace(TYPE::SPAWNER,

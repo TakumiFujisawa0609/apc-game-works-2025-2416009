@@ -275,25 +275,24 @@ void Dragon::AttackSelect(Dragon& dragon)
 	// ƒvƒŒƒCƒ„[‘¤‚ðŒü‚­
 	dragon.LookPlayer();
 
-	dragon.ChangeAttackState(FORWARD_ATTACK);
-	//// ƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚½UŒ‚“à—e‚ð“ü‚ê‚é
-	//int attackRand = GetRand(RANDOM_NUM);
+	// ƒ‰ƒ“ƒ_ƒ€‚ÅŒˆ‚ß‚½UŒ‚“à—e‚ð“ü‚ê‚é
+	int attackRand = GetRand(RANDOM_NUM);
 
-	//if (attackRand >= 0 && attackRand <= RANGE)
-	//{
-	//	// ”ÍˆÍUŒ‚
-	//	dragon.ChangeAttackState(RANGE_ATTACK);
-	//}
-	//else if (attackRand > RANGE && attackRand <= FORWARD)
-	//{
-	//	// ‘O•ûUŒ‚
-	//	dragon.ChangeAttackState(FORWARD_ATTACK);
-	//}
-	//else if (attackRand > FORWARD && attackRand <= RUSH)
-	//{
-	//	// “ËiUŒ‚
-	//	dragon.ChangeAttackState(RUSH_ATTACK);
-	//}
+	if (attackRand >= 0 && attackRand <= RANGE)
+	{
+		// ”ÍˆÍUŒ‚
+		dragon.ChangeAttackState(RANGE_ATTACK);
+	}
+	else if (attackRand > RANGE && attackRand <= FORWARD)
+	{
+		// ‘O•ûUŒ‚
+		dragon.ChangeAttackState(FORWARD_ATTACK);
+	}
+	else if (attackRand > FORWARD && attackRand <= RUSH)
+	{
+		// “ËiUŒ‚
+		dragon.ChangeAttackState(RUSH_ATTACK);
+	}
 }
 
 void Dragon::RangeAttack(Dragon& dragon)
