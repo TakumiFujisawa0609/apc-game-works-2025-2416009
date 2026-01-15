@@ -14,6 +14,7 @@ public:
     void OnWave(void) override;
     void OnClear(void) override;
 
+    void Update(void)override;
     void Draw(void)override;
 };
 

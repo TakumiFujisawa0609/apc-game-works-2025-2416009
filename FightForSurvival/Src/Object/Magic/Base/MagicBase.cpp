@@ -116,6 +116,9 @@ void MagicBase::Draw(void)
 
 void MagicBase::Release(void)
 {
+	// エフェクト停止
+	StopEffekseer3DEffect(effectPlayId_);
+
 	MV1DeleteModel(magic_.modelId_);
 }
 

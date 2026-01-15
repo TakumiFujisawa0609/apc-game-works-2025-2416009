@@ -105,6 +105,9 @@ void Spawner::Draw(void)
 
 void Spawner::Release(void)
 {
+	// エフェクト停止
+	StopEffekseer3DEffect(spawner_.playEffectId_);
+
 	// モデルの解放
 	MV1DeleteModel(spawner_.modelId_);
 }

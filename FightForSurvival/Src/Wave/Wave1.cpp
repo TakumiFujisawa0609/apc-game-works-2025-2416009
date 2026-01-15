@@ -34,6 +34,12 @@ void Wave1::OnClear()
 {
 }
 
+void Wave1::Update(void)
+{
+	// êeÉNÉâÉXÇÃ
+	WaveBase::Update();
+}
+
 void Wave1::Draw()
 {
 	int posX = Application::SCREEN_SIZE_X / 2;

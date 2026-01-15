@@ -45,7 +45,7 @@ public:
     WaveBase(int prep, int wave);
     virtual ~WaveBase();
 
-    void Update(void);  // 更新
+    virtual void Update(void);  // 更新
     virtual void Draw(void);    // 描画
 
     // 派生先で固有の処理があるなら記述する。

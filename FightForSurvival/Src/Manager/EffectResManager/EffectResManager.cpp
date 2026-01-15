@@ -23,6 +23,9 @@ void EffectResManager::Destroy(void)
 {
 	for (const auto& pair : resourceIds_)
 	{
+		// エフェクト停止
+		StopEffekseer3DEffect(pair.second);
+
 		// エフェクトのメモリ解放
 		DeleteEffekseerEffect(pair.second);
 	}
