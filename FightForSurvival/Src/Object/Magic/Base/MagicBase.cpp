@@ -209,6 +209,13 @@ void MagicBase::UpdateCharge(void)
 			magic_.collisionRadius_ = chargeMax_;
 			// 最大になったことをフラグで知らせる
 			isMaxCharge_ = true;
+
+			// 他のエフェクトが表示されていたら停止する
+			if (IsEffekseer3DEffectPlaying(effectPlayId_) != -1)
+			{
+				StopEffekseer3DEffect(effectPlayId_);
+			}
+
 			// 最大チャージ状態のエフェクト再生
 			effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
 				effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);

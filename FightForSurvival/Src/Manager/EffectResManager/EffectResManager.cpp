@@ -129,15 +129,15 @@ void EffectResManager::Load(void)
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "Pulse.efkefc").c_str()));
 
-	// ドラゴン攻撃エフェクトのロード
+	// ドラゴン魔法攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_MAGIC,
 		LoadEffekseerEffect(
 			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
 
-	// ドラゴン攻撃エフェクトのロード
+	// ドラゴン前方攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_BREATH,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+			(Application::PATH_EFFECT + "FireBreath.efkefc").c_str()));
 
 	// スポナーエフェクトのロード
 	resourceIds_.emplace(TYPE::SPAWNER,
