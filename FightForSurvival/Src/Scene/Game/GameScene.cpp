@@ -19,6 +19,7 @@
 #include "../../Wave/WaveManager.h"
 #include "../../Wave/Wave1.h"
 #include "../../Wave/Wave2.h"
+#include "../../Wave/Wave3.h"
 #include "../../Wave/WaveFinal.h"
 #include "../../Object/Enemy/EnemyManager.h"
 #include "../../Object/Player/Upgrade/UpgradeManager.h"
@@ -105,6 +106,7 @@ void GameScene::Load(void)
 	WaveManager::CreateInstance();
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave1>());
 	WaveManager::GetInstance().AddWave(std::make_unique<Wave2>());
+	WaveManager::GetInstance().AddWave(std::make_unique<Wave3>());
 	WaveManager::GetInstance().AddWave(std::make_unique<WaveFinal>());
 
 	// スポナーを生成・ロード

@@ -87,6 +87,7 @@
     <ClCompile Include="Src\Object\Magic\ChaseMagic\ChaseMagic.cpp" />
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
     <ClCompile Include="Src\UI\Object\Button\TitleButton\TitleButton.cpp" />
+    <ClCompile Include="Src\Wave\Wave3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Src\Object\Magic\ChaseMagic\ChaseMagic.h" />
     <ClInclude Include="Src\Object\Stage\Stage.h" />
     <ClInclude Include="Src\UI\Object\Button\TitleButton\TitleButton.h" />
+    <ClInclude Include="Src\Wave\Wave3.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
