@@ -116,17 +116,22 @@ void EnemyManager::Draw(void)
 
 void EnemyManager::Delete(void)
 {
+	// 魔法の解放
+	for (auto& magic : magics_)
+	{
+		if (magic->GetMagic().isExists_)
+		{
+			magic->Release();
+		}
+	}
+
+	magics_.clear();
+
 	// Enemyクラスのメモリ解放
 	for (auto& enemy : enemies_)
 	{
 		enemy->Release();
 	}
-
-	//// ベースとなるモデルのメモリ解放
-	//for (int id : enemyModelIds_)
-	//{
-	//	MV1DeleteModel(id);
-	//}
 
 	enemies_.clear();
 
