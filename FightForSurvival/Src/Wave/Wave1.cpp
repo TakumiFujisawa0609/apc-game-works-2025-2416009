@@ -7,7 +7,7 @@
 
 // 準備30秒 → 戦闘120秒
 Wave1::Wave1(void)
-	: WaveBase(60 * 20, 60 * 20)
+	: WaveBase(60 * 3, 60 * 20)
 {
 	// UI管理の生成処理
 	uiMgr_ = new UIManager();
@@ -28,7 +28,6 @@ Wave1::Wave1(void)
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
 	AddSpawner(60 * 7, 10, VGet(-500.0f, -70.0f, -2000.0f));
-	AddSpawnEvent(60 * 1, ENEMY_TYPE::DRAGON, VGet(0.0f, -5.0f, 0.0f));
 
 }
 
@@ -56,34 +55,34 @@ void Wave1::Update(void)
 	// 親クラスの
 	WaveBase::Update();
 
-	if (state_ != WaveState::PREPARE)
-	{
-		// 準備中でなければこの先の処理を行わない
-		return;
-	}
+	//if (state_ != WaveState::PREPARE)
+	//{
+	//	// 準備中でなければこの先の処理を行わない
+	//	return;
+	//}
 
-	// 2秒たったら説明書の表示を消す
-	if (elapsed_ >= 60 * 15)
-	{
-		for (UIBase* ui : uiMgr_->GetUIList())
-		{
-			if (ui->GetUIKind() != UI_KIND::MANUAL)
-			{
-				continue;
-			}
+	//// 2秒たったら説明書の表示を消す
+	//if (elapsed_ >= 60 * 2)
+	//{
+	//	for (UIBase* ui : uiMgr_->GetUIList())
+	//	{
+	//		if (ui->GetUIKind() != UI_KIND::MANUAL)
+	//		{
+	//			continue;
+	//		}
 
-			ui->SetIsDraw(false);
-		}
-	}
+	//		ui->SetIsDraw(false);
+	//	}
+	//}
 
-	// UIの更新
-	uiMgr_->Update();
+	//// UIの更新
+	//uiMgr_->Update();
 }
 
 void Wave1::Draw()
 {
 	// UIの描画
-	uiMgr_->Draw();
+	//uiMgr_->Draw();
 
 	int posX = Application::SCREEN_SIZE_X / 2;
 

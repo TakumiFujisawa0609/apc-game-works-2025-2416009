@@ -18,11 +18,14 @@ void DragonMagic::SetParam(void)
 	magic_.cntAlive_ = CNT_ALIVE;
 	magic_.collisionRadius_ = COLLISION_RAD;
 	magic_.bodyDamage_ = DAMAGE;
-	effectScale_ = 100.0f;
+	effectScale_ = 10.0f;
 }
 
 void DragonMagic::ChangeCharge(void)
 {
+	// チャージ状態のエフェクト再生
+	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::DRAGON_MAGIC);
 }
 
 void DragonMagic::ChangeShot(void)
