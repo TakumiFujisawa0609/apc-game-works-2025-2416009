@@ -201,4 +201,10 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         0, 0, 1280, 720 ,1.0f}
     },
 
+    { UI_KIND::MANUAL,{
+        UI_KIND::MANUAL,
+        true,
+        "Data/Image/UI/manual.png", "", "","",
+        0, 0, 1280, 720 ,1.0f}
+    },
 };

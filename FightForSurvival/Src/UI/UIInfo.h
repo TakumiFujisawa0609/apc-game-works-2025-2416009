@@ -34,6 +34,8 @@ enum class UI_KIND
     OVER_SPRITE,
     OVER_BG,
 
+    MANUAL,
+
     MAX
 };
 

@@ -135,7 +135,7 @@ void EffectResManager::Load(void)
 	// ドラゴン魔法攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_MAGIC,
 		LoadEffekseerEffect(
-			(Application::PATH_EFFECT + "Hit_Explosion.efkefc").c_str()));
+			(Application::PATH_EFFECT + "FireBall.efkefc").c_str()));
 
 	// ドラゴン前方攻撃エフェクトのロード
 	resourceIds_.emplace(TYPE::DRAGON_BREATH,

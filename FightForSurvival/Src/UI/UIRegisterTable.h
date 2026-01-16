@@ -126,4 +126,8 @@ inline void RegisterUI(void)
     UIFactory::GetInstance()->Register(UI_KIND::OVER_BG,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { Sprite* overBG = new Sprite(info, texMgr); return overBG; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::MANUAL,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { Sprite* manual = new Sprite(info, texMgr); return manual; });
 }
