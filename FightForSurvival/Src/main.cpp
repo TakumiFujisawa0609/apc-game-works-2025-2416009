@@ -14,6 +14,8 @@ int WINAPI WinMain(
 	_In_ LPSTR lpCmdLine, _In_ int nCmdShow)
 {
 
+	AddFontResourceExA("Data/Font/x12y12pxMaruMinya.ttf", FR_PRIVATE, NULL);
+
 	// インスタンスの生成
 	Application::CreateInstance();
 
@@ -28,6 +30,8 @@ int WINAPI WinMain(
 
 	// 実行
 	instance.Run();
+
+	AddFontResourceExA("Font/瀞ノグリッチゴシックH2.ttf", FR_PRIVATE, NULL);
 
 	// 解放
 	instance.Destroy();
