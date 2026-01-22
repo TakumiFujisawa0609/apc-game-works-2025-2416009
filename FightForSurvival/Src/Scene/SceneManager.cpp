@@ -5,6 +5,7 @@
 #include "../Scene/Game/GameScene.h"
 #include "../Scene/Clear/ClearScene.h"
 #include "../Scene/Over/OverScene.h"
+#include "../Scene/Movie/MovieScene.h"
 #include "../Manager/SystemManager.h"
 #include "SceneManager.h"
 #include "../UI/Factory/UIFactory.h"
@@ -234,6 +235,9 @@ void SceneManager::DoChangeScene(SCENE_ID sceneId)
 		break;
 	case SCENE_ID::OVER:
 		scene_ = new OverScene();
+		break;
+	case SCENE_ID::MOVIE:
+		scene_ = new MovieScene();
 		break;
 	}
 

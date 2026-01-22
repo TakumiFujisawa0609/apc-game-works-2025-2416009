@@ -21,7 +21,7 @@ public:
 	OverScene(void);
 
 	// デストラクタ
-	~OverScene(void);
+	~OverScene(void)override;
 
 	void Load(void) override;
 	void Init(void) override;

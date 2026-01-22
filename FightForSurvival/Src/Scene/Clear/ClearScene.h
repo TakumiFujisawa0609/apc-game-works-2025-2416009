@@ -21,7 +21,7 @@ public:
 	ClearScene(void);
 
 	// デストラクタ
-	~ClearScene(void);
+	~ClearScene(void)override;
 
 	void Load(void) override;
 	void Init(void) override;

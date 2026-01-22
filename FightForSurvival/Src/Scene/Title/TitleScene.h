@@ -24,6 +24,9 @@ public:
 	static constexpr int EXIT_POS_X = 335;
 	static constexpr int EXIT_POS_Y = 560;
 
+	// 動画へ進む秒数
+	static constexpr int MOVIE_START_TIME = 10;
+
 	enum STATE
 	{
 		CLICK,
@@ -59,6 +62,9 @@ private:
 
 	// 座標
 	Vector2 pos_[STATE::NON];
+
+	// 動画関連
+	int idleFrameCount_;
 
 	// 確定させる
 	void Confirm(void);

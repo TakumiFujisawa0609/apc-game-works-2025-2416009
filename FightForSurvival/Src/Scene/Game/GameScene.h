@@ -30,7 +30,7 @@ public:
 	GameScene(void);
 
 	// デストラクタ
-	~GameScene(void);
+	~GameScene(void)override;
 
 	void Load(void) override;
 	void Init(void) override;

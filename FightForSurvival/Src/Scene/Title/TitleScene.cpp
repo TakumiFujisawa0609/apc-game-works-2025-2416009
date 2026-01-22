@@ -67,6 +67,8 @@ void TitleScene::Init(void)
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
 	pos_[STATE::END] = { EXIT_POS_X ,EXIT_POS_Y };
 
+	// 動画再生タイミング用フレーム
+	idleFrameCount_ = 0;
 
 	// BGMをかける
 	SoundManager::GetInstance().Play(SoundManager::BGM::TITLE);
@@ -113,6 +115,30 @@ void TitleScene::Update(void)
 				ui->SetIsDraw(true);
 			}
 		}
+	}
+
+	bool hasInput = false;
+	if (InputManager::GetInstance().Confirm() ||
+		CheckHitKeyAll() != 0)
+	{
+		// 操作があったらフラグを立てる
+		hasInput = true;
+	}
+
+	if (hasInput)
+	{
+		// 何か操作があったらフレームカウントを0に初期化
+		idleFrameCount_ = 0;
+	}
+	else
+	{
+		// フレームを進める
+		idleFrameCount_++;
+	}
+
+	if (idleFrameCount_ > 60 * MOVIE_START_TIME) {
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
+		return; // ここで処理を抜けて動画専用の更新にする
 	}
 
 	// UIの更新
