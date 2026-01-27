@@ -90,6 +90,7 @@
     <ClCompile Include="Src\Object\Stage\Stage.cpp" />
     <ClCompile Include="Src\UI\Object\Button\TitleButton\TitleButton.cpp" />
     <ClCompile Include="Src\Wave\Wave3.cpp" />
+    <ClCompile Include="Src\UI\Object\Sprite\ToggleSprite\ToggleSprite.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Object\MoviePlayer\MoviePlayer.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="Src\Object\Stage\Stage.h" />
     <ClInclude Include="Src\UI\Object\Button\TitleButton\TitleButton.h" />
     <ClInclude Include="Src\Wave\Wave3.h" />
+    <ClInclude Include="Src\UI\Object\Sprite\ToggleSprite\ToggleSprite.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
