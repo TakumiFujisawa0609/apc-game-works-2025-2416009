@@ -68,7 +68,7 @@ void WaveBase::Update(void)
             {
                 // マネージャーが存在するなら
                 // 敵をスポーンさせる
-                SpawnerManager::GetInstance().SpawnerInstallation(spawner.pos_, spawner.interval_);
+                SpawnerManager::GetInstance().SpawnerInstallation(spawner.pos_, spawner.interval_, spawner.pattern_);
 
                 // イベント発動
                 spawner.triggered_ = true;
@@ -175,9 +175,9 @@ void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
     spawnEvents_.push_back({ time, type, pos, false });
 }
 
-void WaveBase::AddSpawner(int time, float interval, VECTOR pos)
+void WaveBase::AddSpawner(int time, float interval, VECTOR pos, Spawner::PATTERN pattern)
 {
-    spawnerIns_.push_back({ time, interval, pos, false });
+    spawnerIns_.push_back({ time, interval, pos,pattern, false });
 }
 
 void WaveBase::StartInWave(void)

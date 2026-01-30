@@ -5,6 +5,7 @@
 #include "Object/Sprite/FlashingSprite/FlashingSprite.h"
 #include "Object/Sprite/PendulumSprite/PendulumSprite.h"
 #include "Object/Sprite/ToggleSprite/ToggleSprite.h"
+#include "Object/Sprite/ExplaneSprite/ExplaneSprite.h"
 #include "Object/Bar/HPBar.h"
 #include "Object/Bar/StaminaBar.h"
 #include "Object/Button/Button.h"
@@ -131,4 +132,9 @@ inline void RegisterUI(void)
     UIFactory::GetInstance()->Register(UI_KIND::MANUAL,
         [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
         { ToggleSprite* manual = new ToggleSprite(info, texMgr); return manual; });
+
+    UIFactory::GetInstance()->Register(UI_KIND::EXPLANE,
+        [](const UIResourceInfo& info, TextureManager* texMgr) -> UIBase*
+        { ExplaneSprite* explane = new ExplaneSprite(info, texMgr); return explane; });
+
 }

@@ -63,7 +63,7 @@ public:
 	static constexpr int MAGIC_CAPACITY = 10;
 
 	// MPポーション数
-	static constexpr int MP_POTION_NUM = 5;
+	static constexpr int MP_POTION_NUM = 10;
 
 	// リロードする時間
 	static constexpr float RELOAD_TIME = 2.0f;

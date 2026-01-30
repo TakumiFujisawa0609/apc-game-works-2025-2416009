@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\UI\Object\Sprite\ExplaneSprite\ExplaneSprite.cpp" />
     <ClCompile Include="Src\Object\MoviePlayer\MoviePlayer.cpp" />
     <ClCompile Include="Src\Scene\Movie\MovieScene.cpp" />
     <ClCompile Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.cpp" />
@@ -94,6 +95,7 @@
     <ClCompile Include="Src\Wave\Wave4.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\UI\Object\Sprite\ExplaneSprite\ExplaneSprite.h" />
     <ClInclude Include="Src\Object\MoviePlayer\MoviePlayer.h" />
     <ClInclude Include="Src\Scene\Movie\MovieScene.h" />
     <ClInclude Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.h" />

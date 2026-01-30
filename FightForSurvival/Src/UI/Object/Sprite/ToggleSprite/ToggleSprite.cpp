@@ -34,6 +34,11 @@ void ToggleSprite::Update(void)
 
 void ToggleSprite::Draw(void)
 {
+	if (!isDraw_)
+	{
+		return;
+	}
+
 	if (isPicture1Flg_)
 	{
 		DrawGraph(x_, y_, picture1_, true);

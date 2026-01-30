@@ -172,7 +172,7 @@ void Player::Draw2D(void)
 	DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 208, Application::SCREEN_SIZE_Y - 200,
 		0xffffff, font_[static_cast<int>(FONT_KIND::MAGIC_NUM)], "%d/%d", magicNum_, MAGIC_CAPACITY);
 
-	DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 60, Application::SCREEN_SIZE_Y - 40,
+	DrawFormatStringToHandle(Application::SCREEN_SIZE_X - 80, Application::SCREEN_SIZE_Y - 40,
 		0xffffff, font_[static_cast<int>(FONT_KIND::MP_POTION_NUM)], "x %d", MPPotionNum_);
 
 	// çUåÇïœçXâ¬î\éûä‘

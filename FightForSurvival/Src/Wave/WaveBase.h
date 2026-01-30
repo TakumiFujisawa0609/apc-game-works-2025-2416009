@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Object/Enemy/Base/EnemyBase.h"
+#include "../Object/Spawner/Spawner.h"
 
 #include <DxLib.h>
 
@@ -38,6 +39,7 @@ public:
         int triggerTime_;            // 何フレーム目にスポーンするのか
         float interval_;             // スポーンの間隔
         VECTOR pos_;                 // スポーン座標
+        Spawner::PATTERN pattern_;   // スポーンのパターン
         bool triggered_ = false;     // スポーンしたか
     };
 
@@ -59,7 +61,7 @@ public:
 
     // スポーンイベントを作成
     void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
-    void AddSpawner(int time, float interval, VECTOR pos);
+    void AddSpawner(int time, float interval, VECTOR pos, Spawner::PATTERN pattern);
 
     int GetSpawnEventNum(void)const { return (int)spawnEvents_.size(); }
 

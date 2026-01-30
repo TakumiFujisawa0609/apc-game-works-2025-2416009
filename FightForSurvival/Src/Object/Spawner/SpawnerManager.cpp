@@ -68,13 +68,13 @@ void SpawnerManager::Draw(void)
 	}
 }
 
-void SpawnerManager::SpawnerInstallation(VECTOR pos,float interval)
+void SpawnerManager::SpawnerInstallation(VECTOR pos,float interval, Spawner::PATTERN pattern)
 {
 	// 未使用のスポナーを再利用する。未使用のものが無ければ生成を行う
 	auto* spawner = GetValidSpawner();
 
 	// 初期化を行う
-	spawner->Create(pos,interval);
+	spawner->Create(pos, interval, pattern);
 }
 
 SpawnerManager::SpawnerManager(void)

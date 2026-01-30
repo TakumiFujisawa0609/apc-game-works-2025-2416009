@@ -207,4 +207,11 @@ inline std::map<UI_KIND, UIResourceInfo> UIResourceTable =
         "Data/Image/UI/Ççanual_0.png", "Data/Image/UI/Ççanual_1.png", "","",
         0, 0, 1280, 720 ,1.0f}
     },
+
+    { UI_KIND::EXPLANE,{
+        UI_KIND::EXPLANE,
+        true,
+        "Data/Image/UI/explane/explane_0.png", "Data/Image/UI/explane/explane_1.png", "Data/Image/UI/explane/explane_2.png","Data/Image/UI/explane/explane_3.png",
+        0, 0, 1280, 720 ,1.0f}
+    },
 };

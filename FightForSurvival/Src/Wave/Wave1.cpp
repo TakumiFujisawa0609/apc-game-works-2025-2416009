@@ -4,30 +4,33 @@
 
 #include "../UI/UIManager.h"
 #include "../UI/TextrueManager/TextureManager.h"
+#include "../UI/Object/Sprite/ExplaneSprite/ExplaneSprite.h"
 
-// 準備30秒 → 戦闘120秒
+// 準備20秒 → 戦闘45秒
 Wave1::Wave1(void)
-	: WaveBase(60 * 0, 60 * 20)
+	: WaveBase(60 * 20, 60 * 45)
 {
 	// UI管理の生成処理
 	uiMgr_ = new UIManager();
 	texMgr_ = new TextureManager();
 
 	// UIを生成
-	UIBase* manual = UIFactory::GetInstance()->CreateUI(UI_KIND::MANUAL, texMgr_);
+	UIBase* manual = UIFactory::GetInstance()->CreateUI(UI_KIND::EXPLANE, texMgr_);
 	// 生成したUIを追加
 	uiMgr_->AddUI(manual);
 
-	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
 	// スポーンタイミング、敵種別、座標
-	AddSpawnEvent(60 * 3, ENEMY_TYPE::ZOMBIE, VGet(-1000.0f, 5.0f, 500.0f));
-	AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(600.0f, 5.0f, 3000.0f));
-	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(-500.0f, 5.0f, 0.0f));
-	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 5.0f, -1500.0f));
-	AddSpawnEvent(60 * 18, ENEMY_TYPE::BAT, VGet(100.0f, 5.0f, 300.0f));
+	AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::ZOMBIE, VGet(0.0f, 5.0f, 1500.0f));
+
+	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(20.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 16, ENEMY_TYPE::ZOMBIE, VGet(-20.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 17, ENEMY_TYPE::ZOMBIE, VGet(40.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 18, ENEMY_TYPE::ZOMBIE, VGet(-40.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 19, ENEMY_TYPE::ZOMBIE, VGet(-40.0f, 5.0f, 1500.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
-	AddSpawner(60 * 7, 10, VGet(-500.0f, -70.0f, -2000.0f));
+	AddSpawner(60 * 30, 10, VGet(-100.0f, 5.0f, 1500.0f), Spawner::PATTERN::PATTERN_1);
 
 }
 
@@ -55,34 +58,54 @@ void Wave1::Update(void)
 	// 親クラスの
 	WaveBase::Update();
 
-	//if (state_ != WaveState::PREPARE)
+	if (state_ != WaveState::PREPARE)
+	{
+		// 準備中でなければこの先の処理を行わない
+		return;
+	}
+
+	// 準備時間が経過したら
+	//if (elapsed_ >= prepareTime_)
 	//{
-	//	// 準備中でなければこの先の処理を行わない
-	//	return;
+	//	// ウェーブ開始
+	//	StartInWave();
 	//}
 
-	//// 2秒たったら説明書の表示を消す
-	//if (elapsed_ >= 60 * 2)
-	//{
-	//	for (UIBase* ui : uiMgr_->GetUIList())
-	//	{
-	//		if (ui->GetUIKind() != UI_KIND::MANUAL)
-	//		{
-	//			continue;
-	//		}
+	// 2秒たったら説明書の表示を消す
+	for (UIBase* ui : uiMgr_->GetUIList())
+	{
+		if (ui->GetUIKind() != UI_KIND::EXPLANE)
+		{
+			continue;
+		}
+		ExplaneSprite* explane = dynamic_cast<ExplaneSprite*>(ui);
 
-	//		ui->SetIsDraw(false);
-	//	}
-	//}
+		if (elapsed_ >= 60 * 19)
+		{
+			ui->SetIsDraw(false);
+		}
+		else if (elapsed_ >= 60 * 15)
+		{
+			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_4);
+		}
+		else if (elapsed_ >= 60 * 10)
+		{
+			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_3);
+		}
+		else if (elapsed_ >= 60 * 5)
+		{
+			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_2);
+		}
+	}
 
-	//// UIの更新
-	//uiMgr_->Update();
+	// UIの更新
+	uiMgr_->Update();
 }
 
 void Wave1::Draw()
 {
 	// UIの描画
-	//uiMgr_->Draw();
+	uiMgr_->Draw();
 
 	int posX = Application::SCREEN_SIZE_X / 2;
 

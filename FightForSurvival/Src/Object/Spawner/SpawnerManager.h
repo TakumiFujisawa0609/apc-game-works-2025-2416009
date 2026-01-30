@@ -3,7 +3,7 @@
 #include <vector>
 #include <DxLib.h>
 
-class Spawner;
+#include "Spawner.h"
 
 class SpawnerManager
 {
@@ -25,7 +25,7 @@ public:
 	void Destroy(void);
 
 	// スポナーの設置を行う
-	void SpawnerInstallation(VECTOR pos,float interval);
+	void SpawnerInstallation(VECTOR pos,float interval, Spawner::PATTERN pattern);
 
 	std::vector<Spawner*> GetSpawners(void)const { return spawners_; }
 

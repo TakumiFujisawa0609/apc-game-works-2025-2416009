@@ -3,11 +3,12 @@
 #include "../Application.h"
 
 WaveFinal::WaveFinal(void)
-	: WaveBase(60 * 30, 60 * 30)
+	: WaveBase(60 * 30, 60 * 15)
 {
 }
 void WaveFinal::OnStart()
 {
+
 }
 
 void WaveFinal::OnWave()

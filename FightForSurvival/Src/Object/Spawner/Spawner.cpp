@@ -20,10 +20,11 @@ Spawner::~Spawner(void)
 {
 }
 
-void Spawner::Create(VECTOR pos, float interval)
+void Spawner::Create(VECTOR pos, float interval, PATTERN pattern)
 {
 	// 座標取得(この座標が軸となる)
 	spawner_.basePos_ = pos;
+
 	// 軸座標を基に座標を設定
 	PositionInit();
 	
@@ -43,7 +44,18 @@ void Spawner::Create(VECTOR pos, float interval)
 	spawner_.durability_ = DURABILITY;
 
 	// 最初の出現パターンを決める
-	SelectPattern();
+	SelectPattern(pattern);
+
+	// ランダムで1～4体出現
+	int random = GetRand(3);
+	random++;
+
+	// 1～4体出現
+	for (int i = 0; i < random; i++)
+	{
+		// 敵をスポーンさせる
+		EnemyManager::GetInstance().Spawn(spawner_.eneType_[i], spawner_.pos_[i]);
+	}
 
 	// チャージ状態のエフェクト再生
 	spawner_.playEffectId_ = EffectResManager::GetInstance().PlayEffect(
@@ -75,16 +87,17 @@ void Spawner::Update(void)
 		// 時間を初期化
 		spawner_.time_ = 0.0f;
 
-		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
+		// ランダムで1～4体出現
+		int random = GetRand (3);
+		random++;
+
+		// 1～4体出現
+		for (int i = 0; i < random; i++)
 		{
 			// 敵をスポーンさせる
 			EnemyManager::GetInstance().Spawn(spawner_.eneType_[i], spawner_.pos_[i]);
 		}
-
-		// パターンを変更する
-		SelectPattern();
 	}
-
 }
 
 void Spawner::Draw(void)
@@ -126,10 +139,10 @@ void Spawner::Damage(float durability)
 	}
 }
 
-void Spawner::SelectPattern(void)
+void Spawner::SelectPattern(PATTERN pattern)
 {
-	// ランダムで決める
-	spawner_.pattern_ = static_cast<PATTERN>(GetRand(2));
+	// パターンの指定
+	spawner_.pattern_ = pattern;
 
 	// パターンを設定する
 	PatternInsInit(spawner_.pattern_);

@@ -46,6 +46,9 @@ void SystemManager::ResetGame()
 {
 	score_ = 0; // ƒXƒRƒA‚ğ0‚Å‰Šú‰»
 	typeMagic_ = TYPE_MAGIC::STRAIGHT_MAGIC;
+
+	MouseSensitivity_ = MOUSE_SENSITIVITY;
+	PadSensitivity_ = PAD_SENSITIVITY;
 }
 
 SystemManager::SystemManager(void)

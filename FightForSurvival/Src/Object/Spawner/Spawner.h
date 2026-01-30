@@ -72,7 +72,7 @@ public:
 	~Spawner(void);
 	 
 	// スポナー生成処理
-	void Create(VECTOR pos, float interval);
+	void Create(VECTOR pos, float interval, PATTERN pattern);
 	// 更新処理
 	void Update(void);
 	// 描画処理
@@ -90,8 +90,9 @@ private:
 
 	SpawnerIns spawner_;
 
-	// パターン決め(ランダム)
-	void SelectPattern(void);
+	// パターン決め(指定)
+	void SelectPattern(PATTERN pattern);
+
 	// パターンごとに座標を変更する
 	void PatternInsInit(PATTERN pattern);
 

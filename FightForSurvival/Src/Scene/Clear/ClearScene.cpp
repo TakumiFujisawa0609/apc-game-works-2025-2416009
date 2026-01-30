@@ -42,25 +42,25 @@ void ClearScene::Load(void)
 
 	score_ = SystemManager::GetInstance().GetScore();
 
-	if (score_ < 100)
+	if (score_ < 5000)
 	{
 		// ダウンキャストして Sprite固有の関数を呼べるようにする
 		Sprite* rankCSprite = dynamic_cast<Sprite*>(rankC);
 		rankCSprite->SetIsDraw(true);
 	}
-	else if (score_ < 1000)
+	else if (score_ < 10000)
 	{
 		// ダウンキャストして Sprite固有の関数を呼べるようにする
 		Sprite* rankBSprite = dynamic_cast<Sprite*>(rankB);
 		rankBSprite->SetIsDraw(true);
 	}
-	else if (score_ < 10000)
+	else if (score_ < 18000)
 	{
 		// ダウンキャストして Sprite固有の関数を呼べるようにする
 		Sprite* rankASprite = dynamic_cast<Sprite*>(rankA);
 		rankASprite->SetIsDraw(true);
 	}
-	else if (score_ < 100000)
+	else
 	{
 		// ダウンキャストして Sprite固有の関数を呼べるようにする
 		Sprite* rankSSprite = dynamic_cast<Sprite*>(rankS);

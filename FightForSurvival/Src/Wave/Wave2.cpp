@@ -3,18 +3,24 @@
 #include "../Application.h"
 
 Wave2::Wave2(void)
-	: WaveBase(60 * 30, 60 * 20)
+	: WaveBase(60 * 30, 60 * 45)
 {
-	// ※数値や敵の種別を外部ファイルから取得するようにすると評価〇！
 	// スポーンタイミング、敵種別、座標
-	AddSpawnEvent(60 * 5, ENEMY_TYPE::ZOMBIE, VGet(-3000.0f, 5.0f, 200.0f));
-	AddSpawnEvent(60 * 5, ENEMY_TYPE::ZOMBIE, VGet(-300.0f, 5.0f, -500.0f));
-	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(600.0f, 5.0f, -500.0f));
-	AddSpawnEvent(60 * 15, ENEMY_TYPE::BAT, VGet(200.0f, 5.0f, 0.0f));
-	AddSpawnEvent(60 * 15, ENEMY_TYPE::ZOMBIE, VGet(1500.0f, 5.0f, -600.0f));
+	AddSpawnEvent(60 * 5, ENEMY_TYPE::ZOMBIE, VGet(400.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 6, ENEMY_TYPE::ZOMBIE, VGet(380.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 7, ENEMY_TYPE::ZOMBIE, VGet(360.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 8, ENEMY_TYPE::ZOMBIE, VGet(340.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 9, ENEMY_TYPE::ZOMBIE, VGet(360.0f, 5.0f, 1500.0f));
+
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(400.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(450.0f, 5.0f, 1500.0f));
+	AddSpawnEvent(60 * 10, ENEMY_TYPE::BAT, VGet(500.0f, 5.0f, 1500.0f));
 
 	// スポーンタイミング、スポナーの敵スポーン間隔、座標
-	AddSpawner(60 * 18, 10, VGet(2500.0f, -170.0f, 230.0f));
+	AddSpawner(60 * 20, 10, VGet(-400.0f, 5.0f, 1500.0f), Spawner::PATTERN::PATTERN_3);
+
+	// スポーンタイミング、スポナーの敵スポーン間隔、座標
+	AddSpawner(60 * 20, 10, VGet(-400.0f, 5.0f, -1500.0f), Spawner::PATTERN::PATTERN_3);
 }
 
 Wave2::~Wave2(void)

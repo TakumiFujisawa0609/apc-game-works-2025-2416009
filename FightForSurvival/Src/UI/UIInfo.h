@@ -33,6 +33,7 @@ enum class UI_KIND
     CLEAR_DRAGON,
     OVER_SPRITE,
     OVER_BG,
+    EXPLANE,
 
     MANUAL,
 
