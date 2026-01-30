@@ -24,12 +24,14 @@ public:
 	void Update(void) override;		// 更新
 	void Draw(void) override;		// 描画
 
-	void SetDraw1Flg(bool flg) { draw1Flg_ = flg; }
+	void SetIsPicture1Flg(bool flg) { isPicture1Flg_ = flg; }
 
 private:
 
-	bool draw1Flg_;	// true / 1枚目の画像, false / 2枚目の画像
+	bool isPicture1Flg_;	// true / 1枚目の画像, false / 2枚目の画像
 
+	int picture1_;	// 画像１枚目のハンドル
+	int picture2_;	// 画像２枚目のハンドル
 
 };
 

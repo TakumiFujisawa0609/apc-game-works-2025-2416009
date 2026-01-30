@@ -195,6 +195,9 @@ public:
 	bool AttackSelectLeft(void);
 	bool AttackSelectRight(void);
 
+	// 操作説明：表示/非表示
+	bool ManualKeys(void);
+
 	// マウスに切り替え
 	bool ChangeDeviceMouse(void);
 	// パッドに切り替え

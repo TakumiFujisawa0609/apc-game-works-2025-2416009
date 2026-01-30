@@ -28,25 +28,30 @@ void InputManager::Init(void)
 	// ゲームで使用したいキーを、
 	// 事前にここで登録しておいてください
 	ins.Add(KEY_INPUT_SPACE);
-	ins.Add(KEY_INPUT_N);
-	ins.Add(KEY_INPUT_Z);
 
 	// 移動キー
 	ins.Add(KEY_INPUT_W);
 	ins.Add(KEY_INPUT_A);
 	ins.Add(KEY_INPUT_S);
 	ins.Add(KEY_INPUT_D);
+
 	// リロードキー
 	ins.Add(KEY_INPUT_R);
 
 	// ポーズ
 	ins.Add(KEY_INPUT_ESCAPE);
 
-	ins.Add(KEY_INPUT_O);
-	ins.Add(KEY_INPUT_C);
-
+	// 攻撃方法変更
 	ins.Add(KEY_INPUT_Q);
 	ins.Add(KEY_INPUT_E);
+
+	// 操作説明表示非表示
+	ins.Add(KEY_INPUT_1);
+
+	// デバックキー（ゲームオーバー/ゲームクリア）
+	ins.Add(KEY_INPUT_O);
+	ins.Add(KEY_INPUT_C);
+	// デバックキー（カメラ位置移動 処理コメントアウト中）
 	ins.Add(KEY_INPUT_DOWN);
 	ins.Add(KEY_INPUT_UP);
 	ins.Add(KEY_INPUT_RIGHT);
@@ -585,6 +590,11 @@ bool InputManager::AttackSelectLeft(void)
 bool InputManager::AttackSelectRight(void)
 {
 	return IsTrgDown(KEY_INPUT_E) || IsPadBtnTrgDown(JOYPAD_NO::PAD1, JOYPAD_BTN::B);
+}
+
+bool InputManager::ManualKeys(void)
+{
+	return IsTrgDown(KEY_INPUT_1);
 }
 
 bool InputManager::ChangeDeviceMouse(void)

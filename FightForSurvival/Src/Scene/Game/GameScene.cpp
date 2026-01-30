@@ -141,8 +141,13 @@ void GameScene::Load(void)
 	stamina->SetPlayer(player_);
 	uiMgr_->AddUI(stamina);
 
+	// WAVE数表示の背景
 	UIBase* waveBase = UIFactory::GetInstance()->CreateUI(UI_KIND::WAVE_BASE, texMgr_);
 	uiMgr_->AddUI(waveBase);
+
+	// 操作説明
+	UIBase* manual = UIFactory::GetInstance()->CreateUI(UI_KIND::MANUAL, texMgr_);
+	uiMgr_->AddUI(manual);
 
 	// エフェクト管理初期化
 	EffectResManager::CreateInstance();

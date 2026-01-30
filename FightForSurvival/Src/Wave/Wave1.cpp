@@ -7,7 +7,7 @@
 
 // €”õ30•b ¨ í“¬120•b
 Wave1::Wave1(void)
-	: WaveBase(60 * 3, 60 * 20)
+	: WaveBase(60 * 0, 60 * 20)
 {
 	// UIŠÇ—‚Ì¶¬ˆ—
 	uiMgr_ = new UIManager();
