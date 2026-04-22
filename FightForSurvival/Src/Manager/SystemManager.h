@@ -8,7 +8,7 @@ class SystemManager
 public:
 
 	// マウス感度
-	static constexpr float MOUSE_SENSITIVITY = 0.003f;
+	static constexpr float MOUSE_SENSITIVITY = 0.008f;
 
 	// パッド感度
 	static constexpr float PAD_SENSITIVITY = 0.03f;

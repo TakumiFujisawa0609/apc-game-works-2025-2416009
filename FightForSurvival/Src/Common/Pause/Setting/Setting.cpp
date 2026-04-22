@@ -54,7 +54,7 @@ void Setting::Init(void)
 	// ëIëèàóù
 	if (SystemManager::GetInstance().GetIsDevice())
 	{
-		circlePos_ = { static_cast<int>(((mouseSensitivity_ - SENSITIVITY_MIN_MOUSE) / (SENSITIVITY_MAX_MOUSE - SENSITIVITY_MIN_MOUSE)) + BAR_START_POS_X)
+		circlePos_ = { static_cast<int>((((BAR_END_POS_X - BAR_START_POS_X) / (SENSITIVITY_MAX_MOUSE - SENSITIVITY_MIN_MOUSE) * (mouseSensitivity_ - SENSITIVITY_MIN_MOUSE))) + BAR_START_POS_X)
 			,CIRCLE_POS_Y };
 	}
 	else
