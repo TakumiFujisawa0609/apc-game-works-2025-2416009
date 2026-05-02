@@ -62,7 +62,7 @@ private:
 	// カメラの角度
 	VECTOR angles_;
 
-
+	// カメラ揺らし用のカウンタ
 	int hitStopCounter_;
 
 	// カメラモード別の制御処理

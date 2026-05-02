@@ -7,7 +7,7 @@ class Player;
 class Cursor;
 class Score;
 class Pause;
-class RedDamageEffect;
+class DamageEffect;
 class SkyDome;
 class EnemyBase;
 class Dragon;
@@ -19,6 +19,9 @@ class GameScene : public SceneBase
 {
 
 public:
+
+	static constexpr int DAMAGE_EFFECT_ALPHA = 128;
+	static constexpr unsigned int DAMAGE_EFFECT_COLOR= 0xff0000;
 
 	enum class STATE
 	{
@@ -60,7 +63,7 @@ private:
 	Pause* pause_;
 
 	// エフェクト
-	RedDamageEffect* redEffect_;
+	DamageEffect* redEffect_;
 
 	// スカイドーム
 	SkyDome* skydome_;
@@ -120,5 +123,7 @@ private:
 	// アップグレードモードを終了させる条件
 	void StopUpgrade(void);
 
+	// ダメージ時エフェクトやSE処理
+	void Damage(void);
 };
 

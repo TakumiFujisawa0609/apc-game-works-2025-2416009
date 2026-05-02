@@ -15,7 +15,7 @@
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/SoundManager.h"
 #include "../../Common/Pause/Pause.h"
-#include "../../Common/Effect/RedDamageEffect.h"
+#include "../../Common/Effect/DamageEffect.h"
 #include "../../Wave/WaveManager.h"
 #include "../../Wave/Wave1.h"
 #include "../../Wave/Wave2.h"
@@ -91,7 +91,7 @@ void GameScene::Load(void)
 	pause_->Load();
 
 	// エフェクトの生成・ロード
-	redEffect_ = new RedDamageEffect();
+	redEffect_ = new DamageEffect();
 	redEffect_->Load();
 
 	// スカイドームの生成・ロード
@@ -664,14 +664,8 @@ void GameScene::ZombieAttackCollision(EnemyBase* enemy)
 		player_->Damage(1);
 		enemy->SetIsAttack(false);
 
-		// カメラを揺らす
-		camera_->SetHitStop();
-
-		// 画面を赤くするエフェクトを付ける
-		redEffect_->SetRedEffect();
-
-		// ダメージSEをながす
-		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+		// ダメージ時のエフェクトやSE処理
+		Damage();
 	}
 }
 
@@ -732,14 +726,8 @@ void GameScene::EnemyMagicCollision(void)
 			// プレイヤーにダメージを与える
 			player_->Damage(magic->GetMagic().bodyDamage_);
 
-			// カメラを揺らす
-			camera_->SetHitStop();
-
-			// 画面を赤くするエフェクトを付ける
-			redEffect_->SetRedEffect();
-
-			// ダメージSEをながす
-			SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+			// ダメージ時のエフェクトやSE処理
+			Damage();
 		}
 	}
 }
@@ -755,14 +743,8 @@ void GameScene::DragonForwardAttackCollision(EnemyBase* enemy)
 		// プレイヤーにダメージを与える
 		player_->Damage(1);
 
-		// カメラを揺らす
-		camera_->SetHitStop();
-
-		// 画面を赤くするエフェクトを付ける
-		redEffect_->SetRedEffect();
-
-		// ダメージSEをながす
-		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+		// ダメージ時のエフェクトやSE処理
+		Damage();
 	}
 }
 
@@ -783,14 +765,8 @@ void GameScene::DragonRushAttackCollision(EnemyBase* enemy)
 		player_->Damage(1);
 		enemy->SetIsAttack(false);
 
-		// カメラを揺らす
-		camera_->SetHitStop();
-
-		// 画面を赤くするエフェクトを付ける
-		redEffect_->SetRedEffect();
-
-		// ダメージSEをながす
-		SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+		// ダメージ時のエフェクトやSE処理
+		Damage();
 	}
 }
 
@@ -1119,5 +1095,17 @@ void GameScene::StopUpgrade(void)
 		}
 
 	}
+}
+
+void GameScene::Damage(void)
+{
+	// カメラを揺らす
+	camera_->SetHitStop();
+
+	// 画面を赤くするエフェクトを付ける
+	redEffect_->SetEffect(DAMAGE_EFFECT_ALPHA, DAMAGE_EFFECT_COLOR);
+
+	// ダメージSEをながす
+	SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
 }
 

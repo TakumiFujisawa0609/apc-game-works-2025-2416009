@@ -4,6 +4,7 @@
 
 #include "../UI/UIManager.h"
 #include "../UI/TextrueManager/TextureManager.h"
+#include "../Manager/InputManager.h"
 #include "../UI/Object/Sprite/ExplaneSprite/ExplaneSprite.h"
 
 // €”õ20•b ¨ í“¬45•b
@@ -74,6 +75,12 @@ void Wave1::Update(void)
 	// 2•b‚½‚Á‚½‚çà–¾‘‚Ì•\Ž¦‚ðÁ‚·
 	for (UIBase* ui : uiMgr_->GetUIList())
 	{
+		if (InputManager::GetInstance().IsTrgUp(KEY_INPUT_M))
+		{
+			ui->SetIsDraw(false);
+			state_ = WaveState::INWAVE;
+		}
+
 		if (ui->GetUIKind() != UI_KIND::EXPLANE)
 		{
 			continue;

@@ -5,8 +5,11 @@ class Fader
 
 public:
 
+	// 最大アルファ値
+	static constexpr int MAX_ALPHA = 255;
+
 	// フェードが進む速さ
-	static constexpr float SPEED_ALPHA = 5.0f;
+	static constexpr int SPEED_ALPHA = 5;
 
 	// 状態
 	enum class STATE
@@ -35,7 +38,7 @@ private:
 	STATE state_;
 
 	// 透明度
-	float alpha_;
+	int alpha_;
 
 	// 状態(STATE)を保ったまま終了判定を行うため、
 	// Update->Draw->Updateの1フレーム判定用

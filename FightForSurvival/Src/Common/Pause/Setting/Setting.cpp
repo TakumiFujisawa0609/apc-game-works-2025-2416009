@@ -10,6 +10,16 @@
 #include "../../../UI/Object/Button/SettingButton/SettingButtonDone.h"
 
 Setting::Setting(void)
+	:uiMgr(nullptr)
+	,texMgr(nullptr)
+	,pos_(0,0)
+	,mousePos_(0,0)
+	,circlePos_(0,0)
+	,isSetting_(false)
+	,isDone_(false)
+	,isDrag_(false)
+	,mouseSensitivity_(0.0f)
+	,padSensitivity_(0.0f)
 {
 }
 
@@ -39,29 +49,40 @@ void Setting::Load(void)
 
 void Setting::Init(void)
 {
+	// 座標の初期化
 	pos_.x = DONE_POS_X;
 	pos_.y = DONE_POS_Y;
+
+	// マウス座標の初期化
+	GetMousePoint(&mousePos_.x, &mousePos_.y);
+
+	// 使用しているデバイスによって座標を変更
+	if (SystemManager::GetInstance().GetIsDevice())
+	{
+		// マウスの時のつまみの座標
+		circlePos_ = 
+		{ 
+			static_cast<int>(((BAR_DISTANCE_X / SENSITIVITY_RANGE_MOUSE * (mouseSensitivity_ - SENSITIVITY_MIN_MOUSE))) + BAR_START_POS_X)
+			,CIRCLE_POS_Y 
+		};
+	}
+	else
+	{
+		// パッドの時のつまみの座標
+		circlePos_ =
+		{
+			(BAR_START_POS_X - BAR_DISTANCE_OFFSET) + static_cast<int>((padSensitivity_ * SENSITIVITY_ADJUST_PAD) * (BAR_DISTANCE_X + BAR_DISTANCE_OFFSET))
+			, CIRCLE_POS_Y 
+		};
+	}
+
 	isSetting_ = false;
 	isDone_ = false;
 	isDrag_ = false;
 
 	// 感度の初期化
-	auto& ins = SystemManager::GetInstance();
-	mouseSensitivity_ = ins.GetMouseSensitivity();
-	padSensitivity_ = ins.GetPadSensitivity();
-
-	GetMousePoint(&mousePos_.x, &mousePos_.y);
-	// 選択処理
-	if (SystemManager::GetInstance().GetIsDevice())
-	{
-		circlePos_ = { static_cast<int>((((BAR_END_POS_X - BAR_START_POS_X) / (SENSITIVITY_MAX_MOUSE - SENSITIVITY_MIN_MOUSE) * (mouseSensitivity_ - SENSITIVITY_MIN_MOUSE))) + BAR_START_POS_X)
-			,CIRCLE_POS_Y };
-	}
-	else
-	{
-		circlePos_ = {(BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9)))
-			, CIRCLE_POS_Y };
-	}
+	mouseSensitivity_ = SystemManager::GetInstance().GetMouseSensitivity();
+	padSensitivity_ = SystemManager::GetInstance().GetPadSensitivity();
 }
 
 void Setting::Update(void)
@@ -69,7 +90,7 @@ void Setting::Update(void)
 	// 決定
 	Confirm();
 
-	// 選択処理
+	// 使用しているデバイスを確認
 	if (SystemManager::GetInstance().GetIsDevice())
 	{
 		// マウス
@@ -98,30 +119,51 @@ void Setting::Draw(void)
 	// UIの描画
 	uiMgr->Draw();
 
+	// 使用しているデバイスを確認
 	if (SystemManager::GetInstance().GetIsDevice())
 	{
-
+		// マウスの時の処理
+		// つまみを掴んでいるか
 		if(isDrag_)
 		{
-			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x3b3b3b, true);
+			// 掴んでいる
+			DrawCircle
+			(
+				circlePos_.x
+				, circlePos_.y, CIRCLE_RAD, SELECTED_COLOR, true
+			);
 		}
 		else
 		{
-			DrawCircle(circlePos_.x, circlePos_.y, CIRCLE_RAD, 0x7c7c7c, true);
+			// 掴んでいない
+			DrawCircle
+			(
+				circlePos_.x
+				, circlePos_.y, CIRCLE_RAD, UNSELECTED_COLOR, true
+			);
 
 		}
 	}
 	else
 	{
+		// パッドの時の処理
 		if (isDone_)
 		{
-			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
-				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x7c7c7c, true);
+			// 「Done」を選択していたらつまみを掴んでいないことにする
+			DrawCircle
+			(
+				(BAR_START_POS_X - BAR_DISTANCE_OFFSET) + static_cast<int>((padSensitivity_ * SENSITIVITY_ADJUST_PAD) * (BAR_DISTANCE_X + BAR_DISTANCE_OFFSET))
+				, CIRCLE_POS_Y, CIRCLE_RAD, UNSELECTED_COLOR, true
+			);
 		}
 		else
 		{
-			DrawCircle((BAR_START_POS_X - ((BAR_END_POS_X - BAR_START_POS_X) / 9)) + 
-				static_cast<int>((padSensitivity_ * 10) * ((BAR_END_POS_X - BAR_START_POS_X) + ((BAR_END_POS_X - BAR_START_POS_X) / 9))), CIRCLE_POS_Y, CIRCLE_RAD, 0x3b3b3b, true);
+			// 「Done」を選択していなかったらつまみを掴んでいることにする
+			DrawCircle
+			(
+				(BAR_START_POS_X - BAR_DISTANCE_OFFSET) + static_cast<int>((padSensitivity_ * SENSITIVITY_ADJUST_PAD) * (BAR_DISTANCE_X + BAR_DISTANCE_OFFSET))
+				, CIRCLE_POS_Y, CIRCLE_RAD, SELECTED_COLOR, true
+			);
 		}
 	}
 
@@ -137,8 +179,10 @@ void Setting::Release(void)
 
 void Setting::SetIsSetting(bool flg)
 {
+	// 感度設定中かを受け取る
 	isSetting_ = flg;
 
+	// 感度設定中だったらつまみを掴んでいるかを初期化しておく
 	if (flg)
 	{
 		isDrag_ = false;
@@ -147,10 +191,10 @@ void Setting::SetIsSetting(bool flg)
 
 void Setting::Confirm(void)
 {
-	InputManager& ins = InputManager::GetInstance();
-
-	if (ins.Confirm() && isDone_)
+	// 「Done」を選択中かつ決定ボタンを押されたら
+	if (InputManager::GetInstance().Confirm() && isDone_)
 	{
+		// 感度設定を終了する
 		isSetting_ = false;
 
 		// 決定SEをながす
@@ -160,44 +204,46 @@ void Setting::Confirm(void)
 
 void Setting::MouseSelect(void)
 {
-	auto prevDone = isDone_;
+	// 前の状態を保持しておく
+	bool prevDone = isDone_;
 
+	// 「Done」とマウスの当たり判定行う
 	if (CollisionUtility::RectangleAndMouse(pos_, COL_SIZE_X, COL_SIZE_Y))
 	{
+		// 当たっていたらtrueを設定
 		isDone_ = true;
 	}
 	else
 	{
+		// 当たっていたらfalseを設定
 		isDone_ = false;
 	}
 
-	if (isDone_ != prevDone)
-	{
-		// 何も選択されていない状態から選択されたらSEを流す
-		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
-	}
+	// 前の状態と比較して変更があったら処理を行う
+	CompDone(prevDone);
 }
 
 void Setting::PadSelect(void)
 {
-	auto& ins = InputManager::GetInstance();
-	auto prevDone = isDone_;
+	// 前の状態を保持しておく
+	bool prevDone = isDone_;
 
-	if (ins.SelectUp())
+	// 上選択ボタンを検知したら
+	if (InputManager::GetInstance().SelectUp())
 	{
+		// つまみを掴んでいないことにする
 		isDone_ = false;
 	}
 
-	if (ins.SelectDown())
+	// 下選択ボタンを検知したら
+	if (InputManager::GetInstance().SelectDown())
 	{
+		// つまみを掴んでいることにする
 		isDone_ = true;
 	}
 
-	if (isDone_ != prevDone)
-	{
-		// 何も選択されていない状態から選択されたらSEを流す
-		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
-	}
+	// 前の状態と比較して変更があったら処理を行う
+	CompDone(prevDone);
 }
 
 void Setting::BarUpdate(void)
@@ -206,6 +252,7 @@ void Setting::BarUpdate(void)
 	if (!isDone_)
 	{
 		// 感度設定処理
+		// 使用しているデバイスを確認
 		if (SystemManager::GetInstance().GetIsDevice())
 		{
 			// マウス
@@ -221,30 +268,32 @@ void Setting::BarUpdate(void)
 
 void Setting::MouseBarUpdate(void)
 {
-	auto& ins = InputManager::GetInstance();
-
 	// マウス感度の情報を取得
-	auto& sysIns = SystemManager::GetInstance();
-	mouseSensitivity_ = sysIns.GetMouseSensitivity();
+	mouseSensitivity_ = SystemManager::GetInstance().GetMouseSensitivity();
+
+	// 前の感度を保持しておく
 	float prevSensitivity = mouseSensitivity_;
 
 	// マウスの位置を取得
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
-	// つまみの範囲に入っており、左クリックを押したら
-	if (CollisionUtility::CircleAndMouse(circlePos_, CIRCLE_RAD) && ins.IsClickMouseLeft() && !isDrag_)
+	// つまみの範囲に入っており、左クリックが押されたら
+	if (CollisionUtility::CircleAndMouse(circlePos_, CIRCLE_RAD) && InputManager::GetInstance().IsClickMouseLeft() && !isDrag_)
 	{
 		// つまみを掴んでいる状態にする
 		isDrag_ = true;
 	}
-	else if (BAR_START_POS_Y < mousePos_.y && mousePos_.y < BAR_END_POS_Y && ins.IsClickMouseLeft() && !isDrag_)
+	// バーの縦軸内かつ、左クリックが押されたら
+	else if (BAR_START_POS_Y < mousePos_.y && mousePos_.y < BAR_END_POS_Y && InputManager::GetInstance().IsClickMouseLeft() && !isDrag_)
 	{
+		// つまみを掴んでいる状態にする
 		isDrag_ = true;
 	}
 
 	// つまみを掴んでいる状態であれば
 	if (isDrag_)
 	{
+		// つまみの座標にマウスの座標を設定
 		circlePos_.x = mousePos_.x;
 
 		// 最小値を超えないようにする
@@ -260,29 +309,26 @@ void Setting::MouseBarUpdate(void)
 		}
 
 		// バーの現在の値
-		auto range = circlePos_.x - BAR_START_POS_X;
-
-		// バーの範囲
-		auto barRange = BAR_END_POS_X - BAR_START_POS_X;
-
-		// 感度の範囲
-		auto sensiRange = SENSITIVITY_MAX_MOUSE - SENSITIVITY_MIN_MOUSE;
+		int range = circlePos_.x - BAR_START_POS_X;
 
 		// 現在のバーに対しての割合を計算
-		float ratio = (float)range / barRange;
+		float ratio = (float)range / BAR_DISTANCE_X;
 
 		// 感度の範囲に割合をかけて、感度を求める(感度が0ならないように、最小値から足し算)
-		mouseSensitivity_ = SENSITIVITY_MIN_MOUSE + (sensiRange * ratio);
+		mouseSensitivity_ = SENSITIVITY_MIN_MOUSE + (SENSITIVITY_RANGE_MOUSE * ratio);
 	}
 
+	// 前の感度と比較して変更があったら
 	if (prevSensitivity != mouseSensitivity_)
 	{
-		// 変更が行われていたら処理を行う
-		sysIns.SetMouseSensitivity(mouseSensitivity_);
+		// マウスの感度をSystemManagerに保存
+		SystemManager::GetInstance().SetMouseSensitivity(mouseSensitivity_);
 	}
 
-	if (isDrag_ && !ins.IsClickMouseLeft())
+	// つまみを掴んでいる状態かつ、左クリックが押されていなかったら
+	if (isDrag_ && !InputManager::GetInstance().IsClickMouseLeft())
 	{
+		// つまみを掴んでいない状態にする
 		isDrag_ = false;
 	}
 
@@ -291,13 +337,13 @@ void Setting::MouseBarUpdate(void)
 void Setting::PadBarUpdate(void)
 {
 	// ゲームパッド感度の情報を取得
-	auto& sysIns = SystemManager::GetInstance();
-	padSensitivity_ = sysIns.GetPadSensitivity();
+	padSensitivity_ = SystemManager::GetInstance().GetPadSensitivity();
+
+	// 前の感度を保持しておく
 	float prevSensitivity = padSensitivity_;
 
-	auto& ins = InputManager::GetInstance();
-
-	if (ins.SelectRightIsTrgDown() || ins.SelectRightIsNew())
+	// パッドの十字キーやスティックの右入力を検知したら
+	if (InputManager::GetInstance().SelectRightIsTrgDown() || InputManager::GetInstance().SelectRightIsNew())
 	{
 		// 感度を高くする
 		padSensitivity_+= SENSITIVITY_PAD;
@@ -308,7 +354,8 @@ void Setting::PadBarUpdate(void)
 			padSensitivity_ = SENSITIVITY_MAX_PAD;
 		}
 	}
-	else if (ins.SelectLeftIsTrgDown() || ins.SelectLeftIsNew())
+	// パッドの十字キーやスティックの左入力を検知したら
+	else if (InputManager::GetInstance().SelectLeftIsTrgDown() || InputManager::GetInstance().SelectLeftIsNew())
 	{
 		// 感度を低くする
 		padSensitivity_ -= SENSITIVITY_PAD;
@@ -320,9 +367,20 @@ void Setting::PadBarUpdate(void)
 		}
 	}
 
+	// 前の感度と比較して変更があったら
 	if (prevSensitivity != padSensitivity_)
 	{
-		// 変更が行われていたら処理を行う
-		sysIns.SetPadSensitivity(padSensitivity_);
+		// パッドの感度をSystemManagerに保存
+		SystemManager::GetInstance().SetPadSensitivity(padSensitivity_);
+	}
+}
+
+void Setting::CompDone(const bool prevDone)
+{
+	// 何も選択されていない状態から選択されたら
+	if (isDone_ != prevDone)
+	{
+		// SEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
 	}
 }

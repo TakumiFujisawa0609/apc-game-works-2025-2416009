@@ -1,11 +1,17 @@
 #pragma once
 
+#include "../../Application.h"
+
 //フレームレート
 static constexpr float FRAME_RATE(1000 / 60);
 
 class FpsControl
 {
 public:
+	
+	static constexpr int POS_X = Application::SCREEN_SIZE_X - 96;
+	static constexpr int POS_Y = Application::SCREEN_SIZE_Y - 16;
+
 	//コンストラクタ・デストラクタ
 	FpsControl();
 	~FpsControl();

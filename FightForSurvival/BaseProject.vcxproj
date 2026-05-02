@@ -35,7 +35,7 @@
     <ClCompile Include="Src\Common\Pause\Setting\Setting.cpp" />
     <ClCompile Include="Src\Object\Magic\BatMagic\BatMagic.cpp" />
     <ClCompile Include="Src\Object\Enemy\Bat\Bat.cpp" />
-    <ClCompile Include="Src\Common\Effect\RedDamageEffect.cpp" />
+    <ClCompile Include="Src\Common\Effect\DamageEffect.cpp" />
     <ClCompile Include="Src\Common\Quaternion\Quaternion.cpp" />
     <ClCompile Include="Src\Manager\SoundManager.cpp" />
     <ClCompile Include="Src\Object\Common\AnimationController.cpp" />
@@ -111,7 +111,7 @@
     <ClInclude Include="Src\Common\Pause\Setting\Setting.h" />
     <ClInclude Include="Src\Object\Magic\BatMagic\BatMagic.h" />
     <ClInclude Include="Src\Object\Enemy\Bat\Bat.h" />
-    <ClInclude Include="Src\Common\Effect\RedDamageEffect.h" />
+    <ClInclude Include="Src\Common\Effect\DamageEffect.h" />
     <ClInclude Include="Src\Common\Quaternion\Quaternion.h" />
     <ClInclude Include="Src\Manager\SoundManager.h" />
     <ClInclude Include="Src\Object\Common\AnimationController.h" />
@@ -265,14 +265,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\DxLib;$(DXLIB_DIR)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(DXLIB_DIR)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\DxLib;$(DXLIB_DIR)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -302,7 +302,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(DXLIB_DIR)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\DxLib;$(DXLIB_DIR)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -311,7 +311,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(DXLIB_DIR)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\DxLib;$(DXLIB_DIR)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -159,7 +159,7 @@
     <ClCompile Include="Src\Manager\SoundManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Common\Effect\RedDamageEffect.cpp">
+    <ClCompile Include="Src\Common\Effect\DamageEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Object\SkyDome\SkyDome.cpp">
@@ -262,6 +262,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Wave\Wave4.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Object\Sprite\ExplaneSprite\ExplaneSprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -386,7 +389,7 @@
     <ClInclude Include="Src\Manager\SoundManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Common\Effect\RedDamageEffect.h">
+    <ClInclude Include="Src\Common\Effect\DamageEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Object\SkyDome\SkyDome.h">
@@ -501,6 +504,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Wave\Wave4.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Object\Sprite\ExplaneSprite\ExplaneSprite.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

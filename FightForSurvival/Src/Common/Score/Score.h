@@ -7,6 +7,7 @@ class Score
 {
 public:
 
+	// 座標
 	static constexpr int POS_X = Application::SCREEN_SIZE_X - 250;
 	static constexpr int POS_Y = 0;
 
@@ -20,6 +21,7 @@ public:
 
 private:
 
+	// 座標
 	Vector2 pos_;
 
 	// フォントハンドル

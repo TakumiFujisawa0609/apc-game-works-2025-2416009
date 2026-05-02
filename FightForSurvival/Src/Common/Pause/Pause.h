@@ -28,6 +28,7 @@ public:
 	// アルファ値
 	static constexpr int ALPHA = 200;
 
+	// ポーズモードの選択できる種類
 	enum class PAUSE
 	{
 		CONTINUE,
@@ -63,8 +64,10 @@ public:
 	// 解放
 	void Release(void);
 
+	// ポーズモード中か　true / ポーズモード中 , false / ポーズモード中ではない
 	bool GetPauseMode(void)const { return pauseMode_; }
 
+	// ポーズモードの選択種類変更
 	void ChangePause(PAUSE pause) { pause_ = pause; }
 
 private:
@@ -83,14 +86,17 @@ protected:
 	// ポーズモードの種類
 	PAUSE pause_;
 
+	// ポーズモードかどうか　true / ポーズ中 , false / ポーズ中でない
 	bool pauseMode_;
 
+	// 感度設定中かどうか
 	bool isSetting_;
 
 	// ダウントリガー判定用
 	bool isTrgDown_[static_cast<int>(PAUSE::NON)];
 
-	void StartPause(void);
+	// ポーズモードを起動する
+	void ChangePauseMode(void);
 
 	// カーソルの選択処理
 	virtual void MouseSelect(void);
@@ -100,5 +106,11 @@ protected:
 	
 	// 確定時の遷移処理
 	void Confirm(void);
+
+	// 選択中のものの変更が行われているかつ何かを選択していたら処理を行う
+	void CompPause(const PAUSE prevPause);
+
+	// デバック用描画
+	void DebugDraw(void);
 };
 

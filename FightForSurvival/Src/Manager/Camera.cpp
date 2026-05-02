@@ -3,16 +3,22 @@
 #include "../Utility/AsoUtility.h"
 #include "Camera.h"
 
-Camera::Camera(void):player_(nullptr)
+Camera::Camera(void)
+	:player_(nullptr)
+	,pos_(AsoUtility::VECTOR_ZERO)
+	,angles_(AsoUtility::VECTOR_ZERO)
+	,hitStopCounter_(0)
+	,mode_(MODE::NONE)
 {
 }
 
-Camera::Camera(const Player* player) :player_(player)
+Camera::Camera(const Player* player) 
+	:player_(player)
+	, pos_(AsoUtility::VECTOR_ZERO)
+	, angles_(AsoUtility::VECTOR_ZERO)
+	, hitStopCounter_(0)
+	, mode_(MODE::NONE)
 {
-	// カメラの位置が x = 320.0f, y = 240.0f, z = (画面のサイズによって変化)、
-	// 注視点の位置は x = 320.0f, y = 240.0f, z = 1.0f
-	// カメラの上方向は x = 0.0f, y = 1.0f, z = 0.0f
-	// 右上位置からZ軸のプラス方向を見るようなカメラ
 }
 
 Camera::~Camera(void)
@@ -24,6 +30,7 @@ void Camera::Init(void)
 	pos_ = Player::DEFAULT_POS;
 	pos_.y += Player::RELATIVE_POS_CAMERA;
 	angles_ = AsoUtility::VECTOR_ZERO;
+	hitStopCounter_ = 0;
 	//mode_ = MODE::FREE;
 }
 
@@ -136,6 +143,7 @@ void Camera::MoveCamera(void)
 		return;
 	}
 
+	// プレイヤーからカメラの座標を取得
 	pos_ = player_->GetCameraPos();
 
 	// プレイヤーの角度をカメラの角度として設定
@@ -159,9 +167,11 @@ void Camera::ShakeCamera(void)
 		shake *= 2;
 		// ----------------------------------------
 
+		// 座標に振れ幅分を反映
 		pos_.x -= shake;
 		pos_.y += shake;
 
+		// カウンタを減らす
 		hitStopCounter_--;
 	}
 }

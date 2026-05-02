@@ -1,6 +1,5 @@
 #include <DxLib.h>
 #include "FpsControl.h"
-#include "../../Application.h"
 
 //　コンストラクタ
 FpsControl::FpsControl()
@@ -78,8 +77,8 @@ void FpsControl::DrawFrameRate(void)
 
 	//フレームレートを表示
 	DrawFormatString(
-		Application::SCREEN_SIZE_X - 16 * 6,		//ｘ座標
-		Application::SCREEN_SIZE_Y - 16,			//ｙ座標
+		POS_X,		//ｘ座標
+		POS_Y,		//ｙ座標
 		0x7d7d7d,									//文字の色
 		"FPS[%.2f}",
 		frameRate_
