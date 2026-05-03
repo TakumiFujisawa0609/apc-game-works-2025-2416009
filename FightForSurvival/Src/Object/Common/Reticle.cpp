@@ -1,35 +1,36 @@
 #include <DxLib.h>
 #include "../../Application.h"
-#include "Cursor.h"
+#include "Reticle.h"
 
-Cursor::Cursor(void)
-{
-	img_ = -1;
-}
-
-Cursor::~Cursor(void)
+Reticle::Reticle(void)
+	:img_(-1)
 {
 }
 
-void Cursor::Load(void)
+Reticle::~Reticle(void)
 {
+}
+
+void Reticle::Load(void)
+{
+	// âÊëúÇÃì«Ç›çûÇ›
 	img_ = LoadGraph((Application::PATH_IMAGE + "UI/cursor.png").c_str());
 }
 
-void Cursor::Init(void)
+void Reticle::Init(void)
 {
 	// ç¿ïWê›íË
 	pos_.x = Application::SCREEN_SIZE_X / 2;
 	pos_.y = Application::SCREEN_SIZE_Y / 2;
 }
 
-void Cursor::Draw(void)
+void Reticle::Draw(void)
 {
 	// ï`âÊ
 	DrawRotaGraph(pos_.x, pos_.y, 0.7, 0.0, img_, true);
 }
 
-void Cursor::Release(void)
+void Reticle::Release(void)
 {
 	if (img_ != -1)
 	{

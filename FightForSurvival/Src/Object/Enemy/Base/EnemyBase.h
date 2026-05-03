@@ -60,7 +60,7 @@ public:
 	void SetIsAttack(bool flg) { attack_.isAttacking_ = flg; }
 
 	// HPにダメージを与える
-	void SubHp(float hp);
+	void SubHp(float damage);
 
 	// 状態遷移
 	void ChangeState(ENEMY_STATE newState);
@@ -90,7 +90,10 @@ public:
 	void CreateMagicForward(void);
 
 protected:
+	// アニメーションハンドル
 	AnimationController* animationController_;
+
+	// プレイヤーハンドル
 	Player* player_;
 
 	// プレイヤーの情報
@@ -156,5 +159,8 @@ protected:
 
 	// 重力処理
 	void Gravity(void);
+
+	// デバック用描画処理
+	void DebugDraw(void);
 };
 

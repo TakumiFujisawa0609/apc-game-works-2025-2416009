@@ -2,12 +2,12 @@
 
 #include "../../Common/Vector2/Vector2.h"
 
-class Cursor
+class Reticle
 {
 public:
 
-	Cursor(void);
-	~Cursor(void);
+	Reticle(void);
+	~Reticle(void);
 
 	void Load(void);
 	void Init(void);

@@ -69,9 +69,6 @@
     <ClCompile Include="Src\Manager\InputManager.cpp">
       <Filter>ソース ファイル\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Grid\Grid.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Manager\Camera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -99,7 +96,7 @@
     <ClCompile Include="Src\Object\Magic\StraightMagic\StraightMagic.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Common\Cursor.cpp">
+    <ClCompile Include="Src\Object\Common\Reticle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Src\Common\Vector2\Vector2.cpp">
@@ -243,9 +240,6 @@
     <ClCompile Include="Src\Manager\EffectResManager\EffectResManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Object\Common\MiniMap\MiniMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -293,9 +287,6 @@
     <ClInclude Include="Src\main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Grid\Grid.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Manager\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -326,7 +317,7 @@
     <ClInclude Include="Src\Object\Magic\StraightMagic\StraightMagic.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Object\Common\Cursor.h">
+    <ClInclude Include="Src\Object\Common\Reticle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Common\Vector2\Vector2.h">
@@ -483,9 +474,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\Manager\EffectResManager\EffectResManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Object\Common\MiniMap\MiniMap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.h">

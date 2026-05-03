@@ -46,10 +46,12 @@ EnemyBase::~EnemyBase(void)
 
 void EnemyBase::CreateEnemy(VECTOR pos)
 {
-	// 指定された座標を設定
-	enemy_.prevPos_ = enemy_.pos_ = attack_.rangePos_ = pos;
+	// 指定された初期位置座標を設定
+	enemy_.prevPos_ = enemy_.pos_ = attack_.pos_ = pos;
+	attack_.pos_.y += ATTACK_RANGE_POS_OFFSET;
+
+	// モデルに座標を設定
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
-	attack_.rangePos_.y += ATTACK_RANGE_POS_OFFSET;
 
 	// パラメータ設定
 	SetParam();
@@ -63,6 +65,7 @@ void EnemyBase::CreateEnemy(VECTOR pos)
 	// アングルを設定する
 	MV1SetRotationXYZ(enemy_.modelId_, enemy_.angle_);
 
+	// 敵の向きを初期化
 	enemy_.dir_ = AsoUtility::VECTOR_ZERO;
 
 	// 初期状態
@@ -141,36 +144,13 @@ void EnemyBase::Draw(void)
 		return;
 	}
 
+	// 敵モデルの表示
 	MV1DrawModel(enemy_.modelId_);
 
 #ifdef _DEBUG
-	// デバッグ用：衝突判定用球体
-	DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xffffff, false);
-
-	// 頭 デバッグ用：衝突判定用球体
-	DrawSphere3D(collision_.colPos_[HEAD], enemy_.collisionRadiusHead_, 10, 0xff0000, 0xff0000, false);
-
-	// 体 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collision_.colPos_[BODY_TOP], collision_.colPos_[BODY_UNDER],
-		enemy_.collisionRadiusBody_, 10, 0xff0000, 0xff0000, false);
-
-	// 右腕 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collision_.colPos_[ARM_TOP_R], collision_.colPos_[ARM_UNDER_R],
-		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
-
-	// 左腕 デバッグ用：衝突判定用カプセル
-	DrawCapsule3D(collision_.colPos_[ARM_TOP_L], collision_.colPos_[ARM_UNDER_L],
-		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
-
-	// 右手 デバッグ用：衝突判定用球体
-	DrawSphere3D(collision_.colPos_[HAND_R],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
-
-	// 左手 デバッグ用：衝突判定用球体
-	DrawSphere3D(collision_.colPos_[HAND_L],enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
-
-	// 攻撃可能範囲
-	DrawSphere3D(attack_.rangePos_, attack_.range_, 10, 0x0000ff, 0x0000ff, false);
+	DebugDraw();
 #endif // _DEBUG
+
 }
 
 void EnemyBase::Release(void)
@@ -197,13 +177,16 @@ bool EnemyBase::IsCollisionState(void)
 	return !(state_.state_ == STATE_DEAD || state_.state_ == STATE_END);
 }
 
-void EnemyBase::SubHp(float hp)
+void EnemyBase::SubHp(float damage)
 {
-	enemy_.hp_ -= hp;
+	// 指定されたダメージ分HPを削る
+	enemy_.hp_ -= damage;
 
+	// HPが0以下になったら
 	if (enemy_.hp_ <= 0)
 	{
 		enemy_.hp_ = 0;
+
 		// 攻撃を受けてHPが無くなったら死亡させる
 		ChangeState(STATE_DEAD);
 	}
@@ -216,17 +199,17 @@ void EnemyBase::SubHp(float hp)
 
 void EnemyBase::ChangeState(ENEMY_STATE state)
 {
+	// 指定されたステートへ変更
 	state_.state_ = state;
 
+	// 死亡していたら
 	if (state_.state_ == ENEMY_STATE::STATE_END)
 	{
-		// エフェクト停止
-		//StopEffekseer3DEffect(effectBlastPlayId_);
 		// 生存判定を折る
 		enemy_.isAlive_ = false;
-		auto& sysIns = SystemManager::GetInstance();
+
 		// 撃破したため、スコア加算する
-		sysIns.SetScore(sysIns.GetScore() + score_);
+		SystemManager::GetInstance().SetScore(SystemManager::GetInstance().GetScore() + score_);
 
 		return;
 	}
@@ -273,8 +256,10 @@ void EnemyBase::Retreat(EnemyBase& enemy)
 
 	if (enemy.animationController_ != nullptr)
 	{
+		// アニメーションが再生し終えていたら
 		if (enemy.animationController_->IsEnd())
 		{
+			// Idle状態へ
 			enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
 		}
 	}
@@ -284,14 +269,19 @@ void EnemyBase::Hit(EnemyBase& enemy)
 {
 	if (enemy.animationController_ != nullptr)
 	{
+		// アニメーションが再生し終えていたら
 		if (enemy.animationController_->IsEnd())
 		{
+			// 敵の種類がドラゴンでなかった場合
 			if (enemy.type_ != ENEMY_TYPE::DRAGON)
 			{
+				// 後退処理を行わせる
 				enemy.ChangeState(ENEMY_STATE::STATE_RETREAT);
 			}
+			// 敵の種類がドラゴンだった場合
 			else
 			{
+				// 攻撃処理を行わせる
 				enemy.ChangeState(ENEMY_STATE::STATE_ATTACK);
 			}
 		}
@@ -302,6 +292,7 @@ void EnemyBase::Dead(EnemyBase& enemy)
 {
 	if (enemy.animationController_ != nullptr)
 	{
+		// アニメーションが再生し終えていたら
 		if (enemy.animationController_->IsEnd())
 		{
 			// 死亡リアクションを終えたらENDへ移行
@@ -354,6 +345,8 @@ void EnemyBase::LookPlayer(void)
 
 void EnemyBase::UpdateCollisionPositions(void)
 {
+	// 当たり判定用の座標を更新する
+
 #pragma region 頭
 
 	collision_.colPos_[HEAD] = GetBoneWorldPosition(collision_.headBone_, collision_.offsetHead_);
@@ -390,9 +383,9 @@ void EnemyBase::UpdateCollisionPositions(void)
 
 #pragma endregion
 
-	// 攻撃範囲判定用の
-	attack_.rangePos_ = enemy_.pos_;
-	attack_.rangePos_.y += ATTACK_RANGE_POS_OFFSET;
+	// 攻撃範囲判定用の球体
+	attack_.pos_ = enemy_.pos_;
+	attack_.pos_.y += ATTACK_RANGE_POS_OFFSET;
 
 }
 
@@ -425,7 +418,7 @@ VECTOR EnemyBase::GetBoneWorldPosition(int bone,float offset)
 bool EnemyBase::SearchAttackRange(void)
 {
 	// 攻撃可能範囲にプレイヤーがいるか確認
-	return CollisionUtility::IsCollidingSphereCapsule(attack_.rangePos_,attack_.range_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
+	return CollisionUtility::IsCollidingSphereCapsule(attack_.pos_,attack_.range_,player_->GetCollisionPosTop(),player_->GetCollisionPosUnder(),Player::COLLISION_RADIUS);
 }
 
 void EnemyBase::CollisionStage(VECTOR pos)
@@ -439,9 +432,14 @@ void EnemyBase::CollisionStage(float posY)
 {
 	// 衝突したら指定座標に押し戻す
 	enemy_.pos_.y = posY;
+
+	// モデルに座標を反映させる
 	MV1SetPosition(enemy_.modelId_, enemy_.pos_);
 
+	// 重力を0にする
 	enemy_.gravity_ = 0.0f;
+
+	// ジャンプフラグを折る
 	enemy_.isJump_ = false;
 }
 
@@ -456,6 +454,7 @@ void EnemyBase::Extrusion(VECTOR overlap)
 
 void EnemyBase::DuplicateAnimation(std::vector<float> speed, std::vector<int> animModelIds)
 {
+	// アニメーションの解放
 	for (int i = 0; i < animModelIds.size(); i++)
 	{
 		animationController_->Duplicate(i, speed[i], animModelIds[i]);
@@ -464,29 +463,37 @@ void EnemyBase::DuplicateAnimation(std::vector<float> speed, std::vector<int> an
 
 void EnemyBase::MoveLeftAndRight(void)
 {
+	// 左移動をしていたら
 	if (move_.isLeft_)
 	{
 		// 左率を上げる
 		move_.leftRightRate_ -= SceneManager::GetInstance().GetDeltaTime();
 
+		// 左右移動の左右を変更するタイミングがきたら
 		if (move_.leftRightRate_ < CHANGE_RATE_MIN)
 		{
+			// 右移動にする
 			move_.isLeft_ = !move_.isLeft_;
 		}
 	}
+	// 右移動をしていたら
 	else
 	{
 		// 右率を上げる
 		move_.leftRightRate_ += SceneManager::GetInstance().GetDeltaTime();
 
+		// 左右移動の左右を変更するタイミングがきたら
 		if (move_.leftRightRate_ > CHANGE_RATE_MAX)
 		{
+			// 左移動にする
 			move_.isLeft_ = !move_.isLeft_;
 		}
 	}
 
+	// 動いている方向を出す
 	VECTOR moveDir = VGet(move_.leftRightRate_, 0.0f, 0.0f);
 
+	// 元の向きに変更した向きを反映させる
 	enemy_.dir_ = VAdd(enemy_.dir_, moveDir);
 }
 
@@ -498,6 +505,7 @@ void EnemyBase::PlayAnim(void)
 		return;
 	}
 
+	// ステートに合わせてアニメーションを再生
 	switch (state_.state_)
 	{
 	case ENEMY_STATE::STATE_IDLE:
@@ -547,8 +555,39 @@ void EnemyBase::CreateMagicForward(void)
 	// 方向と同じ要領で、相対座標を回転
 	VECTOR localPosRot = VTransform(relativeMagicPos_, matRot);
 
+	// 元の座標にワールド座標に回転させておいた相対座標を足す
 	VECTOR pos = VAdd(enemy_.pos_, localPosRot);
 
 	// 魔法を発動(生成)
 	EnemyManager::GetInstance().CreateMagic(ENEMY_TYPE::BAT,pos,enemy_.dir_);
+}
+
+void EnemyBase::DebugDraw(void)
+{
+	// デバッグ用：衝突判定用球体
+	DrawSphere3D(enemy_.pos_, enemy_.collisionRadius_, 10, 0xff0000, 0xffffff, false);
+
+	// 頭 デバッグ用：衝突判定用球体
+	DrawSphere3D(collision_.colPos_[HEAD], enemy_.collisionRadiusHead_, 10, 0xff0000, 0xff0000, false);
+
+	// 体 デバッグ用：衝突判定用カプセル
+	DrawCapsule3D(collision_.colPos_[BODY_TOP], collision_.colPos_[BODY_UNDER],
+		enemy_.collisionRadiusBody_, 10, 0xff0000, 0xff0000, false);
+
+	// 右腕 デバッグ用：衝突判定用カプセル
+	DrawCapsule3D(collision_.colPos_[ARM_TOP_R], collision_.colPos_[ARM_UNDER_R],
+		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
+
+	// 左腕 デバッグ用：衝突判定用カプセル
+	DrawCapsule3D(collision_.colPos_[ARM_TOP_L], collision_.colPos_[ARM_UNDER_L],
+		enemy_.collisionRadiusArm_, 10, 0xff0000, 0xff0000, false);
+
+	// 右手 デバッグ用：衝突判定用球体
+	DrawSphere3D(collision_.colPos_[HAND_R], enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
+
+	// 左手 デバッグ用：衝突判定用球体
+	DrawSphere3D(collision_.colPos_[HAND_L], enemy_.collisionRadiusHand_, 10, 0xff0000, 0xff0000, false);
+
+	// 攻撃可能範囲
+	DrawSphere3D(attack_.pos_, attack_.range_, 10, 0x0000ff, 0x0000ff, false);
 }

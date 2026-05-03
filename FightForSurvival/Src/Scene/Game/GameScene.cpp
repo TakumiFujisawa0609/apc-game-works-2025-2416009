@@ -4,7 +4,7 @@
 #include "../../Manager/Camera.h"
 #include "../../Manager/InputManager.h"
 #include "../../Object/Player/Player.h"
-#include "../../Object/Common/Cursor.h"
+#include "../../Object/Common/Reticle.h"
 #include "../../Common/Score/Score.h"
 #include "../../Object/Enemy/Zombie/Zombie.h"
 #include "../../Object/Enemy/Dragon/Dragon.h"
@@ -41,7 +41,7 @@ GameScene::GameScene(void)
 {
 	player_ = nullptr;
 	camera_ = nullptr;
-	cursor_ = nullptr;
+	reticle_ = nullptr;
 	score_ = nullptr;
 	pause_ = nullptr;
 	redEffect_ = nullptr;
@@ -78,9 +78,9 @@ void GameScene::Load(void)
 	// カメラの生成
 	camera_ = new Camera(player_);
 
-	// カーソルの生成・ロード
-	cursor_ = new Cursor();
-	cursor_->Load();
+	// レティクルの生成・ロード
+	reticle_ = new Reticle();
+	reticle_->Load();
 
 	// スコアの生成
 	score_ = new Score();
@@ -165,8 +165,8 @@ void GameScene::Init(void)
 	// カメラの初期化
 	camera_->Init();
 
-	// カーソルの初期化
-	cursor_->Init();
+	// レティクルの初期化
+	reticle_->Init();
 
 	// スコアの初期化
 	score_->Init();
@@ -321,8 +321,8 @@ void GameScene::Draw(void)
 	// プレイヤー情報(2D)の描画
 	player_->Draw2D();
 
-	// カーソルの描画
-	cursor_->Draw();
+	// レティクルの描画
+	reticle_->Draw();
 
 	// アップグレードの描画
 	UpgradeManager::GetInstance().Draw();
@@ -400,12 +400,12 @@ void GameScene::Release(void)
 		score_ = nullptr;
 	}
 
-	// カーソルの解放
-	if (cursor_ != nullptr)
+	// レティクルの解放
+	if (reticle_ != nullptr)
 	{
-		cursor_->Release();
-		delete cursor_;
-		cursor_ = nullptr;
+		reticle_->Release();
+		delete reticle_;
+		reticle_ = nullptr;
 	}
 
 	// カメラの解放

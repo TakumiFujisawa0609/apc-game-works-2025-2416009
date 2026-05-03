@@ -32,10 +32,10 @@ struct Unit
 	// 速度
 	float moveSpeed_;
 
-	// 生存判定
+	// 生存判定 true / 生存中 , false / 死亡
 	bool isAlive_;
 
-	// ダメージを受けたか true = 受けた / false = 受けてない
+	// ダメージを受けたか true / 受けた , false / 受けてない
 	bool isDamaged_;
 
 	// ジャンプ判定(true / ジャンプ中、false / ジャンプ中ではない)

@@ -4,9 +4,11 @@
 Bat::Bat(ENEMY_TYPE type, int baseModelId,Player* player)
 	:EnemyBase(type, baseModelId, player)
 {
+	// ステートテーブルの初期化
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
 
+	// アニメーションの読み込み
 	for (int i = 0; i < static_cast<int>(ANIM_TYPE_FLY::MAX); i++)
 	{
 		animationController_->AddInFbx(i, 25.0f, i);
@@ -22,14 +24,23 @@ Bat::~Bat(void)
 
 void Bat::SetParam(void)
 {
+	// 向き初期化
 	enemy_.angle_ = ANGLE;
+
+	// モデルの大きさ初期化
 	enemy_.scales_ = SCALE;
+
+	// HPの初期化
 	enemy_.hp_ = HP;
+
+	// 移動速度の初期化
 	enemy_.moveSpeed_ = SPEED;
+
+	// 生存判定の初期化
 	enemy_.isAlive_ = true;
 
+	// 敵撃破時のスコア
 	score_ = SCORE;
-
 
 	// 当たり判定用の半径
 	enemy_.collisionRadius_ = COLLISION_RADIUS;
@@ -54,10 +65,13 @@ void Bat::SetParam(void)
 	// 手
 	collision_.offsetHand_ = OFFSET_POS_HAND;
 
-	// 攻撃可能範囲
+	// 攻撃クールダウンの初期化
 	attack_.cooldown_ = ATTACK_COOLDOWN;
+
+	// 攻撃可能範囲の初期化
 	attack_.range_ = ATTACK_RANGE;
 
+	// 魔法攻撃の座標初期化
 	relativeMagicPos_ = RELATIVE_MAGIC_POS;
 }
 
@@ -86,6 +100,7 @@ void Bat::PlayAnim(void)
 		return;
 	}
 
+	// ステートによってアニメーションを変更
 	switch (state_.state_)
 	{
 	case ENEMY_STATE::STATE_IDLE:
@@ -113,12 +128,13 @@ void Bat::PlayAnim(void)
 
 void Bat::Idle(EnemyBase& enemy)
 {
+	// 攻撃範囲に入っていたら
 	if (enemy.SearchAttackRange())
 	{
-		// 攻撃範囲に入っていたら
 		// プレイヤーのほうへ向く
 		enemy.LookPlayer();
 
+		// 攻撃クール時間が終わっていたら
 		if (enemy.GetAttackCooldown() <= 0.0f)
 		{
 			// 攻撃を生成
@@ -134,13 +150,16 @@ void Bat::Attack(EnemyBase& enemy)
 {
 	// ゲッター経由でアクセス
 	AnimationController* animController = enemy.GetAnimationController();
+
 	// ポインタが有効かチェックする
 	if (animController != nullptr)
 	{
+		// アニメーションが終わっていたら
 		if (animController->IsEnd())
 		{
 			// IDLE状態へ戻す
 			enemy.ChangeState(ENEMY_STATE::STATE_IDLE);
+
 			// 攻撃待ち時間をセット
 			enemy.SetAttackCooldown(ATTACK_COOLDOWN);
 		}

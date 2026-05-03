@@ -4,7 +4,7 @@
 
 class Camera;
 class Player;
-class Cursor;
+class Reticle;
 class Score;
 class Pause;
 class DamageEffect;
@@ -54,7 +54,7 @@ private:
 	Player* player_;
 	
 	// カーソル
-	Cursor* cursor_;
+	Reticle* reticle_;
 
 	// スコア
 	Score* score_;

@@ -112,20 +112,33 @@ struct EnemyCollision
 
 struct enemieStateCtrl
 {
+	// 敵のステート
 	ENEMY_STATE state_;
+
+	// ステートテーブル
 	enemieStateFunction stateTable_[ENEMY_STATE_MAX];
 };
 
 struct EnemyMove
 {
+	// 左移動かどうか　true / 左移動中 , false / 右移動中
 	bool isLeft_;
+
+	// 左右の移動率
 	float leftRightRate_;
 };
 
 struct EnemyAttack
 {
-	VECTOR rangePos_;
+	// 座標
+	VECTOR pos_;
+
+	// 攻撃範囲
 	float range_;
+
+	// 攻撃のクールダウン
 	float cooldown_;
+
+	// 攻撃中か　true / 攻撃中 , false / 攻撃中でない
 	bool isAttacking_;
 };

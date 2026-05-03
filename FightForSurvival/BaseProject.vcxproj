@@ -23,7 +23,6 @@
     <ClCompile Include="Src\Object\MoviePlayer\MoviePlayer.cpp" />
     <ClCompile Include="Src\Scene\Movie\MovieScene.cpp" />
     <ClCompile Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.cpp" />
-    <ClCompile Include="Src\Object\Common\MiniMap\MiniMap.cpp" />
     <ClCompile Include="Src\Manager\EffectResManager\EffectResManager.cpp" />
     <ClCompile Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.cpp" />
     <ClCompile Include="Src\UI\Object\Button\PauseButton\PauseButton.cpp" />
@@ -60,7 +59,7 @@
     <ClCompile Include="Src\Object\Enemy\EnemyManager.cpp" />
     <ClCompile Include="Src\Object\Enemy\Base\EnemyBase.cpp" />
     <ClCompile Include="Src\Common\Vector2\Vector2.cpp" />
-    <ClCompile Include="Src\Object\Common\Cursor.cpp" />
+    <ClCompile Include="Src\Object\Common\Reticle.cpp" />
     <ClCompile Include="Src\Object\Magic\StraightMagic\StraightMagic.cpp" />
     <ClCompile Include="Src\Object\Magic\Base\MagicBase.cpp" />
     <ClCompile Include="Src\Object\Player\Weapon\Stick.cpp" />
@@ -76,7 +75,6 @@
     <ClCompile Include="Src\Manager\Camera.cpp" />
     <ClCompile Include="Src\Manager\InputManager.cpp" />
     <ClCompile Include="Src\Scene\SceneManager.cpp" />
-    <ClCompile Include="Src\Object\Grid\Grid.cpp" />
     <ClCompile Include="Src\Scene\Base\SceneBase.cpp" />
     <ClCompile Include="Src\Scene\Title\TitleScene.cpp" />
     <ClCompile Include="Src\Utility\AsoUtility.cpp" />
@@ -99,7 +97,6 @@
     <ClInclude Include="Src\Object\MoviePlayer\MoviePlayer.h" />
     <ClInclude Include="Src\Scene\Movie\MovieScene.h" />
     <ClInclude Include="Src\UI\Object\Sprite\PendulumSprite\PendulumSprite.h" />
-    <ClInclude Include="Src\Object\Common\MiniMap\MiniMap.h" />
     <ClInclude Include="Src\Manager\EffectResManager\EffectResManager.h" />
     <ClInclude Include="Src\UI\Object\Button\SettingButton\SettingButtonDone.h" />
     <ClInclude Include="Src\UI\Object\Button\PauseButton\PauseButton.h" />
@@ -141,7 +138,7 @@
     <ClInclude Include="Src\Object\Enemy\EnemyManager.h" />
     <ClInclude Include="Src\Object\Enemy\Base\EnemyBase.h" />
     <ClInclude Include="Src\Common\Vector2\Vector2.h" />
-    <ClInclude Include="Src\Object\Common\Cursor.h" />
+    <ClInclude Include="Src\Object\Common\Reticle.h" />
     <ClInclude Include="Src\Object\Magic\StraightMagic\StraightMagic.h" />
     <ClInclude Include="Src\Object\Magic\Base\MagicBase.h" />
     <ClInclude Include="Src\Object\Player\Weapon\Stick.h" />
@@ -158,7 +155,6 @@
     <ClInclude Include="Src\Manager\Camera.h" />
     <ClInclude Include="Src\Manager\InputManager.h" />
     <ClInclude Include="Src\Scene\SceneManager.h" />
-    <ClInclude Include="Src\Object\Grid\Grid.h" />
     <ClInclude Include="Src\Scene\Base\SceneBase.h" />
     <ClInclude Include="Src\Scene\Title\TitleScene.h" />
     <ClInclude Include="Src\Utility\AsoUtility.h" />
