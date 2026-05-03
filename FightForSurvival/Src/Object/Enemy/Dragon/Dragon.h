@@ -105,23 +105,33 @@ public:
 		DRAGON_ATTACK_STATE_MAX,    // 敵の全状態
 	};
 
+	// 突進攻撃のステート
 	enum class RUSH_STEP
 	{
-		STATING_POSITION,
-		END_POSITION,
-		RETURN_POSITON,
+		STATING_POSITION,	// スタート位置
+		END_POSITION,		// エンド位置
+		RETURN_POSITON,		// 帰宅位置
 	};
 
+	// コンストラクタ
 	Dragon(ENEMY_TYPE type, int baseModelId, Player* player);
+
+	// デストラクタ
 	~Dragon(void)override;
 
+	// 描画処理
 	void Draw(void)override;
+
+	// 解放処理
 	void Release(void)override;
 
+	// 攻撃範囲内か確認用処理
 	bool SearchAttackRange(void)override;
 
+	// 攻撃ステート変更処理
 	void ChangeAttackState(DRAGON_ATTACK_STATE state);
 
+	// 攻撃ステートを渡す
 	DRAGON_ATTACK_STATE GetAttackState(void)const { return attackState_; }
 
 	// 衝突判定
@@ -151,6 +161,8 @@ private:
 	bool attackStart_;
 	// 前方攻撃待ち時間
 	float forwardAttackStartTime_;
+
+	// 攻撃判定とするタイミングのアニメーション数
 	float animationNum_;
 
 	// 突進攻撃のステート
@@ -179,7 +191,9 @@ private:
 	// 攻撃終了
 	static void AttackEnd(Dragon& dragon);
 
+	// ドラゴンから見て全方位に撃つ魔法攻撃の描画処理
 	void IsDrawMagicWhole(void);
+	// ドラゴンから見て全方位に撃つ魔法攻撃の生成処理
 	void CreateMagicWhole(void);
 
 	// 突進攻撃開始位置まで移動
@@ -202,5 +216,8 @@ private:
 	void PlayAttackAnim(void);
 	// 攻撃変更時の初期化
 	void ChangeAttackStateInit(void);
+
+	// ドラゴンの前方方位の攻撃描画処理
+	void ForwardAttackDraw(void);
 };
 
