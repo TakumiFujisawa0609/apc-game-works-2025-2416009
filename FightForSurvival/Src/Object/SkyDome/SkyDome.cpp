@@ -5,8 +5,8 @@
 
 
 SkyDome::SkyDome(void)
+	:modelId_(-1)
 {
-	modelId_ = -1;
 }
 
 SkyDome::~SkyDome(void)
@@ -49,5 +49,6 @@ void SkyDome::Draw(void)
 
 void SkyDome::Release(void)
 {
+	// ƒ‚ƒfƒ‹‚Ì‰ð•ú
 	MV1DeleteModel(modelId_);
 }

@@ -284,51 +284,37 @@ void Dragon::RangeAttack(Dragon& dragon)
 	// ポインタが有効かチェックする
 	if (dragon.animationController_ != nullptr)
 	{
-		switch (dragon.animationController_->GetPlayType())
+		// 再生していたアニメーションが攻撃かつ、アニメーションが再生し終えているかつ、攻撃が始まっていなかったら
+		if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK)
+			&& dragon.animationController_->IsEnd()
+			&& !dragon.attackStart_)
 		{
-		case static_cast<int>(ANIM_TYPE_FLY::ATTACK):
+			// アニメーションを再生
+			dragon.animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK_2), AnimationController::BLEND_LATIO, false);
 
-			// 再生していたアニメーションが攻撃かつ、攻撃が始まっていなかったら
-			if (dragon.animationController_->IsEnd()
-				&& !dragon.attackStart_)
-			{
-				// アニメーションを再生
-				dragon.animationController_->BlendAnimPlay(static_cast<int>(ANIM_TYPE_FLY::ATTACK_2), AnimationController::BLEND_LATIO, false);
-
-				// ドラゴンから見て全方位に撃つ魔法攻撃の描画処理
-				dragon.IsDrawMagicWhole();
-			}
-
-			break;
-		case static_cast<int>(ANIM_TYPE_FLY::ATTACK_2):
-
-			// 攻撃が始まっていないかつ、魔法が生成されていてmagicsRangeの中身が入っていたら
-			if (!dragon.attackStart_
-				&& dragon.magicsRange_.size() > 0)
-			{
-				// ドラゴンの周りに魔法を発動(生成)
-				dragon.CreateMagicWhole();
-				// アタックしたことを知らせる
-				dragon.attackStart_ = true;
-			}
-
-			break;
-		case static_cast<int>(ANIM_TYPE_FLY::FLYING):
-
-			// アニメーションが終わっているかつ、攻撃が始まっていたら
-			if (dragon.animationController_->IsEnd()
-				&& dragon.attackStart_)
-			{
-				// 攻撃発動したら戻す
-				dragon.ChangeAttackState(ATTACK_END);
-			}
-
-			break;
-		default:
-			break;
+			// ドラゴンから見て全方位に撃つ魔法攻撃の描画処理
+			dragon.IsDrawMagicWhole();
 		}
-		
+		// 再生していたアニメーションが攻撃2かつ、攻撃が始まっていないかつ、魔法が生成されていてmagicsRangeの中身が入っていたら
+		else if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::ATTACK_2)
+			&& !dragon.attackStart_
+			&& dragon.magicsRange_.size() > 0)
+		{
+			// ドラゴンの周りに魔法を発動(生成)
+			dragon.CreateMagicWhole();
+			// アタックしたことを知らせる
+			dragon.attackStart_ = true;
+		}
+		// 再生していたアニメーションが飛行かだったか、アニメーションが再生し終えているかつ、攻撃が始まっていたら
+		else if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::FLYING)
+			|| dragon.animationController_->IsEnd()
+			&& dragon.attackStart_)
+		{
+			// 攻撃発動したら戻す
+			dragon.ChangeAttackState(ATTACK_END);
+		}
 	}
+
 }
 
 void Dragon::ForwardAttack(Dragon& dragon)

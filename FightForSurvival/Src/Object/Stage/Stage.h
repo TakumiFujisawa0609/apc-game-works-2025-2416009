@@ -38,12 +38,18 @@ public:
 
 private:
 
+	// モデルハンドル
 	int modelId_;
+	// 壁モデルハンドル
 	int wallModelId_;
+	// 飾りの花モデルハンドル
 	int flowerModelId_;
 
+	// 大きさ
 	VECTOR scale_;
+	// 向き
 	VECTOR rotate_;
+	// 座標
 	VECTOR pos_;
 
 };
