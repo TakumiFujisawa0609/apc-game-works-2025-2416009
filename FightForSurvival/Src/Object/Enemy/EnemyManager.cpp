@@ -201,10 +201,10 @@ MagicBase* EnemyManager::GetValidMagic(TYPE_MAGIC type)
 	switch (type)
 	{
 	case TYPE_MAGIC::BAT_MAGIC:
-		magic = new BatMagic(TYPE_MAGIC::BAT_MAGIC, -1,nullptr);
+		magic = new BatMagic(TYPE_MAGIC::BAT_MAGIC,nullptr);
 		break;
 	case TYPE_MAGIC::DRAGON_MAGIC:
-		magic = new DragonMagic(TYPE_MAGIC::DRAGON_MAGIC, -1, nullptr);
+		magic = new DragonMagic(TYPE_MAGIC::DRAGON_MAGIC, nullptr);
 		break;
 	default:
 		break;

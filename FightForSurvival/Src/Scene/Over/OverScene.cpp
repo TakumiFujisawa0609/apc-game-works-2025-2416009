@@ -36,6 +36,7 @@ void OverScene::Load(void)
 
 void OverScene::Init(void)
 {
+	// スコアを受け取る
 	score_ = SystemManager::GetInstance().GetScore();
 
 	// BGMをかける
@@ -44,6 +45,7 @@ void OverScene::Init(void)
 
 void OverScene::Update(void)
 {
+	// 指定のキーを押されたら
 	if (InputManager::GetInstance().PushStartKey())
 	{
 		// タイトルに遷移させる
@@ -61,19 +63,18 @@ void OverScene::Draw(void)
 	// UIの描画
 	uiMgr_->Draw();
 
-	int POS_X = Application::SCREEN_SIZE_X / 2;
-	int POS_Y = Application::SCREEN_SIZE_Y / 2;
-
+	// スコアを桁ごとに分ける
 	int score = score_;
 	int count = 0;
-	while (score / 10 != 0)
+	while (score / DIGIT != 0)
 	{
-		score /= 10;
+		score /= DIGIT;
 		count++;
 	}
 
-	DrawStringToHandle(POS_X - 150, POS_Y, "最終スコア", 0xffffff, font_[static_cast<int>(Font::BIG)]);
-	DrawFormatStringToHandle(POS_X + 60 - (count * 20), POS_Y + 90, 0xffffff, font_[static_cast<int>(Font::SMALL)], "%d", score_);
+	DrawStringToHandle(FONT_BIG_POS_X, FONT_BIG_POS_Y, "最終スコア", 0xffffff, font_[static_cast<int>(Font::BIG)]);
+	// スコア表示
+	DrawFormatStringToHandle(FONT_SMALL_POS_X - (count * DISTANCE), FONT_SMALL_POS_Y, 0xffffff, font_[static_cast<int>(Font::SMALL)], "%d", score_);
 }
 
 void OverScene::Release(void)
@@ -85,6 +86,7 @@ void OverScene::Release(void)
 	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::OVER);
 
+	// フォントハンドルの解放
 	DeleteFontToHandle(font_[static_cast<int>(Font::BIG)]);
 	DeleteFontToHandle(font_[static_cast<int>(Font::SMALL)]);
 }

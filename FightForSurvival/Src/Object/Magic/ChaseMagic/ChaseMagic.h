@@ -6,11 +6,6 @@
 class ChaseMagic : public MagicBase
 {
 public:
-	// 大きさ
-	static constexpr VECTOR SCALE = { 1.0f,1.0f,1.0f };
-
-	// 向き
-	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
 
 	// 速度
 	static constexpr float SPEED = 30.0f;
@@ -32,7 +27,10 @@ public:
 	// 視野角
 	static constexpr float VIEW_ANGLE = 20.0f;
 
-	ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
+	// エフェクトの大きさ
+	static constexpr float EFFECT_SCALE = 10.0f;
+
+	ChaseMagic(TYPE_MAGIC typeMagic, VECTOR* weponPos);
 	~ChaseMagic(void)override;
 
 protected:

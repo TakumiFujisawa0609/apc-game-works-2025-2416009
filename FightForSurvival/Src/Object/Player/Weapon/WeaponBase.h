@@ -74,9 +74,6 @@ protected:
 	std::vector<MagicBase*> magics_;
 	MagicBase* magic_;
 
-	// 魔法のモデルID
-	int magicModelId_;
-
 	// 魔法が出る場所
 	VECTOR magicPos_;
 

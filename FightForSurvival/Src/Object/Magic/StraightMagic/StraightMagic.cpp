@@ -1,9 +1,9 @@
 #include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "StraightMagic.h"
 
-StraightMagic::StraightMagic(TYPE_MAGIC typeMagic,int baseModelId, VECTOR* weponPos)
+StraightMagic::StraightMagic(TYPE_MAGIC typeMagic, VECTOR* weponPos)
 	:
-	MagicBase(typeMagic, baseModelId,weponPos)
+	MagicBase(typeMagic,weponPos)
 {
 }
 
@@ -13,23 +13,28 @@ StraightMagic::~StraightMagic(void)
 
 void StraightMagic::SetParam(void)
 {
-	magic_.scale_ = SCALE;
-	magic_.rotate_ = ROTATE;
-
+	// 移動速度初期化
 	magic_.speed_ = SPEED;
+	// 存在可能時間の初期化
 	magic_.cntAlive_ = CNT_ALIVE;
+	// 当たり判定用半径の初期化
 	magic_.collisionRadius_ = COLLISION_RAD;
+
+	// ヘッドショット時のダメージ
 	magic_.headDamage_ = HEAD_DAMAGE;
+
+	// ヘッドショット以外の体のダメージ
 	magic_.bodyDamage_ = BODY_DAMAGE;
 
-	effectScale_ = 10.0f;
+	// エフェクトの大きさ初期化
+	magic_.effectScale_ = EFFECT_SCALE;
 }
 
 void StraightMagic::ChangeCharge(void)
 {
 	// チャージ状態のエフェクト再生
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
+	magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
 }
 
 void StraightMagic::ChangeShot(void)
@@ -42,8 +47,8 @@ void StraightMagic::ChangeShot(void)
 		magic_.bodyDamage_ += addDamage_;
 		
 		// ショット状態のエフェクト再生
-		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT_MAX);
+		magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT_MAX);
 
 	}
 	else
@@ -53,8 +58,8 @@ void StraightMagic::ChangeShot(void)
 		magic_.bodyDamage_ = BODY_DAMAGE;
 
 		// ショット状態のエフェクト再生
-		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
+		magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_SHOT);
 
 	}
 }
@@ -62,6 +67,6 @@ void StraightMagic::ChangeShot(void)
 void StraightMagic::ChangeBlast(void)
 {
 	// 爆発状態のエフェクト再生
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_BLAST);
+	magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_BLAST);
 }

@@ -15,8 +15,6 @@
 
 TitleScene::TitleScene(void)
 {
-	camera_ = nullptr;
-
 	state_ = CLICK;
 
 	// マウスカーソルを表示
@@ -59,10 +57,6 @@ void TitleScene::Load(void)
 
 void TitleScene::Init(void)
 {
-	// カメラの初期化
-	camera_ = new Camera();
-	camera_->Init();
-
 	// 座標初期化
 	pos_[STATE::GAMESTART] = { GAMESTART_POS_X ,GAMESTART_POS_Y };
 	pos_[STATE::END] = { EXIT_POS_X ,EXIT_POS_Y };
@@ -76,16 +70,19 @@ void TitleScene::Init(void)
 
 void TitleScene::Update(void)
 {
+	// ステートがPushStartKeyの画面じゃなかったら
 	if (state_ != CLICK)
 	{
+
+		// 使用しているデバイスを確認
 		if (SystemManager::GetInstance().GetIsDevice())
 		{
-			// 引数の座標によって選択中のものを変化させる
+			// マウスの選択処理
 			MouseSelect();
 		}
 		else
 		{
-			// 選択処理
+			// パッドの選択処理
 			PadSelect();
 		}
 
@@ -93,59 +90,16 @@ void TitleScene::Update(void)
 		Confirm();
 	}
 
-	if (InputManager::GetInstance().PushStartKey())
-	{
-		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
-		ChangeState(STATE::NON);
-		for (auto ui : uiMgr_->GetUIList())
-		{
-			if (ui->GetUIKind() == UI_KIND::CLICK_TO_START)
-			{
-				// 描画を消す
-				ui->SetIsDraw(false);
-			}
-			else if (ui->GetUIKind() == UI_KIND::GAME_START)
-			{
-				// 描画をさせる
-				ui->SetIsDraw(true);
-			}
-			else if (ui->GetUIKind() == UI_KIND::END)
-			{
-				// 描画をさせる
-				ui->SetIsDraw(true);
-			}
-		}
-	}
+	// ステートによって描画物の表示の有無を変更
+	StateDraw();
 
-	bool hasInput = false;
-	if (InputManager::GetInstance().Confirm() ||
-		CheckHitKeyAll() != 0)
+	if (StartMovie())
 	{
-		// 操作があったらフラグを立てる
-		hasInput = true;
-	}
-
-	if (hasInput)
-	{
-		// 何か操作があったらフレームカウントを0に初期化
-		idleFrameCount_ = 0;
-	}
-	else
-	{
-		// フレームを進める
-		idleFrameCount_++;
-	}
-
-	if (idleFrameCount_ > 60 * MOVIE_START_TIME) {
-		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
 		return; // ここで処理を抜けて動画専用の更新にする
 	}
 
 	// UIの更新
 	uiMgr_->Update();
-
-	// カメラの更新
-	camera_->Update();
 }
 
 void TitleScene::Draw(void)
@@ -153,41 +107,17 @@ void TitleScene::Draw(void)
 	// UIの描画
 	uiMgr_->Draw();
 
-	// カメラの設定
-	camera_->SetBeforeDraw();
-
 #ifdef _DEBUG
 
-	// カメラのデバック描画
-	camera_->DrawDebug();
+	// デバッグ用描画
+	DebugDraw();
 
-	if (state_ != CLICK)
-	{
-
-		DrawBox(pos_[STATE::GAMESTART].x,
-			pos_[STATE::GAMESTART].y,
-			pos_[STATE::GAMESTART].x + COL_SIZE_X,
-			pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
-
-		DrawBox(pos_[STATE::END].x,
-			pos_[STATE::END].y,
-			pos_[STATE::END].x + COL_SIZE_X,
-			pos_[STATE::END].y + COL_SIZE_Y, 0xff0000, false);
-
-	}
 #endif // _DEBUG
 
 }
 
 void TitleScene::Release(void)
 {
-	if (camera_ != nullptr)
-	{
-		// カメラの解放
-		camera_->Release();
-		delete camera_;
-	}
-
 	// UIの解放
 	delete uiMgr_;
 	delete texMgr_;
@@ -198,16 +128,13 @@ void TitleScene::Release(void)
 
 void TitleScene::Confirm(void)
 {
-
-	InputManager& ins = InputManager::GetInstance();
-
-	if (ins.Confirm())
+	// 指定のキーを押されたら
+	if (InputManager::GetInstance().Confirm())
 	{
 		switch (state_)
 		{
 		case STATE::GAMESTART:
 
-			//SoundManager::GetInstance()->Play(SoundManager::SE::DONE);
 			// スタートキーが押されたらゲームシーンへ移る
 			SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::GAME);
 
@@ -228,56 +155,61 @@ void TitleScene::Confirm(void)
 
 void TitleScene::MouseSelect(void)
 {
-	auto prevState = state_;
+	// 前の状態を保持しておく
+	STATE prevState = state_;
 
 	// 当たり判定取る
 	for (int i = 0; i < static_cast<int>(STATE::NON); i++)
 	{
+		// マウスとGameStart・Endとの当たり判定を取る
 		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
+			// 当たっているものにステートを変更
 			ChangeState(static_cast<STATE>(i));
 
 			break;
 		}
 		else
 		{
+			// 当たっていない場合はNONへ
 			ChangeState(STATE::NON);
 		}
 	}
 
-	if (state_ != prevState && state_ != STATE::NON)
-	{
-		// 何も選択されていない状態から選択されたらSEを流す
-		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
-	}
-
+	// 何も選択されていない状態から選択されたらSEを流す
+	PlaySelectSE(prevState);
 }
 
 void TitleScene::PadSelect(void)
 {
-	auto& ins = InputManager::GetInstance();
-	auto prevState = state_;
+	// 前の状態を保持しておく
+	STATE prevState = state_;
 
 	switch (state_)
 	{
 	case TitleScene::GAMESTART:
 
-		if (ins.SelectDown())
+		// 指定のキーを押されたら
+		if (InputManager::GetInstance().SelectDown())
 		{
+			// 状態をENDに変更
 			ChangeState(STATE::END);
 		}
 
 		break;
 	case TitleScene::END:
 
-		if (ins.SelectUp())
+		// 指定のキーを押されたら
+		if (InputManager::GetInstance().SelectUp())
 		{
+			// 状態をGAMESTARTに変更
 			ChangeState(STATE::GAMESTART);
 		}
 
 		break;
 	case TitleScene::NON:
 
+		// パッドの場合NONだったら強制的にGameStartを選択するようにする
 		ChangeState(STATE::GAMESTART);
 
 		break;
@@ -285,9 +217,102 @@ void TitleScene::PadSelect(void)
 		break;
 	}
 
+	// 何も選択されていない状態から選択されたらSEを流す
+	PlaySelectSE(prevState);
+}
+
+void TitleScene::PlaySelectSE(STATE prevState)
+{
+	// 何も選択されていない状態から選択されたら
 	if (state_ != prevState && state_ != STATE::NON)
 	{
-		// 何も選択されていない状態から選択されたらSEを流す
+		// SEを流す
 		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
+}
+
+bool TitleScene::StartMovie(void)
+{
+	bool hasInput = false;
+
+	// 操作しているかどうかを見る
+	if (InputManager::GetInstance().Confirm() ||
+		CheckHitKeyAll() != 0)
+	{
+		// 操作があったらフラグを立てる
+		hasInput = true;
+	}
+
+	// 何か操作があったら
+	if (hasInput)
+	{
+		// フレームカウントを0に初期化
+		idleFrameCount_ = 0;
+	}
+	// 何も操作がが無かったら
+	else
+	{
+		// フレームを進める
+		idleFrameCount_++;
+	}
+
+	// カウントが指定の値よりも大きくなったら
+	if (idleFrameCount_ > MOVIE_START_TIME) 
+	{
+		// シーンを動画シーンに変更
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::MOVIE);
+
+		return true;
+	}
+
+	return false;
+}
+
+void TitleScene::StateDraw(void)
+{
+	// 指定のキーを押されたら
+	if (InputManager::GetInstance().PushStartKey())
+	{
+		// SEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
+		// NONにする
+		ChangeState(STATE::NON);
+		for (auto ui : uiMgr_->GetUIList())
+		{
+			if (ui->GetUIKind() == UI_KIND::CLICK_TO_START)
+			{
+				// 描画を消す
+				ui->SetIsDraw(false);
+			}
+			else if (ui->GetUIKind() == UI_KIND::GAME_START)
+			{
+				// 描画をさせる
+				ui->SetIsDraw(true);
+			}
+			else if (ui->GetUIKind() == UI_KIND::END)
+			{
+				// 描画をさせる
+				ui->SetIsDraw(true);
+			}
+		}
+	}
+}
+
+void TitleScene::DebugDraw(void)
+{
+	// GameStartとEndが選択できる時だったら
+	if (state_ != CLICK)
+	{
+
+		DrawBox(pos_[STATE::GAMESTART].x,
+			pos_[STATE::GAMESTART].y,
+			pos_[STATE::GAMESTART].x + COL_SIZE_X,
+			pos_[STATE::GAMESTART].y + COL_SIZE_Y, 0xff0000, false);
+
+		DrawBox(pos_[STATE::END].x,
+			pos_[STATE::END].y,
+			pos_[STATE::END].x + COL_SIZE_X,
+			pos_[STATE::END].y + COL_SIZE_Y, 0xff0000, false);
+
 	}
 }

@@ -21,19 +21,17 @@ enum class MAGIC_STATE
 	END		// 終了
 };
 
+// 魔法用の基本情報
 struct Magic
 {
-	// 魔法のモデルID
-	int modelId_;
+	// 攻撃エフェクトのプレイハンドル
+	int effectPlayId_;
+
+	// エフェクトのサイズ
+	float effectScale_;
 
 	// 方向
 	VECTOR dir_;
-
-	// 魔法の大きさ
-	VECTOR scale_;
-
-	// 魔法の回転
-	VECTOR rotate_;
 
 	// 魔法の座標
 	VECTOR pos_;

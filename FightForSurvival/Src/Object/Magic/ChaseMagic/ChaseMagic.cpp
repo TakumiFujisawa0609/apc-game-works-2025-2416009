@@ -7,9 +7,9 @@
 #include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "ChaseMagic.h"
 
-ChaseMagic::ChaseMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos)
+ChaseMagic::ChaseMagic(TYPE_MAGIC typeMagic, VECTOR* weponPos)
 	:
-	MagicBase(typeMagic, baseModelId, weponPos)
+	MagicBase(typeMagic, weponPos)
 {
 }
 
@@ -19,17 +19,21 @@ ChaseMagic::~ChaseMagic(void)
 
 void ChaseMagic::SetParam(void)
 {
-	magic_.scale_ = SCALE;
-	magic_.rotate_ = ROTATE;
-
+	// 移動速度初期化
 	magic_.speed_ = SPEED;
+	// 存在可能時間の初期化
 	magic_.cntAlive_ = CNT_ALIVE;
+	// 当たり判定用半径の初期化
 	magic_.collisionRadius_ = COLLISION_RAD;
+
+	// ヘッドショット時のダメージ
 	magic_.headDamage_ = HEAD_DAMAGE;
+
+	// ヘッドショット以外の体のダメージ
 	magic_.bodyDamage_ = BODY_DAMAGE;
 
-	effectScale_ = 10.0f;
-
+	// エフェクトの大きさ初期化
+	magic_.effectScale_ = EFFECT_SCALE;
 }
 
 void ChaseMagic::UpdateShot(void)
@@ -54,7 +58,7 @@ void ChaseMagic::UpdateShot(void)
 		angle.z = 0.0f;
 
 		SetRotationPlayingEffekseer3DEffect(
-			effectPlayId_, -angle.x, angle.y, angle.z);
+			magic_.effectPlayId_, -angle.x, angle.y, angle.z);
 	}
 
 	// 移動処理
@@ -64,8 +68,8 @@ void ChaseMagic::UpdateShot(void)
 void ChaseMagic::ChangeCharge(void)
 {
 	// チャージ状態のエフェクト再生
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
+	magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE);
 }
 
 void ChaseMagic::ChangeShot(void)
@@ -78,8 +82,8 @@ void ChaseMagic::ChangeShot(void)
 		magic_.bodyDamage_ += addDamage_;
 
 		// ショット状態のエフェクト再生
-		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE_MAX);
+		magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE_MAX);
 	}
 	else
 	{
@@ -87,8 +91,8 @@ void ChaseMagic::ChangeShot(void)
 		magic_.headDamage_ = HEAD_DAMAGE;
 		magic_.bodyDamage_ = BODY_DAMAGE;
 		// ショット状態のエフェクト再生
-		effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-			effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
+		magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+			magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHASE);
 	}
 
 	// 初期化
@@ -100,6 +104,7 @@ void ChaseMagic::ChangeShot(void)
 	// 現在の最短距離を保持する変数 (最初は非常に大きな値を設定)
 	float minDistance = FLT_MAX;
 
+	// 敵の配列取得
 	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 
 	for (auto& enemy : enemies)
@@ -144,8 +149,8 @@ void ChaseMagic::ChangeShot(void)
 void ChaseMagic::ChangeBlast(void)
 {
 	// 爆発状態のエフェクト再生
-	effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-		effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_BLAST);
+	magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+		magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_BLAST);
 }
 
 void ChaseMagic::LookTargetEnemy(void)
@@ -170,12 +175,4 @@ void ChaseMagic::LookTargetEnemy(void)
 	magic_.dir_.y = vec.y / length;
 	magic_.dir_.z = vec.z / length;
 
-	// 方向から角度を出す
-	magic_.rotate_.y = atan2f(magic_.dir_.x, magic_.dir_.z);
-
-	// 回転はY軸のみとする
-	magic_.rotate_.x = magic_.rotate_.z = 0.0f;
-
-	// モデルに向きを設定
-	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
 }

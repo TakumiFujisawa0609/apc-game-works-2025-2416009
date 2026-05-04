@@ -4,10 +4,12 @@
 #include "../../../Manager/EffectResManager/EffectResManager.h"
 #include "MagicBase.h"
 
-MagicBase::MagicBase(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos)
+MagicBase::MagicBase(TYPE_MAGIC typeMagic, VECTOR* weponPos)
 {
+	// 魔法の種類を貰う
 	magic_.typeMagic_ = typeMagic;
-	magic_.modelId_ = MV1DuplicateModel(baseModelId);
+
+	// 杖の座標ポインタ
 	weponPos_ = weponPos;
 }
 
@@ -17,19 +19,17 @@ MagicBase::~MagicBase(void)
 
 void MagicBase::Init(void)
 {
+	// 存在フラグの初期化
 	magic_.isExists_ = false;
+
+	// 描画フラグの初期化
 	magic_.isDraw_ = false;
+
+	// チャージ可能状態にしておく
 	state_ = MAGIC_STATE::CHARGE;
 
 	// パラメータ設定
 	SetParam();
-
-	// 大きさの設定
-	MV1SetScale(magic_.modelId_, magic_.scale_);
-	// 回転の設定
-	MV1SetRotationXYZ(magic_.modelId_, magic_.rotate_);
-	// 位置の設定
-	MV1SetPosition(magic_.modelId_, magic_.pos_);
 }
 
 void MagicBase::ChargeShot(VECTOR pos, VECTOR dir)
@@ -58,8 +58,11 @@ void MagicBase::CreateShot(VECTOR pos, VECTOR dir)
 	// 魔法の発射方向の設定
 	magic_.dir_ = dir;
 
-	magic_.isDraw_ = true;
+	// 存在フラグを立てる
 	magic_.isExists_ = true;
+
+	// 描画フラグを立てる
+	magic_.isDraw_ = true;
 
 	// チャージ状態
 	ChangeState(MAGIC_STATE::SHOT);
@@ -75,18 +78,27 @@ void MagicBase::Update(void)
 
 	switch (state_)
 	{
+	// チャージ可能状態
 	case MAGIC_STATE::CHARGE:
 
+		// 魔法のチャージ処理を行う
 		UpdateCharge();
 
+		// 魔法のエフェクトの更新を行う
 		UpdateEffectPos();
 
 		break;
 	case MAGIC_STATE::SHOT:
+
+		// 魔法の移動処理を行う
 		UpdateShot();
+
 		break;
 	case MAGIC_STATE::BLAST:
+
+		// 魔法の爆発処理を行う
 		UpdateBlast();
+
 		break;
 	case MAGIC_STATE::END:
 		break;
@@ -103,8 +115,6 @@ void MagicBase::Draw(void)
 		return;
 	}
 
-	MV1DrawModel(magic_.modelId_);
-
 #ifdef _DEBUG
 
 	// デバッグ用：衝突判定用球体
@@ -117,18 +127,17 @@ void MagicBase::Draw(void)
 void MagicBase::Release(void)
 {
 	// エフェクト停止
-	StopEffekseer3DEffect(effectPlayId_);
-
-	MV1DeleteModel(magic_.modelId_);
+	StopEffekseer3DEffect(magic_.effectPlayId_);
 }
 
 void MagicBase::ChangeState(MAGIC_STATE state)
 {
 	// エフェクト停止
-	StopEffekseer3DEffect(effectPlayId_);
+	StopEffekseer3DEffect(magic_.effectPlayId_);
 
 	state_ = state;
 
+	// 状態に応じて処理を変更
 	switch (state_)
 	{
 	case MAGIC_STATE::CHARGE:
@@ -152,18 +161,16 @@ void MagicBase::UpdateEffectPos(void)
 {
 	// 座標を更新する
 	magic_.pos_ = *weponPos_;
-	MV1SetPosition(magic_.modelId_, magic_.pos_);
 
 	// エフェクトの位置の更新
 	SetPosPlayingEffekseer3DEffect(
-		effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
+		magic_.effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
 }
 
 void MagicBase::UpdateEffectPos(VECTOR pos)
 {
 	// 座標を更新する
 	magic_.pos_ = pos;
-	MV1SetPosition(magic_.modelId_, magic_.pos_);
 }
 
 void MagicBase::UpdateEffectDir(VECTOR dir)
@@ -185,8 +192,9 @@ void MagicBase::UpdateEffectDir(VECTOR dir)
 	// 回転はXY軸のみとする
 	angle.z = 0.0f;
 
+	// 再生中のエフェクトの角度を設定
 	SetRotationPlayingEffekseer3DEffect(
-		effectPlayId_, -angle.x, angle.y, angle.z);
+		magic_.effectPlayId_, -angle.x, angle.y, angle.z);
 }
 
 void MagicBase::UpdateCharge(void)
@@ -195,33 +203,37 @@ void MagicBase::UpdateCharge(void)
 	if (isMaxCharge_)
 	{
 		// 指定のエフェクトが表示されていなかったら再生
-		if (IsEffekseer3DEffectPlaying(effectPlayId_) == -1)
+		if (IsEffekseer3DEffectPlaying(magic_.effectPlayId_) == -1)
 		{
 			// チャージ状態のエフェクト再生
 			// 最大チャージ状態のエフェクト再生
-			effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-				effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
+			magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+				magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
 		}
 	}
 	else
 	{
+		// 魔法をチャージしていたら当たり判定用半径も大きくしておく
 		magic_.collisionRadius_ += chargePow_;
 
+		// 当たり判定用半径が指定より大きくならないようにする
 		if (magic_.collisionRadius_ > chargeMax_)
 		{
+			// 超えていたら指定値を代入
 			magic_.collisionRadius_ = chargeMax_;
+
 			// 最大になったことをフラグで知らせる
 			isMaxCharge_ = true;
 
 			// 他のエフェクトが表示されていたら停止する
-			if (IsEffekseer3DEffectPlaying(effectPlayId_) != -1)
+			if (IsEffekseer3DEffectPlaying(magic_.effectPlayId_) != -1)
 			{
-				StopEffekseer3DEffect(effectPlayId_);
+				StopEffekseer3DEffect(magic_.effectPlayId_);
 			}
 
 			// 最大チャージ状態のエフェクト再生
-			effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
-				effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
+			magic_.effectPlayId_ = EffectResManager::GetInstance().PlayEffect(
+				magic_.effectScale_, magic_.dir_, magic_.pos_, EffectResManager::TYPE::PLAYER_MAGIC_CHARGE_MAX);
 		}
 	}
 }
@@ -234,12 +246,9 @@ void MagicBase::UpdateShot(void)
 	// 魔法を移動させる
 	magic_.pos_ = VAdd(magic_.pos_, VScale(magic_.dir_, magic_.speed_));
 	
-	// 位置の設定
-	MV1SetPosition(magic_.modelId_, magic_.pos_);
-
 	// エフェクトの位置の更新
 	SetPosPlayingEffekseer3DEffect(
-		effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
+		magic_.effectPlayId_, magic_.pos_.x, magic_.pos_.y, magic_.pos_.z);
 
 	// 生存カウンタの減少
 	ReduceCntAlive();
@@ -247,15 +256,19 @@ void MagicBase::UpdateShot(void)
 
 void MagicBase::UpdateBlast(void)
 {
-	if (IsEffekseer3DEffectPlaying(effectPlayId_) == -1)
+	// エフェクトを再生し終えていたら
+	if (IsEffekseer3DEffectPlaying(magic_.effectPlayId_) == -1)
 	{
+		// END状態へ変更
 		ChangeState(MAGIC_STATE::END);
 	}
 }
 
 void MagicBase::ChangeEnd(void)
 {
+	// 存在フラグを折る
 	magic_.isExists_ = false;
+	// 描画フラグを折る
 	magic_.isDraw_ = false;
 }
 

@@ -2,7 +2,6 @@
 #include "../../Scene/SceneManager.h"
 #include "../../Manager/SystemManager.h"
 #include "../../Manager/SoundManager.h"
-#include "../../Application.h"
 #include "../../UI/Object/Sprite/PendulumSprite/PendulumSprite.h"
 #include "ClearScene.h"
 
@@ -40,6 +39,7 @@ void ClearScene::Load(void)
 	PendulumSprite* zonbie = dynamic_cast<PendulumSprite*>(zonbieSprite);
 	zonbie->SetIsLeft(false);
 
+	// スコアを受け取る
 	score_ = SystemManager::GetInstance().GetScore();
 
 	if (score_ < 5000)
@@ -93,6 +93,7 @@ void ClearScene::Init(void)
 
 void ClearScene::Update(void)
 {
+	// 指定のキーを押されたら
 	if (InputManager::GetInstance().PushStartKey())
 	{
 		// タイトルに遷移させる
@@ -110,19 +111,18 @@ void ClearScene::Draw(void)
 	// UIの描画
 	uiMgr_->Draw();
 
-	int POS_X = Application::SCREEN_SIZE_X / 2;
-	int POS_Y = Application::SCREEN_SIZE_Y / 2;
-	DrawStringToHandle(POS_X - 150, POS_Y - 50, "最終スコア", 0x000000, font_[static_cast<int>(Font::BIG)]);
-
+	// スコアを桁ごとに分ける
 	int score = score_;
 	int count = 0;
-	while (score / 10 !=0)
+	while (score / DIGIT !=0)
 	{
-		score /= 10;
+		score /= DIGIT;
 		count++;
 	}
 
-	DrawFormatStringToHandle(POS_X + 60 - (count * 20), POS_Y + 90, 0x000000, font_[static_cast<int>(Font::SMALL)], "%d", score_);
+	DrawStringToHandle(FONT_BIG_POS_X, FONT_BIG_POS_Y, "最終スコア", FONT_COLOR, font_[static_cast<int>(Font::BIG)]);
+	// スコア表示
+	DrawFormatStringToHandle(FONT_SMALL_POS_X - (count * DISTANCE), FONT_SMALL_POS_Y, FONT_COLOR, font_[static_cast<int>(Font::SMALL)], "%d", score_);
 }
 
 void ClearScene::Release(void)
@@ -134,6 +134,7 @@ void ClearScene::Release(void)
 	// BGMを止める
 	SoundManager::GetInstance().Stop(SoundManager::BGM::CLEAR);
 
+	// フォントハンドルを解放
 	DeleteFontToHandle(font_[static_cast<int>(Font::BIG)]);
 	DeleteFontToHandle(font_[static_cast<int>(Font::SMALL)]);
 }

@@ -100,6 +100,7 @@ void MoviePlayer::Play(void)
 
 	// 動画ファイルを使用するグラフィックハンドルの動画ファイルの再生を開始する
 	PlayMovieToGraph(movieHandle_);
+	// 再生中状態にする
 	ChangeState(STATE::PLAYING);
 }
 

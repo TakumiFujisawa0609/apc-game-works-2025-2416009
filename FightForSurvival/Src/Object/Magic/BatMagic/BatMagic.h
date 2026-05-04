@@ -7,12 +7,6 @@ class BatMagic : public MagicBase
 {
 public:
 
-	// 大きさ
-	static constexpr VECTOR SCALE = { 1.0f,1.0f,1.0f };
-
-	// 向き
-	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
-
 	// 速度
 	static constexpr float SPEED = 12.0f;
 
@@ -22,10 +16,15 @@ public:
 	// 当たり判定用サイズ
 	static constexpr float COLLISION_RAD = 30.0f;
 
-	// 当たり判定用サイズ
+	// 魔法のダメージ
 	static constexpr int DAMAGE = 1;
 
-	BatMagic(TYPE_MAGIC typeMagic, int baseModelId,VECTOR* pos);
+	// エフェクトの大きさ
+	static constexpr float EFFECT_SCALE = 100.0f;
+
+	// コンストラクタ
+	BatMagic(TYPE_MAGIC typeMagic,VECTOR* pos);
+	// デストラクタ
 	~BatMagic(void)override;
 
 protected:

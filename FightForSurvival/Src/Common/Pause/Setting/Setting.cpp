@@ -53,6 +53,10 @@ void Setting::Init(void)
 	pos_.x = DONE_POS_X;
 	pos_.y = DONE_POS_Y;
 
+	// 感度の初期化
+	mouseSensitivity_ = SystemManager::GetInstance().GetMouseSensitivity();
+	padSensitivity_ = SystemManager::GetInstance().GetPadSensitivity();
+
 	// マウス座標の初期化
 	GetMousePoint(&mousePos_.x, &mousePos_.y);
 
@@ -80,9 +84,6 @@ void Setting::Init(void)
 	isDone_ = false;
 	isDrag_ = false;
 
-	// 感度の初期化
-	mouseSensitivity_ = SystemManager::GetInstance().GetMouseSensitivity();
-	padSensitivity_ = SystemManager::GetInstance().GetPadSensitivity();
 }
 
 void Setting::Update(void)

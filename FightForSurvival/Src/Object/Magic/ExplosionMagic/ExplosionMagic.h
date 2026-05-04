@@ -6,12 +6,6 @@
 class ExplosionMagic : public MagicBase
 {
 public:
-	// 大きさ
-	static constexpr VECTOR SCALE = { 1.0f,1.0f,1.0f };
-
-	// 向き
-	static constexpr VECTOR ROTATE = { 0.0f,0.0f,0.0f };
-
 	// 速度
 	static constexpr float SPEED = 40.0f;
 
@@ -29,7 +23,13 @@ public:
 	// 体
 	static constexpr int BODY_DAMAGE = 5;
 
-	ExplosionMagic(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
+	// エフェクトの大きさ
+	static constexpr float EFFECT_SCALE = 10.0f;
+
+	// 爆発時のエフェクトの大きさ
+	static constexpr float EFFECT_SCALE_BLAST = 50.0f;
+
+	ExplosionMagic(TYPE_MAGIC typeMagic, VECTOR* weponPos);
 	~ExplosionMagic(void)override;
 
 protected:

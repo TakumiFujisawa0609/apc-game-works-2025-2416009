@@ -203,6 +203,7 @@ void GameScene::Update(void)
 		// グリッド更新
 		switch (state_)
 		{
+		// 通常時(戦っている状態)
 		case GameScene::STATE::PLAY:
 
 			// ステージの更新
@@ -243,14 +244,17 @@ void GameScene::Update(void)
 			UpdateEffekseer3D();
 
 			break;
+		// 自己強化時(自己強化中の状態)
 		case GameScene::STATE::UPGRADE:
 
+			// マウスカーソルの表示が行われていなかったら
 			if (!GetMouseDispFlag())
 			{
-				// 表示が行われていなかったら表示する
+				// 表示する
 				SetMouseDispFlag(true);
 			}
 
+			// アップグレードモード更新処理
 			UpgradeManager::GetInstance().Update();
 
 			// アップグレードモード終了条件
@@ -269,18 +273,8 @@ void GameScene::Update(void)
 
 #ifdef _DEBUG
 
-	auto& inputIns = InputManager::GetInstance();
-	auto& sceneIns = SceneManager::GetInstance();
-
-	if (inputIns.IsTrgDown(KEY_INPUT_C))
-	{
-		sceneIns.ChangeScene(SceneManager::SCENE_ID::CLEAR);
-	}
-
-	if (inputIns.IsTrgDown(KEY_INPUT_O))
-	{
-		sceneIns.ChangeScene(SceneManager::SCENE_ID::OVER);
-	}
+	// デバッグ用の更新処理
+	DebugUpdate();
 
 #endif // _DEBUG
 
@@ -334,8 +328,6 @@ void GameScene::Draw(void)
 	pause_->Draw();
 
 #ifdef _DEBUG
-	//DrawString(0, 0, "GameScene", 0xffffff);
-
 	// カメラのデバック描画
 	camera_->DrawDebug();
 #endif // _DEBUG
@@ -499,6 +491,7 @@ void GameScene::MagicCollision(void)
 			// 敵の座標
 			VECTOR enePos[COLLISION_POS::MAX];
 
+			// 当たり判定用の部位座標を貰う
 			for (int i = 0; i < static_cast<int>(COLLISION_POS::MAX); i++)
 			{
 				enePos[static_cast<COLLISION_POS>(i)] = eneColInfo.colPos_[static_cast<COLLISION_POS>(i)];
@@ -586,6 +579,7 @@ void GameScene::ExplosionMagicCollision(void)
 					continue;
 				}
 
+				// 当たり判定
 				if (CollisionUtility::IsCollidingSphereCapsule(magicPos, magicRad, enemy->GetColPos().colPos_[COLLISION_POS::BODY_TOP], enemy->GetColPos().colPos_[COLLISION_POS::BODY_UNDER], enemy->GetEnemy().collisionRadiusBody_))
 				{
 					// 敵にダメージを与える
@@ -650,9 +644,11 @@ void GameScene::EnemiesAttackCollision(void)
 
 void GameScene::ZombieAttackCollision(EnemyBase* enemy)
 {
+	// ゾンビの手の座標と半径を貰う
 	VECTOR enePos = enemy->GetColPos().colPos_[COLLISION_POS::HAND_R];
 	float eneHandRad = enemy->GetEnemy().collisionRadiusHand_;
 
+	// プレイヤーの当たり判定用の情報を貰う
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
 	float plaRad = player_->GetPlayerStatus().collisionRadius_;
@@ -660,12 +656,8 @@ void GameScene::ZombieAttackCollision(EnemyBase* enemy)
 	// プレイヤーと敵の攻撃の当たり判定
 	if (CollisionUtility::IsCollidingSphereCapsule(enePos, eneHandRad, plaPosTop, plaPosUnder, plaRad))
 	{
-		// プレイヤーにダメージを与える
-		player_->Damage(1);
-		enemy->SetIsAttack(false);
-
-		// ダメージ時のエフェクトやSE処理
-		Damage();
+		// 敵からの物理攻撃を受けた場合の処理
+		EnemyPhysicalAttackDamage(enemy);
 	}
 }
 
@@ -676,13 +668,20 @@ void GameScene::DragonAttackCollision(EnemyBase* enemy)
 	// 攻撃のステートを確認
 	auto attackState = self->GetAttackState();
 
+	// 攻撃によって当たり判定を変更
 	switch (attackState)
 	{
 	case Dragon::FORWARD_ATTACK:
+
+		// 前方攻撃
 		DragonForwardAttackCollision(enemy);
+
 		break;
 	case Dragon::RUSH_ATTACK:
+
+		// 突進攻撃
 		DragonRushAttackCollision(enemy);
+
 		break;
 	default:
 		break;
@@ -694,6 +693,7 @@ void GameScene::EnemyMagicCollision(void)
 	// 魔法クラスのポインター取得
 	auto magics = EnemyManager::GetInstance().GetMagics();
 
+	// プレイヤーの当たり判定用の情報を貰う
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
 	float plaRad = player_->GetPlayerStatus().collisionRadius_;
@@ -737,23 +737,19 @@ void GameScene::DragonForwardAttackCollision(EnemyBase* enemy)
 	// 前方の範囲内に入っていたいるかつ、まだ一度も攻撃が当たっていない
 	if (enemy->SearchAttackRange() && enemy->IsAttack())
 	{
-		// 攻撃が当たったことを伝える
-		enemy->SetIsAttack(false);
-
-		// プレイヤーにダメージを与える
-		player_->Damage(1);
-
-		// ダメージ時のエフェクトやSE処理
-		Damage();
+		// 敵からの物理攻撃を受けた場合の処理
+		EnemyPhysicalAttackDamage(enemy);
 	}
 }
 
 void GameScene::DragonRushAttackCollision(EnemyBase* enemy)
 {
+	// ドラゴンの体の座標と半径を貰う
 	VECTOR enePosTop = enemy->GetColPos().colPos_[COLLISION_POS::BODY_TOP];
 	VECTOR enePosUnder = enemy->GetColPos().colPos_[COLLISION_POS::BODY_UNDER];
 	float eneBodyRad = enemy->GetEnemy().collisionRadiusBody_;
 
+	// プレイヤーの当たり判定用の情報を貰う
 	VECTOR plaPosTop = player_->GetCollisionPosTop();
 	VECTOR plaPosUnder = player_->GetCollisionPosUnder();
 	float plaRad = player_->GetPlayerStatus().collisionRadius_;
@@ -761,21 +757,19 @@ void GameScene::DragonRushAttackCollision(EnemyBase* enemy)
 	// プレイヤーと敵の攻撃の当たり判定
 	if (CollisionUtility::IsCollidingCapsules(enePosTop, enePosUnder, eneBodyRad, plaPosTop, plaPosUnder, plaRad))
 	{
-		// プレイヤーにダメージを与える
-		player_->Damage(1);
-		enemy->SetIsAttack(false);
-
-		// ダメージ時のエフェクトやSE処理
-		Damage();
+		// 敵からの物理攻撃を受けた場合の処理
+		EnemyPhysicalAttackDamage(enemy);
 	}
 }
 
 void GameScene::EnemiesExtrusionCollision(void)
 {
+	// 敵の配列を貰う
 	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 
 	for (int i = 0; i < enemies.size(); i++)
 	{
+		// 敵が生存していないカ、敵の種類がドラゴンだった場合次の処理へ
 		if (!enemies[i]->GetEnemy().isAlive_ || enemies[i]->GetType() == ENEMY_TYPE::DRAGON)
 		{
 			continue;
@@ -784,6 +778,7 @@ void GameScene::EnemiesExtrusionCollision(void)
 		for (int j = i + 1; j < enemies.size(); j++)
 		{
 
+			// 敵が生存していないカ、敵の種類がドラゴンだった場合次の処理へ
 			if (!enemies[j]->GetEnemy().isAlive_ || enemies[i]->GetType() == ENEMY_TYPE::DRAGON)
 			{
 				continue;
@@ -939,6 +934,7 @@ void GameScene::StageAndAttackCollision(void)
 
 void GameScene::StageAndEnemiesCollision(void)
 {
+	// 敵の配列を貰う
 	auto& enemies = EnemyManager::GetInstance().GetEnemy();
 	for (auto& enemy : enemies)
 	{
@@ -1006,9 +1002,12 @@ void GameScene::StageAndEnemiesCollision(void)
 
 void GameScene::IsClear(void)
 {
+	// 敵の配列を貰う
 	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
 
 	bool isEnd_ = true;
+
+	// まだ敵が沸かせていない状態の場合に終了してしまうためかませる
 	if ((int)enemies_.size() <= 0)
 	{
 		isEnd_ = false;
@@ -1016,6 +1015,7 @@ void GameScene::IsClear(void)
 
 	for (auto& enemy : enemies_)
 	{
+		// 敵の生存状態をみる
 		if (enemy->GetEnemy().isAlive_)
 		{
 			// 敵が一匹でも残っていたら終了しない
@@ -1050,6 +1050,7 @@ void GameScene::IsOver(void)
 
 void GameScene::StartUpgrade(void)
 {
+	// 1ウェーブクリアしたら
 	if (WaveManager::GetInstance().GetWaveIsClear())
 	{
 		// アップグレードモードにする
@@ -1063,6 +1064,7 @@ void GameScene::StartUpgrade(void)
 
 void GameScene::StopUpgrade(void)
 {
+	// 現在のウェーブをみる
 	auto* wave = WaveManager::GetInstance().GetCurrentWave();
 
 	if (wave == nullptr)
@@ -1071,6 +1073,7 @@ void GameScene::StopUpgrade(void)
 		return;
 	}
 
+	// アップグレードが終わっているか、ウェーブがウェーブ中だったら
 	if (UpgradeManager::GetInstance().GetIsUpgradeEnd() || wave->GetState() == WaveBase::WaveState::INWAVE)
 	{
 		if (wave->GetState() != WaveBase::WaveState::INWAVE)
@@ -1086,11 +1089,14 @@ void GameScene::StopUpgrade(void)
 
 		// 選択処理が終わったため前ウェーブのクリア情報を消去
 		WaveManager::GetInstance().EndWaveIsClear();
+
+		// 自己強化状態を終了させ、通常時の状態へ
 		ChangeState(STATE::PLAY);
 
-		// 攻撃チャージ状態だったら強制的にアタック状態にする
+		// 攻撃チャージ状態だったら
 		if (player_->GetWeapon()->GetState() == WeaponBase::STATE::CHARGE_MAGIC)
 		{
+			// 強制的にアタック状態にする
 			player_->GetWeapon()->ChangeState(WeaponBase::STATE::ATTACK);
 		}
 
@@ -1107,5 +1113,30 @@ void GameScene::Damage(void)
 
 	// ダメージSEをながす
 	SoundManager::GetInstance().Play(SoundManager::SE::DAMEGED);
+}
+
+void GameScene::EnemyPhysicalAttackDamage(EnemyBase* enemy)
+{
+	// 攻撃が当たったことを伝える
+	enemy->SetIsAttack(false);
+
+	// プレイヤーにダメージを与える
+	player_->Damage(1);
+
+	// ダメージ時のエフェクトやSE処理
+	Damage();
+}
+
+void GameScene::DebugUpdate(void)
+{
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_C))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::CLEAR);
+	}
+
+	if (InputManager::GetInstance().IsTrgDown(KEY_INPUT_O))
+	{
+		SceneManager::GetInstance().ChangeScene(SceneManager::SCENE_ID::OVER);
+	}
 }
 

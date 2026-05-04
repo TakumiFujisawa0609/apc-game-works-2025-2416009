@@ -14,7 +14,6 @@ WeaponBase::WeaponBase(Player* player)
 {
 	player_ = player;
 	modelId_ = -1;
-	magicModelId_ = -1;
 	magic_ = nullptr;
 }
 
@@ -140,9 +139,6 @@ void WeaponBase::Release(void)
 {
 	// モデルを何か読み込んでいたら解放させる
 	MV1DeleteModel(modelId_);
-
-	// モデルを何か読み込んでいたら解放させる
-	MV1DeleteModel(magicModelId_);
 
 	for (MagicBase* Magic : magics_)
 	{
@@ -281,19 +277,19 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	case TYPE_MAGIC::STRAIGHT_MAGIC:
 
 		// 炎魔法のインスタンスを生成する
-		Magic = new StraightMagic(typeMagic_, magicModelId_, &magicPos_);
+		Magic = new StraightMagic(typeMagic_, &magicPos_);
 
 		break;
 	case TYPE_MAGIC::CHASE_MAGIC:
 
 		// 風魔法のインスタンスを生成する
-		Magic = new ChaseMagic(typeMagic_, magicModelId_, &magicPos_);
+		Magic = new ChaseMagic(typeMagic_, &magicPos_);
 
 		break;
 	case TYPE_MAGIC::EXPLOSION_MAGIC:
 
 		// 爆発魔法のインスタンスを生成する
-		Magic = new ExplosionMagic(typeMagic_, magicModelId_, &magicPos_);
+		Magic = new ExplosionMagic(typeMagic_, &magicPos_);
 
 		break;
 	default:

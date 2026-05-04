@@ -20,29 +20,35 @@ class GameScene : public SceneBase
 
 public:
 
+	// ダメージエフェクトのアルファ値
 	static constexpr int DAMAGE_EFFECT_ALPHA = 128;
+	// ダメージエフェクトのカラー値
 	static constexpr unsigned int DAMAGE_EFFECT_COLOR= 0xff0000;
 
+	// ステート
 	enum class STATE
 	{
-		PLAY,
-		UPGRADE,
+		PLAY,		// 通常時(戦っている状態)
+		UPGRADE,	// 自己強化時(自己強化中の状態)
 	};
 
 	// コンストラクタ
 	GameScene(void);
-
 	// デストラクタ
 	~GameScene(void)override;
 
+	// 読み込み処理
 	void Load(void) override;
+	// 初期化処理
 	void Init(void) override;
+	// 更新処理
 	void Update(void) override;
+	// 描画処理
 	void Draw(void) override;
+	// 解放処理
 	void Release(void) override;
 
-	Camera* GetCameraPoint(void) { return camera_; }
-
+	// 指定された状態へ変更
 	void ChangeState(STATE state) { state_ = state; }
 
 private:
@@ -125,5 +131,11 @@ private:
 
 	// ダメージ時エフェクトやSE処理
 	void Damage(void);
+
+	// 敵からの物理攻撃を受けた場合の処理
+	void EnemyPhysicalAttackDamage(EnemyBase* enemy);
+
+	// デバッグ時の更新
+	void DebugUpdate(void);
 };
 

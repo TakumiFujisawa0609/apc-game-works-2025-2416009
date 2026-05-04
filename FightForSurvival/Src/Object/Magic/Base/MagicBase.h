@@ -8,8 +8,8 @@ class MagicBase
 {
 public:
 
-	// コンストラクタ(杖種別、元となるモデルのハンドルID)
-	MagicBase(TYPE_MAGIC typeMagic, int baseModelId, VECTOR* weponPos);
+	// コンストラクタ(杖種別、杖の座標ポインタ)
+	MagicBase(TYPE_MAGIC typeMagic, VECTOR* weponPos);
 	// デストラクタ
 	virtual ~MagicBase(void);
 
@@ -59,11 +59,6 @@ protected:
 	float chargeMax_ = 20.0f;
 	// 魔法の威力
 	float addDamage_ = 5.0f;
-
-	// 攻撃エフェクトのプレイハンドル
-	int effectPlayId_;
-	// エフェクトのサイズ
-	float effectScale_;
 
 	// 武器の座標ポインタ
 	VECTOR* weponPos_;
