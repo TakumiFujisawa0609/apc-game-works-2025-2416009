@@ -6,9 +6,11 @@
 Zombie::Zombie(ENEMY_TYPE type, int baseModelId, Player* player)
 	: EnemyBase(type, baseModelId, player)
 {
+	// 状態テーブル初期化
 	state_.stateTable_[STATE_IDLE] = Idle;
 	state_.stateTable_[STATE_ATTACK] = Attack;
 
+	// アニメーション読み込み
 	for (int i = 0; i < static_cast<int>(ANIM_TYPE::MAX); i++)
 	{
 		animationController_->AddInFbx(i, 25.0f, i);
@@ -24,14 +26,23 @@ Zombie::~Zombie(void)
 
 void Zombie::SetParam(void)
 {
+	// モデルの向き初期化
 	enemy_.angle_ = ANGLE;
+
+	// モデルの大きさ初期化
 	enemy_.scales_ = SCALE;
+
+	// HP初期化
 	enemy_.hp_ = HP;
+
+	// 移動速度初期化
 	enemy_.moveSpeed_ = SPEED;
+
+	// 生存判定初期化
 	enemy_.isAlive_ = true;
 
+	// 敵のスコア初期化
 	score_ = SCORE;
-
 
 	// 当たり判定用の半径
 	enemy_.collisionRadius_ = COLLISION_RADIUS;
@@ -56,8 +67,10 @@ void Zombie::SetParam(void)
 	// 手
 	collision_.offsetHand_ = OFFSET_POS_HAND;
 
-	// 攻撃可能範囲
+	// 攻撃クールダウンの初期化
 	attack_.cooldown_ = ATTACK_COOLDOWN;
+
+	// 攻撃可能範囲の初期化
 	attack_.range_ = ATTACK_RANGE;
 
 }
@@ -81,11 +94,13 @@ void Zombie::AddFrames(void)
 
 void Zombie::Idle(EnemyBase& enemy)
 {
+	// 攻撃範囲に入っていなかったら
 	if (!enemy.SearchAttackRange())
 	{
 		// 範囲内に入っていなかったら追跡
 		enemy.ChangeState(ENEMY_STATE::STATE_CHASE);
 	}
+	// 攻撃待ち時間が0だったら
 	else if(enemy.GetAttackCooldown() == 0.0f)
 	{
 		// 攻撃範囲に入っていて、攻撃待ち時間が0だったら攻撃へ移行
@@ -102,6 +117,7 @@ void Zombie::Attack(EnemyBase& enemy)
 	// ポインタが有効かチェックする
 	if (animController != nullptr)
 	{
+		// アニメーションが終わっていたら
 		if (animController->IsEnd())
 		{
 			// 攻撃が終わったら後退させる

@@ -5,15 +5,8 @@
 #include "../Enemy/EnemyManager.h"
 #include "../../Manager/EffectResManager/EffectResManager.h"
 
-Spawner::Spawner(int modelId)
+Spawner::Spawner()
 {
-	if (modelId != -1)
-	{
-		// 中身が-1じゃなかったら(中身が入っていたら)モデルのロードを行う
-		spawner_.modelId_ = MV1DuplicateModel(modelId);
-	}
-
-	spawner_.effectScale_ = 400.0f;
 }
 
 Spawner::~Spawner(void)
@@ -22,12 +15,15 @@ Spawner::~Spawner(void)
 
 void Spawner::Create(VECTOR pos, float interval, PATTERN pattern)
 {
+	// エフェクトの大きさを初期化
+	spawner_.effectScale_ = EFFECT_SCALE;
+
 	// 座標取得(この座標が軸となる)
 	spawner_.basePos_ = pos;
 
 	// 軸座標を基に座標を設定
 	PositionInit();
-	
+
 	// スポーン間隔を取得
 	spawner_.spawnInterval_ = interval;
 
@@ -47,7 +43,9 @@ void Spawner::Create(VECTOR pos, float interval, PATTERN pattern)
 	SelectPattern(pattern);
 
 	// ランダムで1～4体出現
-	int random = GetRand(3);
+	// GetRandの特性が0からなので、-1をして0～3の間の4つの数字から1つを選ばせる
+	int random = GetRand(SPAWN_ENEMY_NUM - 1);
+	// 1～4のどれかの数字にする
 	random++;
 
 	// 1～4体出現
@@ -59,7 +57,7 @@ void Spawner::Create(VECTOR pos, float interval, PATTERN pattern)
 
 	// チャージ状態のエフェクト再生
 	spawner_.playEffectId_ = EffectResManager::GetInstance().PlayEffect(
-		spawner_.effectScale_, VGet(0.0f,0.0f,0.0f), spawner_.basePos_, EffectResManager::TYPE::SPAWNER);
+		spawner_.effectScale_, VGet(0.0f, 0.0f, 0.0f), spawner_.basePos_, EffectResManager::TYPE::SPAWNER);
 }
 
 void Spawner::Update(void)
@@ -88,7 +86,9 @@ void Spawner::Update(void)
 		spawner_.time_ = 0.0f;
 
 		// ランダムで1～4体出現
-		int random = GetRand (3);
+		// GetRandの特性が0からなので、-1をして0～3の間の4つの数字から1つを選ばせる
+		int random = GetRand(SPAWN_ENEMY_NUM - 1);
+		// 1～4のどれかの数字にする
 		random++;
 
 		// 1～4体出現
@@ -102,39 +102,29 @@ void Spawner::Update(void)
 
 void Spawner::Draw(void)
 {
-	if (!spawner_.isExists_)
-	{
-		return;
-	}
-
-#ifdef _DEBUG
-
-	// どこが中心位置か分かるようにデバック表示
-	//DrawSphere3D(spawner_.basePos_, spawner_.collisionRadius_, 100, 0xffff00, 0xffff00, false);
-
-#endif // _DEBUG
-
 }
 
 void Spawner::Release(void)
 {
 	// エフェクト停止
 	StopEffekseer3DEffect(spawner_.playEffectId_);
-
-	// モデルの解放
-	MV1DeleteModel(spawner_.modelId_);
 }
 
 void Spawner::Damage(float durability)
 {
+	// 指定されたダメージ分耐久値を削る
 	spawner_.durability_ -= durability;
 
+	// 耐久値が0以下になったら
 	if (spawner_.durability_ <= 0.0f)
 	{
+		// 耐久値を0初期化する
 		spawner_.durability_ = 0.0f;
+
 		// 攻撃を受けて耐久力が無くなったら、存在をなくす
 		spawner_.isExists_ = false;
 
+		// エフェクトを止める
 		StopEffekseer3DEffect(spawner_.playEffectId_);
 	}
 }
@@ -154,6 +144,7 @@ void Spawner::PatternInsInit(PATTERN pattern)
 	{
 	case Spawner::PATTERN::PATTERN_1:
 
+		// 全てゾンビ
 		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
 		{
 			spawner_.eneType_[i] = ENEMY_TYPE::ZOMBIE;
@@ -162,6 +153,7 @@ void Spawner::PatternInsInit(PATTERN pattern)
 		break;
 	case Spawner::PATTERN::PATTERN_2:
 
+		// 全てコウモリ
 		for (int i = 0; i < SPAWN_ENEMY_NUM; i++)
 		{
 			spawner_.eneType_[i] = ENEMY_TYPE::BAT;
@@ -170,6 +162,7 @@ void Spawner::PatternInsInit(PATTERN pattern)
 		break;
 	case Spawner::PATTERN::PATTERN_3:
 
+		// ゾンビとコウモリの半々
 		spawner_.eneType_[0] = ENEMY_TYPE::ZOMBIE;
 		spawner_.eneType_[1] = ENEMY_TYPE::ZOMBIE;
 		spawner_.eneType_[2] = ENEMY_TYPE::BAT;
@@ -192,5 +185,6 @@ void Spawner::PositionInit(void)
 
 void Spawner::SetPosition(int i, VECTOR offset)
 {
+	// 基準座標からずらした位置に各座標を設定
 	spawner_.pos_[i] = VAdd(spawner_.basePos_, offset);
 }

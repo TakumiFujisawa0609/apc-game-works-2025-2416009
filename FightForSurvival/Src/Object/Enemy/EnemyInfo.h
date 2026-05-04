@@ -77,6 +77,7 @@ enum COLLISION_POS
 	MAX
 };
 
+// 敵の当たり判定用
 struct EnemyCollision
 {
 	// 当たり判定用の座標
@@ -110,6 +111,7 @@ struct EnemyCollision
 	int handBoneL_;
 };
 
+// 状態遷移
 struct enemieStateCtrl
 {
 	// 敵のステート
@@ -119,6 +121,7 @@ struct enemieStateCtrl
 	enemieStateFunction stateTable_[ENEMY_STATE_MAX];
 };
 
+// 敵の移動状態
 struct EnemyMove
 {
 	// 左移動かどうか　true / 左移動中 , false / 右移動中
@@ -128,6 +131,7 @@ struct EnemyMove
 	float leftRightRate_;
 };
 
+// 攻撃状態や攻撃パラメータ
 struct EnemyAttack
 {
 	// 座標

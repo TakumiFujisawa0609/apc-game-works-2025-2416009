@@ -72,7 +72,7 @@ void GameScene::Load(void)
 
 	// 敵マネージャの生成・ロード
 	EnemyManager::CreateInstance();
-	EnemyManager::GetInstance().GetPlayerPoint(player_);
+	EnemyManager::GetInstance().SetPlayerPoint(player_);
 	EnemyManager::GetInstance().Load();
 
 	// カメラの生成

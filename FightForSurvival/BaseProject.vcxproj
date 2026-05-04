@@ -151,7 +151,6 @@
     <ClInclude Include="Src\Scene\Game\GameScene.h" />
     <ClInclude Include="Src\Application.h" />
     <ClInclude Include="Src\Common\Fader\Fader.h" />
-    <ClInclude Include="Src\main.h" />
     <ClInclude Include="Src\Manager\Camera.h" />
     <ClInclude Include="Src\Manager\InputManager.h" />
     <ClInclude Include="Src\Scene\SceneManager.h" />

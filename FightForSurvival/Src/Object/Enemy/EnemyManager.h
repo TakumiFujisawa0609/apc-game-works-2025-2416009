@@ -35,16 +35,23 @@ public:
     // 敵の追加
     void AddEnemy(EnemyBase* enemy);
 
-    void Load(void);  // 更新
-    void Update(void);  // 更新
-    void Draw(void);    // 描画
-    void Delete(void);  // 削除
+    // 読み込み処理
+    void Load(void);
+    // 更新処理
+    void Update(void);
+    // 描画処理
+    void Draw(void);
+    // 解放処理
+    void Delete(void);
 
+    // 倒されて使われていない敵がいたら再利用する
     void Spawn(ENEMY_TYPE type, VECTOR pos);
 
+    // 敵全てを渡す
     const std::vector<EnemyBase*> GetEnemy(void)const { return enemies_; }
 
-    void GetPlayerPoint(Player* player) { player_ = player; }
+    // プレイヤーのポインタを取得
+    void SetPlayerPoint(Player* player) { player_ = player; }
 
     // 魔法の取得
     std::vector<MagicBase*> GetMagics(void)const { return magics_; }
@@ -68,12 +75,6 @@ private:
     EnemyManager& operator=(const EnemyManager&) = delete;
     EnemyManager(EnemyManager&&) = delete;
     EnemyManager& operator=(EnemyManager&&) = delete;
-
-    // 下記をコンパイルエラーさせるため 上記を追加
-    // EnemyManager copy = *EnemyManager::GetInstance();
-    // EnemyManager copied(*EznemyManager::GetInstance());
-    // EnemyManager moved = std::move(*EnemyManager::GetInstance());
-    // 敵モデルのの読み込み
 
     // プレイヤーのポインター
     Player* player_;

@@ -284,9 +284,6 @@
     <ClInclude Include="Src\Application.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Src\main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Manager\Camera.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

@@ -11,7 +11,6 @@
 
 EnemyManager* EnemyManager::instance_ = nullptr;
 
-
 EnemyManager::EnemyManager(void) {}
 EnemyManager::~EnemyManager(void) {}
 
@@ -80,13 +79,6 @@ void EnemyManager::Load(void)
 	Dragon* enemy = new Dragon(ENEMY_TYPE::DRAGON, enemyModelIds_[static_cast<int>(ENEMY_TYPE::DRAGON)], player_);
 	AddEnemy(enemy);
 
-	//// 攻撃エフェクト用のモデルのロード
-	//attackEffectModelIds_.emplace_back(
-	//	MV1LoadModel(
-	//		(Application::PATH_MODEL + "Effect/Fireball/Fireball.mv1").c_str()));
-	//attackEffectModelIds_.emplace_back(
-	//	MV1LoadModel(
-	//		(Application::PATH_MODEL + "Effect/Rockfall/Rock.mv1").c_str()));
 }
 
 void EnemyManager::Update(void)
@@ -103,8 +95,7 @@ void EnemyManager::Update(void)
 
 void EnemyManager::Draw(void)
 {
-	//DrawFormatString(0, 200, 0xffffff, "敵の総数 = %d", enemies_.size());
-
+	// 描画を行う
 	for (auto& enemy : enemies_)
 	{
 		enemy->Draw();
@@ -163,9 +154,7 @@ void EnemyManager::Spawn(ENEMY_TYPE type, VECTOR pos)
 
 EnemyBase* EnemyManager::GetValidEnemy(ENEMY_TYPE type)
 {
-	auto& ins = EnemyManager::GetInstance();
-	auto& enemies_ = ins.GetEnemy();
-
+	auto& enemies_ = EnemyManager::GetInstance().GetEnemy();
 	size_t size = enemies_.size();
 
 	for (int i = 0; i < size; i++)

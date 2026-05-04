@@ -18,6 +18,7 @@ SpawnerManager& SpawnerManager::GetInstance(void)
 
 void SpawnerManager::Destroy()
 {
+	// 解放
 	for (auto& spawner : spawners_)
 	{
 		spawner->Release();
@@ -26,16 +27,12 @@ void SpawnerManager::Destroy()
 	// 可変長配列の解放
 	spawners_.clear();
 
-	// モデルIdの解放
-	MV1DeleteModel(modelId_);
-
 	delete instance_;
 	instance_ = nullptr;
 }
 
 void SpawnerManager::Load(void)
 {
-	//modelId_ = MV1LoadModel();
 }
 
 void SpawnerManager::Update(void)
@@ -79,7 +76,6 @@ void SpawnerManager::SpawnerInstallation(VECTOR pos,float interval, Spawner::PAT
 
 SpawnerManager::SpawnerManager(void)
 {
-	modelId_ = -1;
 }
 
 void SpawnerManager::AddSpawner(Spawner* spawner)
@@ -102,7 +98,7 @@ Spawner* SpawnerManager::GetValidSpawner(void)
 
 	// 未使用のスポナーが無かった場合の新しいスポナーを生成
 	Spawner* spawner = nullptr;
-	spawner = new Spawner(modelId_);
+	spawner = new Spawner();
 
 	// 可変長配列に追加
 	AddSpawner(spawner);

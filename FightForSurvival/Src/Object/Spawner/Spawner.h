@@ -10,7 +10,11 @@ public:
 
 	// 出現させる敵の数
 	static constexpr int SPAWN_ENEMY_NUM = 4;
+
+	// 当たり判定半径
 	static constexpr float COLLISION_RADIUS = 400.0f;
+
+	// スポナーの耐久値
 	static constexpr float DURABILITY = 15.0f;
 
 	// 軸座標から移動させる量(ローカル)
@@ -19,20 +23,25 @@ public:
 	static constexpr VECTOR RIGHT_UP = { 200.0f,0.0f,200.0f };
 	static constexpr VECTOR RIGHT_DOWN = { 200.0f,0.0f,-200.0f };
 
-	// 生成する敵の種類のパターン
+	// エフェクトの大きさ
+	static constexpr float EFFECT_SCALE = 400.0f;
+
+	// 生成する敵の種類のパターン(全て4体ずつ)
 	enum class PATTERN
 	{
-		PATTERN_1,
-		PATTERN_2,
-		PATTERN_3,
+		PATTERN_1,	// 全てゾンビ
+		PATTERN_2,	// 全てコウモリ
+		PATTERN_3,	// ゾンビとコウモリの半々
 
 		MAX,
 	};
 
 	struct SpawnerIns
 	{
-		int modelId_;
+		// エフェクトのサイズ
+		float effectScale_;
 
+		// 基準座標
 		VECTOR basePos_;
 
 		// 座標
@@ -56,19 +65,16 @@ public:
 		// 当たり判定用半径
 		float collisionRadius_;
 
-		// 耐久力
+		// スポナーの耐久力
 		float durability_;
 
 		// 再生中のエフェクトハンドルID
 		int playEffectId_;
-
-		// エフェクトのサイズ
-		float effectScale_;
-
 	};
 
-	// コンストラクタ・デストラクタ
-	Spawner(int modelId);
+	// コンストラクタ
+	Spawner();
+	// デストラクタ
 	~Spawner(void);
 	 
 	// スポナー生成処理
@@ -88,6 +94,7 @@ public:
 
 private:
 
+	// スポナーの情報
 	SpawnerIns spawner_;
 
 	// パターン決め(指定)
@@ -98,6 +105,7 @@ private:
 
 	// 座標初期化
 	void PositionInit(void);
+
 	// 基軸から座標を設定
 	void SetPosition(int i,VECTOR offset);
 };

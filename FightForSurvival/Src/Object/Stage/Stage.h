@@ -14,20 +14,27 @@ public:
 	// 初期位置
 	static constexpr VECTOR DEFAULT_POS = { 0.0f, -120.0f, 0.0f };
 
+	// コンストラクタ
 	Stage(void);
+	// デストラクタ
 	~Stage(void);
 
+	// 読み込み処理
 	void Load(void);
+	// 初期化処理
 	void Init(void);
+	// 更新処理
 	void Update(void);
+	// 描画処理
 	void Draw(void);
+	// 解放処理
 	void Release(void);
 
+	// モデルIdを渡す
 	int GetModelId(void)const { return modelId_; }
-	int GetWallModelId(void)const { return wallModelId_; }
 
-	float GetModelScaleX(void)const;
-	float GetModelScaleZ(void)const;
+	// 壁のモデルIdを渡す
+	int GetWallModelId(void)const { return wallModelId_; }
 
 private:
 

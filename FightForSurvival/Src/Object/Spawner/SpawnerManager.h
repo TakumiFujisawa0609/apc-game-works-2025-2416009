@@ -27,12 +27,10 @@ public:
 	// スポナーの設置を行う
 	void SpawnerInstallation(VECTOR pos,float interval, Spawner::PATTERN pattern);
 
+	// 全てのスポナーを渡す
 	std::vector<Spawner*> GetSpawners(void)const { return spawners_; }
 
 private:
-
-	// スポナーのモデルId
-	int modelId_;
 
 	// スポーンマネージャーのインスタンス
 	static SpawnerManager* instance_;

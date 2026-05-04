@@ -3,6 +3,7 @@
 #include <DxLib.h>
 #include "Common/Vector2/Vector2.h"
 
+// プレイヤーや敵など、ゲーム内のキャラクターの基本情報を保持する
 struct Unit
 {
 	// モデルのハンドルId
@@ -45,14 +46,15 @@ struct Unit
 	float gravity_;
 
 	// 衝突判定用半径
-	float collisionRadius_;
-	float collisionRadiusHead_;
-	float collisionRadiusBody_;
-	float collisionRadiusArm_;
-	float collisionRadiusHand_;
-	float collisionRadiusLeg_;
+	float collisionRadius_;			// 全体の当たり判定
+	float collisionRadiusHead_;		// 頭
+	float collisionRadiusBody_;		// 体
+	float collisionRadiusArm_;		// 腕
+	float collisionRadiusHand_;		// 手
+	float collisionRadiusLeg_;		// 足
 };
 
+// プレイヤーの能力値
 struct Ability
 {
 	// 最大HP

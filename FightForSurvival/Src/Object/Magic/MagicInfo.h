@@ -15,38 +15,49 @@ enum class TYPE_MAGIC
 // 魔法の状態
 enum class MAGIC_STATE
 {
-	CHARGE,
-	SHOT,
-	BLAST,
-	END
+	CHARGE,	// チャージ中
+	SHOT,	// 撃った
+	BLAST,	// 爆発
+	END		// 終了
 };
 
 struct Magic
 {
 	// 魔法のモデルID
 	int modelId_;
+
 	// 方向
 	VECTOR dir_;
+
 	// 魔法の大きさ
 	VECTOR scale_;
+
 	// 魔法の回転
 	VECTOR rotate_;
+
 	// 魔法の座標
 	VECTOR pos_;
 	VECTOR prevPos_;
+
 	// 魔法の種類
 	TYPE_MAGIC typeMagic_;
+
 	// 魔法の移動速度
 	float speed_;
+
 	// 魔法の存在判定
 	bool isExists_;
+
 	// 魔法の描画判定
 	bool isDraw_;
+
 	// 魔法の生存期間
 	float cntAlive_;
+
 	// 魔法の衝突判定用半径
 	float collisionRadius_;
+
 	// ダメージ数
-	float headDamage_;
-	float bodyDamage_;
+	float headDamage_;	// 頭
+	float bodyDamage_;	// 体
 };
