@@ -306,8 +306,8 @@ void Dragon::RangeAttack(Dragon& dragon)
 			dragon.attackStart_ = true;
 		}
 		// 再生していたアニメーションが飛行かだったか、アニメーションが再生し終えているかつ、攻撃が始まっていたら
-		else if (dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::FLYING)
-			|| dragon.animationController_->IsEnd()
+		else if ((dragon.animationController_->GetPlayType() == static_cast<int>(ANIM_TYPE_FLY::FLYING)
+			|| dragon.animationController_->IsEnd())
 			&& dragon.attackStart_)
 		{
 			// 攻撃発動したら戻す
