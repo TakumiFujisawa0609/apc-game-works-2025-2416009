@@ -22,44 +22,57 @@ UpgradeManager& UpgradeManager::GetInstance(void)
 
 void UpgradeManager::Load(Player* player)
 {
+	// プレイヤーのポインタを取得
 	player_ = player;
 
+	// アップグレードクラスを生成
 	upgrade_ = new Upgrade();
 	upgrade_->Load();
 }
 
 void UpgradeManager::Init(void)
 {
+	// 始めはアップグレードを行わないためEndフラグを立てる
 	isUpgradeEnd_ = true;
 
+	// アップグレードクラス初期化
 	upgrade_->Init();
 }
 
 void UpgradeManager::Update(void)
 {
+	// アップグレードモードが始まっていなければ処理を行わない
 	if (isUpgradeEnd_)
 	{
 		return;
 	}
 
+	// アップグレード更新処理
 	upgrade_->Update();
 
+	// アップグレードの状態が確定状態だったら
 	if (upgrade_->GetState() == Upgrade::STATE::APPLY)
 	{
+		// 確定したアップグレード情報を受け取る
 		auto finalizeUpgrade = upgrade_->GetFinalizeUpgrade();
 
+		// アップグレードを適用
 		ApplyUpgrade(finalizeUpgrade);
+
+		// アップグレードモードを終了
 		isUpgradeEnd_ = true;
 	}
 }
 
 void UpgradeManager::Draw(void)
 {
+	// アップグレードモードが始まっていなければ処理を行わない
 	if (isUpgradeEnd_)
 	{
 		return;
 	}
 
+	// アップグレード描画処理
 	upgrade_->Draw();
 }
 
@@ -80,6 +93,7 @@ void UpgradeManager::Destroy(void)
 
 void UpgradeManager::StartIsUpgrade(void)
 {
+	// アップグレードモードを開始
 	isUpgradeEnd_ = false;
 
 	// アップグレード内容を選択する
@@ -88,6 +102,7 @@ void UpgradeManager::StartIsUpgrade(void)
 
 void UpgradeManager::StopIsUpgrade(void)
 {
+	// アップグレードモードを終了
 	isUpgradeEnd_ = true;
 
 	// アップグレード内容を強制適用

@@ -14,9 +14,12 @@ Upgrade::Upgrade(void)
 	// 選択決定内容をNONに初期化する
 	finalizeUpgrade_ = PLAYER_UPGRADE::MAX;
 
+	// 状態の初期化
 	state_ = STATE::NON;
+	// 選択された場所の種類の初期化
 	place_ = PLACE::MAX;
 
+	// 選択中のボタンの状態初期化
 	for (int i = 0; i < static_cast<int>(PLAYER_UPGRADE::MAX); i++)
 	{
 		buttonState_[i] = BUTTON_STATE::DEFAULE;
@@ -45,23 +48,30 @@ void Upgrade::Load(void)
 
 void Upgrade::Init(void)
 {
+
+	// アップグレードの強化値を初期化
 	for (int i = 0; i < static_cast<int>(PLAYER_UPGRADE::MAX); i++)
 	{
 		switch (i)
 		{
-		case 0:
+		// ポーションの数を追加
+		case static_cast<int>(PLAYER_UPGRADE::RESTOCK_POTION):
 			upNum_[i] = RESTOCK_POTION_NUM;
 			break;
-		case 1:
+		// 移動速度上昇
+		case static_cast<int>(PLAYER_UPGRADE::SPEED_UP):
 			upNum_[i] = SPPED_UP_NUM;
 			break;
-		case 2:
+		// スタミナ上昇
+		case static_cast<int>(PLAYER_UPGRADE::STAMINA_UP):
 			upNum_[i] = STAMINA_UP_NUM;
 			break;
-		case 3:
+		// HP上昇
+		case static_cast<int>(PLAYER_UPGRADE::HP_UP):
 			upNum_[i] = HP_UP_NUM;
 			break;
-		case 4:
+		// HP回復
+		case static_cast<int>(PLAYER_UPGRADE::HEAL_HP):
 			upNum_[i] = HEAL_HP_NUM;
 			break;
 		default:
@@ -69,7 +79,7 @@ void Upgrade::Init(void)
 		}
 	}
 
-	// 全ての本の種類を保持するvector
+	// 全てのアップグレードの種類を保持するvector
 	allUpgrades_ = {
 		PLAYER_UPGRADE::RESTOCK_POTION, PLAYER_UPGRADE::SPEED_UP, PLAYER_UPGRADE::STAMINA_UP,
 		PLAYER_UPGRADE::HP_UP, PLAYER_UPGRADE::HEAL_HP,
@@ -92,7 +102,9 @@ void Upgrade::Init(void)
 		}
 	}
 
+	// 状態の初期化
 	ChangeState(STATE::NON);
+	// 選択された場所の種類の初期化
 	ChangePlace(PLACE::MAX);
 }
 
@@ -102,7 +114,7 @@ void Upgrade::Update(void)
 	{
 	case Upgrade::STATE::SELECT:
 
-		// アップグレードを4つ選択
+		// アップグレードを内容を選択
 		SelectUpgrade();
 
 		break;
@@ -124,9 +136,10 @@ void Upgrade::Draw(void)
 {
 	// 背景
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, ALPHA);
-	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, 0xa9a9a9, true);
+	DrawBox(0, 0, Application::SCREEN_SIZE_X, Application::SCREEN_SIZE_Y, BACK_COLOR, true);
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+	// 選択の状態に合わせて描画
 	for (int i = 0; i < selectUpgrades_.size(); ++i)
 	{
 		DrawGraph(pos_[i].x, pos_[i].y,
@@ -140,13 +153,14 @@ void Upgrade::Draw(void)
 
 void Upgrade::Release(void)
 {
-	// 使い終わったらクリア
+	// 解放
 	allUpgrades_.clear();
 	selectUpgrades_.clear();
 }
 
 void Upgrade::SelectUpgrade(void)
 {
+	// 初期化しておく
 	selectUpgrades_.clear();
 	// 乱数生成器
 	std::random_device rd; // ハードウェア乱数からシードを生成
@@ -155,14 +169,11 @@ void Upgrade::SelectUpgrade(void)
 	// allUpgrades_をシャッフル
 	std::shuffle(allUpgrades_.begin(), allUpgrades_.end(), gen);
 
+	// 選べる最大値
 	const int max_choices = static_cast<int>(PLACE::MAX);
-	const int available_upgrades = static_cast<int>(allUpgrades_.size());
-
-	// std::min を std:: のスコープで明示的に呼び出す(基本max_choicesのほうが大きくなるが、vectorのsize外に出ないように比較しておく)
-	int limit = (std::min)(max_choices, available_upgrades);
 
 	// 先頭の４つをselectUpgrades_にコピーする
-	for (int i = 0; i < limit; ++i) {
+	for (int i = 0; i < max_choices; ++i) {
 		selectUpgrades_.push_back(allUpgrades_[i]);
 	}
 
@@ -174,39 +185,40 @@ void Upgrade::SelectUpgrade(void)
 
 void Upgrade::ConfirmUpgrade(void)
 {
-	InputManager& ins = InputManager::GetInstance();
-
+	// 使用しているデバイスによって処理変化
 	if (SystemManager::GetInstance().GetIsDevice())
 	{
-		// 引数の座標によって選択中のものを変化させる
+		// マウス選択処理
 		MouseSelect();
 	}
 	else
 	{
-		// 選択処理
+		// パッド選択処理
 		PadSelect();
 	}
-
-
 }
 
 void Upgrade::MouseSelect(void)
 {
+	// 前の選択中の種類を保存しておく
 	auto prevPlace = place_;
 
-	// 当たり判定取る
+	// 選択できる種類分回す
 	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
 	{
 		// 全て初期化する
 		buttonState_[i] = BUTTON_STATE::DEFAULE;
 
+		// マウスと当たっていたら
 		if (CollisionUtility::RectangleAndMouse(pos_[i], COL_SIZE_X, COL_SIZE_Y))
 		{
+			// 選択中のものの種類を設定
 			ChangePlace(static_cast<PLACE>(i));
 
 			// 何か選択していて、確定ボタンが押されたら処理を行う
 			if(InputManager::GetInstance().ConfirmUp() && isTrgDown_[i])
 			{
+				// 選択したアップグレードを確定させる
 				finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
 
 				// 確定に移行
@@ -216,11 +228,14 @@ void Upgrade::MouseSelect(void)
 				SoundManager::GetInstance().Play(SoundManager::SE::DECIDE);
 
 			}
+			// 押されていて今押されていなかったら
 			else if (InputManager::GetInstance().Confirm() && !isTrgDown_[i])
 			{
+				// 今押されたフラグを立てる
 				isTrgDown_[i] = true;
 			}
 
+			// 今押されたフラグによってボタンの状態を変更
 			if (isTrgDown_[i])
 			{
 				buttonState_[i] = BUTTON_STATE::TRIGGER_DOWN;
@@ -232,25 +247,24 @@ void Upgrade::MouseSelect(void)
 
 			break;
 		}
+		// マウスに当っていなかったら
 		else
 		{
+			// 何も触っていない状態にする
 			ChangePlace(PLACE::MAX);
+			// 今押されたフラグも初期化
 			isTrgDown_[i] = false;
 		}
 	}
 
-	if (place_ != prevPlace && place_ != PLACE::MAX)
-	{
-		// 何も選択されていない状態から選択されたらSEを流す
-		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
-	}
+	// 選択中のものの変更が行われているかつ何かを選択していたら処理を行う
+	CompPlace(prevPlace);
 
 }
 
 void Upgrade::PadSelect(void)
 {
-	auto& ins = InputManager::GetInstance();
-
+	// 前の状態を保持しておく
 	auto prevPlace = place_;
 
 	for (int i = 0; i < static_cast<int>(PLACE::MAX); i++)
@@ -263,58 +277,75 @@ void Upgrade::PadSelect(void)
 	{
 	case Upgrade::PLACE::TOP_LEFT:
 
-		if (ins.SelectDown())
+		// パッドの十字キーやスティックの下入力を検知したら
+		if (InputManager::GetInstance().SelectDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::BOTTOM_LEFT);
 		}
 
-		if (ins.SelectRightIsTrgDown())
+		// パッドの十字キーやスティックの右入力を検知したら
+		if (InputManager::GetInstance().SelectRightIsTrgDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::TOP_RIGHT);
 		}
 
 		break;
 	case Upgrade::PLACE::TOP_RIGHT:
 
-		if (ins.SelectDown())
+		// パッドの十字キーやスティックの下入力を検知したら
+		if (InputManager::GetInstance().SelectDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::BOTTOM_RIGHT);
 		}
 
-		if (ins.SelectLeftIsTrgDown())
+		// パッドの十字キーやスティックの左入力を検知したら
+		if (InputManager::GetInstance().SelectLeftIsTrgDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::TOP_LEFT);
 		}
 
 		break;
 	case Upgrade::PLACE::BOTTOM_LEFT:
 
-		if (ins.SelectUp())
+		// パッドの十字キーやスティックの上入力を検知したら
+		if (InputManager::GetInstance().SelectUp())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::TOP_LEFT);
 		}
 
-		if (ins.SelectRightIsTrgDown())
+		// パッドの十字キーやスティックの右入力を検知したら
+		if (InputManager::GetInstance().SelectRightIsTrgDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::BOTTOM_RIGHT);
 		}
 
 		break;
 	case Upgrade::PLACE::BOTTOM_RIGHT:
 
-		if (ins.SelectUp())
+		// パッドの十字キーやスティックの上入力を検知したら
+		if (InputManager::GetInstance().SelectUp())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::TOP_RIGHT);
 		}
 
-		if (ins.SelectLeftIsTrgDown())
+		// パッドの十字キーやスティックの左入力を検知したら
+		if (InputManager::GetInstance().SelectLeftIsTrgDown())
 		{
+			// 選択中のものを変更
 			ChangePlace(PLACE::BOTTOM_LEFT);
 		}
 
 		break;
 	case Upgrade::PLACE::MAX:
 
+		// 最初は左上に設定される
 		ChangePlace(PLACE::TOP_LEFT);
 		break;
 	default:
@@ -324,14 +355,11 @@ void Upgrade::PadSelect(void)
 	// 見た目を選択中にする
 	buttonState_[static_cast<int>(place_)] = BUTTON_STATE::HOVER;
 
-	if (place_ != prevPlace && place_ != PLACE::MAX)
-	{
-		// 何も選択されていない状態から選択されたらSEを流す
-		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
-	}
+	// 選択中のものの変更が行われているかつ何かを選択していたら処理を行う
+	CompPlace(prevPlace);
 
 	// 何か選択していて、確定ボタンが押されたら処理を行う
-	if (ins.Confirm() && place_ != PLACE::MAX)
+	if (InputManager::GetInstance().Confirm() && place_ != PLACE::MAX)
 	{
 		finalizeUpgrade_ = selectUpgrades_[static_cast<int>(place_)];
 
@@ -346,8 +374,10 @@ void Upgrade::PadSelect(void)
 
 void Upgrade::ChangeState(STATE state)
 {
+	// 指定された状態に変更
 	state_ = state;
 
+	// 変更されたら初期化を行う
 	switch (state_)
 	{
 	case Upgrade::STATE::SELECT:
@@ -387,4 +417,13 @@ void Upgrade::ApplyInit(void)
 
 	// マウスの位置を真ん中に初期化する
 	SetMousePoint(Application::SCREEN_SIZE_X / 2, Application::SCREEN_SIZE_Y / 2);
+}
+
+void Upgrade::CompPlace(const PLACE prevPlace)
+{
+	if (place_ != prevPlace && place_ != PLACE::MAX)
+	{
+		// 何も選択されていない状態から選択されたらSEを流す
+		SoundManager::GetInstance().Play(SoundManager::SE::SELECT);
+	}
 }

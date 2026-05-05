@@ -20,16 +20,20 @@ public:
 	// プレイヤーとの狙う場所の相対座標
 	static constexpr float RELATIVE_POS_TARGET = 1000.0f;
 
-	// プレイヤーとの狙う場所の相対座標
+	// リコイルを戻す際の回復速度
 	static constexpr float RECOVERY_SPEED = 0.001f;
 
+	// 狙う場所の補正値
+	static constexpr float TARGET_POS_OFFSET = 8.0f;
+
+	// 杖の状態
 	enum class STATE
 	{
-		IDLE,
-		CREATE_MAGIC,
-		CHARGE_MAGIC,
-		ATTACK,
-		WAIT,
+		IDLE,			// 待ち状態
+		CREATE_MAGIC,	// 魔法生成状態
+		CHARGE_MAGIC,	// チャージ状態
+		ATTACK,			// 攻撃状態
+		WAIT,			// 硬直状態
 	};
 
 	// コンストラクタ
@@ -51,23 +55,33 @@ public:
 	// 魔法の取得
 	std::vector<MagicBase*> GetMagics(void)const { return magics_; }
 
+	// ステータス渡し
 	STATE GetState(void)const { return state_; }
 
+	// リコイル中か
 	bool GetIsRecoil(void)const { return isRecoil_; }
+	// リコイル中にする
 	void SetIsRecoil(bool flg) { isRecoil_ = flg; }
 
+	// 指定された状態へ変更
 	void ChangeState(STATE state);
 
 protected:
 
+	// プレイヤーのハンドル
 	Player* player_;
 
+	// モデルハンドル
 	int modelId_;
 
+	// モデルの大きさ
 	VECTOR scales_;
+	// モデルの向き
 	VECTOR rotate_;
+	// モデルの座標
 	VECTOR pos_;
 
+	// 現在の状態
 	STATE state_;
 
 	// ショット(ポインタ)
@@ -86,15 +100,21 @@ protected:
 	float recoil;
 	bool isRecoil_;
 
+	// 使用中の魔法の種類
 	TYPE_MAGIC typeMagic_;
 
 	// パラメーター設定
 	virtual void SetParam(void) = 0;
 
+	// 待ち中の更新処理
 	void IdleUpdate(void);
+	// 魔法の生成処理
 	void GenerateMagicUpdate(void);
+	// 魔法のチャージ処理
 	void ChargeMagicUpdate(void);
+	// 攻撃処理
 	void AttackUpdate(void);
+	// 硬直処理
 	void WaitUpdate(void);
 
 	// 魔法の更新
@@ -102,7 +122,15 @@ protected:
 	// 魔法の描画
 	void DrawMagic(void);
 
+	// 未使用の魔法かつ魔法が種別が同じだったら使用、未使用の魔法が無かった場合新しく魔法を生成
 	virtual MagicBase* GetValidMagic(void);
 	
+	// アップデート処理
 	void UpdatePos(void);
+
+	// 魔法の種類確認
+	void CheckMagicType(void);
+
+	// デバッグ用描画
+	void DebugDraw(void);
 };

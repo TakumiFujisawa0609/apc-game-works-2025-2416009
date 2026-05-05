@@ -109,13 +109,13 @@ void MagicBase::Update(void)
 
 void MagicBase::Draw(void)
 {
+#ifdef _DEBUG
+
 	if (!magic_.isDraw_)
 	{
 		// 描画していなければ処理中断
 		return;
 	}
-
-#ifdef _DEBUG
 
 	// デバッグ用：衝突判定用球体
 	DrawSphere3D(magic_.pos_, magic_.collisionRadius_, 10, 0x0000ff, 0x0000ff, false);

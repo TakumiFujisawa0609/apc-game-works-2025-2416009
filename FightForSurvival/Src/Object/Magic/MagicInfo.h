@@ -4,8 +4,8 @@
 
 enum class TYPE_MAGIC
 {
-	STRAIGHT_MAGIC, // まっすぐ飛ぶ炎魔法
-	CHASE_MAGIC,	// 一番近くの敵を追尾する風魔法
+	STRAIGHT_MAGIC, // まっすぐ飛ぶ魔法
+	CHASE_MAGIC,	// 一番近くの敵を追尾する魔法
 	EXPLOSION_MAGIC,	// 着弾時に周囲を爆発で巻き込む爆発魔法
 
 	BAT_MAGIC, // コウモリの魔法

@@ -26,22 +26,6 @@ void WeaponBase::Init(void)
 	// 魔法の種類を取得
 	typeMagic_ = SystemManager::GetInstance().GetTypeMagic();
 
-	// 種類によって読み込むモデルを変える
-	// 魔法のモデルを読み込む
-	switch (typeMagic_)
-	{
-	case TYPE_MAGIC::STRAIGHT_MAGIC:
-	//magicModelId_ = MV1LoadModel(
-	//	(Application::PATH_MODEL + "Effect/Fire.mv1").c_str());
-		break;
-	case TYPE_MAGIC::CHASE_MAGIC:
-		break;
-	case TYPE_MAGIC::EXPLOSION_MAGIC:
-		break;
-	default:
-		break;
-	}
-
 	// パラメータ設定
 	SetParam();
 
@@ -55,8 +39,10 @@ void WeaponBase::Init(void)
 	pos_ = player_->GetCameraPos();
 	pos_ = VAdd(pos_, RELATIVE_POS_STICK);
 
+	// 座標を設定する
 	MV1SetPosition(modelId_, pos_);
 
+	// 待ち状態に初期化
 	state_ = STATE::IDLE;
 
 	// 魔法発射の硬直時間
@@ -73,11 +59,8 @@ void WeaponBase::Init(void)
 
 void WeaponBase::Update(void)
 {
-	// 魔法の変更が行われていたら変更する
-	if (typeMagic_ != SystemManager::GetInstance().GetTypeMagic())
-	{
-		typeMagic_ = SystemManager::GetInstance().GetTypeMagic();
-	}
+	// 魔法の種類変更が行われていたら変更する
+	CheckMagicType();
 
 	// 杖、魔法の座標計算
 	UpdatePos();
@@ -119,17 +102,10 @@ void WeaponBase::Draw(void)
 	// 魔法の描画
 	DrawMagic();
 
-
 #ifdef _DEBUG
 
-	// 杖の位置仮表示
-	DrawSphere3D(pos_, 15.0f, 10, 0xff0000, 0xff0000, false);
-
-	// 魔法の発射位置目安
-	DrawSphere3D(magicPos_, 3.0f, 10, 0x00ff00, 0x00ff00, true);
-
-	// 狙う場所の位置目安
-	DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
+	// デバッグ用描画
+	DebugDraw();
 
 #endif // _DEBUG
 
@@ -140,6 +116,7 @@ void WeaponBase::Release(void)
 	// モデルを何か読み込んでいたら解放させる
 	MV1DeleteModel(modelId_);
 
+	// 魔法解放
 	for (MagicBase* Magic : magics_)
 	{
 		Magic->Release();
@@ -167,6 +144,7 @@ void WeaponBase::GenerateMagicUpdate(void)
 	// 座標を更新する
 	magic_->ChargeShot(magicPos_,magic_->GetMagic().dir_);
 
+	// 状態をチャージ状態変更
 	ChangeState(STATE::CHARGE_MAGIC);
 }
 
@@ -179,13 +157,11 @@ void WeaponBase::AttackUpdate(void)
 
 #pragma region 方向
 
-	VECTOR dir;
-
 	// 狙う場所から魔法の発射位置へのベクトルを計算
 	VECTOR vec = VSub(targetPos_, magicPos_);
 
 	// ベクトルを正規化し、魔法の方向とする
-	dir = VNorm(vec);
+	VECTOR dir = VNorm(vec);
 
 #pragma endregion
 
@@ -195,6 +171,7 @@ void WeaponBase::AttackUpdate(void)
 		return;
 	}
 
+	// 魔法生成
 	magic_->CreateShot(magicPos_, dir);
 	// 放ったら中身を消す
 	magic_ = nullptr;
@@ -202,19 +179,23 @@ void WeaponBase::AttackUpdate(void)
 	// 魔法発射後の反動を計算
 	pitch_ = player_->GetPlayerStatus().angle_.x;
 	pitchAngle_ = pitch_ - recoil;
+
 	// 上を向きすぎないように制限をかける
 	if (pitchAngle_ < Player::MIN_VIEW_ANGLE)
 	{
 		pitchAngle_ = Player::MIN_VIEW_ANGLE;
 	}
-	isRecoil_ = true;
-	player_->SetPitch(pitchAngle_);
 
+	// リコイルフラグを立てる
+	isRecoil_ = true;
+
+	// 状態を硬直中へ変更
 	ChangeState(STATE::WAIT);
 }
 
 void WeaponBase::WaitUpdate(void)
 {
+	// リコイルフラグが立っていれば
 	if (isRecoil_)
 	{
 		// 魔法発射後の反動を設定
@@ -224,6 +205,8 @@ void WeaponBase::WaitUpdate(void)
 	// 角度を元の位置に戻す
 	if (pitchAngle_ < pitch_) {
 		pitchAngle_ += RECOVERY_SPEED;
+
+		// 元の位置より大きくならないようにする
 		if (pitchAngle_ > pitch_) {
 			pitchAngle_ = pitch_;
 		}
@@ -246,11 +229,13 @@ void WeaponBase::UpdateMagic(void)
 
 void WeaponBase::DrawMagic(void)
 {
-	// 魔法の更新
+	// 魔法の描画
 	for (auto& Magic : magics_)
 	{
+		// 描画フラグが立っていれば
 		if (Magic->GetMagic().isDraw_)
 		{
+			// 描画する
 			Magic->Draw();
 		}
 	}
@@ -276,13 +261,13 @@ MagicBase* WeaponBase::GetValidMagic(void)
 	{
 	case TYPE_MAGIC::STRAIGHT_MAGIC:
 
-		// 炎魔法のインスタンスを生成する
+		// 直線魔法のインスタンスを生成する
 		Magic = new StraightMagic(typeMagic_, &magicPos_);
 
 		break;
 	case TYPE_MAGIC::CHASE_MAGIC:
 
-		// 風魔法のインスタンスを生成する
+		// 追跡魔法のインスタンスを生成する
 		Magic = new ChaseMagic(typeMagic_, &magicPos_);
 
 		break;
@@ -304,7 +289,9 @@ MagicBase* WeaponBase::GetValidMagic(void)
 
 void WeaponBase::UpdatePos(void)
 {
+	// 視点座標を取得
 	VECTOR playerCameraPos = player_->GetCameraPos();
+	// プレイヤーの向きを取得
 	VECTOR playerAngle = player_->GetPlayerStatus().angle_;
 
 	// 砲身の回転行列
@@ -314,6 +301,7 @@ void WeaponBase::UpdatePos(void)
 	// カメラの視線方向のベクトルを計算
 	// DxlibのVTransformを使用
 	VECTOR forward = VGet(0.0f, 0.0f, 1.0f); // 前方向をZ軸とする
+	// カメラの方向を算出
 	VECTOR cameraDir = VTransform(forward, matRot);
 
 #pragma region 杖
@@ -322,8 +310,10 @@ void WeaponBase::UpdatePos(void)
 	// 方向と同じ要領で、相対座標を回転
 	VECTOR localPosRot = VTransform(RELATIVE_POS_STICK, matRot);
 
+	// 杖の座標に反映
 	pos_ = VAdd(playerCameraPos, localPosRot);
 
+	// モデルに座標を反映
 	MV1SetPosition(modelId_, pos_);
 
 	// 回転
@@ -342,6 +332,7 @@ void WeaponBase::UpdatePos(void)
 	// 方向と同じ要領で、相対座標を回転
 	localPosRot = VTransform(RELATIVE_POS_MAGIC, matRot);
 
+	// 魔法の座標に反映
 	magicPos_ = VAdd(pos_, localPosRot);
 
 #pragma endregion
@@ -353,7 +344,29 @@ void WeaponBase::UpdatePos(void)
 	targetPos_ = VAdd(playerCameraPos, VScale(cameraDir, RELATIVE_POS_TARGET));
 
 	// ターゲットをわずかに上へ補正
-	targetPos_.y += 0.8f; 
+	targetPos_.y += TARGET_POS_OFFSET;
 #pragma endregion
+}
+
+void WeaponBase::CheckMagicType(void)
+{
+	// 今現在の魔法の種類を確認し、種類が一緒でなかったら
+	if (typeMagic_ != SystemManager::GetInstance().GetTypeMagic())
+	{
+		// 種類を合わせる
+		typeMagic_ = SystemManager::GetInstance().GetTypeMagic();
+	}
+}
+
+void WeaponBase::DebugDraw(void)
+{
+	// 杖の位置仮表示
+	DrawSphere3D(pos_, 15.0f, 10, 0xff0000, 0xff0000, false);
+
+	// 魔法の発射位置目安
+	DrawSphere3D(magicPos_, 3.0f, 10, 0x00ff00, 0x00ff00, true);
+
+	// 狙う場所の位置目安
+	DrawSphere3D(targetPos_, 10.0f, 10, 0x00ff00, 0x0000ff, true);
 }
 

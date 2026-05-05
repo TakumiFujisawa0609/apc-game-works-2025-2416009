@@ -20,8 +20,11 @@ void Stick::Load(void)
 
 void Stick::SetParam(void)
 {
+	// ‘å‚«‚³İ’è
 	scales_ = SCALE;
+	// Œü‚«İ’è
 	rotate_ = ROTATE;
+	// ”½“®’l‚ğİ’è
 	recoil = RECOIL;
 }
 

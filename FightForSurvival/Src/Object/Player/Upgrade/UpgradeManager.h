@@ -24,8 +24,11 @@ public:
 	// 解放処理
 	void Destroy(void);
 
+	// アップグレードモードを開始
 	void StartIsUpgrade(void);
+	// アップグレードモードを終了
 	void StopIsUpgrade(void);
+	// アップグレードモードが終わったかを渡す
 	bool GetIsUpgradeEnd(void)const { return isUpgradeEnd_; }
 
 private:
@@ -49,6 +52,7 @@ private:
 	// デストラクタも同様
 	~UpgradeManager(void) = default;
 
+	// アップグレードモードが終わったか　true / 終了 , false/ 終了していない
 	bool isUpgradeEnd_;
 
 	// プレイヤーにアップグレードの指示を行う

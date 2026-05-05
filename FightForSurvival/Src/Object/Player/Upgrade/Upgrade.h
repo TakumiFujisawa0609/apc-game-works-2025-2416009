@@ -42,20 +42,25 @@ public:
 	// 描画画像の縦横数
 	static constexpr int DRAW_NUM_XY = 2;
 
+	// 背景の色
+	static constexpr unsigned int BACK_COLOR = 0xa9a9a9;
+
+	// 選択された場所の種類
 	enum class PLACE
 	{
-		TOP_LEFT,
-		TOP_RIGHT,
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT,
+		TOP_LEFT,		// 左上
+		TOP_RIGHT,		// 右上
+		BOTTOM_LEFT,	// 左下
+		BOTTOM_RIGHT,	// 右下
 		MAX
 	};
 
+	// 状態
 	enum class STATE
 	{
-		SELECT,
-		CONFIRM,
-		APPLY,
+		SELECT,		// 選択
+		CONFIRM,	// 確認
+		APPLY,		// 適用
 		NON,
 	};
 
@@ -69,20 +74,32 @@ public:
 		MAX,		// 最大数
 	};
 
+	// コンストラクタ
 	Upgrade(void);
+	// デストラクタ
 	~Upgrade(void);
 
+	// 読み込みsyオリ
 	void Load(void);
+	// 初期化処理
 	void Init(void);
+	// 更新処理
 	void Update(void);
+	// 描画処理
 	void Draw(void);
+	// 解放処理
 	void Release(void);
 
+	// 強化値を渡す(アップグレードの種類によって変化)
 	float GetUpNum(PLAYER_UPGRADE upgradeType)const { return upNum_[static_cast<int>(upgradeType)]; }
+	// 最終的にアップグレードする物のを渡す
 	PLAYER_UPGRADE GetFinalizeUpgrade(void)const { return finalizeUpgrade_; }
+	// 状態を渡す
 	STATE GetState(void)const { return state_; }
 
+	// 指定された状態へ変更
 	void ChangeState(STATE state);
+	// 指定された場所の種類へ変更
 	void ChangePlace(PLACE place) { place_ = place; }
 
 private:
@@ -107,13 +124,18 @@ private:
 	// 4つ選択した後のアップグレードの全種類
 	std::vector<PLAYER_UPGRADE>selectUpgrades_;
 
+	// 最終的にアップグレードする物
 	PLAYER_UPGRADE finalizeUpgrade_;
 
+	// 状態
 	STATE state_;
+
+	// 選択された場所の種類
 	PLACE place_;
 
 	// どの能力をアップグレードするか選択を行う
 	void SelectUpgrade(void);
+	// 確認処理
 	void ConfirmUpgrade(void);
 
 	// マウスの選択処理
@@ -122,8 +144,15 @@ private:
 	// パッドの選択処理
 	void PadSelect(void);
 
+	// 選択処理時の初期化
 	void SelectInit(void);
+	// 確認処理時の初期化
 	void ConfirmInit(void);
+	// 適用時の初期化
 	void ApplyInit(void);
+
+	// 選択中のものの変更が行われているかつ何かを選択していたら処理を行う
+	void CompPlace(const PLACE prevPlace);
+
 };
 
