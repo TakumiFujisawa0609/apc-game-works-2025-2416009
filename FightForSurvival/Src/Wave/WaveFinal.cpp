@@ -1,11 +1,15 @@
 #include "WaveFinal.h"
 
-#include "../Application.h"
 
 WaveFinal::WaveFinal(void)
-	: WaveBase(60 * 30, 60 * 15)
+	: WaveBase(PREPARE_TIME, WAVE_TIME)
 {
 }
+
+WaveFinal::~WaveFinal(void)
+{
+}
+
 void WaveFinal::OnStart()
 {
 
@@ -21,14 +25,23 @@ void WaveFinal::OnClear()
 
 void WaveFinal::Draw()
 {
-	int posX = Application::SCREEN_SIZE_X / 2;
-
 	// 親クラスの共通描画物
 	WaveBase::Draw();
 
+	// 準備状態じゃなければ描画
 	if (state_ != WaveBase::WaveState::PREPARE)
 	{
-		DrawStringToHandle(posX - 47, 5, "WaveFinal", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
+		DrawStringToHandle(WAVW_NAME_POS_X
+			, WAVW_NAME_POS_Y
+			, "WaveFinal"
+			, WHITE_COLOR
+			, font_[static_cast<int>(Font::SMALL)]);
 	}
-	DrawStringToHandle(8, 40, "敵を全て倒すか、時間いっぱいまで逃げろ！", 0xff0000, font_[static_cast<int>(Font::SMALL)]);
+
+	// 指示の文字の描画
+	DrawStringToHandle(INSTRUCTION_POS_X
+		, INSTRUCTION_POS_Y
+		, "敵を全て倒すか、時間いっぱいまで逃げろ！"
+		, RED_COLOR
+		, font_[static_cast<int>(Font::SMALL)]);
 }

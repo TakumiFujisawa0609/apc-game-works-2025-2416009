@@ -9,7 +9,7 @@
 
 // 準備20秒 → 戦闘45秒
 Wave1::Wave1(void)
-	: WaveBase(60 * 20, 60 * 45)
+	: WaveBase(PREPARE_TIME, WAVE_TIME)
 {
 	// UI管理の生成処理
 	uiMgr_ = new UIManager();
@@ -65,19 +65,16 @@ void Wave1::Update(void)
 		return;
 	}
 
-	// 準備時間が経過したら
-	//if (elapsed_ >= prepareTime_)
-	//{
-	//	// ウェーブ開始
-	//	StartInWave();
-	//}
-
 	// 2秒たったら説明書の表示を消す
 	for (UIBase* ui : uiMgr_->GetUIList())
 	{
-		if (InputManager::GetInstance().IsTrgUp(KEY_INPUT_M))
+		// スライドスキップボタンを押されたら
+		if (InputManager::GetInstance().IsTrgUp(KEY_INPUT_SPACE))
 		{
+			// 描画を終了
 			ui->SetIsDraw(false);
+
+			// ゲームを開始させる
 			state_ = WaveState::INWAVE;
 		}
 
@@ -85,22 +82,27 @@ void Wave1::Update(void)
 		{
 			continue;
 		}
+
 		ExplaneSprite* explane = dynamic_cast<ExplaneSprite*>(ui);
 
-		if (elapsed_ >= 60 * 19)
+		if (elapsed_ >= SLIDE_END_TIME)
 		{
+			// スライド終了
 			ui->SetIsDraw(false);
 		}
-		else if (elapsed_ >= 60 * 15)
+		else if (elapsed_ >= SLIDE_TIME_3)
 		{
+			// スライド変更
 			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_4);
 		}
-		else if (elapsed_ >= 60 * 10)
+		else if (elapsed_ >= SLIDE_TIME_2)
 		{
+			// スライド変更
 			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_3);
 		}
-		else if (elapsed_ >= 60 * 5)
+		else if (elapsed_ >= SLIDE_TIME_1)
 		{
+			// スライド変更
 			explane->SetDrawPictureKind(ExplaneSprite::EXPLANE_2);
 		}
 	}
@@ -114,14 +116,23 @@ void Wave1::Draw()
 	// UIの描画
 	uiMgr_->Draw();
 
-	int posX = Application::SCREEN_SIZE_X / 2;
-
 	// 親クラスの共通描画物
 	WaveBase::Draw();
 
+	// 準備状態じゃなければ描画
 	if (state_ != WaveBase::WaveState::PREPARE)
 	{
-		DrawStringToHandle(posX - 25, 5, "Wave1", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
+		DrawStringToHandle(WAVW_NAME_POS_X
+			, WAVW_NAME_POS_Y
+			, "Wave1"
+			, WHITE_COLOR
+			, font_[static_cast<int>(Font::SMALL)]);
 	}
-	DrawStringToHandle(8, 40, "敵を倒せ！", 0xff0000, font_[static_cast<int>(Font::SMALL)]);
+
+	// 指示の文字の描画
+	DrawStringToHandle(INSTRUCTION_POS_X
+		, INSTRUCTION_POS_Y
+		, "敵を倒せ！"
+		, RED_COLOR
+		, font_[static_cast<int>(Font::SMALL)]);
 }

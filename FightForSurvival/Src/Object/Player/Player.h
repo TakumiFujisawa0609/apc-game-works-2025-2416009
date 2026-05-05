@@ -1,9 +1,11 @@
 #pragma once
 
 #include "../../Base.h"
+#include "../../Application.h"
 
 class WeaponBase;
 
+// アップグレードの内容
 enum class PLAYER_UPGRADE
 {
 	RESTOCK_POTION,
@@ -76,6 +78,39 @@ public:
 	// 最大重力
 	static constexpr float MAX_GRAVITATION = -9.8f;
 
+	// 魔法の残弾数の文字の座標
+	static constexpr int MAGIC_NUM_POS_X = Application::SCREEN_SIZE_X - 208;
+	static constexpr int MAGIC_NUM_POS_Y = Application::SCREEN_SIZE_Y - 200;
+
+	// MPポーションの残りの数の文字の座標
+	static constexpr int MP_POTION_NUM_POS_X = Application::SCREEN_SIZE_X - 80;
+	static constexpr int MP_POTION_NUM_POS_Y = Application::SCREEN_SIZE_Y - 40;
+
+	// 攻撃変更可能時間の文字の座標
+	static constexpr int CHANGE_MAGIC_INTERVAL_POS_X = Application::SCREEN_SIZE_X - 210;
+	static constexpr int CHANGE_MAGIC_INTERVAL_POS_Y = Application::SCREEN_SIZE_Y - 150;
+
+	// フォントのカラー
+	static constexpr unsigned int FONT_COLOR = 0xffffff;
+
+	// ポーション使用時のプログレスバーの座標
+	// 左上
+	static constexpr int MP_BAR_UPPER_LEFT_POS_X = Application::SCREEN_SIZE_X / 2 - 50;
+	static constexpr int MP_BAR_UPPER_LEFT_POS_Y = Application::SCREEN_SIZE_Y / 2 - 30;
+	// 右下(枠)		  
+	static constexpr int MP_BAR_LOWER_RIGHT_POS_X = Application::SCREEN_SIZE_X / 2 + 50;
+	static constexpr int MP_BAR_LOWER_RIGHT_POS_Y = Application::SCREEN_SIZE_Y / 2 - 40;
+	// 文字の座標  
+	static constexpr int MP_BAR_STRING_POS_X = Application::SCREEN_SIZE_X / 2 - 60;
+	static constexpr int MP_BAR_STRING_POS_Y = Application::SCREEN_SIZE_Y / 2 - 60;
+
+	// MPバーの最大幅
+	static constexpr int MP_BAR_MAX_WIDTH = 50;
+
+	// プログレスバーのカラー値
+	static constexpr unsigned int MP_BAR_FRAME_COLOR = 0x696969;
+	static constexpr unsigned int MP_BAR_MAIN_COLOR = 0xff7f50;
+
 	enum class FONT_KIND
 	{
 		MAGIC_NUM,
@@ -122,7 +157,7 @@ public:
 	WeaponBase* GetWeapon(void)const { return weapon_; }
 
 	// HPにダメージを与える
-	void Damage(float hp);
+	void Damage(float damage);
 
 	// 押し出しを行う
 	void Extrusion(VECTOR overlap);
@@ -207,4 +242,7 @@ private:
 
 	// 重力処理
 	void Gravity(void);
+
+	// デバッグ描画
+	void DebugDraw(void);
 };

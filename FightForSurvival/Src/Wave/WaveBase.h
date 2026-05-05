@@ -8,6 +8,28 @@
 class WaveBase
 {
 public:
+
+    // 固定フレームレート
+    static constexpr int ONE_SECOND = 60;
+
+    // 「準備」の文字の座標
+    static constexpr int PREPARE_POS_X = Application::SCREEN_SIZE_X / 2 - 20;
+    static constexpr int PREPARE_POS_Y = 5;
+
+    // 時間の文字の座標
+    static constexpr int TIME_POS_X = Application::SCREEN_SIZE_X / 2 - 9;
+    static constexpr int TIME_POS_Y = 40;
+
+    // カラー値
+    static constexpr unsigned int RED_COLOR = 0xff0000;
+    static constexpr unsigned int WHITE_COLOR = 0xffffff;
+
+    // 桁ごとの間の距離
+    static constexpr int OFFSET = 8;
+
+    // 桁数を分ける
+    static constexpr int DIGIT = 10;
+
     // ウェーブの状態
     enum class WaveState
     {
@@ -16,6 +38,7 @@ public:
         CLEARED    // クリア済み
     };
 
+    // フォントの大きさ
     enum class Font
     {
         BIG,
@@ -63,8 +86,10 @@ public:
     void AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos);
     void AddSpawner(int time, float interval, VECTOR pos, Spawner::PATTERN pattern);
 
+    // スポーンイベントの数を渡す
     int GetSpawnEventNum(void)const { return (int)spawnEvents_.size(); }
 
+    // ウェーブの状態を渡す
     WaveState GetState(void)const { return state_; }
 
     // ウェーブ開始させる

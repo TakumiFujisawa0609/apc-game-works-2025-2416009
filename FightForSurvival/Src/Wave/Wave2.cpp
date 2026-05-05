@@ -1,9 +1,7 @@
 #include "Wave2.h"
 
-#include "../Application.h"
-
 Wave2::Wave2(void)
-	: WaveBase(60 * 30, 60 * 45)
+	: WaveBase(PREPARE_TIME, WAVE_TIME)
 {
 	// スポーンタイミング、敵種別、座標
 	AddSpawnEvent(60 * 5, ENEMY_TYPE::ZOMBIE, VGet(400.0f, 5.0f, 1500.0f));
@@ -41,14 +39,23 @@ void Wave2::OnClear(void)
 
 void Wave2::Draw(void)
 {
-	int posX = Application::SCREEN_SIZE_X / 2;
-
 	// 親クラスの共通描画物
 	WaveBase::Draw();
 
+	// 準備状態じゃなければ描画
 	if (state_ != WaveBase::WaveState::PREPARE)
 	{
-		DrawStringToHandle(posX - 25, 5, "Wave2", 0xffffff, font_[static_cast<int>(Font::SMALL)]);
+		DrawStringToHandle(WAVE_NAME_POS_X
+			, WAVE_NAME_POS_Y
+			, "Wave2"
+			, WHITE_COLOR
+			, font_[static_cast<int>(Font::SMALL)]);
 	}
-	DrawStringToHandle(8, 40, "敵を倒せ！", 0xff0000, font_[static_cast<int>(Font::SMALL)]);
+
+	// 指示の文字の描画
+	DrawStringToHandle(INSTRUCTION_POS_X
+		, INSTRUCTION_POS_Y
+		, "敵を倒せ！"
+		, RED_COLOR
+		, font_[static_cast<int>(Font::SMALL)]);
 }

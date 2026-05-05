@@ -57,7 +57,8 @@ void InputManager::Init(void)
 	ins.Add(KEY_INPUT_RIGHT);
 	ins.Add(KEY_INPUT_LEFT);
 
-	ins.Add(KEY_INPUT_M);
+	// 説明書スキップ
+	ins.Add(KEY_INPUT_SPACE);
 
 	// ダッシュキー
 	InputManager::GetInstance().Add(KEY_INPUT_LSHIFT);

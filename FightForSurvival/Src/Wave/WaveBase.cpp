@@ -7,14 +7,18 @@
 WaveBase::WaveBase(int prep, int wave)
     :state_(WaveState::PREPARE), prepareTime_(prep), waveTime_(wave), elapsed_(0)
 {
+    // フォントのハンドル読み込み
     font_[static_cast<int>(Font::BIG)] = CreateFontToHandle("x12y12pxMaruMinya", 32, 20, DX_FONTTYPE_ANTIALIASING);
     font_[static_cast<int>(Font::SMALL)] = CreateFontToHandle("x12y12pxMaruMinya", 20, 20, DX_FONTTYPE_ANTIALIASING);
 }
 
 WaveBase::~WaveBase()
 {
+    // 解放
     spawnEvents_.clear();
     spawnerIns_.clear();
+
+    // フォントハンドルの解放
     DeleteFontToHandle(font_[static_cast<int>(Font::BIG)]);
     DeleteFontToHandle(font_[static_cast<int>(Font::SMALL)]);
 }
@@ -91,47 +95,60 @@ void WaveBase::Update(void)
 
 void WaveBase::Draw(void)
 {
-    int time = (prepareTime_ - elapsed_) / 60;
-    int waveTime = (waveTime_ - elapsed_) / 60;
-    int posX = Application::SCREEN_SIZE_X / 2;
+    int time = (prepareTime_ - elapsed_) / ONE_SECOND;
+    int waveTime = (waveTime_ - elapsed_) / ONE_SECOND;
+    int posX = TIME_POS_X;
 
     switch (state_)
     {
     case WaveBase::WaveState::PREPARE:
 
-        DrawStringToHandle(posX - 20, 5, "準備",0xff0000, font_[static_cast<int>(Font::SMALL)]);
+        // 「準備」の文字
+        DrawStringToHandle(PREPARE_POS_X
+            , PREPARE_POS_Y
+            , "準備"
+            , RED_COLOR
+            , font_[static_cast<int>(Font::SMALL)]);
 
-        if (time >= 10)
+        // 時間の桁が10以上であれば
+        if (time >= DIGIT)
         {
-            posX -= 8;
+            // 位置を少しずらす
+            posX -= OFFSET;
         }
 
-        DrawFormatStringToHandle(posX - 9, 40, 0xffffff, font_[static_cast<int>(Font::BIG)], "%d", time);
+        // 時間の表示
+        DrawFormatStringToHandle(posX
+            , TIME_POS_Y
+            , WHITE_COLOR
+            , font_[static_cast<int>(Font::BIG)]
+            , "%d"
+            , time);
 
         break;
     case WaveBase::WaveState::INWAVE:
 
-        if (waveTime >= 10)
+        // 時間の桁が10以上であれば
+        if (waveTime >= DIGIT)
         {
-            posX -= 8;
+            // 位置を少しずらす
+            posX -= OFFSET;
         }
 
-        DrawFormatStringToHandle(posX - 9, 40, 0xffffff, font_[static_cast<int>(Font::BIG)], "%d", waveTime);
+        // 時間の表示
+        DrawFormatStringToHandle(posX
+            , TIME_POS_Y
+            , WHITE_COLOR
+            , font_[static_cast<int>(Font::BIG)]
+            , "%d"
+            , waveTime);
+
         break;
     case WaveBase::WaveState::CLEARED:
         break;
     default:
         break;
     }
-
-    //int cnt = 0;
-
-    //// スポーンイベントを処理
-    //for (auto& event : spawnEvents)
-    //{
-    //    DrawFormatString(0, 300 + 20 * cnt, 0xffffff, "スポーンの判定 = %d", event.triggered);
-    //    cnt++;
-    //}
 }
 
 void WaveBase::OnStart()
@@ -152,37 +169,32 @@ void WaveBase::OnClear()
 
 bool WaveBase::CheckWaveClear()
 {
+    // 戦闘時間が0より大きいかつ,設定された戦闘時間を経過時間が超えたら
     if (waveTime_ > 0 && elapsed_ >= waveTime_) return true;
 
     return false;
-
-    //bool isClear_ = true;
-
-    //for (auto& event : spawnEvents_)
-    //{
-    //    // イベントが発動していないかつイベントの発動フレームになったら
-    //    if (!event.triggered_)
-    //    {
-    //        isClear_ = false;
-    //    }
-    //}
-
-    //return isClear_;
 }
 
 void WaveBase::AddSpawnEvent(int time, ENEMY_TYPE type, VECTOR pos)
 {
+    // 指定された敵スポーンイベントを入れる
     spawnEvents_.push_back({ time, type, pos, false });
 }
 
 void WaveBase::AddSpawner(int time, float interval, VECTOR pos, Spawner::PATTERN pattern)
 {
+    // 指定されたスポナースポーンイベント入れる
     spawnerIns_.push_back({ time, interval, pos,pattern, false });
 }
 
 void WaveBase::StartInWave(void)
 {
+    // ウェーブ開始させる
     state_ = WaveState::INWAVE;
+
+    // 経過時間の初期化
     elapsed_ = 0;
+
+    // 初期化処理
     OnStart();
 }

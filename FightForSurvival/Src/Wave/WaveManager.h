@@ -49,12 +49,9 @@ private:
     WaveManager(WaveManager&&) = delete;
     WaveManager& operator=(WaveManager&&) = delete;
 
-    // 下記をコンパイルエラーさせるため 上記を追加
-    // WaveManager copy = *WaveManager::GetInstance();
-    // WaveManager copied(*WaveManager::GetInstance());
-    // WaveManager moved = std::move(*WaveManager::GetInstance());
-
+    // 各ウェーブを格納
     std::vector<std::unique_ptr<WaveBase>> waves_;
+    // 今現在のウェーブ
     int currentWaveIndex_;
 
     // 1ウェーブがクリアしたか
