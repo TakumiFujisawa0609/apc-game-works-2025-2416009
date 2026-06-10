@@ -32,7 +32,7 @@ int WINAPI WinMain(
 	instance.Run();
 
 	// AddFontResourceExA‚Å“Ç‚İ‚ñ‚Å‚¢‚½ƒf[ƒ^‚ğ”jŠü‚·‚é
-	RemoveFontResourceExA("", FR_PRIVATE, NULL);
+	RemoveFontResourceExA("Data/Font/x12y12pxMaruMinya.ttf", FR_PRIVATE, NULL);
 
 	// ‰ğ•ú
 	instance.Destroy();
